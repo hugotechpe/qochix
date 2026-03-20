@@ -202,6 +202,14 @@
     document.body.appendChild(legend);
   }
 
+  function isEmbeddedFrame() {
+    try {
+      return window.self !== window.top;
+    } catch (error) {
+      return true;
+    }
+  }
+
   function ensureRuntimeTooltip() {
     let box = document.getElementById('q-help-float');
     if (!box) {
@@ -274,6 +282,9 @@
     const selectors = (options && options.selectors) || [];
     const title = (options && options.glossaryTitle) || 'Glosario rápido de bloques';
     const customMap = (options && options.customMap) || {};
+    const showGlobalUi = options && typeof options.showGlobalUi === 'boolean'
+      ? options.showGlobalUi
+      : !isEmbeddedFrame();
     if (!selectors.length) return;
     ensureStyles();
     const nodes = document.querySelectorAll(selectors.join(','));
@@ -330,8 +341,10 @@
       uniq.push(item);
     });
     const modal = buildModal(uniq.slice(0, 80), title);
-    ensureFab(() => modal.classList.add('open'));
-    ensureLegend();
+    if (showGlobalUi) {
+      ensureFab(() => modal.classList.add('open'));
+      ensureLegend();
+    }
     ensureRuntimeTooltip();
   }
 
