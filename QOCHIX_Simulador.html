@@ -1014,13 +1014,15 @@ const LS_NOTES_KEY='qochix_sim_session_notes_v1';
 let _notesTimer;
 let _sharedSyncTimer;
 let _suspendSharedSync=false;
+let _lastLocalSavedAt='';
 function scheduleSharedSync(){
   if(_suspendSharedSync)return;
   clearTimeout(_sharedSyncTimer);
   _sharedSyncTimer=setTimeout(()=>{
-    QSYS.saveState({persons:PERSONS, hires:HIRES, P},{
+    const saved=QSYS.saveState({persons:PERSONS, hires:HIRES, P},{
       source:'simulator'
     });
+    _lastLocalSavedAt=(saved&&saved.meta&&saved.meta.updatedAt)||'';
   },180);
 }
 function scheduleSaveSimNotes(){
@@ -1871,7 +1873,11 @@ syncControlsFromState();
 decorateHelp();
 loadSimNotes();
 document.querySelectorAll('.panel .pbody').forEach(b=>b.style.display='block');
-QSYS.subscribe((nextState)=>applySharedState(nextState));
+QSYS.subscribe((nextState)=>{
+  const incomingStamp=(nextState&&nextState.meta&&nextState.meta.updatedAt)||'';
+  if(incomingStamp&&incomingStamp===_lastLocalSavedAt) return;
+  applySharedState(nextState);
+});
 recalc();
 </script>
 </body>
