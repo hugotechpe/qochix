@@ -75,12 +75,46 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .sb-title::after{content:'';flex:1;height:1px;background:var(--faint)}
 
 /* Person card */
-.pcard{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:.9rem 1rem;margin-bottom:.6rem}
+.pcard{background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.7rem;transition:border-color .3s}
+.pcard:hover{border-color:rgba(255,255,255,.1)}
 .pcard-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}
-.pcard-name{font-weight:600;font-size:.88rem}
-.pcard-badge{font-family:var(--mono);font-size:.68rem;color:var(--gold);background:rgba(212,168,83,.1);padding:.12rem .45rem;border-radius:20px}
+.pcard-name{font-weight:600;font-size:.92rem}
+.pcard-badge{
+  font-family:var(--mono);font-size:.72rem;color:var(--gold);
+  background:rgba(212,168,83,.1);padding:.18rem .5rem;border-radius:20px;
+  border:1px solid transparent;cursor:pointer;transition:all .2s
+}
+.pcard-badge:hover{border-color:var(--gold)}
+.pcard-badge input{
+  width:52px;background:transparent;border:none;color:var(--gold);
+  font-family:var(--mono);font-size:.72rem;text-align:center;outline:none
+}
+.pcard-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:.6rem;padding-top:.55rem;border-top:1px solid var(--brd);
+  font-size:.65rem;color:var(--muted)
+}
+.pcard-footer strong{color:var(--gold);font-family:var(--mono);font-size:.75rem}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+
+/* Ticket mode toggle */
+.tkt-mode{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--brd);margin-bottom:.75rem}
+.tkt-mode-btn{
+  flex:1;padding:.35rem .5rem;font-size:.68rem;font-weight:600;
+  background:transparent;border:none;color:var(--muted);cursor:pointer;
+  transition:all .2s;text-align:center
+}
+.tkt-mode-btn.active{background:var(--gold);color:var(--bg)}
+.tkt-indiv{display:flex;flex-direction:column;gap:.4rem;margin-top:.6rem}
+.tkt-row{display:flex;align-items:center;gap:.5rem;font-size:.75rem}
+.tkt-row .eq-name{width:55px;font-weight:500;flex-shrink:0}
+.tkt-row input{
+  flex:1;background:var(--surf);border:1px solid var(--brd);border-radius:6px;
+  color:var(--teal);font-family:var(--mono);font-size:.8rem;
+  padding:.3rem .45rem;outline:none
+}
+.tkt-row input:focus{border-color:var(--teal)}
 
 /* Field */
 .fld{display:flex;flex-direction:column;gap:.2rem}
@@ -298,10 +332,17 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <!-- A. Ticket -->
   <div class="sb-sec">
     <div class="sb-title">A · Ticket de entrada</div>
-    <div class="slw">
-      <label>Monto por socio (todos igual) <span id="lbl-tkt">S/5,000</span></label>
-      <input type="range" min="2000" max="15000" step="500" value="5000" oninput="onTkt(this.value)">
+    <div class="tkt-mode">
+      <button class="tkt-mode-btn active" id="tkt-eq" onclick="setTktMode('equal')">Todos igual</button>
+      <button class="tkt-mode-btn" id="tkt-ind" onclick="setTktMode('individual')">Individual</button>
     </div>
+    <div id="tkt-equal-box">
+      <div class="slw">
+        <label>Monto por socio <span id="lbl-tkt">S/5,000</span></label>
+        <input type="range" min="2000" max="15000" step="500" value="5000" oninput="onTkt(this.value)">
+      </div>
+    </div>
+    <div id="tkt-indiv-box" class="tkt-indiv" style="display:none"></div>
     <div class="nota" style="margin-top:.5rem">Total fresco Qochix: <strong id="lbl-tkt-tot">S/25,000</strong></div>
   </div>
 
@@ -320,7 +361,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <!-- D. Parámetros -->
-  <div class="sb-sec">
+  <div class="sb-sec" style="border-bottom:none;padding-bottom:1.25rem">
     <div class="sb-title">D · Parámetros financieros</div>
     <div class="g2" style="margin-bottom:.6rem">
       <div class="slw">
@@ -333,12 +374,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
       </div>
     </div>
     <div class="nota">El <strong>neto operativo</strong> es el % que queda tras costos directos (logística, tools, venue). La <strong>reserva</strong> es el colchón antes de distribuir.</div>
-  </div>
-
-  <!-- E. Sueldos 2032 -->
-  <div class="sb-sec" style="border-bottom:none;padding-bottom:1.25rem">
-    <div class="sb-title">E · Sueldo Qochix 2032 (tope)</div>
-    <div id="sue32-box"></div>
   </div>
 </aside>
 
@@ -695,7 +730,9 @@ let HIRES = [
   {role:'Facilitadora Almaria',        brand:'Almaria',   sue:2500,  growth:1.25},
 ];
 
-let P = {ticket:5000, netoPct:0.65, reserva:3000, sc:'n',
+let P = {ticket:5000, tktMode:'equal',
+  tickets:{hugo:5000,rossy:5000,vera:5000,carlos:5000,nicole:5000},
+  netoPct:0.65, reserva:3000, sc:'n',
   sue32:{hugo:30000,rossy:10000,vera:10000,carlos:10000,nicole:6000}};
 
 // Chart instances
@@ -707,16 +744,24 @@ let charts = {};
 function initSidebar() {
   // Persons
   const pb = document.getElementById('persons-box');
-  pb.innerHTML = PERSONS.map(p=>`
+  pb.innerHTML = PERSONS.map(p=>{
+    const hr=Math.round(p.sueldo/(22*8));
+    const s=sw(p);
+    const tkt=getTkt(p.id);
+    const tot=tkt+p.capital+s.sw;
+    return `
   <div class="pcard">
     <div class="pcard-hdr">
       <span class="pcard-name" style="color:${p.c}">${p.name}</span>
-      <span class="pcard-badge" id="badge-${p.id}">S/${Math.round(p.sueldo/(22*8))}/hr</span>
+      <span class="pcard-badge" id="badge-${p.id}">
+        <input type="number" value="${hr}" min="5" max="500" step="1"
+          oninput="onHr('${p.id}',this.value)" title="Editar costo/hora">/hr
+      </span>
     </div>
     <div class="g2" style="margin-bottom:.5rem">
       <div class="fld"><label>Sueldo hoy (S/)</label>
         <input type="number" value="${p.sueldo}" step="500" min="500" max="80000"
-          oninput="onS('${p.id}',this.value)"></div>
+          id="inp-sue-${p.id}" oninput="onS('${p.id}',this.value)"></div>
       <div class="fld"><label>Capital aportado (S/)</label>
         <input type="number" value="${p.capital}" step="500" min="0" max="200000"
           oninput="onCap('${p.id}',this.value)"></div>
@@ -729,7 +774,11 @@ function initSidebar() {
       <div class="fld"><label>Sueldo 2032</label>
         <input type="number" value="${P.sue32[p.id]}" step="500" oninput="onS32('${p.id}',this.value)"></div>
     </div>
-  </div>`).join('');
+    <div class="pcard-footer">
+      <span>Aporte total:</span>
+      <strong id="ptot-${p.id}">${fmt(tot)}</strong>
+    </div>
+  </div>`}).join('');
 
   // Equity
   const eb = document.getElementById('equity-box');
@@ -741,7 +790,25 @@ function initSidebar() {
       oninput="onEq('${p.id}',this.value)">
   </div>`).join('');
 
+  // Individual tickets
+  renderTktIndiv();
+
   renderHires();
+}
+
+function renderTktIndiv(){
+  const box=document.getElementById('tkt-indiv-box');
+  if(!box)return;
+  box.innerHTML=PERSONS.map(p=>`
+    <div class="tkt-row">
+      <span class="eq-name" style="color:${p.c}">${p.name}</span>
+      <input type="number" value="${P.tickets[p.id]}" step="500" min="0" max="50000"
+        id="tkt-inp-${p.id}" oninput="onTktIndiv('${p.id}',this.value)">
+    </div>`).join('');
+}
+
+function getTkt(id){
+  return P.tktMode==='equal'?P.ticket:P.tickets[id];
 }
 
 // ════════════════════════════════════════
@@ -782,10 +849,47 @@ function hiresCostByYear() {
 // ════════════════════════════════════════
 // HANDLERS
 // ════════════════════════════════════════
-function onTkt(v){P.ticket=+v;document.getElementById('lbl-tkt').textContent=fmt(+v);document.getElementById('lbl-tkt-tot').textContent=fmt(+v*5);recalc()}
+function onTkt(v){
+  P.ticket=+v;
+  document.getElementById('lbl-tkt').textContent=fmt(+v);
+  if(P.tktMode==='equal') PERSONS.forEach(p=>{P.tickets[p.id]=+v});
+  updateTktTot();
+  recalc();
+}
+function onTktIndiv(id,v){
+  P.tickets[id]=+v;
+  updateTktTot();
+  recalc();
+}
+function setTktMode(mode){
+  P.tktMode=mode;
+  document.getElementById('tkt-eq').classList.toggle('active',mode==='equal');
+  document.getElementById('tkt-ind').classList.toggle('active',mode==='individual');
+  document.getElementById('tkt-equal-box').style.display=mode==='equal'?'block':'none';
+  document.getElementById('tkt-indiv-box').style.display=mode==='individual'?'flex':'none';
+  if(mode==='equal') PERSONS.forEach(p=>{P.tickets[p.id]=P.ticket});
+  updateTktTot();
+  recalc();
+}
+function updateTktTot(){
+  const tot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
+  document.getElementById('lbl-tkt-tot').textContent=fmt(tot);
+}
+function onHr(id,v){
+  const p=PERSONS.find(x=>x.id===id);
+  p.sueldo=Math.round(+v*22*8);
+  const inp=document.getElementById('inp-sue-'+id);
+  if(inp)inp.value=p.sueldo;
+  recalc();
+}
 function onNeto(v){P.netoPct=+v/100;document.getElementById('lbl-neto').textContent=v+'%';recalc()}
 function onRsv(v){P.reserva=+v;document.getElementById('lbl-rsv').textContent=fmt(+v);recalc()}
-function onS(id,v){const p=PERSONS.find(x=>x.id===id);p.sueldo=+v;document.getElementById('badge-'+id).textContent='S/'+Math.round(+v/(22*8))+'/hr';recalc()}
+function onS(id,v){
+  const p=PERSONS.find(x=>x.id===id);p.sueldo=+v;
+  const badge=document.querySelector('#badge-'+id+' input');
+  if(badge)badge.value=Math.round(+v/(22*8));
+  recalc();
+}
 function onCap(id,v){PERSONS.find(x=>x.id===id).capital=+v;recalc()}
 function onH(id,v){PERSONS.find(x=>x.id===id).hrs=+v;document.getElementById('lhl-'+id).textContent=v+'h';recalc()}
 function onA(id,v){PERSONS.find(x=>x.id===id).adj=+v;document.getElementById('lla-'+id).textContent=(+v).toFixed(2);recalc()}
@@ -865,7 +969,7 @@ function calcFact(){
 }
 
 function calcPool(){
-  return PERSONS.reduce((s,p)=>s+P.ticket+p.capital+sw(p).sw,0);
+  return PERSONS.reduce((s,p)=>s+getTkt(p.id)+p.capital+sw(p).sw,0);
 }
 
 // Monthly year 1 (12 months from April 2026)
@@ -890,7 +994,7 @@ function calcBE(fact){
 
 // Runway months
 function calcRunway(){
-  const capital=P.ticket*5+PERSONS.reduce((s,p)=>s+p.capital,0);
+  const capital=PERSONS.reduce((s,p)=>s+getTkt(p.id)+p.capital,0);
   const monthly=calcMonthly();
   const burn=monthly[0].burn;
   if(burn<=0)return{months:99,capital,burn:0};
@@ -915,6 +1019,14 @@ function recalc(){
   sv('kpi-dist',fmt(dist[6]));
   sv('kpi-be',be);
   sv('kpi-runway',rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
+
+  // Update pcard footers
+  PERSONS.forEach(p=>{
+    const tkt=getTkt(p.id);
+    const s=sw(p);
+    sv('ptot-'+p.id,fmt(tkt+p.capital+s.sw));
+  });
+
   const rossySue=ANOS_RIND=>SUED_F.rossy[ANOS_RIND]||0;
   const rossyCross=AÑOS.findIndex((_,i)=>(SUED_F.rossy[i]||0)>=7000);
   sv('kpi-rossy',rossyCross>=0?AÑOS[rossyCross]:'2033+');
@@ -946,11 +1058,13 @@ function recalc(){
   // ── Equity table ──
   html='';
   PERSONS.forEach((p,i)=>{
-    const s=sw(p),inv=P.ticket+p.capital+s.sw,mat=inv/pool;
+    const tkt=getTkt(p.id);
+    const s=sw(p),inv=tkt+p.capital+s.sw,mat=inv/pool;
     const diff=p.equity/100-mat,ds=(diff>0?'+':'')+(diff*100).toFixed(1)+'pts';
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${p.equity}%</td><td>${fmt(P.ticket)}</td><td>${fmt(p.capital)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${p.equity}%</td><td>${fmt(tkt)}</td><td>${fmt(p.capital)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
   });
-  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(P.ticket*5)}</td><td>${fmt(PERSONS.reduce((s,p)=>s+p.capital,0))}</td><td>${fmt(tsw_calc())}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
+  const tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
+  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(PERSONS.reduce((s,p)=>s+p.capital,0))}</td><td>${fmt(tsw_calc())}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
   sel('tb-equity').innerHTML=html;
 
   // ── Facturación table ──
@@ -1021,7 +1135,7 @@ function recalc(){
     const neto_m=Math.round(m.ingresos*P.netoPct);
     const flujo=neto_m-m.burn;
     caja+=flujo;
-    const estado=caja<0?'🔴 ROJO':caja<P.ticket?'🟡 ALERTA':'🟢 OK';
+    const estado=caja<0?'🔴 ROJO':caja<5000?'🟡 ALERTA':'🟢 OK';
     html+=`<tr${caja<0?' style="background:rgba(232,107,95,.07)"':''}>
       <td>${meses[i]} ${i<9?2026:2027}</td>
       <td class="ct">${fmt(m.ingresos)}</td>
@@ -1037,7 +1151,7 @@ function recalc(){
   // ── APUESTA tab ──
   const hugoEq32=Math.round(dist[6]*PERSONS[0].equity/100);
   const hugoTot32=P.sue32.hugo+hugoEq32;
-  const hugoInv=P.ticket+PERSONS[0].capital+sw(PERSONS[0]).sw;
+  const hugoInv=getTkt('hugo')+PERSONS[0].capital+sw(PERSONS[0]).sw;
   const hugoRet7=AÑOS.reduce((s,_,i)=>{
     return s+((SUED_F.hugo[i]||0)+Math.round(dist[i]*PERSONS[0].equity/100))*12;
   },0);
@@ -1054,7 +1168,7 @@ function recalc(){
   });
   const bestIdx=mults.indexOf(Math.max(...mults));
   const minRois=PERSONS.map(p=>{
-    const inv=P.ticket+p.capital+sw(p).sw;
+    const inv=getTkt(p.id)+p.capital+sw(p).sw;
     const ret=AÑOS.reduce((s,_,i)=>s+((SUED_F[p.id][i]||0)+Math.round(dist[i]*p.equity/100))*12,0);
     return ret/inv;
   });
@@ -1076,7 +1190,7 @@ function recalc(){
     const tot32=sue32+eq32;
     const xTot=tot32/p.sueldo;
     const tot29=(SUED_F[p.id][3]||0)+Math.round(dist[3]*p.equity/100);
-    const inv=P.ticket+p.capital+sw(p).sw;
+    const inv=getTkt(p.id)+p.capital+sw(p).sw;
     const ret7=AÑOS.reduce((s,_,i)=>s+((SUED_F[p.id][i]||0)+Math.round(dist[i]*p.equity/100))*12,0);
     html+=`<div class="ap-card">
       <div><div class="ap-nm" style="color:${p.c}">${p.name}</div>
@@ -1095,7 +1209,7 @@ function recalc(){
 
   html='';
   PERSONS.forEach((p,i)=>{
-    const inv=P.ticket+p.capital+sw(p).sw;
+    const inv=getTkt(p.id)+p.capital+sw(p).sw;
     const ret7=AÑOS.reduce((s,_,j)=>s+((SUED_F[p.id][j]||0)+Math.round(dist[j]*p.equity/100))*12,0);
     const roi=ret7/inv;
     const eq32=Math.round(dist[6]*p.equity/100);
@@ -1173,7 +1287,7 @@ function renderCharts(fact,dist,rw,monthly){
   const croi=sel('ch-roi');
   if(croi){
     const rois=PERSONS.map(p=>{
-      const inv=P.ticket+p.capital+sw(p).sw;
+      const inv=getTkt(p.id)+p.capital+sw(p).sw;
       const ret=AÑOS.reduce((s,_,i)=>s+((SUED_F[p.id][i]||0)+Math.round(fact.dist[i]*p.equity/100))*12,0);
       return parseFloat((ret/inv).toFixed(2));
     });
