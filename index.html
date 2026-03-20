@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QOCHIX Hub</title>
+  <style>
+    :root{
+      --bg:#0a0d13;--bg2:#111520;--panel:#171d2e;--line:rgba(255,255,255,.1);
+      --text:#e8ecf0;--muted:#8b95a8;--gold:#d4a853;--teal:#3ecfcf;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .app{display:grid;grid-template-rows:auto 1fr;height:100vh}
+    .top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(10,13,19,.96)}
+    .brand{font-weight:700;letter-spacing:.08em;color:var(--gold)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--line);background:var(--bg2);color:var(--muted);
+      padding:8px 10px;border-radius:10px;font-size:12px;cursor:pointer
+    }
+    .btn.active{color:var(--text);border-color:rgba(62,207,207,.45);background:rgba(62,207,207,.08)}
+    .meta{margin-left:auto;font-size:12px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:290px 1fr;min-height:0}
+    .side{border-right:1px solid var(--line);padding:12px;background:var(--bg2);overflow:auto}
+    .k{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+    .k .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .k .v{font-size:22px;color:var(--gold);font-weight:700;line-height:1.1}
+    .k .s{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .ctl{display:grid;gap:8px}
+    .ctl-row{display:grid;gap:6px}
+    .ctl-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .ctl-val{font-size:12px;color:var(--text)}
+    .scs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .sc-btn{
+      border:1px solid var(--line);background:rgba(10,13,19,.6);color:var(--muted);cursor:pointer;
+      padding:6px 7px;border-radius:8px;font-size:11px
+    }
+    .sc-btn.active{color:var(--text);border-color:rgba(212,168,83,.45);background:rgba(212,168,83,.12)}
+    .ctl input[type="range"]{width:100%}
+    .ctl input[type="number"]{
+      width:100%;background:rgba(10,13,19,.55);border:1px solid var(--line);border-radius:8px;color:var(--text);
+      padding:7px 8px;font-size:12px
+    }
+    .capm{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .capm-btn{
+      border:1px solid var(--line);background:rgba(10,13,19,.62);color:var(--muted);cursor:pointer;
+      padding:6px 6px;border-radius:8px;font-size:10px;line-height:1.25;text-align:center
+    }
+    .capm-btn.active{border-color:rgba(62,207,207,.55);background:rgba(62,207,207,.12);color:var(--text)}
+    .ctl-pair{display:grid;grid-template-columns:1fr 88px;gap:8px;align-items:center}
+    .prs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .pre-btn{
+      border:1px solid var(--line);background:rgba(10,13,19,.62);color:var(--muted);cursor:pointer;
+      padding:6px 6px;border-radius:8px;font-size:10px;line-height:1.25;text-align:center
+    }
+    .pre-btn:hover{border-color:rgba(212,168,83,.45);color:var(--text)}
+    .pre-btn.active{border-color:rgba(212,168,83,.55);background:rgba(212,168,83,.14);color:var(--text)}
+    .rst-btn{
+      border:1px solid rgba(232,107,95,.35);background:rgba(232,107,95,.08);color:#f0c1b9;cursor:pointer;
+      padding:7px 8px;border-radius:8px;font-size:11px
+    }
+    .rst-btn:hover{border-color:rgba(232,107,95,.55);color:#ffd9d2}
+    .mini{margin-top:6px;font-size:11px;color:var(--muted)}
+    .frame-wrap{min-height:0}
+    iframe{width:100%;height:100%;border:0;background:#fff}
+    @media (max-width:1000px){.layout{grid-template-columns:1fr}.side{display:none}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">QOCHIX HUB</div>
+      <div class="btns" id="tabs">
+        <button class="btn active" data-src="QOCHIX_Simulador.html">Simulador</button>
+        <button class="btn" data-src="QOCHIX_Pacto_Economico.html">Pacto</button>
+        <button class="btn" data-src="qochix_base.html">Deck</button>
+      </div>
+      <div class="meta">Un solo link · todo integrado</div>
+    </header>
+    <div class="layout">
+      <aside class="side">
+        <div class="k"><div class="l">Escenario</div><div class="v" id="k-scn">—</div></div>
+        <div class="k"><div class="l">Distribuible 2032</div><div class="v" id="k-dist">—</div></div>
+        <div class="k"><div class="l">Pool</div><div class="v" id="k-pool">—</div></div>
+        <div class="k"><div class="l">Liberación equipo</div><div class="v" id="k-lib">—</div><div class="s" id="k-lib-detail">—</div></div>
+        <div class="k"><div class="l">Última sync</div><div style="font-size:13px;color:var(--muted)" id="k-upd">—</div></div>
+        <div class="k ctl">
+          <div class="l">Controles rápidos</div>
+          <div class="ctl-row">
+            <div class="ctl-lbl">Escenario</div>
+            <div class="scs">
+              <button class="sc-btn" id="ctl-scp" data-sc="p">×0.7</button>
+              <button class="sc-btn" id="ctl-scn" data-sc="n">×1.0</button>
+              <button class="sc-btn" id="ctl-sco" data-sc="o">×1.4</button>
+            </div>
+          </div>
+          <div class="ctl-row">
+            <div class="ctl-lbl">Neto operativo <span class="ctl-val" id="ctl-neto-lbl">65%</span></div>
+            <input id="ctl-neto" type="range" min="45" max="80" step="1">
+          </div>
+          <div class="ctl-row">
+            <div class="ctl-lbl">Reserva mensual</div>
+            <input id="ctl-rsv" type="number" min="0" step="100">
+          </div>
+          <div class="ctl-row">
+            <div class="ctl-lbl">Tratamiento de aportes</div>
+            <div class="capm">
+              <button class="capm-btn" id="ctl-cap-loan" data-capmode="loan">Préstamo</button>
+              <button class="capm-btn" id="ctl-cap-equity" data-capmode="equity_round">Compra acciones</button>
+            </div>
+            <div class="ctl-lbl">Pre-money ronda <span class="ctl-val" id="ctl-pm-lbl">S/5,000,000</span></div>
+            <input id="ctl-pm" type="number" min="100000" step="50000">
+          </div>
+          <div class="ctl-row">
+            <div class="ctl-lbl">Ticket base <span class="ctl-val" id="ctl-tkt-lbl">S/5,000</span></div>
+            <div class="ctl-pair">
+              <input id="ctl-tkt" type="range" min="1000" max="30000" step="100">
+              <input id="ctl-tkt-num" type="number" min="1000" max="30000" step="100">
+            </div>
+            <div class="mini">Se aplica en modo igual para todos los socios.</div>
+          </div>
+          <div class="ctl-row">
+            <div class="ctl-lbl">Modo comité</div>
+            <div class="prs">
+              <button class="pre-btn" id="pre-conservador" data-preset="conservador">Conservador</button>
+              <button class="pre-btn" id="pre-base" data-preset="base">Base</button>
+              <button class="pre-btn" id="pre-acelerado" data-preset="acelerado">Acelerado</button>
+            </div>
+            <button class="rst-btn" id="ctl-reset-base">Restaurar base</button>
+            <div class="mini" id="pre-hint">Selecciona un preset para aplicar escenario, neto y reserva.</div>
+          </div>
+          <div class="mini">Estos cambios se guardan en el sistema compartido.</div>
+        </div>
+      </aside>
+      <main class="frame-wrap">
+        <iframe id="frame" src="QOCHIX_Simulador.html" title="Qochix integrador"></iframe>
+      </main>
+    </div>
+  </div>
+
+  <script src="qochix_help.js"></script>
+  <script src="qochix_system.js"></script>
+  <script>
+    const tabs = document.querySelectorAll('#tabs .btn');
+    const frame = document.getElementById('frame');
+    function openSrc(src, btn){
+      frame.src = src;
+      tabs.forEach(b=>b.classList.toggle('active', b===btn));
+      history.replaceState(null,'','#'+encodeURIComponent(src));
+    }
+    tabs.forEach(btn=>btn.addEventListener('click',()=>openSrc(btn.dataset.src,btn)));
+    if(location.hash){
+      const src = decodeURIComponent(location.hash.slice(1));
+      const btn = [...tabs].find(b=>b.dataset.src===src);
+      if(btn) openSrc(src,btn);
+    }
+
+    const Q = window.QochixSystem;
+    const byId = (id)=>document.getElementById(id);
+    const ctlNeto = byId('ctl-neto');
+    const ctlNetoLbl = byId('ctl-neto-lbl');
+    const ctlRsv = byId('ctl-rsv');
+    const ctlPm = byId('ctl-pm');
+    const ctlPmLbl = byId('ctl-pm-lbl');
+    const ctlTkt = byId('ctl-tkt');
+    const ctlTktNum = byId('ctl-tkt-num');
+    const ctlTktLbl = byId('ctl-tkt-lbl');
+    const resetBaseBtn = byId('ctl-reset-base');
+    const preHint = byId('pre-hint');
+    let syncingControls = false;
+    let netoTimer = 0;
+    let rsvTimer = 0;
+    let pmTimer = 0;
+    let tktTimer = 0;
+    const PRESETS = {
+      conservador: { sc: 'p', netoPct: 0.58, reserva: 4500, label: 'Conservador: ×0.7, neto 58%, reserva S/4,500' },
+      base: { sc: 'n', netoPct: 0.65, reserva: 3000, label: 'Base: ×1.0, neto 65%, reserva S/3,000' },
+      acelerado: { sc: 'o', netoPct: 0.72, reserva: 2000, label: 'Acelerado: ×1.4, neto 72%, reserva S/2,000' },
+    };
+
+    function savePatch(patch){
+      const state = Q.getState();
+      state.P = {...state.P, ...patch};
+      Q.saveState(state, { source:'hub' });
+      paint();
+    }
+    function paintCapMode(mode){
+      document.querySelectorAll('.capm-btn').forEach((btn)=>{
+        btn.classList.toggle('active', btn.dataset.capmode===mode);
+      });
+      ctlPm.disabled = mode !== 'equity_round';
+    }
+    function restoreBase(){
+      const state = Q.getState();
+      const baseTicket = 5000;
+      const tickets = {};
+      (state.persons || []).forEach((person)=>{
+        if (person && person.id) tickets[person.id] = baseTicket;
+      });
+      state.P = {
+        ...state.P,
+        sc: 'p',
+        netoPct: 0.65,
+        reserva: 3000,
+        capitalMode: 'loan',
+        preMoney: 5000000,
+        tktMode: 'equal',
+        ticket: baseTicket,
+        tickets: { ...(state.P && state.P.tickets ? state.P.tickets : {}), ...tickets },
+      };
+      Q.saveState(state, { source:'hub-reset-base' });
+      paint();
+    }
+    function clampTicket(value){
+      const n = Number(value || 0);
+      if (!Number.isFinite(n)) return 5000;
+      return Math.max(1000, Math.min(30000, Math.round(n / 100) * 100));
+    }
+    function saveTicketEqual(value){
+      const state = Q.getState();
+      const ticket = clampTicket(value);
+      const tickets = {};
+      (state.persons || []).forEach((person)=>{
+        if (person && person.id) tickets[person.id] = ticket;
+      });
+      state.P = {
+        ...state.P,
+        tktMode: 'equal',
+        ticket,
+        tickets: { ...(state.P && state.P.tickets ? state.P.tickets : {}), ...tickets },
+      };
+      Q.saveState(state, { source:'hub' });
+      paint();
+    }
+
+    function paintScenarioButtons(sc){
+      document.querySelectorAll('.sc-btn').forEach((btn)=>{
+        btn.classList.toggle('active', btn.dataset.sc===sc);
+      });
+    }
+
+    document.querySelectorAll('.sc-btn').forEach((btn)=>{
+      btn.addEventListener('click', ()=>{
+        savePatch({ sc: btn.dataset.sc });
+      });
+    });
+    function detectPreset(state){
+      const p = state.P || {};
+      const keys = Object.keys(PRESETS);
+      for(const key of keys){
+        const pr = PRESETS[key];
+        if(p.sc===pr.sc && Math.round((p.netoPct||0)*100)===Math.round(pr.netoPct*100) && Math.round(p.reserva||0)===Math.round(pr.reserva)){
+          return key;
+        }
+      }
+      return '';
+    }
+    function paintPresetButtons(activeKey){
+      document.querySelectorAll('.pre-btn').forEach((btn)=>{
+        btn.classList.toggle('active', btn.dataset.preset===activeKey);
+      });
+      if(activeKey && PRESETS[activeKey]) preHint.textContent = PRESETS[activeKey].label;
+      else preHint.textContent = 'Configuración personalizada: ajusta libremente escenario, neto y reserva.';
+    }
+    function applyPreset(key){
+      const pr = PRESETS[key];
+      if(!pr) return;
+      savePatch({ sc: pr.sc, netoPct: pr.netoPct, reserva: pr.reserva });
+    }
+    document.querySelectorAll('.pre-btn').forEach((btn)=>{
+      btn.addEventListener('click', ()=>applyPreset(btn.dataset.preset));
+    });
+    resetBaseBtn.addEventListener('click', restoreBase);
+    ctlNeto.addEventListener('input', ()=>{
+      ctlNetoLbl.textContent = ctlNeto.value + '%';
+      if(syncingControls) return;
+      clearTimeout(netoTimer);
+      netoTimer = window.setTimeout(()=>{
+        savePatch({ netoPct: Number(ctlNeto.value)/100 });
+      }, 120);
+    });
+    ctlNeto.addEventListener('change', ()=>{
+      if(syncingControls) return;
+      savePatch({ netoPct: Number(ctlNeto.value)/100 });
+    });
+    ctlRsv.addEventListener('change', ()=>{
+      if(syncingControls) return;
+      const val = Number(ctlRsv.value || 0);
+      savePatch({ reserva: Number.isFinite(val) ? Math.max(0, val) : 0 });
+    });
+    ctlRsv.addEventListener('input', ()=>{
+      if(syncingControls) return;
+      const val = Number(ctlRsv.value || 0);
+      clearTimeout(rsvTimer);
+      rsvTimer = window.setTimeout(()=>{
+        savePatch({ reserva: Number.isFinite(val) ? Math.max(0, val) : 0 });
+      }, 140);
+    });
+    document.querySelectorAll('.capm-btn').forEach((btn)=>{
+      btn.addEventListener('click', ()=>savePatch({ capitalMode: btn.dataset.capmode }));
+    });
+    ctlPm.addEventListener('input', ()=>{
+      const v = Math.max(100000, Math.round(Number(ctlPm.value || 0) / 50000) * 50000);
+      ctlPmLbl.textContent = 'S/' + v.toLocaleString('es-PE');
+      if(syncingControls) return;
+      clearTimeout(pmTimer);
+      pmTimer = window.setTimeout(()=>savePatch({ preMoney: v }), 180);
+    });
+    ctlTkt.addEventListener('input', ()=>{
+      const v = clampTicket(ctlTkt.value);
+      ctlTktNum.value = v;
+      ctlTktLbl.textContent = 'S/' + v.toLocaleString('es-PE');
+      if(syncingControls) return;
+      clearTimeout(tktTimer);
+      tktTimer = window.setTimeout(()=>{
+        saveTicketEqual(v);
+      }, 140);
+    });
+    ctlTkt.addEventListener('change', ()=>{
+      if(syncingControls) return;
+      saveTicketEqual(ctlTkt.value);
+    });
+    ctlTktNum.addEventListener('change', ()=>{
+      if(syncingControls) return;
+      const v = clampTicket(ctlTktNum.value);
+      ctlTkt.value = v;
+      ctlTktLbl.textContent = 'S/' + v.toLocaleString('es-PE');
+      saveTicketEqual(v);
+    });
+
+    function paint(){
+      const d = Q.deriveState(Q.getState());
+      byId('k-scn').textContent = d.scenarioLabel;
+      byId('k-dist').textContent = d.fmtCurrency(d.dist2032);
+      byId('k-pool').textContent = d.fmtCurrency(d.pool);
+      byId('k-lib').textContent = `${d.liberatedBy2032}/${d.personCards.length}`;
+      byId('k-lib-detail').textContent = `Primer cruce: ${d.firstLiberationYear}`;
+      byId('k-upd').textContent = d.updatedAtLabel;
+      paintScenarioButtons(d.state.P.sc);
+      paintCapMode(d.state.P.capitalMode || 'loan');
+      paintPresetButtons(detectPreset(d.state));
+      syncingControls = true;
+      ctlNeto.value = Math.round((d.state.P.netoPct || 0) * 100);
+      ctlNetoLbl.textContent = ctlNeto.value + '%';
+      ctlRsv.value = Math.round(d.state.P.reserva || 0);
+      const pmValue = Math.max(100000, Math.round((d.state.P.preMoney || 5000000) / 50000) * 50000);
+      ctlPm.value = pmValue;
+      ctlPmLbl.textContent = 'S/' + pmValue.toLocaleString('es-PE');
+      const ticketValue = clampTicket(d.state.P.ticket || 5000);
+      ctlTkt.value = ticketValue;
+      ctlTktNum.value = ticketValue;
+      ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
+      syncingControls = false;
+    }
+    Q.subscribe(paint);
+    paint();
+
+    if(window.QochixHelp){
+      window.QochixHelp.init({
+        selectors:['.brand','.meta','.k .l','.k .v','.ctl-lbl','.mini','#ctl-tkt-lbl','#ctl-pm-lbl'],
+        glossaryTitle:'Glosario rápido · Hub Qochix',
+        customMap:{
+          'qochix hub':'Entrada única para operar simulador, pacto y deck sin perder sincronía.',
+          'un solo link todo integrado':'Objetivo: compartir un único enlace y mantener estado centralizado.',
+          'ultima sync':'Fecha y hora de la última actualización recibida desde el estado compartido.',
+          'controles rápidos':'Ajustes directos del modelo sin salir del hub: escenario, neto y reserva.',
+          'modo comité':'Preset de reunión para mover el modelo rápidamente entre prudencia, base y aceleración.',
+          'ticket base':'Aporte inicial por socio. Desde el hub se aplica en modo igual para todo el equipo.',
+          'tratamiento de aportes':'Define si el aporte es préstamo o compra de acciones. Si eliges compra de acciones, completa la valorización pre-money.',
+          'restaurar base':'Vuelve al baseline del modelo: pesimista ×0.7, neto 65%, reserva S/3,000 y ticket base S/5,000.'
+        }
+      });
+    }
+  </script>
+</body>
+</html>

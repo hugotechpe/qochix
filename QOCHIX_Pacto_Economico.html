@@ -48,32 +48,32 @@ body {
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2.5rem;
-  height: 64px;
+  padding: 0 2rem;
+  min-height: 68px;
   background: rgba(10,13,19,0.92);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
   font-family: var(--serif);
-  font-size: 1.25rem;
+  font-size: 1.38rem;
   font-weight: 700;
   color: var(--gold);
   letter-spacing: 0.05em;
 }
 .nav-links {
-  display: flex; gap: 0.25rem;
+  display: flex; gap: 0.2rem;
   list-style: none;
 }
 .nav-links a {
   color: var(--muted);
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 0.4rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 8px;
   transition: all 0.2s;
 }
 .nav-links a:hover, .nav-links a.active {
@@ -81,10 +81,10 @@ nav {
   background: var(--surface);
 }
 .nav-tag {
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   color: var(--muted);
   background: var(--surface);
-  padding: 0.25rem 0.75rem;
+  padding: 0.32rem 0.85rem;
   border-radius: 20px;
   border: 1px solid var(--border);
   font-family: var(--mono);
@@ -96,7 +96,7 @@ nav {
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   text-align: center;
-  padding: 8rem 2rem 6rem;
+  padding: clamp(7rem, 12vw, 9rem) 1.5rem clamp(10rem, 18vw, 13rem);
   position: relative;
   overflow: hidden;
 }
@@ -117,21 +117,21 @@ nav {
 }
 .hero-eyebrow {
   font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
+  font-size: 0.84rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   opacity: 0;
   animation: fadeUp 0.8s 0.2s forwards;
 }
 .hero h1 {
   font-family: var(--serif);
-  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-size: clamp(3.85rem, 11vw, 8.75rem);
   font-weight: 900;
-  line-height: 0.9;
+  line-height: 0.88;
   letter-spacing: -0.02em;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   opacity: 0;
   animation: fadeUp 0.8s 0.4s forwards;
 }
@@ -140,27 +140,28 @@ nav {
   color: var(--gold);
 }
 .hero-sub {
-  font-size: clamp(1.05rem, 2vw, 1.3rem);
-  color: var(--muted);
-  max-width: 600px;
-  line-height: 1.6;
-  margin-bottom: 3rem;
+  font-size: clamp(1.18rem, 2.4vw, 1.52rem);
+  color: #aeb6c9;
+  max-width: 640px;
+  line-height: 1.65;
+  margin-bottom: 2.25rem;
+  font-weight: 400;
   opacity: 0;
   animation: fadeUp 0.8s 0.6s forwards;
 }
 .hero-equity {
-  display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
+  display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center;
   margin-bottom: 4rem;
   opacity: 0;
   animation: fadeUp 0.8s 0.8s forwards;
 }
 .eq-pill {
   display: flex; flex-direction: column; align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1.15rem 1.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  min-width: 100px;
+  border-radius: 18px;
+  min-width: 112px;
   transition: all 0.3s;
 }
 .eq-pill:hover {
@@ -170,28 +171,293 @@ nav {
 }
 .eq-pct {
   font-family: var(--serif);
-  font-size: 2rem;
+  font-size: clamp(2.1rem, 4vw, 2.55rem);
   font-weight: 700;
   color: var(--gold);
   line-height: 1;
 }
 .eq-name {
-  font-size: 0.75rem;
-  color: var(--muted);
+  font-size: 0.82rem;
+  color: #9aa3b8;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
 }
 .hero-scroll {
   position: absolute;
   bottom: 2.5rem; left: 50%;
   transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em;
+  color: #9aa3b8;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   animation: bounce 2s infinite;
 }
-.hero-scroll span { width: 1px; height: 40px; background: var(--faint); }
+.hero-scroll span { width: 1px; height: 44px; background: rgba(255,255,255,0.12); }
+
+/* ── HERO — INTRO MOTIVADOR ── */
+.hero-pitch {
+  max-width: 720px;
+  margin: 0 auto 2rem;
+  padding: 0 1.25rem;
+  font-size: clamp(1.02rem, 1.95vw, 1.18rem);
+  color: #b4bdcc;
+  line-height: 1.78;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.5s forwards;
+}
+.hero-pitch strong { color: var(--text); }
+.hero-pitch .hp-line {
+  display: block;
+  margin-top: 0.9rem;
+  padding: 0.65rem 0.9rem;
+  font-size: clamp(0.82rem, 1.5vw, 0.95rem);
+  color: #c8d0de;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(212,168,83,0.15);
+  border-radius: 10px;
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto 3.25rem;
+  padding: 0 1rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.65s forwards;
+}
+@media (max-width: 720px) {
+  .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
+}
+.hs-cell {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 1.2rem 0.85rem 1.15rem;
+  text-align: center;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.hs-cell:hover {
+  border-color: rgba(212,168,83,0.28);
+  transform: translateY(-2px);
+}
+.hs-val {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 4vw, 2.05rem);
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.12;
+}
+.hs-lbl {
+  font-size: clamp(0.68rem, 1.35vw, 0.78rem);
+  color: #aeb6c9;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.55rem;
+  line-height: 1.45;
+  max-width: 18ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── HERO — ESCENARIOS (equity mensual 2032) ── */
+.hero-scenario {
+  max-width: 960px;
+  width: 100%;
+  margin: 2rem auto 0;
+  padding: 1.65rem 1.35rem 1.45rem;
+  background: rgba(17,21,32,0.78);
+  border: 1px solid rgba(212,168,83,0.14);
+  border-radius: 22px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+.hs-sc-title {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 3.2vw, 1.55rem);
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+  margin-bottom: 0.55rem;
+  line-height: 1.22;
+}
+.hs-sc-sub {
+  font-size: clamp(0.84rem, 1.65vw, 0.95rem);
+  color: #b4bdcc;
+  text-align: center;
+  line-height: 1.65;
+  margin-bottom: 1.15rem;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hs-sc-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+.hs-sc-tabs button {
+  padding: 0.55rem 1rem;
+  border-radius: 11px;
+  font-family: var(--sans);
+  font-size: clamp(0.72rem, 1.5vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border);
+  background: rgba(10,13,19,0.5);
+  color: #aeb6c9;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+.hs-sc-tabs button:hover {
+  color: var(--text);
+  border-color: rgba(212,168,83,0.35);
+}
+.hs-sc-tabs button.active {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+.hs-sc-tabs button.sc-p.active {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #fff;
+}
+.hs-sc-tabs button.sc-n.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--bg);
+}
+.hs-sc-tabs button.sc-o.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+}
+.hs-sc-blurb {
+  font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+  color: #b4bdcc;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 0.95rem;
+  min-height: 2.8em;
+  padding: 0 0.35rem;
+}
+.hs-sc-blurb strong { color: var(--text); }
+.hs-sc-total {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: clamp(0.68rem, 1.4vw, 0.78rem);
+  color: var(--teal);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  line-height: 1.45;
+}
+.hs-sc-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.45rem;
+}
+@media (max-width: 640px) {
+  .hs-sc-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.hs-sc-cell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0.85rem 0.45rem 0.75rem;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.hs-sc-cell:hover {
+  border-color: rgba(212,168,83,0.22);
+  transform: translateY(-1px);
+}
+.hs-sc-name {
+  font-size: 0.72rem;
+  color: #aeb6c9;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+.hs-sc-amt {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 2.8vw, 1.2rem);
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.15;
+}
+.hs-sc-breakdown {
+  margin: 0.4rem 0 0.45rem;
+  padding: 0 0.15rem;
+}
+.hs-sc-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  color: #aeb6c9;
+  margin-bottom: 0.32rem;
+  line-height: 1.3;
+}
+.hs-sc-line span:first-child { opacity: 0.95; }
+.hs-sc-line span:last-child {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.hs-sc-line.eq span:last-child { color: var(--gold); }
+.hs-sc-total-person {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.9vw, 1.42rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+  margin-top: 0.15rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border);
+}
+.hs-sc-total-lbl {
+  font-size: 0.65rem;
+  color: #9aa3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.22rem;
+}
+.hs-sc-pct {
+  font-size: 0.65rem;
+  color: #8b95a8;
+  font-family: var(--mono);
+  margin-top: 0.38rem;
+}
+.hs-sc-combo {
+  text-align: center;
+  font-size: clamp(0.74rem, 1.5vw, 0.84rem);
+  color: #aeb6c9;
+  letter-spacing: 0.02em;
+  margin-top: 0.45rem;
+  line-height: 1.5;
+}
+.hs-sc-combo strong { color: var(--gold); font-family: var(--serif); font-size: clamp(1rem, 2.2vw, 1.12rem); font-weight: 700; }
+.hs-sc-foot {
+  font-size: 0.78rem;
+  color: #aeb6c9;
+  text-align: center;
+  margin-top: 0.85rem;
+  line-height: 1.55;
+}
 
 /* ── SECTIONS ── */
 section {
@@ -203,11 +469,11 @@ section.full { max-width: none; }
 
 .section-label {
   font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   display: flex; align-items: center; gap: 0.75rem;
 }
 .section-label::after {
@@ -218,17 +484,17 @@ section.full { max-width: none; }
 }
 .section-title {
   font-family: var(--serif);
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2.25rem, 5.5vw, 3.85rem);
   font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
+  line-height: 1.08;
+  margin-bottom: 1.6rem;
 }
 .section-title em { color: var(--gold); font-style: italic; }
 .section-body {
-  font-size: 1.05rem;
-  color: var(--muted);
-  max-width: 680px;
-  line-height: 1.8;
+  font-size: clamp(1.06rem, 1.5vw, 1.14rem);
+  color: #aeb6c9;
+  max-width: 720px;
+  line-height: 1.82;
 }
 .section-body strong { color: var(--text); }
 
@@ -807,6 +1073,240 @@ footer {
 
 /* ── ROI TABLE special row ── */
 .tr-hugo td { background: rgba(212,168,83,0.04); }
+
+/* ── TÉRMINOS (pestañas tipo simulador) ── */
+.terminos-wrap { max-width: 920px; margin: 0 auto; }
+.terminos-tabs {
+  display: flex; flex-wrap: wrap; gap: 0.35rem;
+  margin: 2rem 0 1.75rem;
+  padding: 0.4rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.terminos-tabs button {
+  flex: 1; min-width: 130px;
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.22s;
+}
+.terminos-tabs button:hover { color: var(--text); border-color: var(--border); background: var(--surface); }
+.terminos-tabs button.active {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  box-shadow: 0 4px 20px rgba(212,168,83,0.2);
+}
+.terminos-panel { display: none; }
+.terminos-panel.active { display: block; animation: fadeUp 0.4s ease; }
+.term-block {
+  margin-bottom: 1.65rem;
+  padding-bottom: 1.45rem;
+  border-bottom: 1px solid var(--border);
+}
+.term-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.term-block h4 {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 0.35rem;
+  line-height: 1.25;
+}
+.term-meta {
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  margin-bottom: 0.65rem;
+}
+.term-block p, .term-block li {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 0.45rem;
+}
+.term-block p:last-child { margin-bottom: 0; }
+.term-block p strong, .term-block li strong { color: var(--text); }
+.term-block ul { margin: 0.4rem 0 0 1.1rem; padding: 0; }
+.term-block li { margin-bottom: 0.35rem; }
+.term-doc-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.15rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+.term-doc-links a {
+  color: var(--teal);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(62,207,207,0.45);
+  font-weight: 500;
+}
+.term-doc-links a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.term-jump-bar {
+  margin-top: 1.5rem;
+  padding: 1rem 1.15rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.term-jump-bar a { color: var(--gold); font-weight: 600; text-decoration: none; }
+.term-jump-bar a:hover { text-decoration: underline; }
+.terminos-note a {
+  color: var(--teal);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(62,207,207,0.45);
+}
+.terminos-note a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+.terminos-note {
+  font-size: 0.82rem;
+  color: var(--muted);
+  background: rgba(62,207,207,0.06);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 12px 12px 0;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.65;
+}
+.terminos-note strong { color: var(--text); }
+.live-system {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+.live-shell {
+  background: linear-gradient(180deg, rgba(17,21,32,0.98) 0%, rgba(23,29,46,0.94) 100%);
+  border: 1px solid rgba(62,207,207,0.18);
+  border-radius: 22px;
+  padding: 1.4rem;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+}
+.live-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.32rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(62,207,207,0.2);
+  background: rgba(62,207,207,0.06);
+  color: var(--teal);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+.live-updated {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.live-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.85rem;
+}
+.live-card {
+  background: rgba(10,13,19,0.36);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 0.95rem;
+}
+.live-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.45rem;
+}
+.live-value {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  line-height: 1.05;
+  color: var(--gold);
+}
+.live-sub {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+.live-note {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(212,168,83,0.16);
+  background: rgba(212,168,83,0.05);
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+.live-note strong { color: var(--text); }
+.live-mini {
+  margin-top: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 0.75rem;
+  background: rgba(10,13,19,0.3);
+}
+.live-mini-title {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+.live-mini table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.live-mini th, .live-mini td {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0.36rem 0.32rem;
+  font-size: 0.74rem;
+  text-align: left;
+}
+.live-mini th {
+  color: var(--muted);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.live-mini tr:last-child td { border-bottom: none; }
+@media (max-width: 1100px) {
+  .live-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .live-system { padding: 0 1rem 3rem; }
+  .live-grid { grid-template-columns: repeat(2, 1fr); }
+  .live-value { font-size: 1.45rem; }
+}
+@media (max-width: 640px) {
+  .terminos-tabs { flex-direction: column; }
+  .terminos-tabs button { min-width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -822,6 +1322,8 @@ footer {
     <li><a href="#proyeccion">Proyección</a></li>
     <li><a href="#apuesta">Apuesta</a></li>
     <li><a href="#reglas">Reglas</a></li>
+    <li><a href="#gobierno">Gobierno</a></li>
+    <li><a href="#terminos">Términos</a></li>
   </ul>
   <span class="nav-tag">2 ABR 2026</span>
 </nav>
@@ -837,33 +1339,140 @@ footer {
     Aquí no hay letra chica — hay números reales, sacrificios reales,
     y una oportunidad que no vas a encontrar en ningún trabajo corporativo.
   </p>
+  <p class="hero-pitch">
+    Sumarte como socio no es un currito ni un side project de fin de semana: es <strong>decidir construir un activo</strong> con cuatro personas más, tres marcas que ya respiran y un modelo que —si le metemos— puede cambiar el piso financiero de cada uno.
+    No es magia: va <strong>tiempo</strong> (años de constancia), <strong>esfuerzo</strong> (horas que podrías no darle), <strong>dinero</strong> (ticket, capital, dejar de facturar otras cosas) y <strong>pasión</strong> (la que te hace volver cuando está difícil).
+    Si eso resuena, los números de abajo son el premio posible —proyectados, exigentes, con riesgo real— no una promesa del cielo.
+    <span class="hp-line">Escenario pesimista ×0,7 (mismo motor que el simulador) · 2026–2032 · cambia de pestaña arriba o abre el simulador para neutro u optimista</span>
+  </p>
+  <div class="hero-stats" aria-label="Indicadores del modelo pesimista ×0,7">
+    <div class="hs-cell">
+      <div class="hs-val" id="hero-live-pool">&gt; S/1,1M</div>
+      <div class="hs-lbl">Pool valorado que el equipo pone (ticket + capital + sweat 3 años)</div>
+    </div>
+    <div class="hs-cell">
+      <div class="hs-val" id="hero-live-fact">~S/231k</div>
+      <div class="hs-lbl">Facturación mensual total ecosistema · 2032 (×0,7)</div>
+    </div>
+    <div class="hs-cell">
+      <div class="hs-val" id="hero-live-dist">~S/43k</div>
+      <div class="hs-lbl">Distribuible mensual socios · 2032 (tras planilla y reserva)</div>
+    </div>
+    <div class="hs-cell">
+      <div class="hs-val" id="hero-live-mult">×1,9 – ×3,6</div>
+      <div class="hs-lbl">Rango de ingreso total 2032 vs sueldo de hoy (sueldo Qochix + equity)</div>
+    </div>
+  </div>
   <div class="hero-equity">
     <div class="eq-pill">
-      <span class="eq-pct">63%</span>
+      <span class="eq-pct" id="hero-eq-hugo">63%</span>
       <span class="eq-name">Hugo</span>
     </div>
     <div class="eq-pill">
-      <span class="eq-pct">17%</span>
+      <span class="eq-pct" id="hero-eq-rossy">17%</span>
       <span class="eq-name">Rossy</span>
     </div>
     <div class="eq-pill">
-      <span class="eq-pct">11%</span>
+      <span class="eq-pct" id="hero-eq-vera">11%</span>
       <span class="eq-name">Vera</span>
     </div>
     <div class="eq-pill">
-      <span class="eq-pct">6%</span>
+      <span class="eq-pct" id="hero-eq-carlos">6%</span>
       <span class="eq-name">Carlos</span>
     </div>
     <div class="eq-pill">
-      <span class="eq-pct">3%</span>
+      <span class="eq-pct" id="hero-eq-nicole">3%</span>
       <span class="eq-name">Nicole</span>
     </div>
   </div>
+
+  <div class="hero-scenario" id="hero-scenario" aria-labelledby="hs-sc-heading">
+    <p class="hs-sc-title" id="hs-sc-heading">¿Cuánto podrías ganar al mes en 2032?</p>
+    <p class="hs-sc-sub">
+      Proyección <strong style="color:var(--text)">2032</strong> — mismo motor que el simulador: facturación × escenario, neto 65%, planilla fundadores + equipo operativo, reserva S/3.000.
+      Cada tarjeta muestra <strong style="color:var(--text)">equity</strong> (dueño) + <strong style="color:var(--text)">sueldo Qochix</strong> (trabajo) = <strong style="color:var(--text)">total mensual</strong>.
+      Los sueldos Qochix del pacto siguen la <strong>tabla año a año</strong> (2030 y 2032 como anclas en el simulador); en el simulador puedes probar otras metas y ver cuánta facturación extra hace falta. Lo que cambia con la pestaña aquí es solo el reparto por <strong>equity</strong>.
+    </p>
+    <div class="hs-sc-tabs" role="tablist" aria-label="Escenario de facturación">
+      <button type="button" class="sc-p active" role="tab" aria-selected="true" id="tab-hs-p" data-sc="p">📉 Pesimista ×0,7</button>
+      <button type="button" class="sc-n" role="tab" aria-selected="false" id="tab-hs-n" data-sc="n">📊 Neutro ×1,0</button>
+      <button type="button" class="sc-o" role="tab" aria-selected="false" id="tab-hs-o" data-sc="o">🚀 Optimista ×1,4</button>
+    </div>
+    <p class="hs-sc-blurb" id="hs-sc-blurb"></p>
+    <div class="hs-sc-total" id="hs-sc-total" aria-live="polite"></div>
+    <div class="hs-sc-combo" id="hs-sc-combo" aria-live="polite"></div>
+    <div class="hs-sc-grid" id="hs-sc-grid" role="list"></div>
+    <p class="hs-sc-foot">
+      Incluso en <strong style="color:var(--text)">modo pesimista</strong>, suma sueldo + equity: deja de ser “unos soles” de lado y lado.
+      Cambia de pestaña para ver cómo sube el techo del reparto por <strong style="color:var(--text)">dueño</strong> si el ecosistema ejecuta el plan.
+    </p>
+  </div>
+
   <div class="hero-scroll">
     Explora
     <span></span>
   </div>
 </div>
+
+<section class="live-system" aria-labelledby="live-system-heading">
+  <div class="live-shell reveal">
+    <div class="live-topline">
+      <div>
+        <p class="section-label" style="margin-bottom:0.45rem">Sistema base sincronizado</p>
+        <h2 id="live-system-heading" class="section-title" style="font-size:clamp(2rem,4vw,3rem);margin-bottom:0.25rem">Estado vivo del sistema</h2>
+        <p style="color:var(--muted);max-width:46rem;font-size:0.9rem;line-height:1.65">Este bloque sí se alimenta del sistema compartido. Si abres el simulador y cambias tickets, equity, escenario o metas, se actualiza automáticamente sin tocar el cuerpo fijo del pacto.</p>
+      </div>
+      <div>
+        <span class="live-pill">Qochix System v1</span>
+        <div class="live-updated">Última sincronización: <strong id="live-updated-pacto" style="color:var(--text)">—</strong></div>
+      </div>
+    </div>
+    <div class="live-grid">
+      <div class="live-card">
+        <div class="live-label">Escenario activo</div>
+        <div class="live-value" id="live-pacto-scn">—</div>
+        <div class="live-sub">El texto principal del pacto sigue siendo el piso pesimista ×0,7.</div>
+      </div>
+      <div class="live-card">
+        <div class="live-label">Pool invertido</div>
+        <div class="live-value" id="live-pacto-pool">—</div>
+        <div class="live-sub">Ticket + capital + sweat equity a 3 años.</div>
+      </div>
+      <div class="live-card">
+        <div class="live-label">Distribuible 2032</div>
+        <div class="live-value" id="live-pacto-dist">—</div>
+        <div class="live-sub">Después de planilla operativa y reserva.</div>
+      </div>
+      <div class="live-card">
+        <div class="live-label">1er año distribuible > 0</div>
+        <div class="live-value" id="live-pacto-first">—</div>
+        <div class="live-sub">Con el equipo operativo incluido.</div>
+      </div>
+      <div class="live-card">
+        <div class="live-label">Liberación equipo</div>
+        <div class="live-value" id="live-pacto-rossy">—</div>
+        <div class="live-sub">Personas liberadas al 2032 y primer año de cruce.</div>
+      </div>
+      <div class="live-card">
+        <div class="live-label">Hugo total 2032</div>
+        <div class="live-value" id="live-pacto-hugo">—</div>
+        <div class="live-sub">Sueldo Qochix + equity en el escenario activo.</div>
+      </div>
+    </div>
+    <div class="live-note" id="live-pacto-note">Cargando estado compartido…</div>
+    <div class="live-mini">
+      <div class="live-mini-title">Liberación financiera por persona (solo lectura)</div>
+      <table>
+        <thead>
+          <tr><th>Persona</th><th>Cruce</th><th>Total 2030</th></tr>
+        </thead>
+        <tbody id="live-pacto-lib-table">
+          <tr><td colspan="3" style="color:var(--muted)">Cargando…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
 <!-- ══════════════════════════════════════ -->
 <!-- SECCIÓN 1 — ¿POR QUÉ? -->
@@ -871,9 +1480,9 @@ footer {
 <section id="por-que">
   <div class="reveal">
     <p class="section-label">Antes de los números</p>
-    <h2 class="section-title">Hay algo que tenés<br>que <em>saber</em></h2>
+    <h2 class="section-title">Hay algo que tienes<br>que <em>saber</em></h2>
     <p class="section-body">
-      Todos tenemos un trabajo. Todos tenemos cuentas que pagar. Nadie acá está jugando con plata que le sobra. <strong>Y por eso mismo, lo que estamos armando tiene un peso distinto.</strong> Porque cada hora que le metemos a Qochix es una hora que podríamos dedicar a descansar, a la familia, a lo seguro. Y aun así, acá estamos.
+      Todos tenemos un trabajo. Todos tenemos cuentas que pagar. Nadie aquí está jugando con dinero que le sobra. <strong>Y por eso mismo, lo que estamos armando tiene un peso distinto.</strong> Porque cada hora que le dedicamos a Qochix es una hora que podríamos dedicar a descansar, a la familia o a lo seguro. Y aun así, aquí estamos.
     </p>
   </div>
 
@@ -954,8 +1563,8 @@ footer {
         Transforma personas y equipos del mundo tech. 3 líneas: sesiones 1:1, talleres B2B para empresas, y RECOprogramando (Full Days, Campamentos, Programa propio de 3 meses).
       </div>
       <div class="brand-num" style="color:var(--teal)">
-        S/123,386/mes
-        <span>proyección 2032</span>
+        S/61,693/mes
+        <span>proyección 2032 · ×0,7</span>
       </div>
     </div>
 
@@ -967,8 +1576,8 @@ footer {
         Coaching ontológico en acción: plantas con intención + frases de introspección. B2C kits delivery, B2B ceremonias S/55/persona, rituales (bodas, quinceañeros). Trabaja desde la emoción y lo simbólico.
       </div>
       <div class="brand-num" style="color:var(--green)">
-        S/256,760/mes
-        <span>proyección 2032</span>
+        S/128,380/mes
+        <span>proyección 2032 · ×0,7</span>
       </div>
     </div>
 
@@ -980,8 +1589,8 @@ footer {
         La capa de ejecución visual y estratégica. Branding, contenido para redes, campañas digitales, producción audiovisual. Modelo premium: pocos clientes, tickets altos. Referente Lima para 2028.
       </div>
       <div class="brand-num" style="color:var(--gold)">
-        S/81,200/mes
-        <span>proyección 2032</span>
+        S/40,600/mes
+        <span>proyección 2032 · ×0,7</span>
       </div>
     </div>
   </div>
@@ -999,23 +1608,23 @@ footer {
         <tbody>
           <tr>
             <td>⚡ Trazo</td>
-            <td class="td-muted">S/12,600</td><td>S/28,000</td><td>S/39,200</td><td>S/49,000</td><td>S/58,800</td><td>S/70,000</td><td class="td-gold">S/81,200</td>
+            <td class="td-muted">S/6,300</td><td>S/14,000</td><td>S/19,600</td><td>S/24,500</td><td>S/29,400</td><td>S/35,000</td><td class="td-gold">S/40,600</td>
           </tr>
           <tr>
             <td>🌿 Almaria</td>
-            <td class="td-muted">S/1,680</td><td>S/11,900</td><td>S/30,800</td><td>S/56,000</td><td>S/137,340</td><td>S/198,660</td><td class="td-gold">S/256,760</td>
+            <td class="td-muted">S/840</td><td>S/5,950</td><td>S/15,400</td><td>S/28,000</td><td>S/68,670</td><td>S/99,330</td><td class="td-gold">S/128,380</td>
           </tr>
           <tr>
             <td>⚡ HugoTech</td>
-            <td class="td-muted">S/5,995</td><td>S/16,076</td><td>S/31,920</td><td>S/55,440</td><td>S/77,676</td><td>S/98,140</td><td class="td-gold">S/123,386</td>
+            <td class="td-muted">S/2,997</td><td>S/8,038</td><td>S/15,960</td><td>S/27,720</td><td>S/38,838</td><td>S/49,070</td><td class="td-gold">S/61,693</td>
           </tr>
           <tr class="tr-total">
             <td>TOTAL QOCHIX</td>
-            <td>S/20,275</td><td>S/55,976</td><td>S/101,920</td><td>S/160,440</td><td>S/273,816</td><td>S/366,800</td><td>S/461,346</td>
+            <td>S/10,137</td><td>S/27,988</td><td>S/50,960</td><td>S/80,220</td><td>S/136,908</td><td>S/183,400</td><td>S/230,673</td>
           </tr>
           <tr class="tr-highlight">
             <td>Neto 65%</td>
-            <td class="td-muted">S/13,179</td><td>S/36,384</td><td>S/66,248</td><td>S/104,286</td><td>S/177,980</td><td>S/238,420</td><td class="td-green">S/299,875</td>
+            <td class="td-muted">S/6,589</td><td>S/18,192</td><td>S/33,124</td><td>S/52,143</td><td>S/88,990</td><td>S/119,210</td><td class="td-green">S/149,937</td>
           </tr>
           <tr>
             <td>(-) Sueldos fundadores</td>
@@ -1031,13 +1640,13 @@ footer {
           </tr>
           <tr class="tr-highlight">
             <td style="color:var(--gold)">💰 Distribuible socios</td>
-            <td class="td-muted">S/0</td><td class="td-gold">S/2,409</td><td class="td-gold">S/21,344</td><td class="td-gold">S/46,911</td><td class="td-gold">S/103,984</td><td class="td-gold">S/149,525</td><td class="td-big">S/192,646</td>
+            <td class="td-muted">S/0</td><td class="td-muted">S/0</td><td class="td-muted">S/0</td><td class="td-muted">S/0</td><td class="td-gold">S/14,994</td><td class="td-gold">S/30,315</td><td class="td-big">S/42,708</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="nota-importante">
-      <strong>Escenario optimista ×1.4, alineado al simulador.</strong> Facturación total × 65% (neto operativo) − planilla total (fundadores + equipo operativo) − reserva mínima S/3,000. Lo que queda se reparte entre socios según su % de equity.
+      <strong>Escenario pesimista ×0,7 — mismas fórmulas que el simulador.</strong> Facturación total × 65% (neto operativo) − planilla total (fundadores + equipo operativo) − reserva mínima S/3,000. Con equipo operativo, el primer distribuible positivo aparece en <strong>2030</strong>; en neutro u optimista ese momento se adelanta. Lo repartible se aplica según tu % de equity.
     </div>
   </div>
 </section>
@@ -1050,9 +1659,9 @@ footer {
 <section id="inversion">
   <div class="reveal">
     <p class="section-label">Lo que pones sobre la mesa</p>
-    <h2 class="section-title">¿Qué te cuesta<br><em>estar acá</em>?</h2>
+    <h2 class="section-title">¿Qué te cuesta<br><em>estar aquí</em>?</h2>
     <p class="section-body">
-      Seamos honestos: esto cuesta. Cuesta plata, cuesta tiempo, cuesta noches y fines de semana. Pero lo que diferencia a Qochix de una "idea entre amigos" es que <strong>cada aporte está medido, valorado y protegido</strong>. Nada se pierde en el aire.
+      Seamos honestos: esto cuesta. Cuesta dinero, cuesta tiempo, cuesta noches y fines de semana. Pero lo que diferencia a Qochix de una "idea entre amigos" es que <strong>cada aporte está medido, valorado y protegido</strong>. Nada se pierde en el aire.
     </p>
   </div>
 
@@ -1124,7 +1733,7 @@ footer {
   <div style="margin-top:4rem" class="reveal">
     <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">Hugo ya puso S/40,243 en cash real</h3>
     <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem;">
-      Este número no es inventado. Es plata real que ya salió del bolsillo de Hugo para que las marcas existan hoy. Herramientas, content creators, ads, capital de arranque. Todo documentado.
+      Este número no es inventado. Es dinero real que ya salió del bolsillo de Hugo para que las marcas existan hoy. Herramientas, content creators, ads, capital de arranque. Todo documentado.
     </p>
     <div class="table-wrap">
       <table>
@@ -1230,7 +1839,7 @@ footer {
   </div>
 
   <div class="reveal" style="margin-top:3rem">
-    <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1rem;">¿Cuántas acciones tenés en cada momento?</h3>
+    <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1rem;">¿Cuántas acciones tienes en cada momento?</h3>
     <div class="vesting-box">
       <div class="vesting-header">
         <div>Socio</div>
@@ -1282,7 +1891,7 @@ footer {
 <!-- ══════════════════════════════════════ -->
 <section id="proyeccion">
   <div class="reveal">
-    <p class="section-label">Cuándo llega la plata</p>
+    <p class="section-label">Cuándo llega el dinero</p>
     <h2 class="section-title">Dos formas de cobrar.<br><em>Las dos</em> crecen.</h2>
     <p class="section-body">
       Hay dos flujos de dinero completamente independientes. Uno es por tu trabajo. Otro es por ser dueño. Ambos crecen cada año. Ambos se suman. Enténdelos bien porque esto es lo que cambia tu vida.
@@ -1295,7 +1904,7 @@ footer {
       <h3>Sueldo: lo que ganas por trabajar</h3>
       <p>
         Es lo que Qochix te paga por <strong>tu trabajo operativo</strong>. Crece gradualmente según la capacidad del ecosistema. 
-        Hugo/Rossy/Vera: es <strong>ADICIONAL</strong> a tu trabajo corporativo — plata extra, no reemplazo. Hasta que el cruce haga obvia la salida.
+        Hugo/Rossy/Vera: es <strong>ADICIONAL</strong> a tu trabajo corporativo — ingreso extra, no reemplazo. Hasta que el cruce haga obvia la salida.
         Carlos/Nicole: es su sueldo principal desde el día 1. Ya cobran.
       </p>
     </div>
@@ -1305,7 +1914,7 @@ footer {
       <p>
         Esto es lo que cambia todo. Es lo que recibes por ser <strong>DUEÑO</strong> del ecosistema — no empleado, dueño. 
         Fórmula: <strong>distribuible × tu % equity</strong>. 
-        Empieza en 2027 y crece cada año. Para 2032, el equity es varias veces más grande que el sueldo. Esa es la magia de ser fundador.
+        En escenario pesimista con equipo operativo, el primer reparto material aparece en <strong>2030</strong> y crece hasta 2032. Para 2032, el equity suma fuerte al sueldo. Esa es la magia de ser fundador.
       </p>
     </div>
   </div>
@@ -1327,7 +1936,7 @@ footer {
       </table>
     </div>
     <div class="nota-importante">
-      <strong>¿Por qué 2032 importa tanto para Hugo?</strong> Ese año Qochix le paga exactamente lo mismo que su trabajo corporativo actual (S/30,000/mes). Es el año en que la decisión de salir del corporativo deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar los S/121,367/mes de equity.
+      <strong>¿Por qué 2032 importa tanto para Hugo?</strong> Ese año Qochix le paga exactamente lo mismo que su trabajo corporativo actual (S/30,000/mes). Es el año en que la decisión de salir del corporativo deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar los <strong>S/26.906/mes</strong> de equity (pesimista ×0,7).
     </div>
   </div>
 
@@ -1338,17 +1947,17 @@ footer {
       <table>
         <thead><tr><th>Persona</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>Acum 7a</th></tr></thead>
         <tbody>
-          <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/1,518</td><td>S/13,447</td><td>S/29,554</td><td>S/65,510</td><td>S/94,201</td><td class="td-big">S/121,367</td><td class="td-gold">S/3,907,164</td></tr>
-          <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/410</td><td>S/3,628</td><td>S/7,975</td><td>S/17,677</td><td>S/25,419</td><td class="td-gold">S/32,750</td><td class="td-muted">S/1,054,308</td></tr>
-          <tr><td>Vera</td><td class="td-gold">11%</td><td>S/265</td><td>S/2,348</td><td>S/5,160</td><td>S/11,438</td><td>S/16,448</td><td class="td-gold">S/21,191</td><td class="td-muted">S/682,200</td></tr>
-          <tr><td>Carlos</td><td class="td-gold">6%</td><td>S/145</td><td>S/1,281</td><td>S/2,815</td><td>S/6,239</td><td>S/8,972</td><td class="td-gold">S/11,559</td><td class="td-muted">S/372,132</td></tr>
-          <tr><td>Nicole</td><td class="td-gold">3%</td><td>S/72</td><td>S/640</td><td>S/1,407</td><td>S/3,120</td><td>S/4,486</td><td class="td-gold">S/5,779</td><td class="td-muted">S/186,048</td></tr>
-          <tr class="tr-total"><td>DISTRIBUIBLE</td><td>—</td><td>S/2,409</td><td>S/21,344</td><td>S/46,911</td><td>S/103,984</td><td>S/149,525</td><td>S/192,646</td><td>—</td></tr>
+          <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/9,446</td><td>S/19,098</td><td class="td-big">S/26,906</td><td class="td-gold">S/665,400</td></tr>
+          <tr><td>Rossy</td><td class="td-gold">17%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/2,549</td><td>S/5,154</td><td class="td-gold">S/7,260</td><td class="td-muted">S/179,556</td></tr>
+          <tr><td>Vera</td><td class="td-gold">11%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/1,649</td><td>S/3,335</td><td class="td-gold">S/4,698</td><td class="td-muted">S/116,184</td></tr>
+          <tr><td>Carlos</td><td class="td-gold">6%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/900</td><td>S/1,819</td><td class="td-gold">S/2,562</td><td class="td-muted">S/63,372</td></tr>
+          <tr><td>Nicole</td><td class="td-gold">3%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/450</td><td>S/909</td><td class="td-gold">S/1,281</td><td class="td-muted">S/31,680</td></tr>
+          <tr class="tr-total"><td>DISTRIBUIBLE</td><td>—</td><td>—</td><td>—</td><td>—</td><td>S/14,994</td><td>S/30,315</td><td>S/42,708</td><td>—</td></tr>
         </tbody>
       </table>
     </div>
     <p style="color:var(--muted); font-size:0.82rem; margin-top:1rem;">
-      Ejemplo Hugo 2032: S/121,367/mes equity × 12 = <strong style="color:var(--gold)">S/1,456,404/año</strong> solo de equity — aparte de su sueldo de S/30,000/mes.
+      Ejemplo Hugo 2032 (pesimista): S/26,906/mes equity × 12 = <strong style="color:var(--gold)">S/322,872/año</strong> solo de equity — aparte de su sueldo de S/30,000/mes.
     </p>
   </div>
 </section>
@@ -1378,25 +1987,25 @@ footer {
       <div class="apuesta-bars">
         <div class="bar-row">
           <span class="bar-label">HOY</span>
-          <div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--faint)"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:53%;background:var(--faint)"></div></div>
           <span class="bar-val">S/30,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2029</span>
-          <div class="bar-track"><div class="bar-fill" style="width:31%;background:var(--teal)"></div></div>
-          <span class="bar-val">S/38,554</span>
+          <div class="bar-track"><div class="bar-fill" style="width:16%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/9,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2032</span>
           <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
-          <span class="bar-val">S/151,367</span>
+          <span class="bar-val">S/56,906</span>
         </div>
         <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
-          Sueldo <strong style="color:var(--text)">S/30k</strong> + Equity <strong style="color:var(--gold)">S/121,367</strong>
+          Sueldo <strong style="color:var(--text)">S/30k</strong> + Equity <strong style="color:var(--gold)">S/26,906</strong> · pesimista ×0,7
         </div>
       </div>
       <div class="apuesta-mult">
-        <div class="x">×5.0</div>
+        <div class="x">×1.9</div>
         <div class="label">vs hoy</div>
       </div>
     </div>
@@ -1411,25 +2020,25 @@ footer {
       <div class="apuesta-bars">
         <div class="bar-row">
           <span class="bar-label">HOY</span>
-          <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--faint)"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:41%;background:var(--faint)"></div></div>
           <span class="bar-val">S/7,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2029</span>
-          <div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--teal)"></div></div>
-          <span class="bar-val">S/11,975</span>
+          <div class="bar-track"><div class="bar-fill" style="width:23%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/4,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2032</span>
           <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
-          <span class="bar-val">S/42,750</span>
+          <span class="bar-val">S/17,260</span>
         </div>
         <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
-          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/32,750</strong>
+          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/7,260</strong>
         </div>
       </div>
       <div class="apuesta-mult">
-        <div class="x">×6.1</div>
+        <div class="x">×2.5</div>
         <div class="label">vs hoy</div>
       </div>
     </div>
@@ -1444,25 +2053,25 @@ footer {
       <div class="apuesta-bars">
         <div class="bar-row">
           <span class="bar-label">HOY</span>
-          <div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--faint)"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--faint)"></div></div>
           <span class="bar-val">S/6,500</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2029</span>
-          <div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--teal)"></div></div>
-          <span class="bar-val">S/9,160</span>
+          <div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/4,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2032</span>
           <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
-          <span class="bar-val">S/31,191</span>
+          <span class="bar-val">S/14,698</span>
         </div>
         <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
-          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/21,191</strong>
+          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/4,698</strong>
         </div>
       </div>
       <div class="apuesta-mult">
-        <div class="x">×4.8</div>
+        <div class="x">×2.3</div>
         <div class="label">vs hoy</div>
       </div>
     </div>
@@ -1477,25 +2086,25 @@ footer {
       <div class="apuesta-bars">
         <div class="bar-row">
           <span class="bar-label">HOY</span>
-          <div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--faint)"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--faint)"></div></div>
           <span class="bar-val">S/5,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2029</span>
-          <div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--teal)"></div></div>
-          <span class="bar-val">S/10,815</span>
+          <div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/8,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2032</span>
           <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
-          <span class="bar-val">S/21,559</span>
+          <span class="bar-val">S/12,562</span>
         </div>
         <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
-          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/11,559</strong>
+          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/2,562</strong>
         </div>
       </div>
       <div class="apuesta-mult">
-        <div class="x">×4.3</div>
+        <div class="x">×2.5</div>
         <div class="label">vs hoy</div>
       </div>
     </div>
@@ -1510,25 +2119,25 @@ footer {
       <div class="apuesta-bars">
         <div class="bar-row">
           <span class="bar-label">HOY</span>
-          <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--faint)"></div></div>
+          <div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--faint)"></div></div>
           <span class="bar-val">S/2,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2029</span>
-          <div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--teal)"></div></div>
-          <span class="bar-val">S/7,407</span>
+          <div class="bar-track"><div class="bar-fill" style="width:82%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/6,000</span>
         </div>
         <div class="bar-row">
           <span class="bar-label">2032</span>
           <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
-          <span class="bar-val">S/11,779</span>
+          <span class="bar-val">S/7,281</span>
         </div>
         <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
-          Sueldo <strong style="color:var(--text)">S/6k</strong> + Equity <strong style="color:var(--gold)">S/5,779</strong>
+          Sueldo <strong style="color:var(--text)">S/6k</strong> + Equity <strong style="color:var(--gold)">S/1,281</strong>
         </div>
       </div>
       <div class="apuesta-mult">
-        <div class="x">×5.9</div>
+        <div class="x">×3.6</div>
         <div class="label">vs hoy</div>
       </div>
     </div>
@@ -1538,17 +2147,17 @@ footer {
   <div class="reveal" style="margin-top:4rem">
     <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">Tu inversión se paga sola — y después sigue pagando</h3>
     <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">
-      Cada sol que pusiste vuelve multiplicado. El ROI mínimo es 6.9x. El máximo 16.5x. Ningún fondo de inversión te da eso.
+      Cada sol que pusiste vuelve multiplicado (sueldos Qochix + equity acumulado en 7 años, escenario pesimista ×0,7). El ROI va de <strong style="color:var(--text)">~2,3x</strong> (Hugo, pool más grande) a <strong style="color:var(--text)">~12,3x</strong> (Nicole). Los números coinciden con la lógica del simulador.
     </p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Persona</th><th>% equity</th><th>Total invertido</th><th>Retorno 7 años</th><th>ROI</th><th>Punto equilibrio</th><th>Nota</th></tr></thead>
         <tbody>
-          <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/710,179</td><td class="td-gold">S/4,867,164</td><td class="td-big">6.9x</td><td class="td-green">2029</td><td class="td-muted" style="font-family:var(--sans)">Más patrimonio S/1.9M-4.4M</td></tr>
-          <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/180,152</td><td class="td-gold">S/1,462,308</td><td class="td-gold">8.1x</td><td class="td-green">2029</td><td class="td-muted" style="font-family:var(--sans)">Muy buen ROI</td></tr>
-          <tr><td>Vera</td><td class="td-gold">11%</td><td>S/153,070</td><td class="td-gold">S/1,078,200</td><td class="td-gold">7.0x</td><td class="td-green">2029</td><td class="td-muted" style="font-family:var(--sans)">Buen ROI</td></tr>
-          <tr><td>Carlos</td><td class="td-gold">6%</td><td>S/84,159</td><td class="td-gold">S/1,032,132</td><td class="td-gold">12.3x</td><td class="td-green">2027</td><td class="td-muted" style="font-family:var(--sans)">ROI alto — ya cobra Trazo</td></tr>
-          <tr><td>Nicole</td><td class="td-gold">3%</td><td>S/36,664</td><td class="td-gold">S/606,048</td><td class="td-gold">16.5x</td><td class="td-green">2027</td><td class="td-muted" style="font-family:var(--sans)">ROI alto — ya cobra Trazo</td></tr>
+          <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/710,179</td><td class="td-gold">S/1,625,400</td><td class="td-big">2.3x</td><td class="td-green">2031</td><td class="td-muted" style="font-family:var(--sans)">Más patrimonio S/1.9M-4.4M</td></tr>
+          <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/180,152</td><td class="td-gold">S/587,556</td><td class="td-gold">3.3x</td><td class="td-green">2030</td><td class="td-muted" style="font-family:var(--sans)">Muy buen ROI</td></tr>
+          <tr><td>Vera</td><td class="td-gold">11%</td><td>S/153,070</td><td class="td-gold">S/512,184</td><td class="td-gold">3.3x</td><td class="td-green">2030</td><td class="td-muted" style="font-family:var(--sans)">Buen ROI</td></tr>
+          <tr><td>Carlos</td><td class="td-gold">6%</td><td>S/84,159</td><td class="td-gold">S/723,372</td><td class="td-gold">8.6x</td><td class="td-green">2027</td><td class="td-muted" style="font-family:var(--sans)">ROI alto — ya cobra Trazo</td></tr>
+          <tr><td>Nicole</td><td class="td-gold">3%</td><td>S/36,664</td><td class="td-gold">S/451,680</td><td class="td-gold">12.3x</td><td class="td-green">2027</td><td class="td-muted" style="font-family:var(--sans)">ROI alto — ya cobra Trazo</td></tr>
         </tbody>
       </table>
     </div>
@@ -1578,7 +2187,7 @@ footer {
       </div>
     </div>
     <p style="color:var(--muted); font-size:0.82rem;">
-      Este patrimonio es <strong style="color:var(--text)">completamente independiente</strong> del sueldo mensual y del equity distribuido. Es el valor de ser dueño mayoritario de un ecosistema que factura medio millón de soles al mes. <strong style="color:var(--gold)">Eso no se compra. Se construye.</strong>
+      Este patrimonio es <strong style="color:var(--text)">completamente independiente</strong> del sueldo mensual y del equity distribuido. Es el valor de ser dueño mayoritario de un ecosistema cuyo flujo operativo —en el modelo pesimista— apunta a ~<strong>S/230k/mes</strong> de facturación en 2032. <strong style="color:var(--gold)">Eso no se compra. Se construye.</strong>
     </p>
   </div>
 </section>
@@ -1668,12 +2277,366 @@ footer {
 <div class="divider"></div>
 
 <!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN — GOBIERNO & OPERACIÓN -->
+<!-- ══════════════════════════════════════ -->
+<section id="gobierno">
+  <div class="reveal">
+    <p class="section-label">Cómo decidimos y qué miramos</p>
+    <h2 class="section-title">Gobierno, documentos<br>y <em>si las ventas no vienen</em></h2>
+    <p class="section-body">
+      El modelo numérico no reemplaza la mesa: define <strong>supuestos compartidos</strong>, el <strong>orden del reparto</strong> y el <strong>ritmo</strong> para revisar si la realidad se parece al plan. Acá va el mapa de herramientas, quién decide qué, y reglas mínimas cuando la caja aprieta.
+    </p>
+    <div class="term-doc-links" style="margin-top:1.1rem;border-top:none;padding-top:0" aria-label="Abrir otros HTML">
+      <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">Simulador</a>
+      <a href="qochix_base.html" target="_blank" rel="noopener noreferrer">Deck</a>
+      <a href="#term-gob">Términos → pestaña Gobierno</a>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:2.75rem">
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.25rem; margin-bottom:1rem;">Mapa de documentos (una sola historia)</h3>
+      <div style="display:flex; flex-direction:column; gap:0.65rem">
+        <div style="padding:1rem 1.1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <div style="font-weight:600; font-size:0.88rem; color:var(--gold)">Excel maestro</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-top:0.35rem; line-height:1.55">Fórmulas y supuestos editables (facturación, neto %, planilla). Fuente para pelearse con el detalle sin tocar el pacto cada semana.</p>
+        </div>
+        <div style="padding:1rem 1.1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <div style="font-weight:600; font-size:0.88rem; color:var(--teal)">Este pacto (HTML)</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-top:0.35rem; line-height:1.55">Narrativa + reglas + escenario <strong>pesimista ×0,7</strong> alineado al simulador. Lo que firmamos en espíritu antes del legal fino.</p>
+        </div>
+        <div style="padding:1rem 1.1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <div style="font-weight:600; font-size:0.88rem; color:var(--green)">Simulador web</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-top:0.35rem; line-height:1.55">Mover escenario (×0,7 / ×1 / ×1,4), ticket, equity, metas 2030/2032 y equipo — ver impacto en distribuible y runway.</p>
+        </div>
+        <div style="padding:1rem 1.1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <div style="font-weight:600; font-size:0.88rem; color:var(--coral)">Deck base (presentación)</div>
+          <p style="font-size:0.82rem; color:var(--muted); margin-top:0.35rem; line-height:1.55">Storytelling para alinear socios e invitados: marcas, métricas, checklist y cierre. No sustituye cifras del pacto/simulador.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.25rem; margin-bottom:1rem;">Ritual trimestral del modelo (~90 min)</h3>
+      <ol style="font-size:0.88rem; color:var(--muted); line-height:1.75; padding-left:1.15rem; margin:0">
+        <li><strong style="color:var(--text)">Caja y runway:</strong> capital disponible, burn mes actual, semáforo (verde / amarillo / rojo).</li>
+        <li><strong style="color:var(--text)">Real vs escenario:</strong> facturación por marca vs curva del escenario activo (idealmente pesimista como piso).</li>
+        <li><strong style="color:var(--text)">Planilla y distribuible:</strong> ¿el equipo operativo sigue siendo el acordado? ¿Primer año con distribuible &gt; 0 sigue siendo creíble?</li>
+        <li><strong style="color:var(--text)">Deuda y marcas:</strong> préstamos (p. ej. Hugo→Trazo), renovaciones críticas, uso de marca — sin mezclar deuda con equity.</li>
+        <li><strong style="color:var(--text)">Decisiones pendientes:</strong> una sola lista de acciones con dueño y fecha.</li>
+      </ol>
+      <div style="margin-top:1.25rem; padding:1rem; background:rgba(212,168,83,0.06); border:1px solid rgba(212,168,83,0.22); border-radius:12px">
+        <p style="font-size:0.78rem; color:var(--muted); line-height:1.6; margin:0"><strong style="color:var(--gold)">Quién vigila la caja:</strong> acordarlo por escrito (p. ej. tesorería rotativa o responsable fijo + contralor). El simulador muestra números; alguien tiene que mirar el banco real cada mes.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:2.75rem">
+    <h3 style="font-family:var(--serif); font-size:1.25rem; margin-bottom:1rem;">Derechos de decisión (resumen)</h3>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem; max-width:52rem">La tabla no reemplaza estatutos ni abogado: es el <em>default</em> que la mesa puede adoptar el 2 de abril. Ajustar % o reglas si no refleja cómo quieren operar.</p>
+    <div style="overflow-x:auto; border:1px solid var(--border); border-radius:12px">
+      <table style="width:100%; border-collapse:collapse; font-size:0.82rem">
+        <thead>
+          <tr style="background:var(--bg2); text-align:left">
+            <th style="padding:0.75rem 1rem; font-weight:600; color:var(--text)">Tema</th>
+            <th style="padding:0.75rem 1rem; font-weight:600; color:var(--text)">Quién propone</th>
+            <th style="padding:0.75rem 1rem; font-weight:600; color:var(--text)">Quién decide</th>
+          </tr>
+        </thead>
+        <tbody style="color:var(--muted)">
+          <tr style="border-top:1px solid var(--border)"><td style="padding:0.65rem 1rem; color:var(--text)">Estrategia Qochix (prioridades trimestre)</td><td style="padding:0.65rem 1rem">Cualquier socio</td><td style="padding:0.65rem 1rem">Mesa (consenso o mayoría acordada)</td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:0.65rem 1rem; color:var(--text)">Marca / producto de una línea (HugoTech, Almaria, Trazo)</td><td style="padding:0.65rem 1rem">Líder de marca o responsable operativo</td><td style="padding:0.65rem 1rem">Líder + veto suave de Qochix si afecta equity o caja</td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:0.65rem 1rem; color:var(--text)">Contratación equipo operativo &gt; umbral (definir monto)</td><td style="padding:0.65rem 1rem">Quien lleva la operación</td><td style="padding:0.65rem 1rem">Mesa unánime o mayoría calificada</td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:0.65rem 1rem; color:var(--text)">Préstamos, endeudamiento, avales</td><td style="padding:0.65rem 1rem">No unilateral</td><td style="padding:0.65rem 1rem">Mesa + registro escrito (no mezclar con % equity)</td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:0.65rem 1rem; color:var(--text)">Dividendos / reparto de excedentes</td><td style="padding:0.65rem 1rem">Según flujo del pacto (colchón, reserva)</td><td style="padding:0.65rem 1rem">Solo si el modelo de caja lo permite; prioridad: <strong style="color:var(--text)">reinversión y runway</strong></td></tr>
+          <tr style="border-top:1px solid var(--border)"><td style="padding:0.65rem 1rem; color:var(--text)">Conflicto entre socios</td><td style="padding:0.65rem 1rem">—</td><td style="padding:0.65rem 1rem">Mediación interna → si no hay acuerdo, tercero / marco legal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:2.5rem">
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.2rem; margin-bottom:0.85rem;">Si el año va flojo (ventas por debajo del plan)</h3>
+      <ul style="font-size:0.88rem; color:var(--muted); line-height:1.75; padding-left:1.1rem; margin:0">
+        <li><strong style="color:var(--text)">Congelar nuevas contrataciones</strong> hasta que el distribuible vuelva a ser positivo en el modelo actualizado.</li>
+        <li><strong style="color:var(--text)">Revisar sueldos Qochix</strong> (metas 2030/2032) solo después de acuerdo explícito — el % equity no se “recorta” por chat.</li>
+        <li><strong style="color:var(--text)">Trazo / préstamos / marcas:</strong> cumplir devoluciones acordadas; resolver renovaciones antes de que venzan; no usar activos de una marca para saldar otra sin acta.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.2rem; margin-bottom:0.85rem;">Checklist mental antes de firmar</h3>
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem">Marcá en voz alta en la reunión del 2 de abril (los checks no se guardan en el navegador).</p>
+      <div style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.84rem; color:var(--muted)">
+        <label style="display:flex; gap:0.65rem; align-items:flex-start; cursor:pointer; padding:0.5rem 0.65rem; background:var(--bg2); border-radius:8px; border:1px solid var(--border)"><input type="checkbox" style="margin-top:0.2rem; accent-color:var(--gold)"> Entiendo que el escenario base del pacto es <strong style="color:var(--text)">pesimista ×0,7</strong>, no el “mejor caso”.</label>
+        <label style="display:flex; gap:0.65rem; align-items:flex-start; cursor:pointer; padding:0.5rem 0.65rem; background:var(--bg2); border-radius:8px; border:1px solid var(--border)"><input type="checkbox" style="margin-top:0.2rem; accent-color:var(--gold)"> Revisé mi fila en ticket, capital, sweat y % equity en el <strong style="color:var(--text)">simulador</strong>.</label>
+        <label style="display:flex; gap:0.65rem; align-items:flex-start; cursor:pointer; padding:0.5rem 0.65rem; background:var(--bg2); border-radius:8px; border:1px solid var(--border)"><input type="checkbox" style="margin-top:0.2rem; accent-color:var(--gold)"> Sé en qué mes el modelo pone <strong style="color:var(--text)">primer distribuible &gt; 0</strong> con equipo operativo incluido.</label>
+        <label style="display:flex; gap:0.65rem; align-items:flex-start; cursor:pointer; padding:0.5rem 0.65rem; background:var(--bg2); border-radius:8px; border:1px solid var(--border)"><input type="checkbox" style="margin-top:0.2rem; accent-color:var(--gold)"> Acordamos <strong style="color:var(--text)">quién mira runway y banco</strong> cada mes.</label>
+        <label style="display:flex; gap:0.65rem; align-items:flex-start; cursor:pointer; padding:0.5rem 0.65rem; background:var(--bg2); border-radius:8px; border:1px solid var(--border)"><input type="checkbox" style="margin-top:0.2rem; accent-color:var(--gold)"> Temas Trazo (préstamo, renovaciones) tienen <strong style="color:var(--text)">fecha o responsable</strong> antes de julio 2026.</label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN — TÉRMINOS (pestañas) -->
+<!-- ══════════════════════════════════════ -->
+<section id="terminos">
+  <div class="reveal">
+    <p class="section-label">Manual del pacto</p>
+    <h2 class="section-title">Términos, definiciones<br>y <em>para qué sirve todo</em></h2>
+    <p class="section-body">
+      Misma idea que el <strong>simulador</strong>: una zona aparte donde puedes profundizar sin mezclar jerga con la historia principal.
+      Elegí una pestaña y leé con calma; si algo no cierra, el 2 de abril lo destapamos en la mesa.
+    </p>
+  </div>
+
+  <div class="terminos-wrap reveal" style="margin-top:2.5rem">
+    <div class="terminos-note">
+      <strong>Tres capas del modelo:</strong> el <strong>Excel</strong> concentra fórmulas y supuestos editables;
+      este <strong>pacto</strong> muestra el escenario <strong>pesimista ×0,7</strong> con planilla operativa incluida (números conservadores, mismas reglas que el simulador);
+      el <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">simulador web</a> te deja mover escenario, ticket, equity y equipo para ver neutro u optimista.
+      La <a href="qochix_base.html" target="_blank" rel="noopener noreferrer">presentación base (deck)</a> resume la historia en diapositivas; enlaces relativos si todos los archivos están en la misma carpeta.
+    </div>
+
+    <div class="terminos-tabs" role="tablist" aria-label="Secciones de términos">
+      <button type="button" class="active" role="tab" aria-selected="true" id="tab-term-def" data-panel="panel-term-def" onclick="showTermTab('panel-term-def', this)">Definiciones</button>
+      <button type="button" role="tab" aria-selected="false" id="tab-term-porque" data-panel="panel-term-porque" onclick="showTermTab('panel-term-porque', this)">Por qué importa</button>
+      <button type="button" role="tab" aria-selected="false" id="tab-term-dinero" data-panel="panel-term-dinero" onclick="showTermTab('panel-term-dinero', this)">Dinero & tablas</button>
+      <button type="button" role="tab" aria-selected="false" id="tab-term-riesgo" data-panel="panel-term-riesgo" onclick="showTermTab('panel-term-riesgo', this)">Salidas & riesgo</button>
+      <button type="button" role="tab" aria-selected="false" id="tab-term-gob" data-panel="panel-term-gob" onclick="showTermTab('panel-term-gob', this)">Gobierno</button>
+    </div>
+
+    <div id="panel-term-def" class="terminos-panel active" role="tabpanel" aria-labelledby="tab-term-def">
+      <div class="term-block">
+        <h4>Qochix</h4>
+        <p class="term-meta">Ecosistema · una sola mesa</p>
+        <p><strong>Qué es:</strong> el nombre del conjunto: tres marcas (HugoTech, Almaria, Trazo), cinco cofundadores, una visión de ingresos y reparto compartido.</p>
+        <p><strong>Para qué sirve:</strong> hablar de “Qochix” evita confundir el dinero de una marca con el del grupo; el equity es del <em>ecosistema</em>, no solo de un proyecto aislado.</p>
+      </div>
+      <div class="term-block">
+        <h4>Equity (participación)</h4>
+        <p class="term-meta">Dueño vs empleado</p>
+        <p><strong>Qué es:</strong> tu porcentaje de propiedad sobre el resultado económico que el pacto define como repartible entre socios (63% / 17% / 11% / 6% / 3%).</p>
+        <p><strong>Para qué sirve:</strong> es lo que te paga por ser <strong>dueño</strong>: el reparto del “distribuible”, aparte del sueldo por trabajo operativo.</p>
+      </div>
+      <div class="term-block">
+        <h4>Ticket de entrada</h4>
+        <p class="term-meta">Señal de compromiso</p>
+        <p><strong>Qué es:</strong> aporte en efectivo (aquí <strong>S/5.000</strong> por persona, con planes de cuotas distintos). No compra acciones al instante: acompaña el acuerdo y cubre arranque (pauta + colchón).</p>
+        <p><strong>Por qué existe:</strong> que “duela un poco” alinea incentivos; si todos tienen piel en el juego, es más difícil abandonar a la primera fricción.</p>
+      </div>
+      <div class="term-block">
+        <h4>Sweat equity</h4>
+        <p class="term-meta">Tiempo valorado en soles</p>
+        <p><strong>Qué es:</strong> el valor económico del tiempo que cada uno dedica a Qochix, calculado como valor/hora de mercado × horas/mes × <strong>36 meses</strong> × <strong>factor de ajuste</strong> (0,6 corporativo, 0,7 otro trabajo, 1,0 dedicación plena a Qochix en esas horas).</p>
+        <p><strong>Para qué sirve:</strong> que las madrugadas y fines de semana cuenten en el pool de inversión total, no solo el cash.</p>
+      </div>
+      <div class="term-block">
+        <h4>Capital aportado (cash)</h4>
+        <p class="term-meta">Plata que ya entró</p>
+        <p><strong>Qué es:</strong> dinero ya gastado o comprometido que se reconoce como aporte al ecosistema (ej. herramientas, contenido, ads, arranque de marcas).</p>
+        <p><strong>Distinto de deuda:</strong> lo que es <strong>préstamo</strong> (ej. a Trazo) no es equity: se devuelve y no mezcla el % de propiedad.</p>
+      </div>
+      <div class="term-block">
+        <h4>% matemático vs % propuesto</h4>
+        <p class="term-meta">Justicia en números y en personas</p>
+        <p><strong>Qué es:</strong> el % “matemático” sale de dividir tu inversión total (ticket + capital + sweat) entre el pool; el % “propuesto” es el acuerdo humano (puede reconocer intangibles o ceder puntos).</p>
+        <p><strong>Para qué sirve:</strong> transparentar la conversación: ves la foto fría y la decisión del equipo.</p>
+      </div>
+      <div class="term-block">
+        <h4>Cliff y vesting</h4>
+        <p class="term-meta">Las acciones se ganan</p>
+        <p><strong>Cliff:</strong> los primeros <strong>12 meses</strong> sin derecho a acciones; si te vas antes, no consolidás equity (sí recuperás el ticket según reglas).</p>
+        <p><strong>Vesting:</strong> en <strong>36 meses</strong> total vas ganando el porcentaje acordado (ej. un tramo fuerte al cumplir el cliff y el resto en el tiempo).</p>
+        <p><strong>Para qué sirve:</strong> proteger a quienes se quedan construyendo y evitar “socios de un mes”.</p>
+      </div>
+      <div class="term-block">
+        <h4>Good leaver / Bad leaver</h4>
+        <p class="term-meta">Cómo te vas importa</p>
+        <p><strong>Good leaver:</strong> salida por acuerdo, salud, cambio de vida razonable — conservás lo ya ganado a valoración justa.</p>
+        <p><strong>Bad leaver:</strong> abandono o incumplimiento grave — conservás lo ganado pero a precio nominal (ej. S/1 por acción), perdiendo el valor de mercado.</p>
+      </div>
+      <div class="term-block">
+        <h4>Derecho de preferencia</h4>
+        <p class="term-meta">Quién entra al cap table</p>
+        <p><strong>Qué es:</strong> antes de vender tu participación a un externo, debés ofrecerla a los cofundadores en las mismas condiciones (plazo típico <strong>30 días</strong>).</p>
+        <p><strong>Para qué sirve:</strong> que nadie meta un tercero en el ecosistema sin consenso del equipo.</p>
+      </div>
+    </div>
+
+    <div id="panel-term-porque" class="terminos-panel" role="tabpanel" aria-labelledby="tab-term-porque">
+      <div class="term-block">
+        <h4>¿Por qué un pacto escrito?</h4>
+        <p class="term-meta">Confianza + papel</p>
+        <p>Porque la memoria falla y los contextos cambian. Escrito quedan <strong>aportes, %, reglas de salida y reparto</strong>. No reemplaza el cariño; evita que el cariño se convierta en pleito cuando hay estrés o dinero en juego.</p>
+      </div>
+      <div class="term-block">
+        <h4>¿Por qué vesting y no “equity desde el día 1”?</h4>
+        <p class="term-meta">Compromiso demostrado</p>
+        <p>Si todo fuera inmediato, alguien podría entrar, cumplir poco y salir con pedazo del futuro de los demás. El vesting dice: <strong>el tiempo y el cumplimiento son la moneda</strong> que completa tu participación.</p>
+      </div>
+      <div class="term-block">
+        <h4>¿Por qué dos flujos: sueldo y equity?</h4>
+        <p class="term-meta">Trabajo hoy vs propiedad mañana</p>
+        <p>El <strong>sueldo</strong> paga el rol operativo (y puede ser adicional al corporativo mientras el ecosistema crece). El <strong>equity</strong> paga el riesgo de construir algo que valga más con el tiempo. En los números fuertes de 2032, el equity suele ser la parte que más escala.</p>
+      </div>
+      <div class="term-block">
+        <h4>¿Por qué el escenario de este documento es “pesimista ×0,7”?</h4>
+        <p class="term-meta">Conservador por diseño</p>
+        <p>Las tablas del pacto no son promesa: son <strong>la misma hipótesis que el simulador en modo pesimista</strong> — facturación al 70% del plan base, con equipo operativo incluido. Sirve para alinear expectativas con un piso creíble; el simulador te deja subir a neutro u optimista para ver el techo.</p>
+      </div>
+      <div class="term-block">
+        <h4>¿Por qué aparece planilla operativa en las tablas del pacto?</h4>
+        <p class="term-meta">Realismo</p>
+        <p>Para que el “distribuible” no sea un número de fantasía: <strong>contenido, comercial, facilitación</strong>, etc. son costos reales que comen del neto antes de repartir entre socios. Sin modelarlos, el primer reparto de equity se ve inflado.</p>
+      </div>
+    </div>
+
+    <div id="panel-term-dinero" class="terminos-panel" role="tabpanel" aria-labelledby="tab-term-dinero">
+      <div class="term-block">
+        <h4>Facturación bruta</h4>
+        <p class="term-meta">Lo que entra por ventas</p>
+        <p>Suma de lo que proyectamos facturar por <strong>Trazo, Almaria y HugoTech</strong> año a año. Es el “top line” antes de margen y costos del modelo.</p>
+      </div>
+      <div class="term-block">
+        <h4>Neto operativo (%)</h4>
+        <p class="term-meta">Aquí usamos 65%</p>
+        <p><strong>Qué es:</strong> el porcentaje de la facturación que queda después de costos directos típicos (logística, herramientas, venues, etc.). No es utilidad contable final; es una capa simplificada para el modelo.</p>
+        <p><strong>Para qué sirve:</strong> pasar de “vendimos X” a “nos queda Y para pagar gente y repartir”.</p>
+      </div>
+      <div class="term-block">
+        <h4>Planilla total</h4>
+        <p class="term-meta">Fundadores + equipo</p>
+        <p><strong>Fundadores:</strong> sueldos Qochix año a año (algunos adicionales al corporativo, otros su sueldo principal).</p>
+        <p><strong>Equipo operativo:</strong> personas que no son de los cinco pero hacen posible escalar marcas; su costo mensual reduce lo disponible para socios.</p>
+      </div>
+      <div class="term-block">
+        <h4>Reserva mínima</h4>
+        <p class="term-meta">Colchón antes de repartir</p>
+        <p>Cantidad (aquí <strong>S/3.000</strong> en el modelo del pacto/simulador) que dejamos en caja antes de calcular el distribuible. Evita repartir hasta el último sol y quedar sin aire ante un imprevisto.</p>
+      </div>
+      <div class="term-block">
+        <h4>Distribuible (para socios)</h4>
+        <p class="term-meta">La base del reparto de equity</p>
+        <p><strong>Fórmula conceptual:</strong> neto operativo − planilla total (fundadores + operativo) − reserva mínima; lo que queda en positivo se puede pensar como repartible según tu <strong>% de equity</strong>.</p>
+        <p><strong>Importante:</strong> si el distribuible de un año es bajo o cero, el equity mensual de ese año también — por eso el simulador muestra el impacto del equipo y del escenario.</p>
+      </div>
+      <div class="term-block">
+        <h4>Escenarios ×0,7 · ×1,0 · ×1,4</h4>
+        <p class="term-meta">Simulador web</p>
+        <p>Multiplican la facturación base para ver <strong>pesimista, neutro u optimista</strong>. El pacto en pantalla está alineado al <strong>×0,7</strong> como referencia principal; el Excel suele trabajar la base ×1,0 en muchas celdas antes de escalar.</p>
+      </div>
+      <div class="term-block">
+        <h4>ROI y “× vs hoy”</h4>
+        <p class="term-meta">Lectura de la apuesta</p>
+        <p><strong>ROI</strong> compara lo que metés (ticket + capital + sweat valorizado) contra lo que el modelo suma en ingresos Qochix (sueldo + equity) en la ventana de años proyectada.</p>
+        <p><strong>× vs hoy</strong> compara tu ingreso total mensual futuro con lo que ganás hoy en el mercado. Son lecturas distintas: una es retorno sobre inversión, la otra es cambio de vida.</p>
+      </div>
+      <div class="term-block">
+        <h4>Patrimonio / valoración</h4>
+        <p class="term-meta">Si Qochix valiera como empresa</p>
+        <p>Escenarios del tipo “si el ecosistema valiera S/3M / 5M / 7M”. Es <strong>independiente</strong> del flujo mensual de sueldos y distribuibles: es el valor de ser dueño de un activo que otro podría comprar o que podría financiarse.</p>
+      </div>
+    </div>
+
+    <div id="panel-term-riesgo" class="terminos-panel" role="tabpanel" aria-labelledby="tab-term-riesgo">
+      <div class="term-block">
+        <h4>Runway</h4>
+        <p class="term-meta">Cuántos meses de aire</p>
+        <p><strong>Qué es:</strong> con el capital disponible (tickets + aportes reconocidos, según cómo lo modeles), cuántos meses aguantás si la facturación fuera muy baja.</p>
+        <p><strong>Para qué sirve:</strong> saber cuánto tiempo tienes para conseguir tracción antes de necesitar recortar costos o inyectar capital. El simulador lo desarrolla con caja mes a mes en el año 1.</p>
+      </div>
+      <div class="term-block">
+        <h4>Break-even (punto de equilibrio)</h4>
+        <p class="term-meta">Cuando la caja deja de sangrar</p>
+        <p>Momento en el modelo en el que los ingresos netos y los costos fijos alineados permiten que el colchón deje de deteriorarse o empiece a recuperarse. En el simulador aparece como KPI y en gráficos de distribuible.</p>
+      </div>
+      <div class="term-block">
+        <h4>Punto de cruce personal</h4>
+        <p class="term-meta">Cuándo Qochix supera tu sueldo “de afuera”</p>
+        <p>Año en que lo que recibís de Qochix (sueldo + equity en el modelo) supera o iguala lo que hoy ganás en tu trabajo actual. Es distinto para cada persona (ej. meta explícita de liberación para quien sigue en corporativo).</p>
+      </div>
+      <div class="term-block">
+        <h4>Deuda vs equity (Trazo)</h4>
+        <p class="term-meta">S/13.000 de préstamo</p>
+        <p>Los préstamos no suben tu % de Qochix: son <strong>devolución acordada</strong>. En el pacto está separado de los S/40.243 que sí cuentan como inversión permanente en el ecosistema.</p>
+      </div>
+      <div class="term-block">
+        <h4>Riesgos que el modelo no borra</h4>
+        <p class="term-meta">Honestidad</p>
+        <ul>
+          <li><strong>Ejecución:</strong> las proyecciones asumen trabajo comercial y operativo real.</li>
+          <li><strong>Mercado:</strong> demanda y precios pueden ir por debajo del escenario.</li>
+          <li><strong>Legal/tributario:</strong> el reparto fino depende de la sociedad, RUC y asesoría.</li>
+          <li><strong>Relación:</strong> el pacto reduce ambigüedad; no elimina la necesidad de comunicación.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="panel-term-gob" class="terminos-panel" role="tabpanel" aria-labelledby="tab-term-gob">
+      <div class="term-block">
+        <h4>Gobierno en el celular</h4>
+        <p class="term-meta">Misma carpeta que el simulador y el deck</p>
+        <p>Si el menú fijo de arriba no se ve cómodo, esta pestaña concentra lo esencial. La versión <strong>completa</strong> (tablas, checklist y texto largo) está en la sección <strong>Gobierno</strong> más arriba en esta misma página.</p>
+      </div>
+      <div class="term-block">
+        <h4>Mapa rápido</h4>
+        <p class="term-meta">Cuatro piezas</p>
+        <ul>
+          <li><strong>Excel:</strong> fórmulas y supuestos que se pueden cambiar sin reescribir el pacto.</li>
+          <li><strong>Este pacto (HTML):</strong> reglas, equity, escenario pesimista ×0,7 y narrativa.</li>
+          <li><strong>Simulador web:</strong> escenarios ×0,7 / ×1 / ×1,4, runway, metas 2030/2032.</li>
+          <li><strong>Deck base:</strong> presentación para alinear al equipo en reuniones.</li>
+        </ul>
+      </div>
+      <div class="term-block">
+        <h4>Ritual ~90 min (trimestral)</h4>
+        <p class="term-meta">Caja · marcas · planilla · deuda · decisiones</p>
+        <p>Revisar caja real vs modelo; facturación por marca vs curva; impacto del equipo operativo en el primer año con distribuible; préstamos Trazo y marcas sin mezclar con % de equity; cerrar con lista de decisiones (dueño + fecha).</p>
+      </div>
+      <div class="term-block">
+        <h4>Quién decide qué (resumen)</h4>
+        <p class="term-meta">Default para acordar el 2 abr</p>
+        <ul>
+          <li><strong>Estrategia Qochix:</strong> mesa (consenso o mayoría definida).</li>
+          <li><strong>Marca individual:</strong> líder de línea; si toca caja o equity, entra la mesa.</li>
+          <li><strong>Préstamos / avales:</strong> mesa y por escrito — no suben %.</li>
+          <li><strong>Dividendos:</strong> solo si la caja lo permite; prioridad reinversión y runway.</li>
+        </ul>
+      </div>
+      <div class="term-block">
+        <h4>Si las ventas no vienen</h4>
+        <p class="term-meta">Tres anclas</p>
+        <ul>
+          <li>Congelar contrataciones nuevas hasta que el modelo muestre distribuible viable.</li>
+          <li>Cambiar metas de sueldo solo con acuerdo explícito; el % equity no se renegocia por mensaje.</li>
+          <li>Honrar deudas y límites de marca acordados (Trazo, préstamos, renovaciones).</li>
+        </ul>
+      </div>
+      <div class="term-doc-links" aria-label="Archivos hermanos">
+        <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">Abrir simulador</a>
+        <a href="qochix_base.html" target="_blank" rel="noopener noreferrer">Abrir presentación (deck)</a>
+      </div>
+      <div class="term-jump-bar">
+        <strong style="color:var(--text)">Sección completa en esta página:</strong>
+        <a href="#gobierno">Ir a Gobierno ↑</a>
+        (tablas de decision rights, checklist pre-firma y texto detallado).
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
 <!-- PREGUNTA FINAL -->
 <!-- ══════════════════════════════════════ -->
 <section style="padding:4rem 2rem">
   <div class="pregunta-final reveal">
     <p class="pf-eyebrow">La única pregunta que importa</p>
-    <h2 class="pf-title">¿Estás dispuesto a apostar por ti mismo — a <em>multiplicar tu ingreso entre ×4.3 y ×6.1 en 6 años</em> — y ser dueño de algo que construiste con tus manos?</h2>
+    <h2 class="pf-title">¿Estás dispuesto a apostar por ti mismo — a <em>multiplicar tu ingreso total (sueldo Qochix + equity) entre ×1,9 y ×3,6 hacia 2032</em> en el escenario pesimista del modelo — y ser dueño de algo que construiste con tus manos?</h2>
     <p style="color:var(--muted); max-width:550px; margin:0 auto; font-size:0.95rem; line-height:1.7">
       Ningún trabajo corporativo te va a dar esto. Ningún ascenso. Ningún bono.
       Esto solo lo consigues construyéndolo tú. Y no estás solo — somos 5.
@@ -1692,9 +2655,18 @@ footer {
 <!-- FOOTER -->
 <footer>
   QOCHIX · Pacto Económico · Hugo 63% · Rossy 17% · Vera 11% · Carlos 6% · Nicole 3%<br>
-  <span style="opacity:0.5">Versión definitiva auditada · Escenario optimista ×1.4 · Abril 2026</span>
+  <span style="opacity:0.5">Versión definitiva auditada · Tablas escenario pesimista ×0,7 (alineado al simulador) · Abril 2026</span>
+  <details style="margin-top:1.25rem; max-width:42rem; margin-left:auto; margin-right:auto; text-align:left">
+    <summary style="cursor:pointer; color:var(--muted); font-size:0.84rem; list-style-position:outside">Historial de versiones (changelog)</summary>
+    <ul style="margin:0.75rem 0 0; padding-left:1.2rem; font-size:0.8rem; color:var(--muted); line-height:1.65">
+      <li><strong style="color:var(--text)">Mar 2026 (actual)</strong> — Sección <em>Gobierno</em>; pestaña <em>Términos → Gobierno</em> (resumen móvil); enlaces relativos a simulador y deck en la misma carpeta.</li>
+      <li><strong style="color:var(--text)">Abr 2026 (previo)</strong> — Agenda socios (tickets, Trazo, estructura legal) y alineación escenario ×0,7 con simulador.</li>
+    </ul>
+  </details>
 </footer>
 
+<script src="qochix_help.js"></script>
+<script src="qochix_system.js"></script>
 <script>
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
@@ -1735,6 +2707,173 @@ const barObs = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.3 });
 document.querySelectorAll('.progress-list, .apuesta-bars').forEach(el => barObs.observe(el));
+
+// ── TÉRMINOS TABS ──
+function showTermTab(panelId, btn) {
+  document.querySelectorAll('.terminos-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.terminos-tabs button').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+}
+
+(function () {
+  function openGobTabFromHash() {
+    if (location.hash !== '#term-gob' && location.hash !== '#terminos-gobierno') return;
+    const btn = document.getElementById('tab-term-gob');
+    const sec = document.getElementById('terminos');
+    if (btn && sec) {
+      showTermTab('panel-term-gob', btn);
+      setTimeout(() => sec.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    }
+  }
+  window.addEventListener('load', openGobTabFromHash);
+  window.addEventListener('hashchange', openGobTabFromHash);
+})();
+
+// ── HERO ESCENARIOS (alineado al sistema base compartido) ──
+(function () {
+  const QSYS = window.QochixSystem;
+  const fmt = QSYS.fmtCurrency;
+  const grid = document.getElementById('hs-sc-grid');
+  const blurb = document.getElementById('hs-sc-blurb');
+  const totalEl = document.getElementById('hs-sc-total');
+  const comboEl = document.getElementById('hs-sc-combo');
+  const tabs = document.querySelectorAll('.hs-sc-tabs button');
+  let current = QSYS.getState().P.sc || 'p';
+
+  function paintTabs(key) {
+    tabs.forEach((b) => {
+      const active = b.getAttribute('data-sc') === key;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+  }
+
+  function renderScenario(key) {
+    if (!grid) return;
+    const shared = QSYS.getState();
+    shared.P.sc = key;
+    const derived = QSYS.deriveState(shared);
+    const planilla2032 = derived.personCards.reduce((sum, person) => sum + person.sue2032, 0);
+    const label = key === 'p' ? 'Pesimista ×0,7' : key === 'n' ? 'Neutro ×1,0' : 'Optimista ×1,4';
+    const intro = key === 'p'
+      ? 'Si la facturación del ecosistema va al <strong>70%</strong> del plan base, este sería el <strong>distribuible equity</strong> 2032 y su cruce con los sueldos Qochix activos.'
+      : key === 'n'
+        ? 'Escenario <strong>central</strong>: misma lógica del sistema base, sin reescribir cifras a mano. Acá ves el efecto de abrir el multiplicador a ×1,0.'
+        : 'Escenario de <strong>upside</strong>: el sistema recalcula el equity distribuible si el ecosistema ejecuta a ×1,4 del plan base.';
+    blurb.innerHTML = intro;
+    totalEl.textContent = 'Pool equity (distribuible socios) · 2032 · ' + label + ' · ' + fmt(derived.dist2032);
+    if (comboEl) {
+      comboEl.innerHTML =
+        'Planilla fundadores 2032: ' + fmt(planilla2032) + '/mes &nbsp;·&nbsp; ' +
+        'Efectivo total Qochix/mes (sueldos + equity): <strong>' + fmt(derived.total2032) + '</strong>';
+    }
+    grid.innerHTML = derived.personCards.map((person) => (
+      '<div class="hs-sc-cell" role="listitem">' +
+      '<div class="hs-sc-name">' + person.name + '</div>' +
+      '<div class="hs-sc-breakdown">' +
+      '<div class="hs-sc-line eq"><span>Equity</span><span>' + fmt(person.eq2032) + '</span></div>' +
+      '<div class="hs-sc-line"><span>Sueldo Qochix</span><span>' + fmt(person.sue2032) + '</span></div>' +
+      '</div>' +
+      '<div class="hs-sc-total-lbl">Total / mes</div>' +
+      '<div class="hs-sc-total-person">' + fmt(person.total2032) + '</div>' +
+      '<div class="hs-sc-pct">' + person.equity + '% equity</div>' +
+      '</div>'
+    )).join('');
+  }
+
+  function setTab(key, btn) {
+    current = key;
+    paintTabs(key);
+    renderScenario(key);
+  }
+
+  tabs.forEach((btn) => {
+    btn.addEventListener('click', () => setTab(btn.getAttribute('data-sc'), btn));
+  });
+
+  QSYS.subscribe(() => {
+    current = QSYS.getState().P.sc || current;
+    paintTabs(current);
+    renderScenario(current);
+  });
+  paintTabs(current);
+  renderScenario(current);
+})();
+
+// ── ESTADO VIVO DEL PACTO ──
+(function () {
+  const QSYS = window.QochixSystem;
+  const byId = (id) => document.getElementById(id);
+
+  function renderLivePact() {
+    const derived = QSYS.deriveState(QSYS.getState());
+    const hugo = derived.personCards.find((person) => person.id === 'hugo');
+    const multiples = derived.personCards.map((person) => person.total2032 / derived.state.persons.find((p) => p.id === person.id).sueldo);
+    const minX = Math.min(...multiples);
+    const maxX = Math.max(...multiples);
+    byId('live-updated-pacto').textContent = derived.updatedAtLabel;
+    byId('live-pacto-scn').textContent = derived.scenarioLabel;
+    byId('live-pacto-pool').textContent = derived.fmtCurrency(derived.pool);
+    byId('live-pacto-dist').textContent = derived.fmtCurrency(derived.dist2032);
+    byId('live-pacto-first').textContent = String(derived.firstDistYear);
+    byId('live-pacto-rossy').textContent = `${derived.liberatedBy2032}/${derived.personCards.length} · ${derived.firstLiberationYear}`;
+    byId('live-pacto-hugo').textContent = hugo ? derived.fmtCurrency(hugo.total2032) : '—';
+    byId('hero-live-pool').textContent = derived.fmtCurrency(derived.pool);
+    byId('hero-live-fact').textContent = derived.fmtCurrency(derived.totalFact2032);
+    byId('hero-live-dist').textContent = derived.fmtCurrency(derived.dist2032);
+    byId('hero-live-mult').textContent = '×' + minX.toFixed(1) + ' – ×' + maxX.toFixed(1);
+    derived.personCards.forEach((person) => {
+      const el = byId('hero-eq-' + person.id);
+      if (el) el.textContent = person.equity + '%';
+    });
+    const note = byId('live-pacto-note');
+    if (!note) return;
+    note.innerHTML =
+      '<strong>Lectura rápida.</strong> Equity total: <strong>' + derived.eqSum.toFixed(1) + '%</strong>. ' +
+      'Facturación total 2032 del escenario activo: <strong>' + derived.fmtCurrency(derived.totalFact2032) + '</strong>/mes. ' +
+      (derived.state.P.sc === 'p'
+        ? 'Estás viendo el mismo piso conservador que estructura el cuerpo del pacto.'
+        : 'El cuerpo del pacto sigue defendiendo el piso pesimista ×0,7; este bloque solo te muestra el sistema vivo actual.');
+    const table = byId('live-pacto-lib-table');
+    if (table) {
+      const idx30 = derived.years.indexOf(2030);
+      table.innerHTML = derived.personCards.map((person) => (
+        '<tr>' +
+          '<td style="color:' + person.color + ';font-weight:600">' + person.name + '</td>' +
+          '<td>' + person.liberationYear + '</td>' +
+          '<td>' + derived.fmtCurrency(person.yearlyTotals[idx30] || 0) + '/mes</td>' +
+        '</tr>'
+      )).join('');
+    }
+  }
+
+  QSYS.subscribe(renderLivePact);
+  renderLivePact();
+})();
+
+(function () {
+  if (!window.QochixHelp) return;
+  window.QochixHelp.init({
+    selectors: [
+      '.section-label','.section-title','.section-body',
+      '.hs-sc-title','.hs-sc-total','.hs-sc-total-lbl','.hs-sc-pct',
+      '.term-meta','.term-block h4','.live-label','.live-note','.live-mini-title',
+      '.pf-eyebrow','.pf-title','.pf-btn','.doc-links a','.hs-lbl'
+    ],
+    glossaryTitle: 'Glosario rápido · Pacto Qochix',
+    customMap: {
+      'esto no es un documento.': 'Mensaje de contexto: el pacto es una conversación estratégica, no solo texto legal.',
+      'la única pregunta que importa': 'Cierre de decisión: ayuda a alinear compromiso y claridad antes de firmar.',
+      'gobierno, documentos y si las ventas no vienen': 'Bloque que define cómo se decide y qué hacer cuando el plan no se cumple.'
+    }
+  });
+})();
 </script>
 </body>
 </html>

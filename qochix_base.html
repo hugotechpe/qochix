@@ -1,0 +1,2708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qochix — Ecosistema de marcas · Presentación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Qochix deck — tipografía amplia, capas de fondo, sombras suaves */
+:root {
+  --qochix:#4A3F8F; --qochix-l:#8B7FD4;
+  --hugo:#1E5FA5; --hugo-l:#4A8DD4;
+  --almaria:#1A7A56; --almaria-l:#3DAA7A;
+  --trazo:#B06A10; --trazo-l:#E08A30;
+  --bg:#0A0D13; --bg2:#111520; --bg3:#171D2E;
+  --surface:#1C2438;
+  --text:#E8ECF0; --text2:#c4cad8; --muted:#8b95a8;
+  --border:rgba(255,255,255,0.1);
+  --gold:#D4A853; --gold2:#F0C878; --teal:#3ECFCF; --coral:#E86B5F; --green:#52C97A;
+  --red:#C0392B; --amber:#E67E22;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+  --shadow-sm:0 4px 24px rgba(0,0,0,.25);
+  --shadow-md:0 16px 48px rgba(0,0,0,.35);
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:clamp(16px,0.35vw + 15px,18px);}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:#4a5570;border-radius:4px;}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(ellipse 90% 55% at 50% -15%, rgba(212,168,83,.09), transparent 52%),
+    radial-gradient(ellipse 50% 45% at 100% 30%, rgba(62,207,207,.06), transparent 48%),
+    radial-gradient(ellipse 45% 40% at 0% 70%, rgba(74,63,143,.07), transparent 45%);
+  color:var(--text);
+  font-family:var(--sans);
+  font-weight:400;
+  line-height:1.68;
+  min-height:100vh;
+  height:100vh;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .55s cubic-bezier(.4,0,.2,1);
+  padding:clamp(1.5rem,4.5vw,2.75rem) clamp(1.15rem,4.5vw,3.75rem);
+  padding-bottom:clamp(6rem,13vh,8rem);
+  overflow-x:hidden;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.slide::before{
+  content:'';
+  position:absolute;inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 95% 80% at 50% 42%, black 20%, transparent 75%);
+  opacity:.85;
+}
+.slide.active{opacity:1;pointer-events:all;}
+.deck-res{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:center;
+  margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.08);
+  font-size:clamp(10px,1.9vw,11px);font-family:var(--mono);letter-spacing:.04em;
+}
+.deck-res a{
+  color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.45);
+  padding-bottom:1px;transition:color .2s,border-color .2s;
+}
+.deck-res a:hover{color:var(--gold);border-bottom-color:var(--gold);}
+.deck-live{
+  width:min(100%,760px);margin:1.15rem auto 0;padding:1rem 1.1rem;
+  background:rgba(17,21,32,.88);border:1px solid rgba(62,207,207,.16);border-radius:18px;
+  box-shadow:var(--shadow-sm);
+}
+.deck-live-top{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.8rem;
+}
+.deck-live-tag{
+  display:inline-flex;align-items:center;gap:.45rem;padding:.28rem .65rem;border-radius:999px;
+  border:1px solid rgba(62,207,207,.2);background:rgba(62,207,207,.06);color:var(--teal);
+  font-size:.68rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;
+}
+.deck-live-updated{font-size:.72rem;color:var(--muted)}
+.deck-live-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem}
+.deck-live-card{background:rgba(10,13,19,.36);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.8rem .75rem}
+.deck-live-label{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+.deck-live-value{font-family:var(--serif);font-size:1.45rem;line-height:1.05;color:var(--gold)}
+.deck-live-note{margin-top:.8rem;font-size:.75rem;color:var(--text2);line-height:1.5}
+.deck-live-mini{
+  margin-top:.7rem;padding:.55rem .6rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(10,13,19,.26);
+}
+.deck-live-mini-title{
+  font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.28rem
+}
+.deck-live-mini table{width:100%;border-collapse:collapse}
+.deck-live-mini th,.deck-live-mini td{
+  padding:.24rem .2rem;border-bottom:1px solid rgba(255,255,255,.08);font-size:.62rem;text-align:left;color:var(--text2)
+}
+.deck-live-mini th{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.deck-live-mini tr:last-child td{border-bottom:none}
+@media(max-width:780px){.deck-live-grid{grid-template-columns:repeat(2,1fr)}}
+nav{
+  position:fixed;
+  bottom:max(1.1rem,env(safe-area-inset-bottom));
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;align-items:center;gap:16px;
+  background:rgba(20,24,38,.92);
+  backdrop-filter:blur(20px) saturate(1.2);
+  border:1px solid rgba(212,168,83,.16);
+  border-radius:999px;
+  padding:12px 22px;
+  z-index:100;
+  box-shadow:var(--shadow-md),0 0 0 1px rgba(255,255,255,.04) inset;
+}
+.nb{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--text2);
+  cursor:pointer;
+  font-size:1.15rem;
+  min-width:46px;min-height:46px;
+  padding:10px 14px;
+  border-radius:14px;
+  transition:transform .15s,background .2s,border-color .2s,color .2s;
+  font-family:var(--sans);
+  font-weight:600;
+  line-height:1;
+}
+.nb:hover{color:var(--text);background:rgba(212,168,83,.14);border-color:rgba(212,168,83,.28);transform:translateY(-1px);}
+.nb:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+.nb:disabled{opacity:.28;cursor:not-allowed;transform:none;}
+.nc{color:var(--text2);font-size:.92rem;min-width:58px;text-align:center;font-family:var(--mono);font-weight:600;letter-spacing:.02em;}
+.dots{display:flex;gap:8px;align-items:center;padding:0 6px;}
+button.dot{
+  width:11px;height:11px;border-radius:50%;
+  background:var(--muted);opacity:.4;cursor:pointer;transition:all .22s;
+  padding:0;border:none;-webkit-appearance:none;appearance:none;
+}
+button.dot:hover{opacity:.75;transform:scale(1.1);}
+button.dot:focus-visible{outline:2px solid var(--gold);outline-offset:4px;}
+button.dot.active{opacity:1;background:var(--gold);transform:scale(1.45);box-shadow:0 0 16px rgba(212,168,83,.45);}
+.nav-hint{
+  position:fixed;
+  bottom:max(.5rem,env(safe-area-inset-bottom));
+  left:50%;
+  transform:translateX(-50%);
+  font-size:.74rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-family:var(--mono);
+  opacity:.72;
+  z-index:99;
+  pointer-events:none;
+}
+.pb{
+  position:fixed;top:0;left:0;
+  height:4px;
+  background:linear-gradient(90deg,var(--teal),var(--gold) 45%,var(--qochix-l));
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+  z-index:200;
+  box-shadow:0 0 20px rgba(212,168,83,.25);
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:.84rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:1rem;
+  font-weight:500;
+}
+h1{font-family:var(--serif);font-size:clamp(2.65rem,7.5vw,4.85rem);font-weight:900;line-height:1;}
+h2{font-family:var(--serif);font-size:clamp(1.7rem,4vw,3rem);font-weight:700;line-height:1.12;margin-bottom:1.4rem;letter-spacing:-.02em;}
+h3{font-size:.82rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text2);margin-bottom:12px;}
+p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
+.card{
+  background:linear-gradient(165deg,rgba(28,36,56,.98),rgba(23,29,46,.95));
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:var(--r);
+  padding:1.35rem 1.4rem;
+  box-shadow:var(--shadow-sm);
+}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2.2vw,22px);}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2.2vw,22px);}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2vw,20px);}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.bc{
+  border-radius:var(--r);
+  padding:clamp(20px,3.2vw,30px);
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.bh{background:rgba(30,95,165,.16);border:1px solid rgba(74,141,212,.32);}
+.ba{background:rgba(26,122,86,.16);border:1px solid rgba(61,170,122,.32);}
+.bt{background:rgba(176,106,16,.16);border:1px solid rgba(224,138,48,.32);}
+.bq{background:rgba(74,63,143,.16);border:1px solid rgba(123,111,191,.35);}
+.bl{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+.hl{color:var(--hugo-l);} .al{color:var(--almaria-l);} .tl{color:var(--trazo-l);} .ql{color:var(--qochix-l);}
+.bc h3{font-family:var(--serif);font-size:clamp(1.15rem,2.1vw,1.45rem);font-weight:700;text-transform:none;letter-spacing:0;color:var(--text);margin-bottom:10px;}
+.tag{display:inline-block;font-size:.76rem;padding:6px 12px;border-radius:999px;margin:4px 6px 0 0;font-weight:600;}
+.th{background:rgba(30,95,165,.25);color:var(--hugo-l);}
+.ta{background:rgba(26,122,86,.25);color:var(--almaria-l);}
+.tt{background:rgba(176,106,16,.25);color:var(--trazo-l);}
+.mv{font-family:var(--serif);font-size:clamp(1.65rem,3.2vw,2.25rem);font-weight:900;color:var(--gold);line-height:1;}
+.ml{font-size:.88rem;color:var(--text2);margin-top:8px;line-height:1.45;}
+.content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;min-height:0;}
+.orb{position:absolute;border-radius:50%;filter:blur(88px);pointer-events:none;}
+.pill{display:inline-block;padding:9px 18px;border-radius:999px;font-size:.92rem;border:1px solid;font-weight:600;transition:transform .2s,box-shadow .2s;}
+.pill:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2);}
+
+/* HORAS TABLE */
+.htable{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;border-radius:12px;overflow:hidden;}
+.htable th{padding:11px 12px;text-align:center;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);}
+.htable td{padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,.06);}
+.htable tr:last-child td{border-bottom:none;}
+.htable .name-cell{text-align:left;font-weight:700;color:var(--text);font-size:.95rem;}
+.htable .sub{font-size:.74rem;color:var(--muted);display:block;margin-top:3px;}
+.cell-a{background:rgba(26,122,86,.16);color:var(--almaria-l);border-radius:10px;padding:6px 11px;display:inline-block;font-weight:600;}
+.cell-h{background:rgba(30,95,165,.16);color:var(--hugo-l);border-radius:10px;padding:6px 11px;display:inline-block;font-weight:600;}
+.cell-t{background:rgba(176,106,16,.16);color:var(--trazo-l);border-radius:10px;padding:6px 11px;display:inline-block;font-weight:600;}
+.cell-total-ok{background:rgba(82,201,122,.14);color:#7FE0A8;border-radius:10px;padding:6px 13px;display:inline-block;font-weight:700;}
+.cell-total-warn{background:rgba(230,126,34,.16);color:var(--amber);border-radius:10px;padding:6px 13px;display:inline-block;font-weight:700;}
+.cell-total-red{background:rgba(232,107,95,.14);color:#ff9a8f;border-radius:10px;padding:6px 13px;display:inline-block;font-weight:700;}
+.cell-other{color:var(--text2);font-size:.82rem;}
+
+/* TIMELINE */
+.tl{display:flex;gap:0;position:relative;}
+.tl::before{content:'';position:absolute;top:20px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--qochix-l),var(--hugo-l));opacity:.4;border-radius:2px;}
+.tli{flex:1;padding-top:52px;padding-right:16px;position:relative;}
+.tld{position:absolute;top:11px;left:0;width:18px;height:18px;border-radius:50%;border:2px solid;}
+.tld-g{border-color:var(--muted);background:var(--bg2);}
+.tld-a{border-color:var(--almaria-l);background:rgba(26,122,86,.4);}
+.tld-b{border-color:var(--hugo-l);background:rgba(30,95,165,.4);}
+.tld-p{border-color:var(--qochix-l);background:rgba(74,63,143,.4);}
+.tly{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-weight:600;}
+.tli h4{font-family:var(--serif);font-size:clamp(1.05rem,1.6vw,1.2rem);margin-bottom:8px;color:var(--text);}
+.tli p{font-size:.9rem;line-height:1.6;}
+
+/* SINERGIA */
+.sr{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-radius:14px;border:1px solid rgba(255,255,255,.08);margin-bottom:12px;background:rgba(255,255,255,.03);}
+.sr:hover{background:rgba(255,255,255,.06);border-color:rgba(212,168,83,.15);}
+.ai{color:var(--gold);font-size:1.25rem;flex-shrink:0;line-height:1.2;}
+.st{font-size:.98rem;line-height:1.6;}
+.st strong{color:var(--text);font-weight:700;}
+
+/* FUNNEL */
+.funnel-stage{border-radius:12px;padding:12px 16px;margin:5px auto;text-align:center;}
+.funnel-stage p{font-size:.95rem;color:var(--text2);}
+.funnel-stage small{font-size:.82rem;color:var(--muted);display:block;margin-top:4px;}
+
+/* FADE IN */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.slide.active .content>*{animation:fadeUp .55s cubic-bezier(.2,.8,.2,1) both;}
+.slide.active .content>*:nth-child(1){animation-delay:.05s;}
+.slide.active .content>*:nth-child(2){animation-delay:.12s;}
+.slide.active .content>*:nth-child(3){animation-delay:.2s;}
+.slide.active .content>*:nth-child(4){animation-delay:.28s;}
+.slide.active .content>*:nth-child(5){animation-delay:.36s;}
+
+/* QUESTION BOX */
+.qbox{
+  background:rgba(212,168,83,.09);
+  border:1px solid rgba(212,168,83,.28);
+  border-radius:var(--r);
+  padding:22px 26px;
+  margin-top:16px;
+  box-shadow:0 8px 32px rgba(212,168,83,.06);
+}
+.qbox h4{color:var(--gold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;font-weight:800;}
+.qbox ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.qbox li{font-size:1.02rem;color:var(--text2);padding-left:22px;position:relative;line-height:1.62;}
+.qbox li::before{content:'?';position:absolute;left:0;color:var(--gold);font-weight:900;font-size:1.1rem;opacity:.9;}
+
+@media (max-width:900px){
+  .g3{grid-template-columns:1fr;}
+  .g4{grid-template-columns:repeat(2,1fr);}
+  .tl{flex-direction:column;gap:1.25rem;}
+  .tl::before{display:none;}
+  nav{flex-wrap:wrap;justify-content:center;max-width:calc(100% - 2rem);}
+}
+
+/* Slides con tipografía inline muy pequeña: escalar sin tocar cada línea */
+.slide [style*="font-size:9px"]{font-size:.72rem !important;line-height:1.55 !important;}
+.slide [style*="font-size:10px"]{font-size:.8rem !important;line-height:1.55 !important;}
+.slide [style*="font-size:11px"]{font-size:.88rem !important;line-height:1.55 !important;}
+.slide [style*="font-size:12px"]{font-size:.95rem !important;}
+.slide [style*="font-size:13px"]{font-size:1rem !important;}
+.slide [style*="font-size:14px"]{font-size:1.05rem !important;}
+.slide [style*="font-size:15px"]{font-size:1.08rem !important;}
+.slide [style*="font-size:16px"]{font-size:1.1rem !important;}
+.slide [style*="font-size:17px"]{font-size:1.12rem !important;}
+.slide [style*="font-size:18px"]{font-size:1.15rem !important;}
+.slide [style*="font-size:20px"]{font-size:1.35rem !important;}
+</style>
+</head>
+<body>
+<div class="pb" id="pb"></div>
+
+<!-- S1 PORTADA -->
+<div class="slide active" id="s1">
+  <div class="orb" style="width:400px;height:400px;background:var(--qochix);opacity:.14;top:-100px;right:-100px;"></div>
+  <div class="orb" style="width:280px;height:280px;background:var(--almaria);opacity:.09;bottom:-50px;left:-50px;"></div>
+  <div class="content" style="justify-content:center;max-width:42rem;">
+    <div class="eyebrow">Ecosistema · Lima, Perú · 2026–2029</div>
+    <h1>Bienvenidos a<br><span style="color:var(--gold);">Qochix</span></h1>
+    <p style="font-size:clamp(1.08rem,2vw,1.28rem);color:var(--text2);margin:1.25rem 0 2.25rem;max-width:36rem;line-height:1.7;font-weight:400;">Un ecosistema donde las ideas se reúnen, se nutren y se transforman en innovación con propósito.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:2.5rem;">
+      <span class="pill" style="border-color:var(--hugo);color:var(--hugo-l);">HugoTech</span>
+      <span class="pill" style="border-color:var(--almaria);color:var(--almaria-l);">Almaria</span>
+      <span class="pill" style="border-color:var(--trazo);color:var(--trazo-l);">Trazo</span>
+    </div>
+    <p style="font-size:.95rem;color:var(--muted);letter-spacing:.08em;font-family:var(--mono);">Hugo · Rossy · Vera · Carlos · Nicole</p>
+    <div class="deck-live" aria-label="Estado vivo del sistema">
+      <div class="deck-live-top">
+        <span class="deck-live-tag">Estado vivo</span>
+        <span class="deck-live-updated">Última sync: <strong id="deck-live-updated" style="color:var(--text)">—</strong></span>
+      </div>
+      <div class="deck-live-grid">
+        <div class="deck-live-card">
+          <div class="deck-live-label">Escenario</div>
+          <div class="deck-live-value" id="deck-live-scn">—</div>
+        </div>
+        <div class="deck-live-card">
+          <div class="deck-live-label">Distribuible 2032</div>
+          <div class="deck-live-value" id="deck-live-dist">—</div>
+        </div>
+        <div class="deck-live-card">
+          <div class="deck-live-label">1er año +</div>
+          <div class="deck-live-value" id="deck-live-first">—</div>
+        </div>
+        <div class="deck-live-card">
+          <div class="deck-live-label">Hugo 2032</div>
+          <div class="deck-live-value" id="deck-live-hugo">—</div>
+        </div>
+      </div>
+      <div class="deck-live-note" id="deck-live-note">Cargando estado del sistema…</div>
+      <div class="deck-live-mini">
+        <div class="deck-live-mini-title">Liberación por persona (lectura)</div>
+        <table>
+          <thead><tr><th>Persona</th><th>Cruce</th><th>2030</th></tr></thead>
+          <tbody id="deck-live-lib-table"><tr><td colspan="3">Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <nav class="deck-res" aria-label="Documentos del ecosistema (misma carpeta)">
+      <a href="QOCHIX_Pacto_Economico.html" target="_blank" rel="noopener noreferrer">Pacto económico</a>
+      <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer">Pacto → Gobierno</a>
+      <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">Simulador</a>
+      <a href="QOCHIX_Pacto_Economico.html#term-gob" target="_blank" rel="noopener noreferrer">Pacto → Términos · Gobierno</a>
+    </nav>
+  </div>
+</div>
+
+<!-- S2 LAS 3 MARCAS -->
+<div class="slide" id="s2">
+  <div class="content">
+    <div class="eyebrow">El ecosistema</div>
+    <h2>Qochix — tres esencias, una convergencia</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+
+      <!-- HUGOTECH -->
+      <div style="flex:1;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;border:1px solid rgba(30,95,165,.35);">
+        <div style="background:rgba(30,95,165,.2);padding:14px 16px 10px;">
+          <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--hugo-l);margin-bottom:5px;">Transformación · Tech · Propósito</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;">HugoTech</div>
+          <p style="font-size:10px;font-style:italic;color:var(--hugo-l);">"Reescribe tu Código. Activa tu beAgile."</p>
+        </div>
+        <div style="background:rgba(30,95,165,.07);padding:12px 16px;flex:1;display:flex;flex-direction:column;gap:9px;">
+          <div>
+            <p style="font-size:9px;color:var(--hugo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Propósito</p>
+            <p style="font-size:10px;">Cerrar la brecha entre el talento técnico y la madurez humana. Acompañar a personas y equipos a activar su sistema interno con consciencia y dirección real.</p>
+          </div>
+          <div>
+            <p style="font-size:9px;color:var(--hugo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Público objetivo</p>
+            <p style="font-size:10px;">Profesionales y líderes tech 25-40 años · jóvenes 19-35 del mundo digital y creativo · equipos de desarrollo · empresas que entienden que su mayor activo son las personas.</p>
+          </div>
+          <div>
+            <p style="font-size:9px;color:var(--hugo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Nicho</p>
+            <p style="font-size:10px;">Transformación humana aplicada al mundo tech. Donde el coaching ontológico y la agilidad se vuelven una forma de ser, no una metodología.</p>
+          </div>
+          <div style="background:rgba(30,95,165,.15);border-left:2px solid var(--hugo);padding:7px 10px;border-radius:0 6px 6px 0;">
+            <p style="font-size:9px;color:var(--hugo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Manifiesto</p>
+            <p style="font-size:10px;font-style:italic;color:var(--text);">"Hay demasiados talentos extraordinarios en lo que hacen, y demasiado solos en lo que son. HugoTech existe para cerrar esa brecha."</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span class="tag th">Coaching 1:1</span><span class="tag th">Talleres B2B</span><span class="tag th">Full Day</span><span class="tag th">Campamento</span><span class="tag th" style="border:1px dashed rgba(74,193,122,.4);">Programa 2027 ✍️</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALMARIA -->
+      <div style="flex:1;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;border:1px solid rgba(26,122,86,.35);">
+        <div style="background:rgba(26,122,86,.2);padding:14px 16px 10px;">
+          <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--almaria-l);margin-bottom:5px;">Conexión · Símbolo · Emoción</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;">Almaria</div>
+          <p style="font-size:10px;font-style:italic;color:var(--almaria-l);">"No vendemos plantas. Vendemos momentos que cambian algo."</p>
+        </div>
+        <div style="background:rgba(26,122,86,.07);padding:12px 16px;flex:1;display:flex;flex-direction:column;gap:9px;">
+          <div>
+            <p style="font-size:9px;color:var(--almaria-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Propósito</p>
+            <p style="font-size:10px;">Crear pausas con significado en medio del ruido. Que cada experiencia despierte algo genuino — una reconexión con uno mismo, con otros, o con lo que realmente importa.</p>
+          </div>
+          <div>
+            <p style="font-size:9px;color:var(--almaria-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Público objetivo</p>
+            <p style="font-size:10px;">Personas que quieren regalar algo que importe · empresas que cuidan a su gente · parejas en momentos clave · equipos que necesitan reconectar de verdad.</p>
+          </div>
+          <div>
+            <p style="font-size:9px;color:var(--almaria-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Nicho</p>
+            <p style="font-size:10px;">Experiencias simbólicas vivas. El espacio entre el regalo físico y la transformación interna. Bienestar corporativo con alma y rituales personales con intención.</p>
+          </div>
+          <div style="background:rgba(26,122,86,.15);border-left:2px solid var(--almaria);padding:7px 10px;border-radius:0 6px 6px 0;">
+            <p style="font-size:9px;color:var(--almaria-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Manifiesto</p>
+            <p style="font-size:10px;font-style:italic;color:var(--text);">"En un mundo que corre, Almaria propone detenerse. Sentir. Conectar. Porque los momentos más importantes de la vida merecen más que un regalo bonito."</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span class="tag ta">Corporate</span><span class="tag ta">Rituales</span><span class="tag ta">B2C</span><span class="tag ta">B2B</span><span class="tag ta">Delivery Lima</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRAZO -->
+      <div style="flex:1;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;border:1px solid rgba(176,106,16,.35);">
+        <div style="background:rgba(176,106,16,.2);padding:14px 16px 10px;">
+          <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--trazo-l);margin-bottom:5px;">Creatividad · Estrategia · Impacto</div>
+          <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;">Trazo</div>
+          <p style="font-size:10px;font-style:italic;color:var(--trazo-l);">"Convertimos visión en presencia real."</p>
+        </div>
+        <div style="background:rgba(176,106,16,.07);padding:12px 16px;flex:1;display:flex;flex-direction:column;gap:9px;">
+          <div>
+            <p style="font-size:9px;color:var(--trazo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Propósito</p>
+            <p style="font-size:10px;">Ayudar a marcas a volverse visibles, coherentes y comercialmente poderosas. Que lo que una marca es por dentro se vea y se sienta por fuera con claridad e impacto.</p>
+          </div>
+          <div>
+            <p style="font-size:9px;color:var(--trazo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Público objetivo</p>
+            <p style="font-size:10px;">Empresas 10-200 personas que quieren crecer · marcas personales que escalan · emprendedores que necesitan narrativa + ejecución + resultados medibles.</p>
+          </div>
+          <div>
+            <p style="font-size:9px;color:var(--trazo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Nicho</p>
+            <p style="font-size:10px;">Agencia de contenido estratégico con producción audiovisual de alto nivel. No vendemos piezas — vendemos presencia, posicionamiento y conversión medible.</p>
+          </div>
+          <div style="background:rgba(176,106,16,.15);border-left:2px solid var(--trazo);padding:7px 10px;border-radius:0 6px 6px 0;">
+            <p style="font-size:9px;color:var(--trazo-l);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;">Manifiesto</p>
+            <p style="font-size:10px;font-style:italic;color:var(--text);">"Cada marca tiene algo poderoso que decir. Trazo existe para que el mundo lo escuche — con claridad, con fuerza, con identidad que no se olvida."</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+            <span class="tag tt">Branding</span><span class="tag tt">Contenido</span><span class="tag tt">Producción AV</span><span class="tag tt">Performance</span><span class="tag tt">Consultoría</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVERGENCIA -->
+    <div style="margin-top:10px;background:rgba(74,63,143,.12);border:1px solid rgba(74,63,143,.3);border-radius:12px;padding:10px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <p style="font-size:10px;color:var(--qochix-l);font-weight:600;flex-shrink:0;">Donde convergen:</p>
+      <p style="font-size:10px;color:var(--text);flex:1;">Las tres nacen de la misma convicción — que el mundo necesita marcas, personas y equipos más conscientes, más auténticos y más conectados con su propósito real.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;">
+        <span style="font-size:11px;color:var(--hugo-l);">HugoTech piensa</span>
+        <span style="color:var(--text2);">·</span>
+        <span style="font-size:11px;color:var(--almaria-l);">Almaria siente</span>
+        <span style="color:var(--text2);">·</span>
+        <span style="font-size:11px;color:var(--trazo-l);">Trazo comunica</span>
+        <span style="color:var(--text2);">·</span>
+        <span style="font-size:11px;color:var(--qochix-l);">Qochix sostiene todo</span>
+      </div>
+    </div>
+
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿El manifiesto de cada marca les resuena o hay algo que cambiarían?</li>
+        <li>¿El nicho de cada marca está bien delimitado o hay superposición?</li>
+        <li>¿Hay algo en el público objetivo de alguna marca que no refleja la realidad?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- S3 EQUIPO -->
+<div class="slide" id="s3">
+  <div class="content">
+    <div class="eyebrow">Los que lo hacen posible</div>
+    <h2>Los 5 co-fundadores de Qochix</h2>
+    <div class="g5" style="flex:1;align-content:start;">
+
+      <div class="card" style="padding:16px;border-top:2px solid var(--hugo);">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:2px;">Hugo</div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--hugo-l);margin-bottom:4px;">Co-fundador · Innovation & Tech</div>
+        <div style="font-size:10px;color:var(--gold);margin-bottom:8px;">Fundador Qochix</div>
+        <p style="font-size:11px;">CIO, coach y mentor tech con 17+ años. Origen y motor del ecosistema. Construye HugoTech desde su convicción más profunda.</p>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
+          <span class="tag th">HugoTech</span><span class="tag ta">Almaria</span><span class="tag tt">Trazo</span>
+        </div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+          <p style="font-size:9px;color:var(--text2);">Aporte capital: HugoTech 100% · Almaria S/10k · Trazo S/12-13k</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;border-top:2px solid var(--almaria);">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:2px;">Rossy</div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--almaria-l);margin-bottom:4px;">Co-fundadora · Brand Strategy</div>
+        <div style="font-size:10px;color:var(--gold);margin-bottom:8px;">Co-fundadora Qochix</div>
+        <p style="font-size:11px;">Define el rumbo y posicionamiento de las 3 marcas. Alma y voz de Almaria. Construye la narrativa que hace que todo tenga sentido.</p>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
+          <span class="tag ta">Almaria</span><span class="tag th">HugoTech</span><span class="tag tt">Trazo</span>
+        </div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+          <p style="font-size:9px;color:var(--text2);">Aporte capital: Almaria S/20k</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;border-top:2px solid var(--qochix);">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:2px;">Vera</div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--qochix-l);margin-bottom:4px;">Co-fundadora · Project Strategy</div>
+        <div style="font-size:10px;color:var(--gold);margin-bottom:8px;">Co-fundadora Qochix</div>
+        <p style="font-size:11px;">Organiza, prioriza y conecta. Lidera alianzas estratégicas en las 3 marcas. La que hace que las cosas sucedan de verdad.</p>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
+          <span class="tag ta">Almaria</span><span class="tag th">HugoTech</span><span class="tag tt">Trazo</span>
+        </div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+          <p style="font-size:9px;color:var(--text2);">Aporte capital: Almaria S/4k</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;border-top:2px solid var(--trazo);">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:2px;">Carlos</div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--trazo-l);margin-bottom:4px;">Co-fundador · Creative Lead</div>
+        <div style="font-size:10px;color:var(--gold);margin-bottom:8px;">Co-fundador Qochix · CEO Trazo</div>
+        <p style="font-size:11px;">CEO de Trazo. Lidera la identidad visual y creativa del ecosistema completo. Todo lo que se ve bien en Qochix pasa por Carlos.</p>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
+          <span class="tag tt">Trazo CEO</span><span class="tag th">HugoTech</span><span class="tag ta">Almaria</span>
+        </div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+          <p style="font-size:9px;color:var(--text2);">Aporte capital: Trazo (mayor aporte histórico)</p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;border-top:2px solid var(--gold);">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;margin-bottom:2px;">Nicole</div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Co-fundadora · Operations Lead</div>
+        <div style="font-size:10px;color:var(--gold);margin-bottom:8px;">Co-fundadora Qochix · PM Trazo</div>
+        <p style="font-size:11px;">PM y account lead de Trazo. Coordina operaciones en las 3 marcas. El pegamento que mantiene todo funcionando en el día a día.</p>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;">
+          <span class="tag tt">Trazo FT</span><span class="tag ta">Almaria</span><span class="tag th">HugoTech</span>
+        </div>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+          <p style="font-size:9px;color:var(--gold);">Aporte: tiempo full + gestión · % por formalizar</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROLES COMPLEMENTARIOS -->
+    <div class="card" style="margin-top:12px;padding:12px 20px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <p style="font-size:11px;color:var(--text);font-weight:500;">Cada co-fundador responde una pregunta distinta — pero todas son necesarias:</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <div style="padding:6px 12px;background:rgba(30,95,165,.15);border-radius:8px;"><p style="font-size:10px;"><span style="color:var(--hugo-l);">Hugo</span> — ¿cómo evoluciona?</p></div>
+        <div style="padding:6px 12px;background:rgba(26,122,86,.15);border-radius:8px;"><p style="font-size:10px;"><span style="color:var(--almaria-l);">Rossy</span> — ¿por qué?</p></div>
+        <div style="padding:6px 12px;background:rgba(74,63,143,.15);border-radius:8px;"><p style="font-size:10px;"><span style="color:var(--qochix-l);">Vera</span> — ¿cómo sucede?</p></div>
+        <div style="padding:6px 12px;background:rgba(176,106,16,.15);border-radius:8px;"><p style="font-size:10px;"><span style="color:var(--trazo-l);">Carlos</span> — ¿cómo se ve?</p></div>
+        <div style="padding:6px 12px;background:rgba(201,168,76,.12);border-radius:8px;"><p style="font-size:10px;"><span style="color:var(--gold);">Nicole</span> — ¿cómo se ejecuta?</p></div>
+      </div>
+    </div>
+
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Todos se sienten cómodos con el título de co-fundador y lo que implica?</li>
+        <li>¿Cómo formalizamos la participación de Nicole en términos de % societario?</li>
+        <li>¿Hay algo en la descripción de algún rol que no refleja lo que esa persona hace o quiere hacer?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- S4 HORAS REALES -->
+<div class="slide" id="s4">
+  <div class="content">
+    <div class="eyebrow">Capacidad real del equipo</div>
+    <h2>Horas semanales — diagnóstico honesto</h2>
+    <div style="flex:1;overflow:auto;">
+      <table class="htable">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Socio</th>
+            <th>Almaria<br><span style="font-size:9px;opacity:.6;">6 días</span></th>
+            <th>HugoTech</th>
+            <th>Trazo<br><span style="font-size:9px;opacity:.6;">6 días</span></th>
+            <th>Total Qochix</th>
+            <th>Otro trabajo</th>
+            <th>Total día</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name-cell">Hugo<span class="sub">Maneja sus tiempos</span></td>
+            <td><span class="cell-a">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-h">5 hrs/día<br><small>30 hrs/sem</small></span></td>
+            <td><span class="cell-t">2 hrs/día<br><small>12 hrs/sem</small></span></td>
+            <td><span class="cell-total-warn">54-66 hrs/sem<br>9-11/día</span></td>
+            <td><span class="cell-other">8 hrs/día flexible</span></td>
+            <td><span class="cell-total-red">17-19 hrs/día 🚨</span></td>
+          </tr>
+          <tr>
+            <td class="name-cell">Rossy<span class="sub">Más tiempo disponible</span></td>
+            <td><span class="cell-a">6 hrs/día<br><small>36 hrs/sem</small></span></td>
+            <td><span class="cell-h">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-t">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-total-red">60-72 hrs/sem<br>10-12/día</span></td>
+            <td><span class="cell-other">Trabajo propio<br>4-6 hrs/día</span></td>
+            <td><span class="cell-total-red">10-12 hrs/día 🚨</span></td>
+          </tr>
+          <tr>
+            <td class="name-cell">Vera<span class="sub">Maneja sus tiempos</span></td>
+            <td><span class="cell-a">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-h">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-t">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-total-warn">36-54 hrs/sem<br>6-9/día</span></td>
+            <td><span class="cell-other">8 hrs/día flexible</span></td>
+            <td><span class="cell-total-warn">14-17 hrs/día ⚠️</span></td>
+          </tr>
+          <tr>
+            <td class="name-cell">Carlos<span class="sub">CEO Trazo · full time</span></td>
+            <td><span class="cell-a">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-h">2-3 hrs/día<br><small>12-18 hrs/sem</small></span></td>
+            <td><span class="cell-t">Full time<br><small>40 hrs/sem</small></span></td>
+            <td><span class="cell-total-warn">64-76 hrs/sem<br>10-12/día</span></td>
+            <td><span class="cell-other">— solo Trazo</span></td>
+            <td><span class="cell-total-warn">10-12 hrs/día ⚠️</span></td>
+          </tr>
+          <tr>
+            <td class="name-cell">Nicole<span class="sub">Full time Trazo · sin otro trabajo</span></td>
+            <td><span class="cell-a">2-3 hrs/día</span></td>
+            <td><span class="cell-h">2-3 hrs/día</span></td>
+            <td><span class="cell-t">Full time<br><small>40 hrs/sem</small></span></td>
+            <td><span class="cell-total-warn">52-58 hrs/sem</span></td>
+            <td><span class="cell-other">—</span></td>
+            <td><span class="cell-total-warn">~9-10 hrs/día</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="g2" style="margin-top:12px;gap:10px;">
+      <div style="background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);border-radius:10px;padding:12px 16px;">
+        <p style="font-size:12px;color:#E74C3C;font-weight:500;margin-bottom:4px;">Hugo y Rossy — zona roja 🚨</p>
+        <p style="font-size:11px;">Hugo: 17-19 hrs/día totales. Rossy: 10-12 hrs Qochix + trabajo propio. Hay que definir techos reales antes de arrancar.</p>
+      </div>
+      <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:10px;padding:12px 16px;">
+        <p style="font-size:12px;color:var(--amber);font-weight:500;margin-bottom:4px;">Carlos, Vera y Nicole — zona de alerta ⚠️</p>
+        <p style="font-size:11px;">Carlos y Nicole: 10-12 hrs/día en Qochix pero sin otro trabajo encima — manejable. Vera: 6-9 hrs/día con flexibilidad.</p>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>Rossy y Carlos: ¿cuántas horas reales pueden dar a Qochix sin afectar su otra fuente de ingreso?</li>
+        <li>¿Qué pasaría si en el mes 2 alguien necesita reducir sus horas? ¿Cómo lo manejamos?</li>
+        <li>¿Tenemos un plan B si algún rol queda sin cobertura por sobrecarga?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S5 MODELO FINANCIERO -->
+<div class="slide" id="s5">
+  <div class="content">
+    <div class="eyebrow">Estructura financiera</div>
+    <h2>Modelo centralizado Qochix</h2>
+    <div style="display:flex;gap:18px;flex:1;align-items:flex-start;">
+      <div style="flex:1.3;">
+        <h3>Cómo fluye el dinero</h3>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <div class="bc bh" style="flex:1;padding:12px 14px;">
+            <div class="bl hl" style="font-size:9px;margin-bottom:3px;">HugoTech</div>
+            <p style="font-size:11px;">Factura → cubre costos → excedente a Qochix</p>
+          </div>
+          <div class="bc ba" style="flex:1;padding:12px 14px;">
+            <div class="bl al" style="font-size:9px;margin-bottom:3px;">Almaria</div>
+            <p style="font-size:11px;">Factura → cubre costos → excedente a Qochix</p>
+          </div>
+          <div class="bc bt" style="flex:1;padding:12px 14px;">
+            <div class="bl tl" style="font-size:9px;margin-bottom:3px;">Trazo</div>
+            <p style="font-size:11px;">Factura → cubre costos → excedente a Qochix</p>
+          </div>
+        </div>
+        <div style="text-align:center;color:var(--gold);font-size:18px;margin:4px 0;">↓</div>
+        <div class="bc bq" style="padding:14px 18px;text-align:center;margin-bottom:8px;">
+          <div class="bl ql" style="margin-bottom:4px;">Pool de ingresos centralizado</div>
+          <p style="font-size:12px;color:var(--text);">QOCHIX distribuye sueldos a los 5</p>
+        </div>
+        <div style="text-align:center;color:var(--gold);font-size:18px;margin:4px 0;">↓</div>
+        <div style="display:flex;gap:6px;">
+          <div class="card" style="flex:1;padding:8px;text-align:center;"><p style="font-size:11px;">Hugo</p></div>
+          <div class="card" style="flex:1;padding:8px;text-align:center;"><p style="font-size:11px;">Rossy</p></div>
+          <div class="card" style="flex:1;padding:8px;text-align:center;"><p style="font-size:11px;">Vera</p></div>
+          <div class="card" style="flex:1;padding:8px;text-align:center;"><p style="font-size:11px;">Carlos</p></div>
+          <div class="card" style="flex:1;padding:8px;text-align:center;"><p style="font-size:11px;">Nicole</p></div>
+        </div>
+        <div style="margin-top:12px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px 16px;">
+          <p style="font-size:12px;color:var(--gold);margin-bottom:4px;">Importante: sueldo ≠ retorno de inversión</p>
+          <p style="font-size:11px;">El sueldo es por el trabajo. El retorno sobre el capital aportado es independiente y se distribuye según % societario cuando Qochix genera utilidades. Son dos flujos distintos.</p>
+        </div>
+      </div>
+      <div style="flex:0.8;display:flex;flex-direction:column;gap:10px;">
+        <h3>Acuerdo base Abril 2026</h3>
+        <div class="card" style="padding:14px 18px;">
+          <p style="font-size:12px;color:var(--gold);margin-bottom:6px;">12 meses sin cobrar sueldo</p>
+          <p style="font-size:11px;">Hugo · Rossy · Vera: sin sueldo. Todo el excedente se reinvierte. Carlos mantiene S/5,000 de Trazo. Nicole mantiene su sueldo actual.</p>
+        </div>
+        <h3>Meta de sueldos Qochix</h3>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;">2027-2028 · Nicole</span>
+            <span style="color:var(--gold);font-size:13px;font-weight:600;">S/5,000</span>
+          </div>
+          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;">2029 · Rossy · Vera · Carlos · Nicole</span>
+            <span style="color:var(--almaria-l);font-size:13px;font-weight:600;">S/8,000</span>
+          </div>
+          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;">2028-2029 · Hugo</span>
+            <span style="color:var(--hugo-l);font-size:13px;font-weight:600;">S/15,000</span>
+          </div>
+          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;">2030 · Rossy · Vera · Carlos · Nicole</span>
+            <span style="color:var(--almaria-l);font-size:13px;font-weight:600;">S/10,000</span>
+          </div>
+          <div class="bc bq" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;">2029-2030 · Hugo</span>
+            <span style="color:var(--gold);font-size:14px;font-weight:700;">S/30,000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Están de acuerdo con el acuerdo de no cobrar sueldo los primeros 12 meses?</li>
+        <li>¿Cómo valorizamos el capital aportado vs el tiempo para definir el % societario?</li>
+        <li>¿Qué pasa si una marca genera utilidades antes de que Qochix active el pool?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S6 HOJA DE RUTA -->
+<div class="slide" id="s6">
+  <div class="content">
+    <div class="eyebrow">Visión 2026–2029</div>
+    <h2>El camino a vivir de Qochix — visión realista</h2>
+    <div class="tl" style="flex:1;align-items:flex-start;">
+      <div class="tli">
+        <div class="tld tld-g"></div>
+        <div class="tly">2026 · Q2–Q3</div>
+        <h4>Construcción</h4>
+        <p>Almaria primeras ventas. HugoTech 1:1 + talleres. Trazo escala a S/12-15k. Full Day julio. Sin sueldos — todo se reinvierte.</p>
+      </div>
+      <div class="tli">
+        <div class="tld tld-g"></div>
+        <div class="tly">2026–2027</div>
+        <h4>Aceleración</h4>
+        <p>Almaria S/10-15k. Campamento + B2B. Trazo S/15-20k. MC 5.0 piloto. <span style="color:var(--almaria-l);">Rossy apunta a liberarse mediados 2027.</span></p>
+      </div>
+      <div class="tli">
+        <div class="tld tld-a"></div>
+        <div class="tly">2027–2028</div>
+        <h4>Rossy se libera</h4>
+        <p>HugoTech S/15-20k. Trazo S/20-25k. Almaria S/15k+. <span style="color:var(--almaria-l);">Rossy deja su otro trabajo.</span> Nicole: S/5k de Qochix. Hugo aún en corporativo.</p>
+      </div>
+      <div class="tli">
+        <div class="tld tld-b"></div>
+        <div class="tly">2028–2029</div>
+        <h4>Hugo se libera</h4>
+        <p>HugoTech ~S/21k+ (×0,7 vs plan). <span style="color:var(--hugo-l);">Hugo deja el corporativo.</span> Rossy · Vera · Carlos · Nicole: <span style="color:var(--gold);">S/8k de Qochix.</span> Primeros retornos de inversión.</p>
+      </div>
+      <div class="tli">
+        <div class="tld tld-p"></div>
+        <div class="tly">2029–2030</div>
+        <h4>Escala total</h4>
+        <p><span style="color:var(--gold);">Todos: S/10k+. Hugo: S/30k.</span> Qochix ~S/84k+/mes facturación total (referencia pesimista ×0,7; <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">abrir simulador</a>). Metas 2030/2032 y facturación extra: <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">pacto y gobierno</a>. Retorno sobre capital. <em>El ecosistema vive solo.</em></p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;padding:12px 20px;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div style="text-align:center;"><div class="mv" style="font-size:20px;">S/15-22k</div><div class="ml">Dic 2026/mes · ×0,7 vs plan</div></div>
+      <div style="width:1px;height:30px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:20px;">S/28-39k</div><div class="ml">2027/mes · ×0,7 vs plan</div></div>
+      <div style="width:1px;height:30px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:20px;">~S/84k</div><div class="ml">2029-2030/mes · ×0,7</div></div>
+      <div style="width:1px;height:30px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:20px;">5</div><div class="ml">Socios viviendo de Qochix</div></div>
+      <div style="width:1px;height:30px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:20px;">2</div><div class="ml">Flujos: sueldo + retorno</div></div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Los plazos (Rossy 2027-2028, Hugo 2028-2029, todos 2029) les parecen alcanzables?</li>
+        <li>¿Qué condición concreta activaría el pool de Qochix?</li>
+        <li>¿Cómo manejamos si alguien necesita ingresos antes de 2028?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- S6 INVERSIÓN HUGO -->
+<div class="slide" id="s7">
+  <div class="content">
+    <div class="eyebrow">Transparencia total · Lo que esto cuesta realmente</div>
+    <h2>La inversión de Hugo — números reales</h2>
+    <div style="display:flex;gap:14px;flex:1;">
+
+      <!-- IZQUIERDA: desglose ya pagado -->
+      <div style="flex:1.1;display:flex;flex-direction:column;gap:10px;">
+
+        <div style="background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:#E74C3C;font-weight:700;margin-bottom:10px;letter-spacing:.5px;">YA INVERTIDO — antes de abril 2026</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Préstamo planillas Trazo (actual)</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/8,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Préstamo planillas Trazo (fin de mes)</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/4,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Inversión como socio Trazo</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/4,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Google Workspace anual</span>
+              <span style="font-size:11px;color:var(--text);font-weight:600;">S/1,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Metricool anual (EUR 486)</span>
+              <span style="font-size:11px;color:var(--text);font-weight:600;">S/1,968</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">pCloud anual (USD 180)</span>
+              <span style="font-size:11px;color:var(--text);font-weight:600;">S/675</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Pauta publicitaria</span>
+              <span style="font-size:11px;color:var(--text);font-weight:600;">S/500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Content creator febrero</span>
+              <span style="font-size:11px;color:var(--text);font-weight:600;">S/2,000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,.05);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Almuerzo del equipo</span>
+              <span style="font-size:11px;color:var(--text);font-weight:600;">S/300</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(192,57,43,.15);border-radius:5px;margin-top:2px;border:1px solid rgba(192,57,43,.2);">
+              <span style="font-size:11px;color:var(--text);font-weight:600;">SUBTOTAL YA INVERTIDO</span>
+              <span style="font-size:13px;color:#E74C3C;font-weight:700;">S/24,443</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Capital en otras marcas -->
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:8px;">Más: capital en Almaria y HugoTech</p>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;padding:8px;background:rgba(26,122,86,.1);border-radius:6px;text-align:center;">
+              <p style="font-size:9px;color:var(--almaria-l);">Almaria</p>
+              <p style="font-size:13px;color:var(--almaria-l);font-weight:700;">S/10,000</p>
+            </div>
+            <div style="flex:1;padding:8px;background:rgba(30,95,165,.1);border-radius:6px;text-align:center;">
+              <p style="font-size:9px;color:var(--hugo-l);">HugoTech</p>
+              <p style="font-size:13px;color:var(--hugo-l);font-weight:700;">100% tiempo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTRO: próximos 3 meses -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+        <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:#E08A30;font-weight:700;margin-bottom:10px;letter-spacing:.5px;">COMPROMETIDO POR HUGO — Abr, May, Jun 2026</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Content creator Trazo fin de mes</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/2,000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Content creator Trazo × 3 meses</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/6,000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Comercial Trazo × 3 meses</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/6,000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(201,168,76,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Ads Trazo × 3 meses</span>
+              <span style="font-size:11px;color:var(--gold);font-weight:600;">S/1,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Ads Almaria × 3 meses</span>
+              <span style="font-size:11px;color:var(--almaria-l);font-weight:600;">S/1,800</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Ads HugoTech × 3 meses</span>
+              <span style="font-size:11px;color:var(--hugo-l);font-weight:600;">S/1,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(230,126,18,.15);border-radius:5px;margin-top:2px;border:1px solid rgba(230,126,18,.2);">
+              <span style="font-size:11px;color:var(--text);font-weight:600;">SUBTOTAL COMPROMETIDO</span>
+              <span style="font-size:13px;color:#E08A30;font-weight:700;">S/18,800</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- POR DECIDIR EN EQUIPO -->
+        <div style="background:rgba(74,63,143,.1);border:2px dashed rgba(74,63,143,.4);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--qochix-l);font-weight:700;margin-bottom:6px;letter-spacing:.5px;">POR DECIDIR EN EQUIPO — ¿quién paga esto?</p>
+          <p style="font-size:9px;color:var(--text2);margin-bottom:8px;">Hugo no quiere asumir esto solo. Es una conversación que hay que tener.</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(74,63,143,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">LinkedIn Premium × 3 marcas/mes</span>
+              <span style="font-size:11px;color:var(--qochix-l);font-weight:600;">S/506/mes</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(74,63,143,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">LinkedIn Premium × 3 meses</span>
+              <span style="font-size:11px;color:var(--qochix-l);font-weight:600;">S/1,519</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(74,63,143,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Merch HugoTech (kits Full Day, cuadernos)</span>
+              <span style="font-size:11px;color:var(--hugo-l);font-weight:600;">S/1,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(74,63,143,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Merch Almaria (packaging, cajas, muestras)</span>
+              <span style="font-size:11px;color:var(--almaria-l);font-weight:600;">S/2,000</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(74,63,143,.1);border-radius:5px;">
+              <span style="font-size:10px;color:var(--text2);">Merch Trazo (polos, stickers, materiales)</span>
+              <span style="font-size:11px;color:var(--trazo-l);font-weight:600;">S/1,500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:6px 8px;background:rgba(74,63,143,.2);border-radius:5px;margin-top:2px;border:1px solid rgba(74,63,143,.35);">
+              <span style="font-size:11px;color:var(--text);font-weight:600;">TOTAL A DECIDIR</span>
+              <span style="font-size:13px;color:var(--qochix-l);font-weight:700;">S/8,019</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRAN TOTAL -->
+        <div style="background:rgba(192,57,43,.15);border:2px solid rgba(192,57,43,.4);border-radius:12px;padding:16px 18px;text-align:center;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">EXPOSICIÓN TOTAL HUGO · Sep 2026</p>
+          <p style="font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#E74C3C;margin-bottom:4px;">S/53,243</p>
+          <p style="font-size:9px;color:var(--text2);">Comprometido por Hugo · sin contar Almaria S/10k</p>
+          <div style="margin-top:6px;padding:5px 8px;background:rgba(74,63,143,.15);border-radius:6px;display:flex;justify-content:space-between;">
+            <span style="font-size:9px;color:var(--qochix-l);">+ A decidir en equipo</span>
+            <span style="font-size:10px;color:var(--qochix-l);font-weight:600;">S/8,019</span>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px 16px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:6px;">Incluyendo Almaria S/10k · TOTAL REAL:</p>
+          <p style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--gold);">S/63,243+ Hugo solo</p>
+          <p style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--qochix-l);margin-top:4px;">S/71,262+ si cubre todo</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:4px;">La diferencia (S/8k) es lo que el equipo debe decidir cómo cubrir</p>
+        </div>
+      </div>
+
+      <!-- DERECHA: recuperación -->
+      <div style="flex:0.9;display:flex;flex-direction:column;gap:10px;">
+        <h3>¿Cuándo recupera Hugo?</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(176,106,16,.1);border:1px solid rgba(176,106,16,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--trazo-l);font-weight:600;margin-bottom:6px;">Trazo — préstamo total S/13,000 · Plan acordado</p>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Jul 2026</span><span style="font-size:9px;color:var(--trazo-l);">-S/2,000 → saldo S/11,000</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Ago 2026</span><span style="font-size:9px;color:var(--trazo-l);">-S/2,000 → saldo S/9,000</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Sep 2026</span><span style="font-size:9px;color:var(--trazo-l);">-S/2,000 → saldo S/7,000</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Oct–Dic</span><span style="font-size:9px;color:var(--trazo-l);">-S/2,000/mes → S/0 en ene 27</span></div>
+            </div>
+            <p style="font-size:9px;color:var(--gold);margin-top:5px;">⚠ Para devolver S/2k/mes, Trazo necesita S/13k+/mes desde julio</p>
+          </div>
+          <div style="background:rgba(30,95,165,.1);border:1px solid rgba(30,95,165,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--hugo-l);font-weight:600;margin-bottom:4px;">Retorno sobre capital (dividendos)</p>
+            <p style="font-size:9px;">Cuando Qochix genere utilidades netas · 2027-2028 · según % societario que acordemos hoy</p>
+          </div>
+          <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--almaria-l);font-weight:600;margin-bottom:4px;">Sueldo de HugoTech</p>
+            <p style="font-size:9px;">Cuando HugoTech genere S/30k+/mes · 2028-2029 · la apuesta más grande y de largo plazo</p>
+          </div>
+          <div style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:4px;">Umbral de revisión</p>
+            <p style="font-size:9px;">Si Trazo no llega a S/15k en junio 2026, Hugo revisa la inversión mensual. No es derrota — es decisión responsable de socio.</p>
+          </div>
+        </div>
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:10px;color:var(--qochix-l);font-weight:600;margin-bottom:4px;">Por qué vale la pena</p>
+          <p style="font-size:9px;">Hugo no invierte en empleados — invierte en socios que construyen con él. El retorno es financiero, pero también es tiempo libre, propósito y un ecosistema que eventualmente vive sin su empleo corporativo.</p>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Hugo no puede ni debe asumir el 100% de las inversiones del ecosistema — ¿cómo se distribuye el S/8,019 pendiente?</li>
+        <li>¿El préstamo S/13,000 (S/8,500 + S/4,500) tiene fecha de devolución firmada?</li>
+        <li>LinkedIn Premium y merch: ¿cada marca lo cubre con sus ingresos o hay otro modelo?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S7 SINERGIAS -->
+<div class="slide" id="s8">
+  <div class="content">
+    <div class="eyebrow">Por qué somos ecosistema</div>
+    <h2>Sinergias — cómo se alimentan las 3 marcas</h2>
+    <div style="display:flex;gap:18px;flex:1;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:7px;">
+        <h3>Flujos entre marcas</h3>
+        <div class="sr"><div style="width:7px;height:7px;border-radius:50%;background:var(--hugo-l);flex-shrink:0;"></div><span class="ai">→</span><p class="st"><strong>HugoTech → Almaria:</strong> Kit Almaria cierra cada Full Day. Participantes se convierten en clientes B2C.</p></div>
+        <div class="sr"><div style="width:7px;height:7px;border-radius:50%;background:var(--hugo-l);flex-shrink:0;"></div><span class="ai">→</span><p class="st"><strong>HugoTech → Trazo:</strong> Trazo produce todo el contenido de HugoTech. Diana ejecuta, Carlos supervisa.</p></div>
+        <div class="sr"><div style="width:7px;height:7px;border-radius:50%;background:var(--almaria-l);flex-shrink:0;"></div><span class="ai">→</span><p class="st"><strong>Almaria → HugoTech:</strong> Empresas que contratan Almaria Corporate descubren talleres HugoTech.</p></div>
+        <div class="sr"><div style="width:7px;height:7px;border-radius:50%;background:var(--almaria-l);flex-shrink:0;"></div><span class="ai">→</span><p class="st"><strong>Almaria → Trazo:</strong> Trazo produce reels, branding y campañas de Almaria (Corporate + Rituales).</p></div>
+        <div class="sr"><div style="width:7px;height:7px;border-radius:50%;background:var(--trazo-l);flex-shrink:0;"></div><span class="ai">→</span><p class="st"><strong>Trazo → las 3:</strong> Posiciona, lanza y escala HugoTech y Almaria. Genera casos de éxito cruzados.</p></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+        <h3>La sinergia máxima</h3>
+        <div class="bc bq" style="padding:20px;">
+          <p style="font-size:12px;line-height:1.9;color:var(--text);">
+            Una empresa contrata <span style="color:var(--hugo-l);">HugoTech</span> para transformar a su equipo
+            <span style="color:var(--text2);"> → </span>el equipo recibe un kit <span style="color:var(--almaria-l);">Almaria</span> al cierre
+            <span style="color:var(--text2);"> → </span><span style="color:var(--trazo-l);">Trazo</span> documenta el caso de éxito
+            <span style="color:var(--text2);"> → </span>ese contenido atrae nuevas empresas para las 3 marcas.
+          </p>
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+            <p style="font-size:11px;color:var(--gold);">Un cliente cruzado vale 2–3x más. Reduce el costo de adquisición de las 3 marcas simultáneamente.</p>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 18px;">
+          <p style="font-size:12px;color:var(--text);margin-bottom:6px;">Una sola raíz · tres expresiones</p>
+          <p style="font-size:11px;">HugoTech piensa · Almaria siente · Trazo comunica · Qochix sostiene todo.</p>
+        </div>
+        <div class="card" style="padding:14px 18px;">
+          <p style="font-size:12px;color:var(--text);margin-bottom:6px;">El equipo transversal</p>
+          <p style="font-size:11px;">Rossy: narrativa coherente en las 3 marcas · Carlos: identidad visual unificada · Vera: alianzas cruzadas · Nicole: PM de los 3 funnels.</p>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Ven alguna sinergia que no hemos identificado?</li>
+        <li>¿Hay riesgo de que una marca "canibalice" la audiencia de otra?</li>
+        <li>¿Cómo priorizamos si Trazo tiene capacidad limitada para atender las 3 marcas a la vez?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S8 PLAN 90 DÍAS -->
+<div class="slide" id="s9">
+  <div class="content">
+    <div class="eyebrow">Ejecución inmediata · Abril–Junio 2026</div>
+    <h2>Plan 90 días — arranque del ecosistema</h2>
+    <div style="display:flex;gap:12px;flex:1;align-content:start;">
+
+      <!-- ABRIL -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--hugo);padding-bottom:8px;margin-bottom:4px;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">Mes 1</div>
+          <div style="font-size:16px;font-family:'Playfair Display',serif;color:var(--text);">Abril — Arranque</div>
+        </div>
+        <div style="background:rgba(30,95,165,.1);border:1px solid rgba(30,95,165,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--hugo-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">HUGOTECH</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ Sesiones 1:1 abiertas en web</p>
+            <p style="font-size:10px;">✦ Catálogo de 5 talleres B2B listo</p>
+            <p style="font-size:10px;">✦ Comercial B2B inicia prospección</p>
+            <p style="font-size:10px;">✦ Diana: 3-4 posts/sem LinkedIn Hugo</p>
+            <p style="font-size:10px;">✦ 3-4 videos/sem TikTok "bug interno"</p>
+            <p style="font-size:10px;">✦ Deck comercial para empresas</p>
+          </div>
+        </div>
+        <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--almaria-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">ALMARIA</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ Red socios: primeras ventas B2C</p>
+            <p style="font-size:10px;">✦ 30 empresas target identificadas</p>
+            <p style="font-size:10px;">✦ Comercial inicia contacto corp</p>
+            <p style="font-size:10px;">✦ María: 5-6 posts/sem Instagram</p>
+            <p style="font-size:10px;">✦ LinkedIn Almaria Corporate activo</p>
+            <p style="font-size:10px;">✦ Propuesta B2B Día Madre lista</p>
+          </div>
+        </div>
+        <div style="background:rgba(176,106,16,.1);border:1px solid rgba(176,106,16,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">TRAZO</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ Prospección activa · upsell clientes actuales</p>
+            <p style="font-size:10px;">✦ Content creator contratado y briefeado</p>
+            <p style="font-size:10px;">✦ Línea editorial definida y activa</p>
+            <p style="font-size:10px;">✦ 3 posts/sem LinkedIn Trazo marca</p>
+            <p style="font-size:10px;">✦ Portafolio 5 casos de éxito listo</p>
+            <p style="font-size:10px;">✦ Meta realista: S/9,000-10,500</p>
+          </div>
+        </div>
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:10px;color:var(--text2);">Meta Qochix abril</span>
+          <span style="font-size:13px;color:var(--gold);font-weight:700;">S/9-11k</span>
+        <p style="font-size:9px;color:var(--text2);margin-top:3px;">Casi todo Trazo · Almaria arranca B2C</p>
+        </div>
+      </div>
+
+      <!-- MAYO -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--almaria);padding-bottom:8px;margin-bottom:4px;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">Mes 2</div>
+          <div style="font-size:16px;font-family:'Playfair Display',serif;color:var(--text);">Mayo — Día de la Madre 🎯</div>
+        </div>
+        <div style="background:rgba(30,95,165,.1);border:1px solid rgba(30,95,165,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--hugo-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">HUGOTECH</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ Primer taller B2B ejecutado</p>
+            <p style="font-size:10px;">✦ Masterclass en universidad</p>
+            <p style="font-size:10px;">✦ 5-8 sesiones 1:1 activas</p>
+            <p style="font-size:10px;">✦ Lista espera Full Day: 20+ personas</p>
+            <p style="font-size:10px;">✦ 2 empresas en pipeline B2B</p>
+            <p style="font-size:10px;">✦ Participación en evento tech Lima</p>
+          </div>
+        </div>
+        <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--almaria-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">ALMARIA</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ 1-2 empresas Día Madre (comercial tiene 5 sem)</p>
+            <p style="font-size:10px;">✦ Rituales B2C activos vía Instagram</p>
+            <p style="font-size:10px;">✦ Red socios: 5-10 ventas B2C</p>
+            <p style="font-size:10px;">✦ Ads Meta S/600 Día Madre</p>
+            <p style="font-size:10px;">✦ Pipeline: 8-10 empresas contactadas</p>
+            <p style="font-size:10px;">✦ Meta realista: S/2,000-4,000</p>
+          </div>
+        </div>
+        <div style="background:rgba(176,106,16,.1);border:1px solid rgba(176,106,16,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">TRAZO</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ +3 clientes · total 9 activos</p>
+            <p style="font-size:10px;">✦ Ticket mínimo S/1,500 aplicado</p>
+            <p style="font-size:10px;">✦ 2 casos de éxito publicados</p>
+            <p style="font-size:10px;">✦ Trazo produce contenido Almaria</p>
+            <p style="font-size:10px;">✦ Ads LinkedIn S/500: prospectos B2B</p>
+            <p style="font-size:10px;">✦ S/15-16k · primer excedente</p>
+          </div>
+        </div>
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:10px;color:var(--text2);">Meta Qochix mayo</span>
+          <span style="font-size:13px;color:var(--gold);font-weight:700;">S/13-18k</span>
+        <p style="font-size:9px;color:var(--text2);margin-top:3px;">Trazo crece · Almaria primeras corp · HugoTech 1:1</p>
+        </div>
+      </div>
+
+      <!-- JUNIO -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--qochix);padding-bottom:8px;margin-bottom:4px;">
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);">Mes 3</div>
+          <div style="font-size:16px;font-family:'Playfair Display',serif;color:var(--text);">Junio — Full Day piloto</div>
+        </div>
+        <div style="background:rgba(30,95,165,.1);border:1px solid rgba(30,95,165,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--hugo-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">HUGOTECH</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ FULL DAY PILOTO GRATUITO · 15-20p</p>
+            <p style="font-size:10px;">✦ Testimonios reales grabados</p>
+            <p style="font-size:10px;">✦ Venue julio confirmado</p>
+            <p style="font-size:10px;">✦ 1 empresa B2B contrato firmado</p>
+            <p style="font-size:10px;">✦ Alianza 1 universidad activa</p>
+            <p style="font-size:10px;">✦ Comunidad lista espera programa 2027: 50+</p>
+          </div>
+        </div>
+        <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--almaria-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">ALMARIA</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ 5+ clientes corporativos activos</p>
+            <p style="font-size:10px;">✦ Kit Almaria cierra Full Day piloto</p>
+            <p style="font-size:10px;">✦ Rituales: bodas verano activo</p>
+            <p style="font-size:10px;">✦ 2 colaboraciones de marca</p>
+            <p style="font-size:10px;">✦ Flujo B2C regular establecido</p>
+            <p style="font-size:10px;">✦ S/12-15k · primer mes rentable</p>
+          </div>
+        </div>
+        <div style="background:rgba(176,106,16,.1);border:1px solid rgba(176,106,16,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;margin-bottom:6px;letter-spacing:.5px;">TRAZO</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">✦ 10+ clientes activos</p>
+            <p style="font-size:10px;">✦ Primer excedente real sobre planilla</p>
+            <p style="font-size:10px;">✦ Trazo produce HugoTech + Almaria</p>
+            <p style="font-size:10px;">✦ Performance/ads activado</p>
+            <p style="font-size:10px;">✦ S/17-20k · modelo consolidado</p>
+            <p style="font-size:10px;">✦ Carlos: camino claro a S/8k</p>
+          </div>
+        </div>
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:10px;color:var(--text2);">Meta Qochix junio</span>
+          <span style="font-size:13px;color:var(--gold);font-weight:700;">S/18-25k</span>
+        <p style="font-size:9px;color:var(--text2);margin-top:3px;">Trazo S/13-15k · Almaria S/3-6k · HugoTech S/2-4k</p>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Qué recursos concretos necesitamos tener listos antes del 1 de abril?</li>
+        <li>¿Quién hace seguimiento semanal de los avances de cada marca?</li>
+        <li>¿Alguien ve algún hito como no realista en este trimestre?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S8B PLAN 1 AÑO -->
+<div class="slide" id="s10">
+  <div class="content">
+    <div class="eyebrow">Visión a mediano plazo · Jul 2026 – Mar 2027</div>
+    <h2>Plan 1 año — construir la base sólida</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+
+      <!-- HUGOTECH 1 AÑO -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--hugo);padding-bottom:6px;margin-bottom:2px;">
+          <p style="font-size:11px;color:var(--hugo-l);font-weight:600;letter-spacing:1px;">HUGOTECH · Jul 26 – Mar 27</p>
+        </div>
+        <div style="background:rgba(30,95,165,.08);border:1px solid rgba(30,95,165,.2);border-radius:10px;padding:12px 14px;flex:1;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">HITOS CLAVE</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(30,95,165,.08);border-radius:6px;">
+              <span style="color:var(--hugo-l);font-size:11px;flex-shrink:0;">Jul</span>
+              <p style="font-size:10px;">Full Day #1 OFICIAL · S/100pp · 20-25p · primera caja real</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(30,95,165,.08);border-radius:6px;">
+              <span style="color:var(--hugo-l);font-size:11px;flex-shrink:0;">Ago</span>
+              <p style="font-size:10px;">1-2 empresas B2B · talleres regulares · 1:1 activas · S/4-7k/mes</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(30,95,165,.08);border-radius:6px;">
+              <span style="color:var(--hugo-l);font-size:11px;flex-shrink:0;">Sep</span>
+              <p style="font-size:10px;">Full Day #2 · lista espera Campamento · masterclass en 2 universidades</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(30,95,165,.08);border-radius:6px;">
+              <span style="color:var(--hugo-l);font-size:11px;flex-shrink:0;">Nov</span>
+              <p style="font-size:10px;">CAMPAMENTO #1 · S/500pp · 15-18p · experiencia inmersiva 2 días</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(30,95,165,.08);border-radius:6px;">
+              <span style="color:var(--hugo-l);font-size:11px;flex-shrink:0;">Dic</span>
+              <p style="font-size:10px;">Comunidad RECOprogramando: 100+ alumni · preparar lanzamiento programa propio 2027</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(30,95,165,.08);border-radius:6px;">
+              <span style="color:var(--hugo-l);font-size:11px;flex-shrink:0;">Mar 27</span>
+              <p style="font-size:10px;">3 empresas B2B activas · Full Day cada 2 meses · Programa propio ene 2027 en curso · S/15k/mes</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(30,95,165,.15);border:1px solid rgba(30,95,165,.3);border-radius:8px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">Meta Mar 2027</p>
+          <p style="font-size:14px;color:var(--hugo-l);font-weight:700;">S/8-12k/mes</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:2px;">1:1 + talleres B2B + Full Days + Campamento · Hugo a full</p>
+        </div>
+      </div>
+
+      <!-- ALMARIA 1 AÑO -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--almaria);padding-bottom:6px;margin-bottom:2px;">
+          <p style="font-size:11px;color:var(--almaria-l);font-weight:600;letter-spacing:1px;">ALMARIA · Jul 26 – Mar 27</p>
+        </div>
+        <div style="background:rgba(26,122,86,.08);border:1px solid rgba(26,122,86,.2);border-radius:10px;padding:12px 14px;flex:1;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">HITOS CLAVE</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(26,122,86,.08);border-radius:6px;">
+              <span style="color:var(--almaria-l);font-size:11px;flex-shrink:0;">Jul</span>
+              <p style="font-size:10px;">Rituales bodas temporada alta · 3-4 clientes corp activos · S/4-7k</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(26,122,86,.08);border-radius:6px;">
+              <span style="color:var(--almaria-l);font-size:11px;flex-shrink:0;">Ago</span>
+              <p style="font-size:10px;">5-7 empresas activas · 2 con programa recurrente · S/6-9k/mes</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(26,122,86,.08);border-radius:6px;">
+              <span style="color:var(--almaria-l);font-size:11px;flex-shrink:0;">Sep</span>
+              <p style="font-size:10px;">Temporada bodas pico · Rituales: bautizos + quinceañeros · 3ra colaboración</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(26,122,86,.08);border-radius:6px;">
+              <span style="color:var(--almaria-l);font-size:11px;flex-shrink:0;">Nov</span>
+              <p style="font-size:10px;">Día Amistad corp · prep cierres año · suscripción mensual piloto</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(26,122,86,.08);border-radius:6px;">
+              <span style="color:var(--almaria-l);font-size:11px;flex-shrink:0;">Dic</span>
+              <p style="font-size:10px;">CIERRES DE AÑO CORPORATIVOS 🎯 · mayor mes del año · S/18-22k</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(26,122,86,.08);border-radius:6px;">
+              <span style="color:var(--almaria-l);font-size:11px;flex-shrink:0;">Mar 27</span>
+              <p style="font-size:10px;">Almaria integrada a HugoTech · kit cierre cada programa · flujo doble estable</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(26,122,86,.15);border:1px solid rgba(26,122,86,.3);border-radius:8px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">Meta Mar 2027</p>
+          <p style="font-size:14px;color:var(--almaria-l);font-weight:700;">S/8-13k/mes</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:2px;">Corporate + Rituales + primeras recompras · con trabajo duro</p>
+        </div>
+      </div>
+
+      <!-- TRAZO 1 AÑO -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--trazo);padding-bottom:6px;margin-bottom:2px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;letter-spacing:1px;">TRAZO · Jul 26 – Mar 27</p>
+        </div>
+        <div style="background:rgba(176,106,16,.08);border:1px solid rgba(176,106,16,.2);border-radius:10px;padding:12px 14px;flex:1;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">HITOS CLAVE</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(176,106,16,.08);border-radius:6px;">
+              <span style="color:var(--trazo-l);font-size:11px;flex-shrink:0;">Jul</span>
+              <p style="font-size:10px;">9-10 clientes activos · S/15-17k/mes · Carlos camino a S/6,500</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(176,106,16,.08);border-radius:6px;">
+              <span style="color:var(--trazo-l);font-size:11px;flex-shrink:0;">Ago</span>
+              <p style="font-size:10px;">Performance/ads: primer cliente con revenue share · consultoría estratégica</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(176,106,16,.08);border-radius:6px;">
+              <span style="color:var(--trazo-l);font-size:11px;flex-shrink:0;">Sep</span>
+              <p style="font-size:10px;">Trazo produce campañas HugoTech Full Day + Almaria Rituales bodas</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(176,106,16,.08);border-radius:6px;">
+              <span style="color:var(--trazo-l);font-size:11px;flex-shrink:0;">Oct</span>
+              <p style="font-size:10px;">Trazo como marca referente en Lima · 5 casos de éxito publicados · S/22k</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(176,106,16,.08);border-radius:6px;">
+              <span style="color:var(--trazo-l);font-size:11px;flex-shrink:0;">Dic</span>
+              <p style="font-size:10px;">Carlos sube a S/7-8k · 12-14 clientes · S/20-25k/mes</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 8px;background:rgba(176,106,16,.08);border-radius:6px;">
+              <span style="color:var(--trazo-l);font-size:11px;flex-shrink:0;">Mar 27</span>
+              <p style="font-size:10px;">Modelo nuevo consolidado · menos piezas más valor · S/25-28k/mes</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(176,106,16,.15);border:1px solid rgba(176,106,16,.3);border-radius:8px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">Meta Mar 2027</p>
+          <p style="font-size:14px;color:var(--trazo-l);font-weight:700;">S/18-25k/mes</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:2px;">Retainers + primeros clientes performance · escenario alcanzable</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.25);border-radius:10px;padding:10px 20px;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">S/30-45k</div><div class="ml">Qochix Mar 2027/mes · escenario realista</div></div>
+      <div style="width:1px;height:24px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">12</div><div class="ml">meses sin sueldos = reinversión total</div></div>
+      <div style="width:1px;height:24px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">Rossy</div><div class="ml">apunta a liberarse</div></div>
+      <div style="width:1px;height:24px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">3</div><div class="ml">Full Days ejecutados</div></div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿El Campamento de noviembre es realista si el Full Day es en julio?</li>
+        <li>¿Trazo puede atender HugoTech y Almaria sin bajar calidad a sus clientes actuales?</li>
+        <li>¿Cómo celebramos los hitos grandes como equipo?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S8C PLAN 2 AÑOS -->
+<div class="slide" id="s11">
+  <div class="content">
+    <div class="eyebrow">Visión a largo plazo · 2027–2028</div>
+    <h2>Plan 2 años — escalar y liberar</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+
+      <!-- HUGOTECH 2 AÑOS -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--hugo);padding-bottom:6px;margin-bottom:2px;">
+          <p style="font-size:11px;color:var(--hugo-l);font-weight:600;letter-spacing:1px;">HUGOTECH · 2027–2028</p>
+        </div>
+        <div style="background:rgba(30,95,165,.08);border:1px solid rgba(30,95,165,.2);border-radius:10px;padding:12px 14px;flex:1;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">ESCALA Y SISTEMA</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="padding:8px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:500;margin-bottom:3px;">RECOprogramando en ritmo</p>
+              <p style="font-size:10px;">Full Day cada 2 meses · Campamento cada 3 meses · <span style="color:var(--gold);">Ene 2027: lanzamiento programa propio (nombre por definir)</span> · Curso Universidad semestral</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:500;margin-bottom:3px;">B2B consolidado</p>
+              <p style="font-size:10px;">4-5 empresas con programa largo plazo · Programa Alto Rendimiento B2B piloto · S/5-8k/empresa/mes</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:500;margin-bottom:3px;">Comunidad y escala</p>
+              <p style="font-size:10px;">200+ alumni RECOprogramando · comunidad privada activa · primer facilitador certificado</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:500;margin-bottom:3px;">Posicionamiento nacional</p>
+              <p style="font-size:10px;">Universidades invitan a Hugo · LinkedIn top 50 líderes tech Perú · Referente beAgile en LATAM</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:500;margin-bottom:3px;">Hugo deja el corporativo</p>
+              <p style="font-size:10px;">HugoTech genera S/25-30k/mes · Hugo dedica 100% al ecosistema · 2028 target</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(30,95,165,.15);border:1px solid rgba(30,95,165,.35);border-radius:8px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">Meta 2028</p>
+          <p style="font-size:14px;color:var(--hugo-l);font-weight:700;">S/20-28k/mes</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:2px;">Hugo cerca de liberarse · 2028-2029 target real 🎯</p>
+        </div>
+      </div>
+
+      <!-- ALMARIA 2 AÑOS -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--almaria);padding-bottom:6px;margin-bottom:2px;">
+          <p style="font-size:11px;color:var(--almaria-l);font-weight:600;letter-spacing:1px;">ALMARIA · 2027–2028</p>
+        </div>
+        <div style="background:rgba(26,122,86,.08);border:1px solid rgba(26,122,86,.2);border-radius:10px;padding:12px 14px;flex:1;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">EXPANSIÓN Y COMUNIDAD</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="padding:8px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:500;margin-bottom:3px;">Corporate escalado</p>
+              <p style="font-size:10px;">15-20 empresas en cartera · programa mensual recurrente · Día Mujer + Navidad + onboarding regular</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:500;margin-bottom:3px;">Rituales consolidado</p>
+              <p style="font-size:10px;">Alianzas con 5+ wedding planners · presencia en bodas, quinceañeros, bautizos · delivery Lima completo</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:500;margin-bottom:3px;">Suscripción mensual</p>
+              <p style="font-size:10px;">Experiencia mensual para personas · 50-100 suscriptores · ingreso recurrente predecible</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:500;margin-bottom:3px;">Sinergia total HugoTech</p>
+              <p style="font-size:10px;">Kit Almaria en todos los cierres · empresas B2B de Hugo son clientes Almaria · canal cruzado activo</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:500;margin-bottom:3px;">Rossy full time Almaria</p>
+              <p style="font-size:10px;">Rossy 100% dedicada · Vera lidera alianzas · Almaria tiene equipo propio · Marca reconocida Lima</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(26,122,86,.15);border:1px solid rgba(26,122,86,.35);border-radius:8px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">Meta 2028</p>
+          <p style="font-size:14px;color:var(--almaria-l);font-weight:700;">S/15-22k/mes</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:2px;">Rossy full time · Vera cerca · escenario alcanzable 🎯</p>
+        </div>
+      </div>
+
+      <!-- TRAZO 2 AÑOS -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div style="border-bottom:2px solid var(--trazo);padding-bottom:6px;margin-bottom:2px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;letter-spacing:1px;">TRAZO · 2027–2028</p>
+        </div>
+        <div style="background:rgba(176,106,16,.08);border:1px solid rgba(176,106,16,.2);border-radius:10px;padding:12px 14px;flex:1;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">POSICIONAMIENTO Y VALOR</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:500;margin-bottom:3px;">Modelo premium consolidado</p>
+              <p style="font-size:10px;">Ticket promedio S/2,500+ · clientes que pagan por resultados · no por piezas · menos clientes más rentables</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:500;margin-bottom:3px;">Performance activo</p>
+              <p style="font-size:10px;">3-5 clientes con revenue share · Meta Ads + LinkedIn Ads · resultados medibles que se venden solos</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:500;margin-bottom:3px;">Consultoría estratégica</p>
+              <p style="font-size:10px;">Auditorías de marca · estrategia digital · ticket S/3-5k por proyecto · alto margen bajo tiempo</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:500;margin-bottom:3px;">Trazo como marca referente</p>
+              <p style="font-size:10px;">Casos de éxito HugoTech + Almaria publicados · Trazo es prueba viva de su propio trabajo</p>
+            </div>
+            <div style="padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:500;margin-bottom:3px;">Carlos S/8k cubierto</p>
+              <p style="font-size:10px;">Trazo genera S/30-35k/mes · Carlos cobra S/8k de Qochix · préstamo de Hugo devuelto</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(176,106,16,.15);border:1px solid rgba(176,106,16,.35);border-radius:8px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--text2);margin-bottom:4px;">Meta 2028</p>
+          <p style="font-size:14px;color:var(--trazo-l);font-weight:700;">S/25-32k/mes</p>
+          <p style="font-size:9px;color:var(--text2);margin-top:2px;">Carlos S/8k · préstamo devuelto · modelo premium 🎯</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;background:rgba(74,63,143,.12);border:1px solid rgba(74,63,143,.3);border-radius:10px;padding:10px 20px;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">S/60-80k</div><div class="ml">Qochix 2028/mes · realista con esfuerzo</div></div>
+      <div style="width:1px;height:24px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">Hugo</div><div class="ml">deja el corporativo 🎯</div></div>
+      <div style="width:1px;height:24px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">S/8k</div><div class="ml">Carlos · Rossy · Vera · Nicole</div></div>
+      <div style="width:1px;height:24px;background:var(--border);"></div>
+      <div style="text-align:center;"><div class="mv" style="font-size:17px;">5</div><div class="ml">socios viviendo de Qochix</div></div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Qué necesita pasar para que Hugo deje el corporativo con tranquilidad en 2028?</li>
+        <li>¿Cómo escalamos sin que la calidad baje en ninguna de las 3 marcas?</li>
+        <li>¿Qué pasa con los % societarios cuando Qochix active el pool de sueldos?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S9 DIGITAL POTENCIADO -->
+<div class="slide" id="s12">
+  <div class="content">
+    <div class="eyebrow">Presencia digital · Ecosistema Qochix</div>
+    <h2>Estrategia digital — 90 días de impacto</h2>
+    <div style="display:flex;gap:10px;flex:1;">
+
+      <!-- LINKEDIN -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div style="background:rgba(0,119,181,.15);border:1px solid rgba(0,119,181,.35);border-radius:10px;padding:10px 14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:13px;color:#4DA6D4;font-weight:700;letter-spacing:1px;">LINKEDIN</span>
+            <span style="font-size:9px;color:var(--gold);background:rgba(201,168,76,.15);padding:2px 8px;border-radius:10px;">B2B PRINCIPAL 🔥</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="background:rgba(30,95,165,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:600;margin-bottom:4px;">HugoTech · Diana · 4/sem</p>
+              <p style="font-size:9px;">Reflexiones liderazgo tech · casos reales coaching · "el bug interno" · beAgile en acción · artículos B2B · Hugo como CIO/coach de referencia en Perú</p>
+            </div>
+            <div style="background:rgba(26,122,86,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:600;margin-bottom:4px;">Almaria · María · 3/sem</p>
+              <p style="font-size:9px;">Bienestar organizacional · cultura empresarial · casos de experiencias corp · propuesta Día Madre · testimonios RRHH · regalos con propósito</p>
+            </div>
+            <div style="background:rgba(176,106,16,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:600;margin-bottom:4px;">Trazo · CC nuevo · 3/sem</p>
+              <p style="font-size:9px;">Casos de éxito con métricas · proceso creativo · resultados de clientes · antes/después · estrategia de contenido · posicionamiento de marca</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIKTOK -->
+        <div style="background:rgba(105,201,208,.1);border:1px solid rgba(105,201,208,.25);border-radius:10px;padding:10px 14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:13px;color:#69C9D0;font-weight:700;letter-spacing:1px;">TIKTOK</span>
+            <span style="font-size:9px;color:var(--gold);background:rgba(201,168,76,.15);padding:2px 8px;border-radius:10px;">ALCANCE 19-35</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="background:rgba(30,95,165,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:600;margin-bottom:4px;">HugoTech · Diana · 4/sem 🔥</p>
+              <p style="font-size:9px;">"¿Cuánto gana un dev en Perú?" · "El bug que nadie te enseña a resolver" · clips Hugo hablando · RECOprogramando detrás de escenas · frases poderosas</p>
+            </div>
+            <div style="background:rgba(26,122,86,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:600;margin-bottom:4px;">Almaria · María · 3/sem</p>
+              <p style="font-size:9px;">Unboxing de experiencias · "regala esto, no flores" · rituales de intención · detrás de un evento corp · plantas que tienen significado · bodas y momentos</p>
+            </div>
+            <div style="background:rgba(176,106,16,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:600;margin-bottom:4px;">Trazo · CC nuevo · 2/sem</p>
+              <p style="font-size:9px;">Tips de contenido · "por qué tu marca no vende" · proceso de producción · transformaciones de marca · errores comunes en redes sociales</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSTAGRAM + FACEBOOK -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <!-- INSTAGRAM -->
+        <div style="background:rgba(225,48,108,.1);border:1px solid rgba(225,48,108,.25);border-radius:10px;padding:10px 14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:13px;color:#E1306C;font-weight:700;letter-spacing:1px;">INSTAGRAM</span>
+            <span style="font-size:9px;color:var(--gold);background:rgba(201,168,76,.15);padding:2px 8px;border-radius:10px;">VISUAL · EMOCIONAL</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="background:rgba(30,95,165,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--hugo-l);font-weight:600;margin-bottom:4px;">HugoTech · Diana · 5/sem</p>
+              <p style="font-size:9px;">Transformación personal · frases poderosas · reels detrás del Full Day · testimonios · carruseles "cómo reprogramar tu código" · stories Q&A Hugo</p>
+            </div>
+            <div style="background:rgba(26,122,86,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--almaria-l);font-weight:600;margin-bottom:4px;">Almaria · María · 6/sem 🔥 CANAL PRINCIPAL</p>
+              <p style="font-size:9px;">Experiencias en acción · unboxing kits · momentos reales de empresas · bodas y rituales · frases de introspección · plantas con historia · stories ventas directas</p>
+            </div>
+            <div style="background:rgba(176,106,16,.15);border-radius:7px;padding:8px 10px;">
+              <p style="font-size:10px;color:var(--trazo-l);font-weight:600;margin-bottom:4px;">Trazo · CC nuevo · 4/sem</p>
+              <p style="font-size:9px;">Portfolio visual · reels proceso creativo · resultados de clientes · antes/después de marca · behind the scenes · stories mostrando el equipo</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FACEBOOK -->
+        <div style="background:rgba(24,119,242,.08);border:1px solid rgba(24,119,242,.2);border-radius:10px;padding:10px 14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:13px;color:#4A90D9;font-weight:700;letter-spacing:1px;">FACEBOOK</span>
+            <span style="font-size:9px;color:var(--gold);background:rgba(201,168,76,.15);padding:2px 8px;border-radius:10px;">RETARGETING + GRUPOS</span>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:rgba(30,95,165,.1);border-radius:6px;padding:7px 9px;">
+              <p style="font-size:9px;color:var(--hugo-l);font-weight:600;margin-bottom:2px;">HugoTech</p>
+              <p style="font-size:9px;">Grupos tech Lima · retargeting ads · comunidad RECOprogramando</p>
+            </div>
+            <div style="flex:1;background:rgba(26,122,86,.1);border-radius:6px;padding:7px 9px;">
+              <p style="font-size:9px;color:var(--almaria-l);font-weight:600;margin-bottom:2px;">Almaria 🔥</p>
+              <p style="font-size:9px;">Grupos bodas Lima · grupos RRHH · ads Día Madre · retargeting web</p>
+            </div>
+            <div style="flex:1;background:rgba(176,106,16,.1);border-radius:6px;padding:7px 9px;">
+              <p style="font-size:9px;color:var(--trazo-l);font-weight:600;margin-bottom:2px;">Trazo</p>
+              <p style="font-size:9px;">Retargeting B2B · grupos empresariales · ads leads calificados</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO + ADS + IA -->
+      <div style="flex:0.85;display:flex;flex-direction:column;gap:6px;">
+        <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;">
+          <p style="font-size:11px;color:var(--gold);font-weight:600;margin-bottom:8px;letter-spacing:.5px;">SEO · BLOGS · IA</p>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="padding:7px 10px;background:rgba(30,95,165,.1);border-radius:6px;">
+              <p style="font-size:9px;color:var(--hugo-l);font-weight:600;margin-bottom:2px;">HugoTech · 1 blog/sem</p>
+              <p style="font-size:9px;">"coach liderazgo tech Lima" · "mentoring programadores Perú" · "beAgile qué es" · "RECOprogramando"</p>
+            </div>
+            <div style="padding:7px 10px;background:rgba(26,122,86,.1);border-radius:6px;">
+              <p style="font-size:9px;color:var(--almaria-l);font-weight:600;margin-bottom:2px;">Almaria · 1 blog/sem</p>
+              <p style="font-size:9px;">"regalos corporativos Lima" · "experiencias bienestar empresas" · "regalo Día Madre Lima" · "plantas con intención"</p>
+            </div>
+            <div style="padding:7px 10px;background:rgba(176,106,16,.1);border-radius:6px;">
+              <p style="font-size:9px;color:var(--trazo-l);font-weight:600;margin-bottom:2px;">Trazo · 1 blog/sem</p>
+              <p style="font-size:9px;">"agencia contenido Lima" · "producción audiovisual Perú" · "estrategia redes sociales Lima"</p>
+            </div>
+            <div style="padding:6px 10px;background:rgba(74,63,143,.15);border-radius:6px;">
+              <p style="font-size:9px;color:var(--qochix-l);font-weight:600;margin-bottom:2px;">IA — ChatGPT · Perplexity · Gemini</p>
+              <p style="font-size:9px;">Blogs bien escritos con keywords → las 3 marcas aparecen cuando alguien consulta a la IA por estos servicios en Lima</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-radius:10px;padding:10px 14px;">
+          <p style="font-size:11px;color:#E74C3C;font-weight:600;margin-bottom:8px;letter-spacing:.5px;">ADS PAGADOS / MES</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+              <span style="font-size:9px;color:var(--hugo-l);">HugoTech · Meta Ads</span>
+              <span style="font-size:10px;color:var(--hugo-l);font-weight:600;">S/500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+              <span style="font-size:9px;color:var(--almaria-l);">Almaria · Meta + FB</span>
+              <span style="font-size:10px;color:var(--almaria-l);font-weight:600;">S/600</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+              <span style="font-size:9px;color:var(--trazo-l);">Trazo · LinkedIn Ads</span>
+              <span style="font-size:10px;color:var(--trazo-l);font-weight:600;">S/500</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:rgba(201,168,76,.1);border-radius:5px;margin-top:2px;">
+              <span style="font-size:10px;color:var(--text);font-weight:500;">Total ecosistema</span>
+              <span style="font-size:12px;color:var(--gold);font-weight:700;">S/1,600/mes</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.25);border-radius:10px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--qochix-l);font-weight:600;margin-bottom:6px;">YOUTUBE · PODCASTS</p>
+          <p style="font-size:9px;color:var(--text2);">1 video/mes por marca mínimo. HugoTech: clips de sesiones y eventos. Almaria: experiencias en video. Trazo: casos de éxito en formato mini-doc.</p>
+        </div>
+
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;">
+          <p style="font-size:10px;color:var(--gold);font-weight:600;margin-bottom:5px;">REGLA DE ORO</p>
+          <p style="font-size:9px;">Trazo produce · Diana y María adaptan y publican · Rossy revisa coherencia · Vera mide resultados semanales. <strong style="color:var(--text);">1 historia → 3 canales → 3 marcas.</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Quién aprueba el contenido antes de publicar? ¿Hay flujo de aprobación definido?</li>
+        <li>¿Diana, María y el CC nuevo tienen briefing claro de cada marca antes del 1 de abril?</li>
+        <li>¿El presupuesto de ads S/1,600/mes está disponible desde abril o lo activamos gradual?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S9B COMERCIAL HUGOTECH + ALMARIA -->
+<div class="slide" id="s13">
+  <div class="content">
+    <div class="eyebrow">Estrategia comercial · B2B</div>
+    <h2>El comercial — HugoTech + Almaria</h2>
+    <div style="display:flex;gap:14px;flex:1;">
+
+      <!-- PERFIL -->
+      <div style="flex:0.7;display:flex;flex-direction:column;gap:8px;">
+        <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--gold);font-weight:600;margin-bottom:10px;letter-spacing:.5px;">PERFIL DEL COMERCIAL</p>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--gold);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Experiencia en venta consultiva B2B · no venta transaccional</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--gold);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Conoce el mundo de RRHH, Cultura y bienestar organizacional</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--gold);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Empático, curioso, orientado a relaciones de largo plazo</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--gold);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Maneja LinkedIn y puede prospectar sin miedo al rechazo</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--gold);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Capacidad de presentar tanto experiencias (Almaria) como programas de transformación (HugoTech)</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--text);font-weight:500;margin-bottom:8px;">Herramientas que necesita desde día 1</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">📋 Propuesta comercial Almaria Corporate</p>
+            <p style="font-size:10px;">📋 Catálogo de talleres HugoTech (5 formatos)</p>
+            <p style="font-size:10px;">📋 Deck presentación HugoTech para empresas</p>
+            <p style="font-size:10px;">📋 Lista de 50 empresas target con contacto RRHH</p>
+            <p style="font-size:10px;">📋 Guión de primer contacto WhatsApp + LinkedIn</p>
+            <p style="font-size:10px;">📋 Calendario de fechas clave 2026 (Día Madre, etc.)</p>
+            <p style="font-size:10px;">📋 CRM simple (Notion o similar) para seguimiento</p>
+          </div>
+        </div>
+        <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:10px;padding:12px 16px;">
+          <p style="font-size:10px;color:var(--almaria-l);font-weight:600;margin-bottom:4px;">Meta mensual del comercial</p>
+          <p style="font-size:13px;color:var(--text);">Almaria: <span style="color:var(--almaria-l);">3-5 eventos corp/mes</span></p>
+          <p style="font-size:13px;color:var(--text);">HugoTech: <span style="color:var(--hugo-l);">1-2 talleres + 1 empresa en pipeline</span></p>
+        </div>
+      </div>
+
+      <!-- PROCESO -->
+      <div style="flex:1.3;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+
+          <!-- ALMARIA proceso -->
+          <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:12px;padding:14px 16px;">
+            <p style="font-size:11px;color:var(--almaria-l);font-weight:600;margin-bottom:10px;letter-spacing:.5px;">PROCESO ALMARIA B2B</p>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">1</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Identificar</strong> · HR manager o CEO · empresas 20-300 personas · Lima</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">2</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Conectar</strong> · LinkedIn + mensaje personalizado · "¿ya tienen algo para el Día de la Madre?"</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">3</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Presentar</strong> · demo visual de la experiencia · propuesta en 24hrs · precio claro</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">4</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Cerrar</strong> · mínimo S/600 por evento · anticipo 50% · coordina con Rossy/Vera</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">5</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Recompra</strong> · seguimiento post-evento · propuesta siguiente fecha clave</p>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(26,122,86,.2);">
+              <p style="font-size:9px;color:var(--text2);">Fechas clave: Día Madre (mayo) · Día Padre (jun) · Fiestas Patrias (jul) · Aniversario empresa · Navidad (dic)</p>
+            </div>
+          </div>
+
+          <!-- HUGOTECH proceso -->
+          <div style="background:rgba(30,95,165,.1);border:1px solid rgba(30,95,165,.25);border-radius:12px;padding:14px 16px;">
+            <p style="font-size:11px;color:var(--hugo-l);font-weight:600;margin-bottom:10px;letter-spacing:.5px;">PROCESO HUGOTECH B2B</p>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">1</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Identificar</strong> · COO/CPTO/RRHH · empresas tech 20-200p · que "hacen ágil" pero algo falta</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">2</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Conectar</strong> · LinkedIn Hugo · red de contactos Tornado Bus, Odiseo · referidos</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">3</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Presentar</strong> · deck HugoTech · catálogo de talleres · caso de éxito piloto · resultados medibles</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">4</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Cerrar</strong> · taller entrada S/1,000-2,000 · propuesta programa 3-6 meses · contrato + anticipo</p>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-start;">
+                <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">5</span>
+                <p style="font-size:10px;"><strong style="color:var(--text);">Escalar</strong> · taller → programa completo · S/5,000-8,000/mes · relación 3-6 meses</p>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(30,95,165,.2);">
+              <p style="font-size:9px;color:var(--text2);">Canales de prospección: LinkedIn Hugo · Red Tornado Bus/Odiseo · Alianzas Vera con consultoras ágiles</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MÉTRICAS SEMANA A SEMANA -->
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--text);font-weight:500;margin-bottom:10px;">Lo que el comercial reporta cada semana a Nicole</p>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+            <div style="text-align:center;padding:10px;background:rgba(201,168,76,.08);border-radius:8px;">
+              <p style="font-size:18px;font-family:'Playfair Display',serif;color:var(--gold);font-weight:700;">30</p>
+              <p style="font-size:9px;color:var(--text2);">contactos nuevos/sem</p>
+            </div>
+            <div style="text-align:center;padding:10px;background:rgba(201,168,76,.08);border-radius:8px;">
+              <p style="font-size:18px;font-family:'Playfair Display',serif;color:var(--gold);font-weight:700;">5</p>
+              <p style="font-size:9px;color:var(--text2);">reuniones agendadas/sem</p>
+            </div>
+            <div style="text-align:center;padding:10px;background:rgba(201,168,76,.08);border-radius:8px;">
+              <p style="font-size:18px;font-family:'Playfair Display',serif;color:var(--gold);font-weight:700;">2</p>
+              <p style="font-size:9px;color:var(--text2);">propuestas enviadas/sem</p>
+            </div>
+            <div style="text-align:center;padding:10px;background:rgba(201,168,76,.08);border-radius:8px;">
+              <p style="font-size:18px;font-family:'Playfair Display',serif;color:var(--gold);font-weight:700;">1</p>
+              <p style="font-size:9px;color:var(--text2);">cierre mínimo/sem</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿El comercial ya está identificado o estamos en proceso de selección?</li>
+        <li>¿Vera apoya al comercial con sus contactos de alianzas o van en paralelo?</li>
+        <li>¿Qué comisión o estructura de incentivo tendrá el comercial por cierre?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S9C COMERCIAL TRAZO -->
+<div class="slide" id="s14">
+  <div class="content">
+    <div class="eyebrow">Estrategia comercial · Trazo</div>
+    <h2>El comercial — Trazo marca</h2>
+    <div style="display:flex;gap:14px;flex:1;">
+
+      <!-- PERFIL TRAZO -->
+      <div style="flex:0.7;display:flex;flex-direction:column;gap:8px;">
+        <div style="background:rgba(176,106,16,.1);border:1px solid rgba(176,106,16,.3);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;margin-bottom:10px;letter-spacing:.5px;">PERFIL DEL COMERCIAL TRAZO</p>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--trazo-l);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Entiende de marketing digital y resultados medibles</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--trazo-l);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Habla el idioma del cliente: ROI, conversiones, branding</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--trazo-l);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">LinkedIn activo · capacidad de prospectar en frío y caliente</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--trazo-l);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Conoce startups, agencias, empresas medianas que buscan crecer</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;">
+              <span style="color:var(--trazo-l);flex-shrink:0;font-size:12px;">✦</span>
+              <p style="font-size:11px;">Capaz de presentar el nuevo modelo Trazo: menos piezas, más estrategia y valor</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--text);font-weight:500;margin-bottom:8px;">Herramientas que necesita</p>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <p style="font-size:10px;">📋 Portafolio Trazo con 5 casos de éxito reales</p>
+            <p style="font-size:10px;">📋 Propuesta comercial tipo con precios claros</p>
+            <p style="font-size:10px;">📋 Deck presentación Trazo para reuniones</p>
+            <p style="font-size:10px;">📋 Perfil LinkedIn Trazo optimizado</p>
+            <p style="font-size:10px;">📋 Lista 50 empresas target con decisor identificado</p>
+            <p style="font-size:10px;">📋 Guión "auditoría gratuita" como puerta de entrada</p>
+            <p style="font-size:10px;">📋 CRM seguimiento · Nicole gestiona pipeline</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(176,106,16,.15);border:1px solid rgba(176,106,16,.35);border-radius:10px;padding:12px 16px;">
+          <p style="font-size:10px;color:var(--trazo-l);font-weight:600;margin-bottom:4px;">Meta mensual del comercial Trazo</p>
+          <p style="font-size:13px;color:var(--text);">Abril: <span style="color:var(--trazo-l);">+2 clientes nuevos</span></p>
+          <p style="font-size:13px;color:var(--text);">Mayo: <span style="color:var(--trazo-l);">+3 clientes nuevos</span></p>
+          <p style="font-size:12px;color:var(--text2);margin-top:4px;">Ticket mínimo: S/1,500/mes · meta promedio S/2,000</p>
+        </div>
+      </div>
+
+      <!-- PROCESO TRAZO -->
+      <div style="flex:1.3;display:flex;flex-direction:column;gap:8px;">
+
+        <!-- Proceso paso a paso -->
+        <div style="background:rgba(176,106,16,.08);border:1px solid rgba(176,106,16,.2);border-radius:12px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--trazo-l);font-weight:600;margin-bottom:10px;letter-spacing:.5px;">PROCESO COMERCIAL TRAZO — NUEVO MODELO</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">1</span>
+              <div><p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:2px;">Identificar perfil ideal</p><p style="font-size:9px;">Empresas 10-100p · gerencia/marketing · necesitan crecer su marca · no tienen equipo de contenido</p></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">2</span>
+              <div><p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:2px;">Puerta de entrada</p><p style="font-size:9px;">Auditoría gratuita de redes (15 min) → muestra el problema real → el cliente lo ve con sus propios ojos</p></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">3</span>
+              <div><p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:2px;">Propuesta de valor</p><p style="font-size:9px;">No vendemos posts · vendemos resultados · "¿cuánto te cuesta no tener presencia digital?" · ROI claro</p></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">4</span>
+              <div><p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:2px;">Cierre</p><p style="font-size:9px;">Retainer desde S/1,500 · contrato 3 meses mínimo · anticipo mes 1 · Nicole gestiona onboarding</p></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">5</span>
+              <div><p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:2px;">Upsell</p><p style="font-size:9px;">Retainer → performance/ads → consultoría estratégica · de S/1,500 a S/3,000 en 3 meses</p></div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start;padding:8px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+              <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 6px;border-radius:10px;flex-shrink:0;font-weight:600;">6</span>
+              <div><p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:2px;">Referido</p><p style="font-size:9px;">Cliente satisfecho refiere · incentivo por referido · el mejor canal de Trazo en sus primeros 2 años</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Target + Métricas -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:8px;">Empresas target Trazo</p>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <p style="font-size:9px;">✦ Startups Lima que buscan crecer</p>
+              <p style="font-size:9px;">✦ Marcas personales que escalan</p>
+              <p style="font-size:9px;">✦ Empresas medianas sin equipo de contenido</p>
+              <p style="font-size:9px;">✦ Agencias que necesitan producción</p>
+              <p style="font-size:9px;">✦ HugoTech y Almaria (interno)</p>
+              <p style="font-size:9px;">✦ Contactos de red Carlos + referidos actuales</p>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:8px;">KPIs del comercial Trazo</p>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Contactos/semana</span><span style="font-size:10px;color:var(--trazo-l);font-weight:600;">30+</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Auditorías dadas/sem</span><span style="font-size:10px;color:var(--trazo-l);font-weight:600;">3-5</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Propuestas enviadas/sem</span><span style="font-size:10px;color:var(--trazo-l);font-weight:600;">2-3</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Cierre mínimo/mes</span><span style="font-size:10px;color:var(--trazo-l);font-weight:600;">2-3</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:9px;color:var(--text2);">Ticket promedio</span><span style="font-size:10px;color:var(--trazo-l);font-weight:600;">S/1,800</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SINERGIA con Almaria/HugoTech -->
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.25);border-radius:10px;padding:12px 14px;">
+          <p style="font-size:10px;color:var(--qochix-l);font-weight:600;margin-bottom:6px;">Sinergia comercial del ecosistema</p>
+          <p style="font-size:10px;">Trazo produce el contenido que los comerciales de Almaria y HugoTech usan para prospectar. Un cliente de Trazo puede convertirse en cliente de Almaria Corporate o HugoTech B2B. Los 2 comerciales comparten inteligencia de mercado con Nicole semanalmente.</p>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿El comercial de Trazo ya está identificado o en proceso de selección?</li>
+        <li>¿Nicole puede gestionar el pipeline de los 2 comerciales en paralelo desde día 1?</li>
+        <li>¿Qué estructura de comisión tienen los comerciales? ¿% de lo que cierran?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S10 CIERRE -->
+
+<!-- S14 — RIESGOS REALES -->
+<div class="slide" id="s15">
+  <div class="content">
+    <div class="eyebrow">Transparencia total · Lo que puede salir mal</div>
+    <h2>Riesgos reales — hay que nombrarlos</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+
+        <div style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(192,57,43,.3);color:#E74C3C;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">RIESGO CRÍTICO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Hugo = cuello de botella</p>
+          </div>
+          <p style="font-size:10px;">HugoTech depende 100% de Hugo. Si Hugo se agota con 17-19 hrs/día, HugoTech se frena. La pregunta sin respuesta: ¿cuándo hay un facilitador certificado que pueda hacer lo que Hugo hace? Sin esa respuesta, HugoTech tiene un techo muy claro.</p>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(201,168,76,.08);border-radius:6px;">
+            <p style="font-size:9px;color:var(--gold);">Plan de mitigación: MC 5.0 forma los primeros facilitadores · Q4 2026 identificar candidato · 2027 primer facilitador activo</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(192,57,43,.3);color:#E74C3C;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">RIESGO CRÍTICO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Rossy al límite desde antes de arrancar</p>
+          </div>
+          <p style="font-size:10px;">60-72 horas semanales con otro trabajo encima no es sostenible. Si Almaria no genera en 3 meses, Rossy debe elegir entre su estabilidad económica y el ecosistema. Perder a Rossy = perder el alma de Almaria y la estrategia de las 3 marcas.</p>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(201,168,76,.08);border-radius:6px;">
+            <p style="font-size:9px;color:var(--gold);">Plan de mitigación: si Almaria no llega a S/5k en 3 meses, Rossy reduce horas Qochix y prioriza su estabilidad. Eso hay que acordarlo ahora.</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(230,126,18,.2);color:#E08A30;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">RIESGO ALTO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Almaria: mercado difícil de educar</p>
+          </div>
+          <p style="font-size:10px;">Vender "momentos de conexión" a empresas en Perú es venta consultiva compleja. El mercado de bienestar corporativo existe pero es inmaduro. El comercial necesita 4-6 semanas mínimo para entender el producto y generar confianza. Los primeros cierres corporativos reales llegarán en mayo-junio, no en abril.</p>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(201,168,76,.08);border-radius:6px;">
+            <p style="font-size:9px;color:var(--gold);">Plan de mitigación: abril = B2C primero (más fácil de cerrar) + red personal socios. B2B corporativo arranca a rendir en mayo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+
+        <div style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(192,57,43,.3);color:#E74C3C;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">RIESGO CRÍTICO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Trazo: deuda + cero margen real</p>
+          </div>
+          <p style="font-size:10px;">S/9,000 ingresos − S/8,800 planilla = S/200 margen. Más S/8,500 de préstamo de Hugo pendiente. Más S/4,000/mes de inversión Hugo en Trazo marca. Si en abril-mayo no entran 2-3 clientes nuevos, Hugo sigue poniendo dinero sin retorno visible.</p>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(201,168,76,.08);border-radius:6px;">
+            <p style="font-size:9px;color:var(--gold);">Umbral claro: si junio no llega a S/14k, revisar inversión Hugo en Trazo marca. No es derrota — es decisión responsable.</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(192,57,43,.3);color:#E74C3C;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">RIESGO CRÍTICO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">% societarios sin definir = conflicto latente</p>
+          </div>
+          <p style="font-size:10px;">Operan con acuerdos verbales. Cuando llegue el primer ingreso real van a necesitar respuestas a: ¿cuánto del excedente de Almaria le toca a cada uno? ¿El préstamo de Hugo a Trazo tiene fecha de devolución? ¿Nicole es socia o empleada? Sin documento firmado, el dinero crea tensiones que destruyen socios.</p>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(201,168,76,.08);border-radius:6px;">
+            <p style="font-size:9px;color:var(--gold);">Acción: pacto de socios firmado antes del 15 de abril. No es burocracia — es respeto mutuo.</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(230,126,18,.2);color:#E08A30;font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">RIESGO ALTO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Nicole con demasiados sombreros</p>
+          </div>
+          <p style="font-size:10px;">PM full time Trazo + 2-3 hrs Almaria + 2-3 hrs HugoTech + gestionar pipeline de 2 comerciales. Una sola persona no puede ser PM de 3 marcas sin que algo falle. Va a haber cuellos de botella operativos en los meses de mayor presión.</p>
+          <div style="margin-top:8px;padding:6px 10px;background:rgba(201,168,76,.08);border-radius:6px;">
+            <p style="font-size:9px;color:var(--gold);">Solución: Vera asume coordinación de HugoTech y Almaria. Nicole se enfoca en Trazo + pipeline comercial cruzado. Roles más claros desde abril 2.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>La pregunta más importante</h4>
+      <ul>
+        <li>¿Qué pasa si en 6 meses Almaria no llega a S/8,000/mes? ¿Cuál es el plan B concreto?</li>
+        <li>¿Cuál es el umbral de inversión de Hugo en Trazo? ¿Hasta cuándo y hasta cuánto?</li>
+        <li>¿Todos están realmente de acuerdo con no cobrar sueldo 12 meses o hay dudas que no se han dicho?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S15 — OPORTUNIDADES -->
+<div class="slide" id="s16">
+  <div class="content">
+    <div class="eyebrow">Lo que no se está aprovechando aún</div>
+    <h2>Oportunidades reales — hay oro sin explotar</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+
+        <div style="background:rgba(26,122,86,.12);border:1px solid rgba(26,122,86,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD INMEDIATA</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Rituales Almaria > Corporate en velocidad</p>
+          </div>
+          <p style="font-size:10px;">Bodas, quinceañeros y bautizos en Lima son miles de eventos al mes. El ticket puede ser menor pero la conversión es en días, no semanas. Una novia que ve el producto en Instagram compra rápido. Este canal debería ser el primero en activarse en abril — genera caja mientras el corporativo madura.</p>
+        </div>
+
+        <div style="background:rgba(30,95,165,.12);border:1px solid rgba(30,95,165,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD INMEDIATA</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Sesiones 1:1 generan caja desde el 2 de abril</p>
+          </div>
+          <p style="font-size:10px;">S/100/hora × 8 sesiones semanales = S/3,200/mes desde el primer mes. Sin eventos, sin comercial, sin programa. Solo Hugo y su agenda abierta. ¿Está realmente promovida en LinkedIn y la web? ¿Hay un Calendly activo? Esta es la caja puente mientras HugoTech escala.</p>
+        </div>
+
+        <div style="background:rgba(30,95,165,.12);border:1px solid rgba(30,95,165,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD SEMANA 1</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Red de Hugo = primer pipeline sin comercial</p>
+          </div>
+          <p style="font-size:10px;">17+ años en tecnología, Tornado Bus, Odiseo, 200+ jóvenes acompañados. Esa red puede generar los primeros clientes B2B de HugoTech, los primeros participantes del Full Day Y las primeras empresas para Almaria Corporate en las primeras 2 semanas de abril. No necesitan al comercial para eso.</p>
+        </div>
+
+        <div style="background:rgba(176,106,16,.12);border:1px solid rgba(176,106,16,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD INMEDIATA</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Trazo debe subir precios antes de buscar clientes</p>
+          </div>
+          <p style="font-size:10px;">El ticket promedio actual es ~S/1,500. Con el nuevo modelo de menos piezas más valor, deberían entrar con S/2,000 mínimo desde ya. Los clientes nuevos nunca conocieron el precio viejo — no hay razón para empezar bajo. Subir el precio de entrada sube el promedio de toda la cartera.</p>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+
+        <div style="background:rgba(26,122,86,.12);border:1px solid rgba(26,122,86,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(26,122,86,.3);color:var(--almaria-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD DIFERENCIADORA</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Almaria + coaching ontológico = segmento premium</p>
+          </div>
+          <p style="font-size:10px;">Rossy tiene formación en coaching ontológico. Almaria ES coaching ontológico en acción con lo físico-simbólico. Pocas marcas en Lima combinan esto. Esa narrativa puede posicionar a Almaria en un segmento premium dispuesto a pagar más — no S/55/persona sino S/90-120/persona para experiencias más profundas.</p>
+        </div>
+
+        <div style="background:rgba(74,63,143,.12);border:1px solid rgba(74,63,143,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(74,63,143,.3);color:var(--qochix-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD ECOSISTEMA</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Contenido cruzado no está planificado operativamente</p>
+          </div>
+          <p style="font-size:10px;">Se dice "Trazo produce contenido de HugoTech y Almaria" pero nadie ha definido: ¿cuántas piezas al mes? ¿Con qué briefing? ¿Quién lo aprueba? ¿Qué pasa cuando Trazo tiene carga máxima con sus propios clientes? Necesitan un acuerdo de servicio interno antes del 2 de abril.</p>
+        </div>
+
+        <div style="background:rgba(176,106,16,.12);border:1px solid rgba(176,106,16,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(176,106,16,.3);color:var(--trazo-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD TRAZO</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">Trazo es la prueba viva de sí mismo</p>
+          </div>
+          <p style="font-size:10px;">Trazo vende contenido estratégico pero su propia presencia en redes es nueva y tiene poco contenido. Eso es la primera pregunta que hace un prospecto: "¿cómo se ven sus propias redes?" Trazo necesita ser el mejor caso de éxito de sí mismo antes de venderle a otros.</p>
+        </div>
+
+        <div style="background:rgba(30,95,165,.12);border:1px solid rgba(30,95,165,.3);border-radius:12px;padding:14px 16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="background:rgba(30,95,165,.3);color:var(--hugo-l);font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;">OPORTUNIDAD 2027</span>
+            <p style="font-size:11px;color:var(--text);font-weight:600;">HugoTech como plataforma, no solo como persona</p>
+          </div>
+          <p style="font-size:10px;">Hoy HugoTech = Hugo. En 2027 HugoTech debería tener su propia plataforma digital, cursos grabados, comunidad de alumni y facilitadores certificados que escalen lo que Hugo no puede hacer solo. Ese es el salto de marca personal a empresa real.</p>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Almaria tiene productos B2C listos para vender desde el 2 de abril sin esperar al comercial B2B?</li>
+        <li>¿El acuerdo de servicio interno de Trazo con HugoTech y Almaria está definido antes del arranque?</li>
+        <li>¿Alguien en el equipo puede liderar la línea de Rituales de Almaria con foco total en abril?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S16 — CHECKLIST 2 ABRIL -->
+<div class="slide" id="s17">
+  <div class="content">
+    <div class="eyebrow">Todo arranca el 2 de abril — sin excusas</div>
+    <h2>Checklist pre-lanzamiento · ¿Qué debe estar listo?</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+
+      <!-- HUGOTECH -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div style="border-bottom:2px solid var(--hugo);padding-bottom:6px;margin-bottom:4px;">
+          <p style="font-size:12px;color:var(--hugo-l);font-weight:700;letter-spacing:1px;">HUGOTECH · 2 abril</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Agenda 1:1 abierta en web con Calendly</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Catálogo de 5 talleres B2B con nombre, objetivo, duración y precio</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Deck comercial listo para empresas (Trazo lo produce)</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Comercial B2B con briefing completo y lista de 30 prospectos</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Diana con plan de contenido semana 1 listo</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Hugo activa su red: 20 mensajes a contactos clave el 2 de abril</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">LinkedIn de Hugo optimizado con nueva propuesta de valor</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(30,95,165,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Venue Full Day junio identificado y consultado</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALMARIA -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div style="border-bottom:2px solid var(--almaria);padding-bottom:6px;margin-bottom:4px;">
+          <p style="font-size:12px;color:var(--almaria-l);font-weight:700;letter-spacing:1px;">ALMARIA · 2 abril</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Kits B2C listos para vender y entregar en Lima</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Precio mínimo evento definido: S/600 (no negociable)</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Propuesta corporativa Día de la Madre lista (el evento es en 6 semanas)</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">30 empresas target con nombre + contacto RRHH identificadas</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">María con plan de contenido Instagram semana 1</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Los 3 socios activaron su red personal para primeras ventas B2C</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Alianzas Rituales: 2 wedding planners contactados</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">WhatsApp Business Almaria activo para conversión directa</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRAZO + QOCHIX -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+        <div style="border-bottom:2px solid var(--trazo);padding-bottom:6px;margin-bottom:4px;">
+          <p style="font-size:12px;color:var(--trazo-l);font-weight:700;letter-spacing:1px;">TRAZO · 2 abril</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Content creator nuevo contratado y con briefing</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Línea editorial Trazo marca definida (Carlos aprueba)</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Portafolio con 5 casos de éxito reales listo</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Propuesta comercial tipo con nuevo precio mínimo S/1,500-2,000</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Comercial B2B Trazo con lista 50 prospectos</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(176,106,16,.1);border-radius:7px;">
+            <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Acuerdo servicio interno: piezas mensuales para HugoTech y Almaria</p>
+          </div>
+        </div>
+
+        <div style="border-bottom:2px solid var(--qochix);padding-bottom:6px;margin-top:8px;margin-bottom:4px;">
+          <p style="font-size:12px;color:var(--qochix-l);font-weight:700;letter-spacing:1px;">QOCHIX · antes del 15 abril</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(74,63,143,.1);border-radius:7px;">
+            <span style="color:var(--gold);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Pacto de socios firmado: % societario + distribución excedentes</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(74,63,143,.1);border-radius:7px;">
+            <span style="color:var(--gold);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Préstamo Hugo → Trazo: fecha y forma de devolución acordada</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(74,63,143,.1);border-radius:7px;">
+            <span style="color:var(--gold);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">CRM simple (Notion) para pipeline de los 2 comerciales · Nicole gestiona</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(74,63,143,.1);border-radius:7px;">
+            <span style="color:var(--gold);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Reunión semanal Qochix: lunes 30 min · reportes Nicole + métricas Vera</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(74,63,143,.1);border-radius:7px;">
+            <span style="color:var(--gold);font-size:12px;flex-shrink:0;">□</span>
+            <p style="font-size:10px;">Umbral de revisión Trazo: si junio no llega a S/14k revisar inversión Hugo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Quién es responsable de que cada ítem del checklist esté listo el 2 de abril?</li>
+        <li>¿Hay algo en esta lista que hoy no está ni empezado y necesita más de una semana?</li>
+        <li>¿Tienen el pacto de socios como prioridad esta semana o lo dejan para después?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S17 — MÉTRICAS Y SEGUIMIENTO -->
+<div class="slide" id="s18">
+  <div class="content">
+    <div class="eyebrow">Cómo sabemos si vamos bien</div>
+    <h2>Métricas semanales — el tablero de control</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+
+      <!-- MÉTRICAS POR MARCA -->
+      <div style="flex:1.4;display:flex;flex-direction:column;gap:10px;">
+        <h3>KPIs por marca — se miden cada lunes</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+
+          <!-- HugoTech KPIs -->
+          <div style="background:rgba(30,95,165,.1);border:1px solid rgba(30,95,165,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--hugo-l);font-weight:700;margin-bottom:8px;letter-spacing:.5px;">HUGOTECH</p>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Sesiones 1:1 activas</span>
+                <span style="font-size:10px;color:var(--hugo-l);font-weight:600;">Meta: 5+</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Leads para Full Day</span>
+                <span style="font-size:10px;color:var(--hugo-l);font-weight:600;">Meta: 5/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Empresas B2B contactadas</span>
+                <span style="font-size:10px;color:var(--hugo-l);font-weight:600;">Meta: 10/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Seguidores LinkedIn Hugo</span>
+                <span style="font-size:10px;color:var(--hugo-l);font-weight:600;">+50/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(30,95,165,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Ingresos semana</span>
+                <span style="font-size:10px;color:var(--hugo-l);font-weight:600;">Meta: S/800+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Almaria KPIs -->
+          <div style="background:rgba(26,122,86,.1);border:1px solid rgba(26,122,86,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--almaria-l);font-weight:700;margin-bottom:8px;letter-spacing:.5px;">ALMARIA</p>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Ventas B2C semana</span>
+                <span style="font-size:10px;color:var(--almaria-l);font-weight:600;">Meta: 3+</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Empresas en pipeline</span>
+                <span style="font-size:10px;color:var(--almaria-l);font-weight:600;">Meta: 10+</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Propuestas enviadas</span>
+                <span style="font-size:10px;color:var(--almaria-l);font-weight:600;">Meta: 2/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Seguidores Instagram</span>
+                <span style="font-size:10px;color:var(--almaria-l);font-weight:600;">+80/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(26,122,86,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Ingresos semana</span>
+                <span style="font-size:10px;color:var(--almaria-l);font-weight:600;">Meta: S/500+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trazo KPIs -->
+          <div style="background:rgba(176,106,16,.1);border:1px solid rgba(176,106,16,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:10px;color:var(--trazo-l);font-weight:700;margin-bottom:8px;letter-spacing:.5px;">TRAZO</p>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Prospectos contactados</span>
+                <span style="font-size:10px;color:var(--trazo-l);font-weight:600;">Meta: 30/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Auditorías gratuitas</span>
+                <span style="font-size:10px;color:var(--trazo-l);font-weight:600;">Meta: 3-5/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Propuestas enviadas</span>
+                <span style="font-size:10px;color:var(--trazo-l);font-weight:600;">Meta: 2/sem</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Clientes activos total</span>
+                <span style="font-size:10px;color:var(--trazo-l);font-weight:600;">Actual: 6</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(176,106,16,.1);border-radius:5px;">
+                <span style="font-size:9px;color:var(--text2);">Ingresos mes</span>
+                <span style="font-size:10px;color:var(--trazo-l);font-weight:600;">Actual: S/9k</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reunión semanal -->
+        <div style="background:rgba(74,63,143,.1);border:1px solid rgba(74,63,143,.25);border-radius:10px;padding:14px 16px;">
+          <p style="font-size:11px;color:var(--qochix-l);font-weight:600;margin-bottom:8px;">Reunión semanal Qochix — todos los lunes · 30 minutos</p>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+            <div style="padding:8px;background:rgba(74,63,143,.1);border-radius:7px;text-align:center;">
+              <p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:3px;">Nicole</p>
+              <p style="font-size:9px;color:var(--text2);">Pipeline comercial · cierres · onboarding</p>
+            </div>
+            <div style="padding:8px;background:rgba(74,63,143,.1);border-radius:7px;text-align:center;">
+              <p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:3px;">Vera</p>
+              <p style="font-size:9px;color:var(--text2);">Métricas redes · alianzas · avance por marca</p>
+            </div>
+            <div style="padding:8px;background:rgba(74,63,143,.1);border-radius:7px;text-align:center;">
+              <p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:3px;">Rossy</p>
+              <p style="font-size:9px;color:var(--text2);">Coherencia de marca · contenido aprobado</p>
+            </div>
+            <div style="padding:8px;background:rgba(74,63,143,.1);border-radius:7px;text-align:center;">
+              <p style="font-size:10px;color:var(--text);font-weight:500;margin-bottom:3px;">Hugo</p>
+              <p style="font-size:9px;color:var(--text2);">Decisiones · bloqueos · visión</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEMÁFORO MENSUAL -->
+      <div style="flex:0.7;display:flex;flex-direction:column;gap:10px;">
+        <h3>Semáforo mensual</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(26,122,86,.12);border:1px solid rgba(26,122,86,.3);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:11px;color:var(--almaria-l);font-weight:600;margin-bottom:6px;">🟢 Verde — vamos bien</p>
+            <p style="font-size:10px;">Almaria: 2+ ventas · Trazo: 1+ cliente nuevo · HugoTech: 4+ sesiones 1:1 activas · Contenido publicándose en las 3 marcas</p>
+          </div>
+          <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:11px;color:#E08A30;font-weight:600;margin-bottom:6px;">🟡 Amarillo — revisar</p>
+            <p style="font-size:10px;">Almaria: 0-1 ventas · Trazo estancado en S/9k · HugoTech sin sesiones activas · Contenido irregular o sin coherencia</p>
+          </div>
+          <div style="background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:11px;color:#E74C3C;font-weight:600;margin-bottom:6px;">🔴 Rojo — actuar ya</p>
+            <p style="font-size:10px;">Almaria sin ingresos en mes 2 · Trazo pierde cliente · HugoTech sin actividad · Un socio clave con energía en 0 · Conflicto sin resolver entre socios</p>
+          </div>
+          <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px 14px;">
+            <p style="font-size:11px;color:var(--gold);font-weight:600;margin-bottom:6px;">Cómo celebrar los hitos 🎉</p>
+            <p style="font-size:10px;">Primera venta Almaria · primer taller B2B HugoTech · cliente #10 Trazo · Full Day julio completo. Celebrar en equipo — los hitos construyen cultura.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="qbox">
+      <h4>Preguntas abiertas</h4>
+      <ul>
+        <li>¿Vera tiene capacidad real de medir métricas semanales de las 3 marcas?</li>
+        <li>¿Qué herramienta usan para el CRM y seguimiento? ¿Notion, Trello, otra?</li>
+        <li>¿Cómo toman decisiones cuando el semáforo está en rojo? ¿Quién tiene la última palabra?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S19 CIERRE -->
+<div class="slide" id="s19">
+  <div class="orb" style="width:450px;height:450px;background:var(--qochix);opacity:.12;top:-150px;right:-150px;"></div>
+  <div class="orb" style="width:280px;height:280px;background:var(--almaria);opacity:.08;bottom:-50px;left:-50px;"></div>
+  <div class="content" style="justify-content:center;align-items:center;text-align:center;">
+    <div class="eyebrow">El momento es ahora</div>
+    <h1 style="max-width:560px;margin:0 auto 20px;">Un ecosistema.<br><span style="color:var(--gold);">Una decisión.</span></h1>
+    <p style="max-width:480px;margin:0 auto 36px;font-size:15px;">Qochix no es solo un negocio. Es el sistema que nos permite a todos vivir de lo que amamos construir. Cada acción esta semana mueve el ecosistema hacia 2029.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;">
+      <div class="card" style="padding:16px 22px;min-width:130px;"><div class="mv" style="font-size:20px;">Abr</div><div class="ml">Primera venta Almaria</div></div>
+      <div class="card" style="padding:16px 22px;min-width:130px;"><div class="mv" style="font-size:20px;">May</div><div class="ml">Día de la Madre 🎯</div></div>
+      <div class="card" style="padding:16px 22px;min-width:130px;"><div class="mv" style="font-size:20px;">Jun</div><div class="ml">Full Day piloto Hugo</div></div>
+      <div class="card" style="padding:16px 22px;min-width:130px;"><div class="mv" style="font-size:20px;">Jul</div><div class="ml">Full Day oficial 🎯🎯</div></div>
+    </div>
+    <div class="bc bq" style="padding:20px 28px;max-width:480px;margin:0 auto 24px;">
+      <p style="font-size:14px;color:var(--text);line-height:1.9;">
+        <span style="color:var(--hugo-l);">Desarrollamos el talento.</span><br>
+        <span style="color:var(--almaria-l);">Transformamos el SER.</span><br>
+        <span style="color:var(--trazo-l);">Comunicamos con impacto.</span><br>
+        <span style="color:var(--gold);">Qochix sostiene todo.</span>
+      </p>
+    </div>
+    <div class="qbox" style="max-width:560px;text-align:left;">
+      <h4>Para cerrar la reunión</h4>
+      <ul>
+        <li>¿Estamos todos alineados con la visión y los compromisos de los próximos 12 meses?</li>
+        <li>¿Qué acuerdos necesitamos formalizar esta semana antes de arrancar?</li>
+        <li>¿Cuál es el primer entregable concreto de cada uno para el lunes que viene?</li>
+      </ul>
+    </div>
+    <nav class="deck-res" style="max-width:560px;margin-left:auto;margin-right:auto;" aria-label="Documentos">
+      <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer">Firmar con cabeza: Gobierno</a>
+      <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">Simulador</a>
+    </nav>
+  </div>
+</div>
+
+<!-- S20 — North Star por fase -->
+<div class="slide" id="s20">
+  <div class="content">
+    <div class="eyebrow">Estrategia · 2026 → 2030</div>
+    <h2>North Star por fase</h2>
+    <p style="font-size:11px;color:var(--text2);max-width:44rem;line-height:1.55;margin-bottom:12px;">Una métrica “jefa” por etapa evita discutir todo a la vez. Ajusta el wording en la mesa; la lógica es tracción → repetibilidad → escala.</p>
+    <div style="display:flex;gap:12px;flex:1;align-items:stretch;">
+      <div class="card" style="flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-color:rgba(30,95,165,.35);">
+        <p style="font-size:10px;color:var(--hugo-l);font-weight:700;letter-spacing:1px;">2026 · TRACCIÓN</p>
+        <p style="font-size:20px;font-family:'Playfair Display',serif;font-weight:700;color:var(--text);">Primeras ventas cruzadas</p>
+        <p style="font-size:10px;color:var(--text2);line-height:1.5;">Meta tipo: pipeline visible (CRM), primera venta Almaria, Full Day Hugo en marcha, Trazo estable o creciente. Semáforo semanal en la reunión del lunes.</p>
+      </div>
+      <div class="card" style="flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-color:rgba(26,122,86,.35);">
+        <p style="font-size:10px;color:var(--almaria-l);font-weight:700;letter-spacing:1px;">2027–28 · REPETIBILIDAD</p>
+        <p style="font-size:20px;font-family:'Playfair Display',serif;font-weight:700;color:var(--text);">Márgenes y oferta clara</p>
+        <p style="font-size:10px;color:var(--text2);line-height:1.5;">Meta tipo: B2B recurrente (Hugo/Trazo), canales B2C predecibles (Almaria), costos por marca entendidos. El modelo del pacto asume equipo operativo real.</p>
+      </div>
+      <div class="card" style="flex:1;padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-color:rgba(201,168,76,.4);">
+        <p style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1px;">2029–30 · ESCALA</p>
+        <p style="font-size:20px;font-family:'Playfair Display',serif;font-weight:700;color:var(--text);">Distribuible sostenible</p>
+        <p style="font-size:10px;color:var(--text2);line-height:1.5;">Meta tipo: planilla fundadores y operativa cubierta con holgura; equity mensual deja de ser “teórico”. Metas 2030/2032 alineadas al pacto o explícitas en el simulador.</p>
+      </div>
+    </div>
+    <div class="qbox" style="margin-top:10px;">
+      <h4>Recordatorio</h4>
+      <p style="font-size:10px;color:var(--text2);margin:0;line-height:1.5;">El <strong>pacto</strong> y el <strong>simulador</strong> usan escenario <strong>pesimista ×0,7</strong> como piso de conversación — no como techo de ambición.</p>
+    </div>
+    <nav class="deck-res" style="border-top:none;margin-top:8px;padding-top:0;" aria-label="Enlaces">
+      <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer">Gobierno (pacto)</a>
+      <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">Simulador</a>
+    </nav>
+  </div>
+</div>
+
+<!-- S21 — Escenarios con nombre -->
+<div class="slide" id="s21">
+  <div class="content">
+    <div class="eyebrow">Riesgo y ambición</div>
+    <h2>Tres escenarios, un solo modelo</h2>
+    <div style="display:flex;gap:10px;flex:1;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;background:rgba(232,107,95,.08);border:1px solid rgba(232,107,95,.28);border-radius:12px;padding:14px 16px;">
+        <p style="font-size:10px;color:#E86B5F;font-weight:700;margin-bottom:6px;">📉 PESIMISTA ×0,7</p>
+        <p style="font-size:11px;color:var(--text2);line-height:1.55;"><strong style="color:var(--text)">“Piso Qochix”</strong> — ventas un 30% por debajo del plan base. Es el que manda en el pacto HTML: conservador, defendible frente a socios y abogado.</p>
+      </div>
+      <div style="flex:1;min-width:200px;background:rgba(62,207,207,.08);border:1px solid rgba(62,207,207,.25);border-radius:12px;padding:14px 16px;">
+        <p style="font-size:10px;color:var(--hugo-l);font-weight:700;margin-bottom:6px;">📊 NEUTRO ×1,0</p>
+        <p style="font-size:11px;color:var(--text2);line-height:1.55;"><strong style="color:var(--text)">“Plan de mesa”</strong> — lo que el Excel y las conversaciones suelen asumir como base. Bueno para presupuestos y hiring.</p>
+      </div>
+      <div style="flex:1;min-width:200px;background:rgba(212,168,83,.1);border:1px solid rgba(212,168,76,.35);border-radius:12px;padding:14px 16px;">
+        <p style="font-size:10px;color:var(--gold);font-weight:700;margin-bottom:6px;">🚀 OPTIMISTA ×1,4</p>
+        <p style="font-size:11px;color:var(--text2);line-height:1.55;"><strong style="color:var(--text)">“Stretch”</strong> — B2B y marcas despegan; sirve para ver techo de distribuible y de ambición, no para prometer en voz alta sin acta.</p>
+      </div>
+    </div>
+    <p style="font-size:10px;color:var(--muted);margin-top:12px;max-width:46rem;line-height:1.5;">En el <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">simulador</a> cambias escenario en un clic; en el <a href="QOCHIX_Pacto_Economico.html" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">pacto</a> el texto respalda el piso (<a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">Gobierno</a>). Si los tres números no conversan, algo está roto en la historia.</p>
+  </div>
+</div>
+
+<!-- S22 — Documentos y ritual -->
+<div class="slide" id="s22">
+  <div class="content">
+    <div class="eyebrow">Gobernanza ligera</div>
+    <h2>Mapa de documentos + ritual 90 min</h2>
+    <div style="display:flex;gap:12px;flex:1;">
+      <div style="flex:1.1;display:flex;flex-direction:column;gap:8px;">
+        <h3 style="font-size:13px;margin-bottom:4px;">Qué archivo para qué</h3>
+        <div class="card" style="padding:10px 12px;"><span style="color:var(--gold);font-size:10px;font-weight:700;">EXCEL</span><p style="font-size:10px;color:var(--text2);margin:4px 0 0;line-height:1.45;">Supuestos y fórmulas — donde se pelea el detalle.</p></div>
+        <div class="card" style="padding:10px 12px;"><span style="color:var(--teal);font-size:10px;font-weight:700;">PACTO HTML</span><p style="font-size:10px;color:var(--text2);margin:4px 0 0;line-height:1.45;">Reglas, equity, ×0,7 y sección <strong>Gobierno</strong>.</p></div>
+        <div class="card" style="padding:10px 12px;"><span style="color:var(--green);font-size:10px;font-weight:700;">SIMULADOR</span><p style="font-size:10px;color:var(--text2);margin:4px 0 0;line-height:1.45;">Escenarios, runway, metas 2030/2032, impacto vs pacto.</p></div>
+        <div class="card" style="padding:10px 12px;"><span style="color:var(--qochix-l);font-size:10px;font-weight:700;">DECK BASE</span><p style="font-size:10px;color:var(--text2);margin:4px 0 0;line-height:1.45;">Esta presentación — alinear corazones y calendario.</p></div>
+      </div>
+      <div style="flex:0.95;background:rgba(74,63,143,.08);border:1px solid rgba(74,63,143,.22);border-radius:12px;padding:14px 16px;">
+        <h3 style="font-size:13px;margin-bottom:8px;color:var(--qochix-l);">Trimestral (~90 min)</h3>
+        <ol style="font-size:10px;color:var(--text2);line-height:1.6;margin:0;padding-left:1rem;">
+          <li>Caja real vs modelo — quién es responsable del banco.</li>
+          <li>Facturación por marca vs curva del escenario activo.</li>
+          <li>Planilla y primer año con distribuible &gt; 0.</li>
+          <li>Deuda Trazo / renovaciones / marcas — sin mezclar con %.</li>
+          <li>Lista de decisiones: una línea cada una, dueño, fecha.</li>
+        </ol>
+      </div>
+    </div>
+    <nav class="deck-res" style="margin-top:12px;flex-shrink:0;" aria-label="Abrir archivos">
+      <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer">Pacto → Gobierno</a>
+      <a href="QOCHIX_Pacto_Economico.html" target="_blank" rel="noopener noreferrer">Pacto (inicio)</a>
+      <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer">Simulador</a>
+      <a href="QOCHIX_Pacto_Economico.html#term-gob" target="_blank" rel="noopener noreferrer">Pacto → Términos · Gobierno</a>
+    </nav>
+  </div>
+</div>
+
+<!-- S23 — Decision rights y mal año -->
+<div class="slide" id="s23">
+  <div class="content">
+    <div class="eyebrow">Cuando aprieta</div>
+    <h2>Decisiones y si las ventas no vienen</h2>
+    <div style="display:flex;gap:10px;flex:1;flex-direction:column;">
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:10px;">
+        <table style="width:100%;border-collapse:collapse;font-size:9px;">
+          <thead><tr style="background:rgba(255,255,255,.04);text-align:left;">
+            <th style="padding:8px 10px;color:var(--gold);">Tema</th>
+            <th style="padding:8px 10px;color:var(--muted);">Decide</th>
+          </tr></thead>
+          <tbody style="color:var(--text2);">
+            <tr style="border-top:1px solid var(--border);"><td style="padding:7px 10px;color:var(--text);">Estrategia Qochix trimestre</td><td style="padding:7px 10px;">Mesa (consenso o mayoría acordada)</td></tr>
+            <tr style="border-top:1px solid var(--border);"><td style="padding:7px 10px;color:var(--text);">Línea de marca (Hugo / Almaria / Trazo)</td><td style="padding:7px 10px;">Líder de marca + mesa si toca caja o equity</td></tr>
+            <tr style="border-top:1px solid var(--border);"><td style="padding:7px 10px;color:var(--text);">Préstamos y avales</td><td style="padding:7px 10px;">Mesa, por escrito — no suman % equity</td></tr>
+            <tr style="border-top:1px solid var(--border);"><td style="padding:7px 10px;color:var(--text);">Dividendos / excedentes</td><td style="padding:7px 10px;">Solo si caja lo permite; prioridad reinversión y runway</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="bc bq" style="padding:12px 16px;">
+        <p style="font-size:10px;color:var(--text);line-height:1.55;margin:0;"><strong>Si el año va flojo:</strong> congelar contrataciones nuevas hasta distribuible positivo en el modelo actualizado · revisar metas de sueldo solo con acuerdo explícito (el % equity no se toca por chat) · cumplir devoluciones y marcas sin cruzar líneas entre sociedades.</p>
+      </div>
+    </div>
+    <p style="font-size:9px;color:var(--muted);margin-top:8px;">Detalle y checklist pre-firma: <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">Sección Gobierno</a> · <a href="QOCHIX_Pacto_Economico.html#term-gob" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">Términos → pestaña Gobierno</a></p>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav aria-label="Diapositivas">
+  <button type="button" class="nb" id="pb2" onclick="go(-1)" disabled aria-label="Anterior">←</button>
+  <div class="dots" id="dots" role="tablist" aria-label="Ir a diapositiva"></div>
+  <span class="nc" id="nc">1 / 23</span>
+  <button type="button" class="nb" id="nb2" onclick="go(1)" aria-label="Siguiente">→</button>
+</nav>
+<p class="nav-hint" aria-hidden="true">← → · espacio</p>
+
+<script src="qochix_help.js"></script>
+<script src="qochix_system.js"></script>
+<script>
+const T=23; let c=1;
+function init(){
+  const d=document.getElementById('dots');
+  for(let i=1;i<=T;i++){
+    const x=document.createElement('button');
+    x.type='button';
+    x.className='dot'+(i===1?' active':'');
+    x.setAttribute('aria-label','Diapositiva '+i+' de '+T);
+    x.setAttribute('aria-current',i===1?'true':'false');
+    x.onclick=()=>gt(i);
+    d.appendChild(x);
+  } ui();
+}
+function gt(n){
+  document.getElementById('s'+c).classList.remove('active');
+  c=n;
+  document.getElementById('s'+c).classList.add('active');
+  ui();
+}
+function go(d){const n=c+d; if(n<1||n>T)return; gt(n);}
+function ui(){
+  document.getElementById('nc').textContent=c+' / '+T;
+  document.getElementById('pb2').disabled=c===1;
+  document.getElementById('nb2').disabled=c===T;
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.toggle('active',i+1===c);
+    d.setAttribute('aria-current',i+1===c?'true':'false');
+  });
+  document.getElementById('pb').style.width=((c/T)*100)+'%';
+}
+document.addEventListener('keydown',e=>{
+  if(e.target&&['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
+  if(e.key==='ArrowRight'){e.preventDefault();go(1);}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
+  if(e.key===' '||e.code==='Space'){e.preventDefault();go(1);}
+});
+
+(function(){
+  const QSYS=window.QochixSystem;
+  const byId=(id)=>document.getElementById(id);
+  function renderDeckLive(){
+    const derived=QSYS.deriveState(QSYS.getState());
+    const hugo=derived.personCards.find((person)=>person.id==='hugo');
+    const idx30=derived.years.indexOf(2030);
+    byId('deck-live-updated').textContent=derived.updatedAtLabel;
+    byId('deck-live-scn').textContent=derived.scenarioLabel;
+    byId('deck-live-dist').textContent=derived.fmtCurrency(derived.dist2032);
+    byId('deck-live-first').textContent=String(derived.firstDistYear);
+    byId('deck-live-hugo').textContent=hugo?derived.fmtCurrency(hugo.total2032):'—';
+    const note=byId('deck-live-note');
+    const libTable=byId('deck-live-lib-table');
+    if(!note)return;
+    note.innerHTML='Pool actual: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.pool)+'</strong> · Facturación 2032 del escenario activo: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.totalFact2032)+'</strong>/mes. Si cambias el simulador, esta portada se actualiza automáticamente.';
+    if(libTable){
+      libTable.innerHTML=derived.personCards.map((person)=>(
+        '<tr><td style="color:'+person.color+';font-weight:600">'+person.name+'</td><td>'+person.liberationYear+'</td><td>'+derived.fmtCurrency(person.yearlyTotals[idx30]||0)+'/mes</td></tr>'
+      )).join('');
+    }
+  }
+  QSYS.subscribe(renderDeckLive);
+  renderDeckLive();
+})();
+
+(function(){
+  if(!window.QochixHelp) return;
+  window.QochixHelp.init({
+    selectors:[
+      '.eyebrow','h2','h3','.deck-live-label','.deck-live-note','.deck-live-value',
+      '.deck-live-mini-title','.qbox h4','.mv','.ml','.tly','.bl','.nav-hint','.nc'
+    ],
+    glossaryTitle:'Glosario rápido · Deck Qochix',
+    customMap:{
+      'north star por fase':'Métrica principal por etapa para evitar dispersión operativa.',
+      'tres escenarios, un solo modelo':'Comparación de riesgo/ambición usando exactamente el mismo motor de cálculo.',
+      'mapa de documentos + ritual 90 min':'Define dónde vive cada decisión y cómo se revisa periódicamente.'
+    }
+  });
+})();
+
+init();
+</script>
+</body>
+</html>

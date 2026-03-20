@@ -53,7 +53,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .sc-btn.active{background:var(--gold);border-color:var(--gold);color:var(--bg)}
 .sc-btn.p.active{background:var(--coral);border-color:var(--coral);color:#fff}
 .sc-btn.o.active{background:var(--green);border-color:var(--green);color:var(--bg)}
-.tab-bar{display:flex;gap:.25rem;flex-shrink:0}
+.tab-bar{display:flex;gap:.25rem;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;max-width:min(100%,520px)}
 .tab-btn{
   padding:.4rem .95rem;border-radius:10px;font-size:.78rem;font-weight:600;
   border:1px solid var(--brd);background:transparent;color:var(--muted);
@@ -167,6 +167,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .nota.warn{background:rgba(232,107,95,.05);border-left-color:var(--coral)}
 .nota.ok{background:rgba(82,201,122,.05);border-left-color:var(--green)}
 
+/* Metas sueldo impacto */
+.si-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:.25rem}
+.si-kpis-2row{grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto}
+@media(max-width:900px){.si-kpis,.si-kpis-2row{grid-template-columns:1fr}}
+.si-kpi{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:.65rem .75rem}
+.si-kpi-l{display:block;font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.35rem}
+.si-kpi-v{font-family:var(--serif);font-weight:800;font-size:1.05rem;color:var(--gold);line-height:1.2}
+.si-table{font-size:.72rem}
+.si-table th,.si-table td{padding:.4rem .45rem;text-align:right}
+.si-table th:first-child,.si-table td:first-child{text-align:left}
+
 /* ── MAIN ── */
 .main{overflow-y:auto;height:calc(100vh - 58px);padding:1.75rem 2rem}
 .tab-content{display:none}
@@ -251,6 +262,13 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .lib-track{height:12px;background:var(--faint);border-radius:6px;overflow:hidden;margin-bottom:.6rem}
 .lib-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 15px rgba(82,201,122,.3)}
 .lib-marks{display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);font-family:var(--mono)}
+.lib-team{margin-top:.85rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+.lib-item{background:rgba(16,21,34,.88);border:1px solid var(--brd);border-radius:10px;padding:.56rem .62rem}
+.lib-item-top{display:flex;justify-content:space-between;align-items:center;gap:.7rem}
+.lib-item-name{font-size:.74rem;font-weight:600}
+.lib-item-year{font-size:.7rem;font-family:var(--mono);color:var(--gold)}
+.lib-item-sub{margin-top:.2rem;font-size:.68rem;color:var(--muted);line-height:1.4}
+@media(max-width:900px){.lib-team{grid-template-columns:1fr}}
 
 /* Monthly table (runway) */
 .runway-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.25rem}
@@ -262,12 +280,38 @@ tr:hover td{background:rgba(255,255,255,.02)}
 @keyframes flash{0%{opacity:.4}100%{opacity:1}}
 .updated{animation:flash .5s}
 
+.sim-foot{border-top:1px solid var(--brd);margin-top:1.25rem;padding-top:.85rem;font-size:.68rem;color:var(--muted);font-family:var(--mono);line-height:1.5}
+.sim-foot details summary{cursor:pointer;color:var(--muted)}
+.ceo-intro{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:1.1rem;max-width:48rem}
+.ceo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1rem}
+@media(max-width:900px){.ceo-grid{grid-template-columns:1fr}}
+.sb-texta{width:100%;min-height:5.5rem;background:var(--bg3);border:1px solid var(--brd);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:.74rem;padding:.55rem .65rem;resize:vertical;margin-top:.35rem;line-height:1.45}
+
+.hint-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;margin-left:.38rem;border-radius:999px;
+  border:1px solid rgba(62,207,207,.45);color:var(--teal);
+  font-family:var(--mono);font-size:.6rem;line-height:1;cursor:help;
+  background:rgba(62,207,207,.06);position:relative;vertical-align:middle;
+}
+.hint-badge::before{content:'?';font-weight:700}
+.hint-badge::after{
+  content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%);
+  min-width:220px;max-width:320px;padding:.55rem .62rem;border-radius:10px;
+  border:1px solid rgba(212,168,83,.2);background:rgba(9,12,18,.96);color:var(--text2);
+  font-size:.66rem;font-family:var(--sans);line-height:1.45;letter-spacing:0;white-space:normal;
+  box-shadow:0 14px 34px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .16s ease;z-index:1000;
+}
+.hint-badge:hover::after,.hint-badge:focus-visible::after{opacity:1}
+.hint-badge:focus-visible{outline:1px solid var(--gold);outline-offset:2px}
+
 /* Hero splash */
 .hero-overlay{
   position:fixed;inset:0;z-index:999;
   background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   transition:opacity .6s ease,transform .6s ease;
+  overflow-y:auto;padding:2rem 0 2.5rem;box-sizing:border-box;
 }
 .hero-overlay.hidden{opacity:0;pointer-events:none;transform:scale(1.05)}
 .hero-logo{font-family:var(--serif);font-size:4.5rem;font-weight:900;color:var(--gold);letter-spacing:.12em;margin-bottom:1rem;text-shadow:0 0 60px rgba(212,168,83,.3)}
@@ -287,7 +331,37 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .hero-partners{margin-top:2.5rem;display:flex;gap:1.5rem;color:var(--muted);font-size:.8rem;font-family:var(--mono)}
 .hero-partners span{opacity:.5}
 
-@media(max-width:900px){.app{grid-template-columns:1fr}.app.sidebar-hidden{grid-template-columns:1fr}.sidebar{height:auto;position:relative;top:0}.main{height:auto;padding:1rem}.ap-card{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.hero-logo{font-size:2.5rem}.hero-tagline{font-size:1.1rem;padding:0 1rem}}
+.hero-why{
+  max-width:540px;margin:0 auto 1.1rem;padding:0 1.35rem;
+  font-size:.9rem;color:var(--muted);line-height:1.68;text-align:center;
+}
+.hero-why strong{color:var(--text)}
+.hero-why .hw-gold{color:var(--gold);font-family:var(--serif);font-weight:700;font-style:italic}
+.hero-stats-mini{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;
+  max-width:620px;width:100%;margin:0 auto 1.35rem;padding:0 1rem;
+}
+@media(max-width:560px){.hero-stats-mini{grid-template-columns:repeat(2,1fr)}}
+.hsm{
+  background:rgba(22,29,46,.92);border:1px solid var(--brd);border-radius:11px;
+  padding:.55rem .65rem;text-align:center;
+}
+.hsm-v{font-family:var(--serif);font-weight:800;font-size:clamp(.95rem,2.5vw,1.12rem);color:var(--gold);line-height:1.1}
+.hsm-l{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.28rem;line-height:1.3}
+.hero-foot{
+  max-width:480px;margin:0 auto;padding:0 1rem;
+  font-size:.72rem;color:var(--muted);line-height:1.5;text-align:center;opacity:.85;
+}
+.doc-link-row{
+  display:flex;flex-wrap:wrap;gap:.5rem 1rem;justify-content:center;align-items:center;
+  max-width:520px;margin:.75rem auto 0;padding:0 1rem;
+  font-size:.68rem;font-family:var(--mono);letter-spacing:.03em;
+}
+.doc-link-row a{color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.35)}
+.doc-link-row a:hover{color:var(--gold);border-bottom-color:var(--gold)}
+.sim-foot .doc-link-row{margin-top:.55rem;padding:0;max-width:none;justify-content:flex-start}
+
+@media(max-width:900px){.app{grid-template-columns:1fr}.app.sidebar-hidden{grid-template-columns:1fr}.sidebar{height:auto;position:relative;top:0}.main{height:auto;padding:1rem}.ap-card{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.hero-logo{font-size:2.5rem}.hero-tagline{font-size:1.05rem;padding:0 1rem}}
 </style>
 </head>
 <body>
@@ -295,9 +369,27 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- HERO SPLASH -->
 <div class="hero-overlay" id="hero">
   <div class="hero-logo">QOCHIX</div>
-  <div class="hero-sub">Ecosistema de marcas · Simulador financiero v3</div>
+  <div class="hero-sub">Ecosistema de marcas · Simulador financiero v3.1</div>
   <div class="hero-line"></div>
   <div class="hero-tagline">Un modelo donde <em>todos ganan</em>.<br>5 socios, 3 marcas, 7 años de proyección.</div>
+  <p class="hero-why">
+    ¿Por qué sumarte como socio? Porque aquí no estás vendiendo horas para el sueño de otro: estás <strong>construyendo un activo compartido</strong> —tres marcas, un solo ecosistema— con upside que un empleo corporativo no te va a dar.
+    Eso exige <strong>tiempo</strong> (constancia en años), <strong>esfuerzo</strong> (lo que no le das a otra cosa), <strong>dinero</strong> (ticket, capital, dejar de facturar en paralelo) y <strong>pasión</strong> para aguantar los meses feos.
+    Abajo tienes <span class="hw-gold">referencias en escenario pesimista ×0,7</span> (mismo piso que el pacto); entra al simulador y cambia a neutro u optimista para ver el techo.
+  </p>
+  <div class="hero-stats-mini" aria-label="Referencia rápida pesimista ×0,7">
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-pool">&gt; S/1,1M</div><div class="hsm-l">Pool equipo · ticket+capital+sweat</div></div>
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-fact">~S/231k</div><div class="hsm-l">Facturación / mes · 2032</div></div>
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-dist">~S/43k</div><div class="hsm-l">Distribuible socios / mes · 2032</div></div>
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-mult">×1,9 – ×3,6</div><div class="hsm-l">Ingreso total vs hoy · 2032</div></div>
+  </div>
+  <p class="hero-foot">Neutro y optimista están un clic adentro. Los números no son promesa: son hipótesis para decidir juntos.</p>
+  <div class="doc-link-row" aria-label="Documentos relacionados">
+    <a href="QOCHIX_Pacto_Economico.html" target="_blank" rel="noopener noreferrer">Pacto económico</a>
+    <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer">Pacto → Gobierno</a>
+    <a href="QOCHIX_Pacto_Economico.html#term-gob" target="_blank" rel="noopener noreferrer">Pacto → Términos · Gobierno</a>
+    <a href="qochix_base.html" target="_blank" rel="noopener noreferrer">Deck presentación</a>
+  </div>
   <button class="hero-btn" onclick="enterApp()">Explorar el modelo →</button>
   <div class="hero-partners">
     <span>⚡ Trazo</span>
@@ -313,16 +405,17 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <span class="logo">QOCHIX</span>
   <button class="sidebar-toggle" id="sb-toggle" onclick="toggleSidebar()" title="Mostrar/ocultar controles">☰</button>
   <div class="topbar-center">
-    <button class="sc-btn p" onclick="setScenario('p')">📉 Pesimista ×0.7</button>
-    <button class="sc-btn n active" onclick="setScenario('n')">📊 Neutro ×1.0</button>
+    <button class="sc-btn p active" onclick="setScenario('p')">📉 Pesimista ×0.7</button>
+    <button class="sc-btn n" onclick="setScenario('n')">📊 Neutro ×1.0</button>
     <button class="sc-btn o" onclick="setScenario('o')">🚀 Optimista ×1.4</button>
   </div>
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
-    <button class="tab-btn" onclick="showTab('graficos')">Gráficos</button>
-    <button class="tab-btn" onclick="showTab('equipo')">Equipo</button>
-    <button class="tab-btn" onclick="showTab('runway')">Runway</button>
-    <button class="tab-btn" onclick="showTab('apuesta')">Apuesta</button>
+    <button class="tab-btn active" onclick="showTab('dashboard', this)">Dashboard</button>
+    <button class="tab-btn" onclick="showTab('graficos', this)">Gráficos</button>
+    <button class="tab-btn" onclick="showTab('equipo', this)">Equipo</button>
+    <button class="tab-btn" onclick="showTab('runway', this)">Runway</button>
+    <button class="tab-btn" onclick="showTab('apuesta', this)">Apuesta</button>
+    <button class="tab-btn" onclick="showTab('ceo', this)">Vista CEO</button>
   </div>
 </div>
 
@@ -339,7 +432,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div id="tkt-equal-box">
       <div class="slw">
         <label>Monto por socio <span id="lbl-tkt">S/5,000</span></label>
-        <input type="range" min="2000" max="15000" step="500" value="5000" oninput="onTkt(this.value)">
+        <input type="range" id="tkt-range" min="2000" max="15000" step="500" value="5000" oninput="onTkt(this.value)">
       </div>
     </div>
     <div id="tkt-indiv-box" class="tkt-indiv" style="display:none"></div>
@@ -350,6 +443,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div class="sb-sec">
     <div class="sb-title">B · Socios fundadores</div>
     <div id="persons-box"></div>
+    <div class="nota" style="margin-top:.55rem;font-size:.68rem;line-height:1.45">
+      <strong>Metas 2030 y 2032</strong> arman la curva de sueldos Qochix (si coinciden con el pacto, se usa la tabla literal del HTML). El % efectivo de reparto depende del modo de aportes en Parámetros financieros.
+    </div>
   </div>
 
   <!-- C. Equity -->
@@ -357,23 +453,42 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="sb-title">C · Distribución equity</div>
     <div id="equity-box"></div>
     <div class="eq-sum">Suma: <b id="eq-sum-v" class="ok">100.0%</b></div>
-    <div class="nota" id="eq-nota" style="margin-top:.4rem">✓ Suma 100%.</div>
+    <div class="nota" id="eq-nota" style="margin-top:.4rem">✓ Suma 100% (cap table base).</div>
   </div>
 
   <!-- D. Parámetros -->
-  <div class="sb-sec" style="border-bottom:none;padding-bottom:1.25rem">
+  <div class="sb-sec">
     <div class="sb-title">D · Parámetros financieros</div>
+    <div class="tkt-mode" style="margin-bottom:.55rem">
+      <button class="tkt-mode-btn active" id="cap-loan" onclick="setCapitalMode('loan')">Aporte como préstamo</button>
+      <button class="tkt-mode-btn" id="cap-equity" onclick="setCapitalMode('equity_round')">Aporte compra acciones</button>
+    </div>
+    <div class="fld" style="margin-bottom:.6rem">
+      <label>Valorización pre-money de ronda (S/)</label>
+      <input type="number" id="pre-money-input" min="100000" step="50000" value="5000000" oninput="onPreMoney(this.value)">
+    </div>
     <div class="g2" style="margin-bottom:.6rem">
       <div class="slw">
         <label>Neto operativo <span id="lbl-neto">65%</span></label>
-        <input type="range" min="45" max="80" step="1" value="65" oninput="onNeto(this.value)">
+        <input type="range" id="neto-range" min="45" max="80" step="1" value="65" oninput="onNeto(this.value)">
       </div>
       <div class="slw">
         <label>Reserva mínima <span id="lbl-rsv">S/3,000</span></label>
-        <input type="range" min="500" max="10000" step="500" value="3000" oninput="onRsv(this.value)">
+        <input type="range" id="rsv-range" min="500" max="10000" step="500" value="3000" oninput="onRsv(this.value)">
       </div>
     </div>
-    <div class="nota">El <strong>neto operativo</strong> es el % que queda tras costos directos (logística, tools, venue). La <strong>reserva</strong> es el colchón antes de distribuir.</div>
+    <div class="nota">El <strong>neto operativo</strong> es el % que queda tras costos directos. La <strong>reserva</strong> es el colchón antes de distribuir. Si activas <strong>aporte compra acciones</strong>, debes definir <strong>pre-money</strong>: valor de Qochix antes de la ronda.</div>
+  </div>
+
+  <!-- E. Operación -->
+  <div class="sb-sec" style="border-bottom:none;padding-bottom:1.25rem">
+    <div class="sb-title">E · Operación y notas</div>
+    <div class="nota" style="margin-bottom:.5rem;font-size:.68rem;line-height:1.45">
+      <strong>Runway y banco:</strong> el simulador proyecta caja; en el <strong>Pacto → Gobierno</strong> conviene asignar quién cruza números reales vs modelo cada mes.
+    </div>
+    <label style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Notas de sesión (se guardan en este navegador)</label>
+    <textarea id="sim-session-notes" class="sb-texta" placeholder="Supuestos acordados en la reunión, dudas legales, acuerdos verbales…" oninput="scheduleSaveSimNotes()"></textarea>
+    <div class="nota" style="margin-top:.4rem;font-size:.62rem">Solo en tu equipo local (localStorage). No sustituye acta firmada.</div>
   </div>
 </aside>
 
@@ -405,25 +520,59 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="ksub">meses con el capital disponible</div>
     </div>
     <div class="kcard k-purple">
-      <div class="klbl">Liberación Rossy</div>
+      <div class="klbl">Liberación equipo</div>
       <div class="kval" id="kpi-rossy">—</div>
-      <div class="ksub">año en que Qochix supera su corp</div>
+      <div class="ksub">primer año de cruce del equipo</div>
     </div>
   </div>
 
   <!-- Liberation meter -->
   <div class="lib-bar">
     <div class="lib-hdr">
-      <span class="lib-title">🌟 Meta humana #1 — Liberación financiera de Rossy</span>
+      <span class="lib-title">🌟 Meta humana — Liberación financiera del equipo</span>
       <span class="lib-status" id="lib-status">Calculando...</span>
     </div>
     <div class="lib-track"><div class="lib-fill" id="lib-fill" style="width:0%"></div></div>
     <div class="lib-marks">
-      <span>S/0 hoy</span>
+      <span>0/5 personas liberadas</span>
       <span id="lib-curr">—</span>
-      <span>S/<span id="lib-target">7,000</span>/mes (cruce)</span>
+      <span id="lib-target">Objetivo: 5/5 al 2032</span>
     </div>
     <div class="nota ok" id="lib-nota" style="margin-top:.5rem"></div>
+    <div class="lib-team" id="lib-team"></div>
+  </div>
+
+  <!-- Metas sueldo Qochix — impacto -->
+  <div class="panel open" style="margin-top:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">💼 Metas sueldo Qochix (2030 y 2032) — impacto y facturación extra</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.75rem">
+        En el sidebar definís <strong>meta 2030</strong> y <strong>meta 2032</strong> por socio. Si coinciden con la <strong>tabla del pacto</strong>, el modelo usa la <strong>curva literal</strong> (mismos números año a año que el HTML).
+        Si cambias una meta, la curva activa pasa a ser <strong>lineal 2026→2030</strong> y <strong>2030→2032</strong> (2031 = punto medio). Más planilla fundadores reduce el <strong>distribuible</strong> y el equity en soles de todos.
+      </p>
+      <p style="font-size:.72rem;color:var(--muted);margin:-.4rem 0 .75rem;font-family:var(--mono);opacity:.9">
+        Fórmula (misma facturación y neto %): <strong>Δ distribuible ≈ −Δ planilla fundadores</strong>. Para recuperar el distribuible del pacto en un año: <strong>Δ facturación bruta ≈ Δ planilla ÷ neto%</strong> (aprox., ignora efectos de reserva S/3k si el colchón roza el piso).
+      </p>
+      <div class="si-kpis si-kpis-2row">
+        <div class="si-kpi"><span class="si-kpi-l">Δ Planilla fundadores · 2030</span><span class="si-kpi-v" id="si-delta-pay-30">—</span></div>
+        <div class="si-kpi"><span class="si-kpi-l">Fact. bruta extra/mes · 2030 (aprox.)</span><span class="si-kpi-v" id="si-fact-extra-30">—</span></div>
+        <div class="si-kpi"><span class="si-kpi-l">Distribuible 2030</span><span class="si-kpi-v"><span id="si-dist-ref-30">—</span> → <span id="si-dist-dyn-30">—</span></span></div>
+        <div class="si-kpi"><span class="si-kpi-l">Δ Planilla fundadores · 2032</span><span class="si-kpi-v" id="si-delta-pay">—</span></div>
+        <div class="si-kpi"><span class="si-kpi-l">Fact. bruta extra/mes · 2032 (aprox.)</span><span class="si-kpi-v" id="si-fact-extra">—</span></div>
+        <div class="si-kpi"><span class="si-kpi-l">Distribuible 2032</span><span class="si-kpi-v"><span id="si-dist-ref">—</span> → <span id="si-dist-dyn">—</span></span></div>
+      </div>
+      <div class="tw" style="margin:.85rem 0;overflow-x:auto"><table class="si-table"><thead><tr>
+        <th>Socio</th>
+        <th colspan="2">2030 pacto → meta</th>
+        <th colspan="2">2032 pacto → meta</th>
+        <th>Eq 2030 (p→m)</th><th>Eq 2032 (p→m)</th><th>Total 2032</th>
+      </tr></thead><tbody id="tb-salary-impact"></tbody></table></div>
+      <div class="nota" id="si-nota"></div>
+      <button type="button" class="add-hire-btn" style="margin-top:.6rem;border-style:solid;border-color:var(--faint)" onclick="resetSueMetasToPact()">↺ Restaurar metas 2030 y 2032 al pacto base</button>
+    </div>
   </div>
 
   <!-- Sweat + Equity table -->
@@ -480,6 +629,82 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
 </div><!-- /dashboard -->
+
+<!-- ══ TAB: VISTA CEO ══ -->
+<div id="tab-ceo" class="tab-content">
+  <p class="ceo-intro">Resumen en una pantalla para la mesa: mismos KPI que el dashboard, más <strong>primer año con distribuible</strong> y semáforo de runway. El detalle sigue en las otras pestañas. Documentos: <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.4)">Pacto → sección Gobierno</a> · <a href="QOCHIX_Pacto_Economico.html#term-gob" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.4)">Pacto → Términos · Gobierno</a> · <a href="qochix_base.html" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.4)">Deck</a>.</p>
+  <div class="ceo-grid">
+    <div class="kcard k-gold">
+      <div class="klbl">Escenario activo</div>
+      <div class="kval" style="font-size:1.35rem" id="ceo-scn">—</div>
+      <div class="ksub">pesimista / neutro / optimista</div>
+    </div>
+    <div class="kcard k-gold">
+      <div class="klbl">Pool invertido</div>
+      <div class="kval" id="ceo-pool">—</div>
+      <div class="ksub">ticket + capital + sweat</div>
+    </div>
+    <div class="kcard k-teal">
+      <div class="klbl">Distribuible 2032</div>
+      <div class="kval" id="ceo-dist32">—</div>
+      <div class="ksub">post equipo operativo</div>
+    </div>
+    <div class="kcard k-teal">
+      <div class="klbl">Distribuible 2030</div>
+      <div class="kval" id="ceo-dist30">—</div>
+      <div class="ksub">cruce metas sueldo</div>
+    </div>
+    <div class="kcard k-green">
+      <div class="klbl">Break-even (colchón ≥ 0)</div>
+      <div class="kval" id="ceo-be">—</div>
+      <div class="ksub">año en el modelo</div>
+    </div>
+    <div class="kcard k-coral">
+      <div class="klbl">Runway inicial</div>
+      <div class="kval" id="ceo-runway">—</div>
+      <div class="ksub">meses con capital de arranque</div>
+    </div>
+    <div class="kcard k-purple">
+      <div class="klbl">Liberación equipo</div>
+      <div class="kval" id="ceo-rossy">—</div>
+      <div class="ksub">personas liberadas al 2032</div>
+    </div>
+    <div class="kcard k-green">
+      <div class="klbl">1.º año distribuible &gt; 0</div>
+      <div class="kval" id="ceo-first-dist">—</div>
+      <div class="ksub">con equipo operativo</div>
+    </div>
+  </div>
+  <div class="nota" id="ceo-runway-hint"></div>
+  <div class="panel open" style="margin-top:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">📎 Documentos y ritual (recordatorio)</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <ul style="font-size:.78rem;color:var(--muted);line-height:1.65;margin:0;padding-left:1.1rem">
+        <li><strong style="color:var(--text)">Excel</strong> — supuestos editables y fórmulas.</li>
+        <li><strong style="color:var(--text)">Pacto HTML</strong> — narrativa, reglas, escenario ×0,7 y sección <em>Gobierno</em>.</li>
+        <li><strong style="color:var(--text)">Este simulador</strong> — escenarios, equity, metas 2030/2032, runway.</li>
+        <li><strong style="color:var(--text)">Deck base</strong> — alineación visual en reuniones.</li>
+        <li>Cada <strong style="color:var(--text)">90 días</strong>: caja real vs modelo, facturación por marca, lista de decisiones con dueño.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel open">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">📜 Changelog v3.1</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <ul style="font-size:.74rem;color:var(--muted);line-height:1.6;margin:0;padding-left:1.05rem">
+        <li>Pestaña <strong>Vista CEO</strong> y KPI duplicados para reuniones rápidas.</li>
+        <li><strong>Notas de sesión</strong> en sidebar (localStorage).</li>
+        <li>Alineado con pacto: escenario pesimista ×0,7, metas 2030/2032, panel impacto vs curva pacto.</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <!-- ══ TAB: GRÁFICOS ══ -->
 <div id="tab-graficos" class="tab-content">
@@ -681,59 +906,103 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <div class="be-card" style="border-color:rgba(212,168,83,.3);background:rgba(212,168,83,.04)"><div class="be-lbl">Base (S/5M)</div><div class="be-val cg" id="pat-b">—</div><div class="be-sub">63% Hugo</div></div>
         <div class="be-card"><div class="be-lbl">Optimista (S/7M)</div><div class="be-val cv" id="pat-o">—</div><div class="be-sub">63% Hugo</div></div>
       </div>
-      <div class="nota ok">Este patrimonio es <strong>adicional e independiente</strong> del sueldo mensual y del equity distribuido mes a mes. Es el valor de ser dueño mayoritario de un ecosistema que factura S/329,533/mes en 2032.</div>
+      <div class="nota ok">Este patrimonio es <strong>adicional e independiente</strong> del sueldo mensual y del equity distribuido mes a mes. La facturación 2032 del escenario activo se ve en el panel de facturación (cambia con pesimista/neutro/optimista).</div>
     </div>
   </div>
 
 </div><!-- /apuesta -->
 
+<div class="sim-foot">
+  QOCHIX Simulador <strong>v3.1</strong> · Mar 2026 · Escenario por defecto: pesimista ×0,7
+  <div class="doc-link-row" aria-label="Enlaces al pacto y deck">
+    <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer">Pacto → Gobierno</a>
+    <a href="QOCHIX_Pacto_Economico.html#term-gob" target="_blank" rel="noopener noreferrer">Pacto → Términos · Gobierno</a>
+    <a href="qochix_base.html" target="_blank" rel="noopener noreferrer">Deck</a>
+  </div>
+  <details style="margin-top:.5rem">
+    <summary>Notas de versión</summary>
+    <p style="margin:.45rem 0 0;font-size:.65rem;max-width:40rem">v3.1 añade Vista CEO, notas locales y recordatorios de gobierno/ritual. Los números del modelo no reemplazan asesoría legal ni contable.</p>
+  </details>
+</div>
+
 </main>
 </div><!-- /app -->
 
+<script src="qochix_help.js"></script>
+<script src="qochix_system.js"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
 // ════════════════════════════════════════
-const PERSONS = [
-  {id:'hugo',  name:'Hugo',  sueldo:30000,hrs:7,  adj:0.6,equity:63,capital:40243,c:'#D4A853'},
-  {id:'rossy', name:'Rossy', sueldo:7000, hrs:6,  adj:0.7,equity:17,capital:20000,c:'#3ECFCF'},
-  {id:'vera',  name:'Vera',  sueldo:6500, hrs:6,  adj:0.7,equity:11,capital:4000, c:'#52C97A'},
-  {id:'carlos',name:'Carlos',sueldo:5000, hrs:3,  adj:1.0,equity:6, capital:0,    c:'#9B7FE8'},
-  {id:'nicole',name:'Nicole',sueldo:2000, hrs:3,  adj:1.0,equity:3, capital:0,    c:'#E86B5F'},
-];
+const QSYS = window.QochixSystem;
+const BOOT = QSYS.getState();
+const PERSONS = BOOT.persons;
 
-// Sueldos Qochix por año (fundadores, índice 0=2026..6=2032)
-const SUED_F = {
-  hugo:  [0,   2000, 5000, 9000,14000,20000,30000],
-  rossy: [0,   1000, 2500, 4000, 7500, 9000,10000],
-  vera:  [0,   1000, 2500, 4000, 7000, 8500,10000],
-  carlos:[5000,6000, 7000, 8000, 9000,10000,10000],
-  nicole:[2000,4000, 5000, 6000, 6000, 6000, 6000],
-};
-const AÑOS = [2026,2027,2028,2029,2030,2031,2032];
+// Curva base pacto por año (fundadores, índice 0=2026..6=2032). La meta 2032 en UI escala toda la curva.
+const SUED_F_BASE = QSYS.clone(QSYS.SUED_F_BASE);
+
+/** Curvas del pacto (tabla HTML / Excel) — referencia fija para comparar metas. */
+function founderCurvesPact(){
+  const o={};
+  PERSONS.forEach(p=>{o[p.id]=SUED_F_BASE[p.id].slice();});
+  return o;
+}
+
+/**
+ * Curva activa: tramo lineal 2026→2030 (índices 0–4) y 2030→2032 (4–6).
+ * 2031 = punto medio entre metas 2030 y 2032.
+ */
+function buildSuedCurve(id, target30, target32){
+  const b=SUED_F_BASE[id];
+  const t30=target30!=null&&!isNaN(+target30)?Math.max(0,Math.round(+target30)):(b[4]||0);
+  const t32=target32!=null&&!isNaN(+target32)?Math.max(0,Math.round(+target32)):(b[6]||0);
+  const b0=b[0]||0;
+  const arr=[];
+  for(let i=0;i<4;i++){
+    arr[i]=Math.round(b0+(t30-b0)*(i/4));
+  }
+  arr[4]=t30;
+  arr[5]=Math.round(t30+(t32-t30)*0.5);
+  arr[6]=t32;
+  return arr;
+}
+
+function buildCurvesFromMetas(s30map,s32map){
+  const s30=s30map||P.sue30;
+  const s32=s32map||P.sue32;
+  const out={};
+  PERSONS.forEach(p=>{
+    out[p.id]=buildSuedCurve(p.id,s30[p.id],s32[p.id]);
+  });
+  return out;
+}
+
+/** Si las metas 2030/2032 = tabla pacto para todos, usamos la curva literal (años intermedios idénticos al HTML). */
+function metasMatchPactAnchors(){
+  return PERSONS.every(p=>
+    (+P.sue30[p.id]===SUED_F_BASE[p.id][4]) &&
+    (+P.sue32[p.id]===SUED_F_BASE[p.id][6])
+  );
+}
+
+function activeFounderCurves(){
+  if(metasMatchPactAnchors()) return founderCurvesPact();
+  return buildCurvesFromMetas(P.sue30,P.sue32);
+}
+
+function suedTotalsFromCurves(curves){
+  return AÑOS.map((_,i)=>PERSONS.reduce((s,p)=>s+(curves[p.id][i]||0),0));
+}
+const AÑOS = QSYS.AÑOS.slice();
 
 // Facturación base neutro
-const FACT0 = {
-  trazo:   [9000,20000,28000,35000,42000,50000,58000],
-  almaria: [1200,8500,22000,40000,98100,141900,183400],
-  ht:      [4282,11483,22800,39600,55483,70100,88133],
-};
-const SC = {p:0.7,n:1.0,o:1.4};
+const FACT0 = QSYS.clone(QSYS.FACT0);
+const SC = {...QSYS.SC};
 
 // Equipo operativo inicial (contrataciones confirmadas / planeadas)
-let HIRES = [
-  {role:'Diana — Content HugoTech',    brand:'HugoTech',  sue:2000,  growth:1.15},
-  {role:'María — Content Almaria',     brand:'Almaria',   sue:2000,  growth:1.15},
-  {role:'Content creator Trazo',       brand:'Trazo',     sue:2000,  growth:1.10},
-  {role:'Comercial HugoTech+Almaria',  brand:'Mixto',     sue:3000,  growth:1.20},
-  {role:'Comercial Trazo',             brand:'Trazo',     sue:3000,  growth:1.15},
-  {role:'Facilitadora Almaria',        brand:'Almaria',   sue:2500,  growth:1.25},
-];
+let HIRES = BOOT.hires;
 
-let P = {ticket:5000, tktMode:'equal',
-  tickets:{hugo:5000,rossy:5000,vera:5000,carlos:5000,nicole:5000},
-  netoPct:0.65, reserva:3000, sc:'n',
-  sue32:{hugo:30000,rossy:10000,vera:10000,carlos:10000,nicole:6000}};
+let P = BOOT.P;
 
 // Chart instances
 let charts = {};
@@ -741,6 +1010,60 @@ let charts = {};
 // ════════════════════════════════════════
 // INIT SIDEBAR
 // ════════════════════════════════════════
+const LS_NOTES_KEY='qochix_sim_session_notes_v1';
+let _notesTimer;
+let _sharedSyncTimer;
+let _suspendSharedSync=false;
+function scheduleSharedSync(){
+  if(_suspendSharedSync)return;
+  clearTimeout(_sharedSyncTimer);
+  _sharedSyncTimer=setTimeout(()=>{
+    QSYS.saveState({persons:PERSONS, hires:HIRES, P},{
+      source:'simulator'
+    });
+  },180);
+}
+function scheduleSaveSimNotes(){
+  clearTimeout(_notesTimer);
+  _notesTimer=setTimeout(()=>{
+    const el=document.getElementById('sim-session-notes');
+    if(el)try{localStorage.setItem(LS_NOTES_KEY,el.value)}catch(e){}
+  },350);
+}
+function loadSimNotes(){
+  const el=document.getElementById('sim-session-notes');
+  if(el)try{el.value=localStorage.getItem(LS_NOTES_KEY)||''}catch(e){}
+}
+function syncControlsFromState(){
+  const tr=sel('tkt-range'); if(tr) tr.value=P.ticket;
+  const nr=sel('neto-range'); if(nr) nr.value=Math.round(P.netoPct*100);
+  const rr=sel('rsv-range'); if(rr) rr.value=P.reserva;
+  const pm=sel('pre-money-input'); if(pm){pm.value=Math.round(P.preMoney||5000000);pm.disabled=P.capitalMode!=='equity_round';}
+  sel('cap-loan').classList.toggle('active',P.capitalMode!=='equity_round');
+  sel('cap-equity').classList.toggle('active',P.capitalMode==='equity_round');
+  sv('lbl-tkt',fmt(P.ticket));
+  sel('tkt-eq').classList.toggle('active',P.tktMode==='equal');
+  sel('tkt-ind').classList.toggle('active',P.tktMode==='individual');
+  sel('tkt-equal-box').style.display=P.tktMode==='equal'?'block':'none';
+  sel('tkt-indiv-box').style.display=P.tktMode==='individual'?'flex':'none';
+  sv('lbl-neto',Math.round(P.netoPct*100)+'%');
+  sv('lbl-rsv',fmt(P.reserva));
+  document.querySelectorAll('.sc-btn').forEach(b=>{b.classList.toggle('active',b.classList.contains(P.sc));b.style.transform=''});
+  updateTktTot();
+}
+function applySharedState(nextState){
+  const normalized=QSYS.normalizeState(nextState);
+  PERSONS.splice(0,PERSONS.length,...normalized.persons);
+  HIRES=normalized.hires;
+  P=normalized.P;
+  _suspendSharedSync=true;
+  initSidebar();
+  decorateHelp();
+  syncControlsFromState();
+  recalc();
+  _suspendSharedSync=false;
+}
+
 function initSidebar() {
   // Persons
   const pb = document.getElementById('persons-box');
@@ -766,13 +1089,19 @@ function initSidebar() {
         <input type="number" value="${p.capital}" step="500" min="0" max="200000"
           oninput="onCap('${p.id}',this.value)"></div>
     </div>
-    <div class="g3">
+    <div class="g2">
       <div class="slw"><label>Hrs/día Qochix <span id="lhl-${p.id}">${p.hrs}h</span></label>
         <input type="range" min="0.5" max="12" step="0.5" value="${p.hrs}" oninput="onH('${p.id}',this.value)"></div>
       <div class="slw"><label>Factor ajuste <span id="lla-${p.id}">${p.adj}</span></label>
         <input type="range" min="0.3" max="1.0" step="0.05" value="${p.adj}" oninput="onA('${p.id}',this.value)"></div>
-      <div class="fld"><label>Sueldo 2032</label>
-        <input type="number" value="${P.sue32[p.id]}" step="500" oninput="onS32('${p.id}',this.value)"></div>
+    </div>
+    <div class="g2" style="margin-top:.45rem">
+      <div class="fld"><label>Meta sueldo Qochix 2030</label>
+        <input type="number" id="inp-s30-${p.id}" value="${P.sue30[p.id]}" step="500" min="0" max="100000"
+          title="Tope ene 2030; junto con 2032 define la curva intermedia" oninput="onS30('${p.id}',this.value)"></div>
+      <div class="fld"><label>Meta sueldo Qochix 2032</label>
+        <input type="number" id="inp-s32-${p.id}" value="${P.sue32[p.id]}" step="500" min="0" max="100000"
+          title="Tope ene 2032" oninput="onS32('${p.id}',this.value)"></div>
     </div>
     <div class="pcard-footer">
       <span>Aporte total:</span>
@@ -884,6 +1213,16 @@ function onHr(id,v){
 }
 function onNeto(v){P.netoPct=+v/100;document.getElementById('lbl-neto').textContent=v+'%';recalc()}
 function onRsv(v){P.reserva=+v;document.getElementById('lbl-rsv').textContent=fmt(+v);recalc()}
+function setCapitalMode(mode){
+  P.capitalMode=mode;
+  syncControlsFromState();
+  recalc();
+}
+function onPreMoney(v){
+  const next=Math.max(100000,Math.round(Number(v||0)));
+  P.preMoney=Number.isFinite(next)?next:5000000;
+  recalc();
+}
 function onS(id,v){
   const p=PERSONS.find(x=>x.id===id);p.sueldo=+v;
   const badge=document.querySelector('#badge-'+id+' input');
@@ -893,7 +1232,18 @@ function onS(id,v){
 function onCap(id,v){PERSONS.find(x=>x.id===id).capital=+v;recalc()}
 function onH(id,v){PERSONS.find(x=>x.id===id).hrs=+v;document.getElementById('lhl-'+id).textContent=v+'h';recalc()}
 function onA(id,v){PERSONS.find(x=>x.id===id).adj=+v;document.getElementById('lla-'+id).textContent=(+v).toFixed(2);recalc()}
+function onS30(id,v){P.sue30[id]=+v;recalc()}
 function onS32(id,v){P.sue32[id]=+v;recalc()}
+function resetSueMetasToPact(){
+  PERSONS.forEach(p=>{
+    P.sue30[p.id]=SUED_F_BASE[p.id][4];
+    P.sue32[p.id]=SUED_F_BASE[p.id][6];
+    const e30=sel('inp-s30-'+p.id), e32=sel('inp-s32-'+p.id);
+    if(e30) e30.value=P.sue30[p.id];
+    if(e32) e32.value=P.sue32[p.id];
+  });
+  recalc();
+}
 function onEq(id,v){
   PERSONS.find(x=>x.id===id).equity=+v;
   const tot=PERSONS.reduce((s,p)=>s+p.equity,0);
@@ -916,11 +1266,15 @@ function setScenario(s){
   document.querySelectorAll('.kval').forEach(el=>{el.classList.remove('updated');void el.offsetWidth;el.classList.add('updated')});
   recalc();
 }
-function showTab(t){
+function showTab(t,btn){
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
-  event.target.classList.add('active');
+  if(btn) btn.classList.add('active');
+  else {
+    const fallback=document.querySelector(`.tab-btn[onclick*="'${t}'"]`);
+    if(fallback) fallback.classList.add('active');
+  }
   if(t==='graficos'||t==='equipo'||t==='runway') setTimeout(renderCharts, 50);
 }
 function toggleP(hdr){
@@ -952,53 +1306,48 @@ function sw(p){
   return{hr,hm,vm,sw:vm*36*p.adj};
 }
 
-function calcFact(){
+function calcFactFromCurves(suedCurves){
   const m=SC[P.sc];
   const trazo=FACT0.trazo.map(v=>Math.round(v*m));
   const alm  =FACT0.almaria.map(v=>Math.round(v*m));
   const ht   =FACT0.ht.map(v=>Math.round(v*m));
   const total=AÑOS.map((_,i)=>trazo[i]+alm[i]+ht[i]);
   const neto =total.map(t=>Math.round(t*P.netoPct));
-  const sued_f=AÑOS.map((_,i)=>PERSONS.reduce((s,p)=>s+(SUED_F[p.id][i]||0),0));
+  const sued_f=suedTotalsFromCurves(suedCurves);
   const hcost=hiresCostByYear();
   const sued_tot=sued_f.map((s,i)=>s+hcost[i]);
   const colchon=neto.map((n,i)=>n-sued_tot[i]);
   const dist=colchon.map(c=>Math.max(0,c-P.reserva));
   const dist_no_op=neto.map((n,i)=>Math.max(0,n-sued_f[i]-P.reserva)); // sin equipo op
-  return{trazo,alm,ht,total,neto,sued_f,hcost,sued_tot,colchon,dist,dist_no_op};
+  return{trazo,alm,ht,total,neto,sued_f,hcost,sued_tot,colchon,dist,dist_no_op,suedCurves};
+}
+
+function calcFact(){
+  return QSYS.deriveState({persons:PERSONS,hires:HIRES,P}).fact;
+}
+
+/** Misma facturación/escenario; solo curva pacto literal (para Δ metas). */
+function calcFactPactReference(){
+  return QSYS.deriveState({persons:PERSONS,hires:HIRES,P}).factPact;
 }
 
 function calcPool(){
-  return PERSONS.reduce((s,p)=>s+getTkt(p.id)+p.capital+sw(p).sw,0);
+  return QSYS.deriveState({persons:PERSONS,hires:HIRES,P}).pool;
 }
 
 // Monthly year 1 (12 months from April 2026)
 function calcMonthly(){
-  const m=SC[P.sc];
-  const monthly_fact=[
-    [2200,1000,450],[2800,1200,500],[4200,2000,600],[5000,2500,700],
-    [6000,3000,800],[7000,4000,900],[8000,5000,1000],[9500,6000,1100],
-    [10500,7000,1200],[12000,8000,1300],[13000,9000,1400],[14000,10000,1500]
-  ].map(([t,a,h])=>Math.round((t+a+h)*m));
-  const burn_fijo=PERSONS.reduce((s,p)=>{
-    const sue=SUED_F[p.id][0]||0;return s+sue;
-  },0)+hiresCostByYear()[0];
-  return monthly_fact.map(f=>({ingresos:f,burn:burn_fijo}));
+  return QSYS.deriveState({persons:PERSONS,hires:HIRES,P}).runway.monthly;
 }
 
 // Break-even: primer año en que colchón >= 0 de forma sostenida
 function calcBE(fact){
-  for(let i=0;i<AÑOS.length;i++){if(fact.colchon[i]>=0)return AÑOS[i];}
-  return '2033+';
+  return QSYS.deriveState({persons:PERSONS,hires:HIRES,P}).breakEven;
 }
 
 // Runway months
 function calcRunway(){
-  const capital=PERSONS.reduce((s,p)=>s+getTkt(p.id)+p.capital,0);
-  const monthly=calcMonthly();
-  const burn=monthly[0].burn;
-  if(burn<=0)return{months:99,capital,burn:0};
-  return{months:Math.floor(capital/burn),capital,burn};
+  return QSYS.deriveState({persons:PERSONS,hires:HIRES,P}).runway;
 }
 
 // ════════════════════════════════════════
@@ -1008,17 +1357,46 @@ const fmt=(n,d=0)=>n===undefined||isNaN(n)?'—':'S/'+Math.round(n).toLocaleStri
 const fmtX=n=>n.toFixed(1)+'x';
 
 function recalc(){
-  const fact=calcFact();
-  const pool=calcPool();
+  const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+  const fact=derived.fact;
+  const factPact=derived.factPact;
+  const pool=derived.pool;
   const dist=fact.dist;
-  const rw=calcRunway();
-  const be=calcBE(fact);
+  const rw=derived.runway;
+  const be=derived.breakEven;
+  const sc=derived.curves;
+  const monthly=rw.monthly;
+  const eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
+  const baseEqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.baseEquity||0)]));
 
   // ── KPIs dashboard ──
   sv('kpi-pool',fmt(pool));
   sv('kpi-dist',fmt(dist[6]));
   sv('kpi-be',be);
   sv('kpi-runway',rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
+  sv('hero-kpi-pool',fmt(pool));
+  sv('hero-kpi-fact',fmt(fact.total[6]));
+  sv('hero-kpi-dist',fmt(dist[6]));
+  const heroMults=derived.personCards.map((person)=>person.total2032/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
+  const minMult=Math.min(...heroMults);
+  const maxMult=Math.max(...heroMults);
+  sv('hero-kpi-mult','×'+minMult.toFixed(1)+' – ×'+maxMult.toFixed(1));
+  const eqTotBase=PERSONS.reduce((s,p)=>s+Number(p.equity||0),0);
+  const eqSumEl=sel('eq-sum-v');
+  if(eqSumEl){
+    eqSumEl.textContent=eqTotBase.toFixed(1)+'%';
+    eqSumEl.className=Math.abs(eqTotBase-100)<.5?'ok':'bad';
+  }
+  const eqNote=sel('eq-nota');
+  if(eqNote){
+    if(P.capitalMode==='equity_round'){
+      eqNote.className='nota';
+      eqNote.innerHTML='Modo <strong>compra de acciones</strong> activo. El % de reparto usa equity efectivo de ronda (pre-money: <strong>'+fmt(P.preMoney)+'</strong>). El cap table base sigue editable en esta sección.';
+    }else{
+      eqNote.className=Math.abs(eqTotBase-100)<.5?'nota ok':'nota warn';
+      eqNote.textContent=Math.abs(eqTotBase-100)<.5?'✓ Suma 100% (cap table base).':'⚠️ Suma '+eqTotBase.toFixed(1)+'% — debe ser 100% en cap table base.';
+    }
+  }
 
   // Update pcard footers
   PERSONS.forEach(p=>{
@@ -1027,23 +1405,46 @@ function recalc(){
     sv('ptot-'+p.id,fmt(tkt+p.capital+s.sw));
   });
 
-  const rossySue=ANOS_RIND=>SUED_F.rossy[ANOS_RIND]||0;
-  const rossyCross=AÑOS.findIndex((_,i)=>(SUED_F.rossy[i]||0)>=7000);
-  sv('kpi-rossy',rossyCross>=0?AÑOS[rossyCross]:'2033+');
+  sv('kpi-rossy',String(derived.firstLiberationYear));
 
-  // Liberation meter
-  const rossy=PERSONS.find(p=>p.id==='rossy');
-  const rossySue30=SUED_F.rossy[AÑOS.indexOf(2030)]||0;
-  const rossyEq30=Math.round(dist[AÑOS.indexOf(2030)]*rossy.equity/100);
-  const rossyTot30=rossySue30+rossyEq30;
-  const pct=Math.min(100,Math.round(rossyTot30/rossy.sueldo*100));
+  // Liberation meter (equipo completo, automático por persona)
+  const libIdx30=AÑOS.indexOf(2030);
+  const liberated2030=derived.liberatedBy2030;
+  const liberated2032=derived.liberatedBy2032;
+  const pct=Math.round((liberated2032/PERSONS.length)*100);
   sel('lib-fill').style.width=pct+'%';
-  sv('lib-curr',fmt(rossyTot30)+'/mes en 2030');
-  sv('lib-target',rossy.sueldo.toLocaleString('es-PE'));
+  sv('lib-curr',`${liberated2030}/${PERSONS.length} al 2030`);
+  sv('lib-target',`Objetivo: ${PERSONS.length}/${PERSONS.length} al 2032`);
   const libN=sel('lib-nota');
-  if(rossyTot30>=rossy.sueldo){libN.className='nota ok';libN.innerHTML=`🌟 <strong>Rossy se libera en 2030</strong> — Qochix le paga S/${rossyTot30.toLocaleString('es-PE')}/mes (sueldo S/${rossySue30.toLocaleString('es-PE')} + equity S/${rossyEq30.toLocaleString('es-PE')}), superando su S/${rossy.sueldo.toLocaleString('es-PE')}/mes actual.`;}
-  else{libN.className='nota warn';libN.innerHTML=`⏳ En 2030 Qochix le paga S/${rossyTot30.toLocaleString('es-PE')}/mes — falta S/${(rossy.sueldo-rossyTot30).toLocaleString('es-PE')}/mes para el cruce.`;}
-  sel('lib-status').textContent=pct+'% del objetivo';
+  if(liberated2032===PERSONS.length){
+    libN.className='nota ok';
+    libN.innerHTML=`🌟 <strong>Equipo liberado al 2032.</strong> Las ${PERSONS.length} personas cruzan su sueldo actual dentro del horizonte del modelo.`;
+  }else if(liberated2032>=Math.ceil(PERSONS.length*0.6)){
+    libN.className='nota';
+    libN.innerHTML=`✅ <strong>Avance sólido:</strong> ${liberated2032}/${PERSONS.length} personas se liberan al 2032. Ajusta metas y estructura para cerrar el resto.`;
+  }else{
+    libN.className='nota warn';
+    libN.innerHTML=`⏳ <strong>Avance parcial:</strong> solo ${liberated2032}/${PERSONS.length} personas se liberan al 2032. Revisar metas sueldo, neto operativo y ritmo comercial.`;
+  }
+  sel('lib-status').textContent=`${pct}% del objetivo equipo`;
+  const libTeam=sel('lib-team');
+  if(libTeam){
+    libTeam.innerHTML=derived.personCards.map((person)=>{
+      const total30=person.yearlyTotals[libIdx30]||0;
+      const gap=Math.round(Number(person.sueldo||0)-total30);
+      const ok=person.liberationYear!=='2033+';
+      const sub=ok
+        ? `Cruce en ${person.liberationYear} · total 2030: ${fmt(total30)}/mes`
+        : `Sin cruce al 2032 · brecha 2030: ${fmt(Math.max(0,gap))}/mes`;
+      return `<div class="lib-item">
+        <div class="lib-item-top">
+          <span class="lib-item-name" style="color:${person.color}">${person.name}</span>
+          <span class="lib-item-year">${ok?person.liberationYear:'2033+'}</span>
+        </div>
+        <div class="lib-item-sub">${sub}</div>
+      </div>`;
+    }).join('');
+  }
 
   // ── Sweat table ──
   let html='';let tvm=0,tsw=0;
@@ -1060,8 +1461,10 @@ function recalc(){
   PERSONS.forEach((p,i)=>{
     const tkt=getTkt(p.id);
     const s=sw(p),inv=tkt+p.capital+s.sw,mat=inv/pool;
-    const diff=p.equity/100-mat,ds=(diff>0?'+':'')+(diff*100).toFixed(1)+'pts';
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${p.equity}%</td><td>${fmt(tkt)}</td><td>${fmt(p.capital)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
+    const effEq=eqById[p.id]||0;
+    const baseEq=baseEqById[p.id]||0;
+    const diff=effEq/100-mat,ds=(diff>0?'+':'')+(diff*100).toFixed(1)+'pts';
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${effEq.toFixed(1)}% <span style="color:var(--muted);font-size:.64rem">(base ${baseEq.toFixed(1)}%)</span></td><td>${fmt(tkt)}</td><td>${fmt(p.capital)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
   });
   const tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
   html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(PERSONS.reduce((s,p)=>s+p.capital,0))}</td><td>${fmt(tsw_calc())}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
@@ -1088,15 +1491,84 @@ function recalc(){
   const scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
   sel('nota-fact').innerHTML=`Escenario <strong>${scn[P.sc]}</strong>. Distribuible 2032: <strong style="color:var(--gold)">${fmt(dist[6])}/mes</strong>. El equipo operativo reduce el distribuible en <strong style="color:var(--coral)">${fmt(fact.hcost[6])}/mes</strong> en 2032.`;
 
+  sv('ceo-scn',scn[P.sc]);
+  sv('ceo-pool',fmt(pool));
+  sv('ceo-dist32',fmt(dist[6]));
+  sv('ceo-dist30',fmt(dist[4]));
+  sv('ceo-be',String(be));
+  sv('ceo-runway',rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
+  sv('ceo-rossy',`${derived.liberatedBy2032}/${PERSONS.length}`);
+  sv('ceo-first-dist',String(derived.firstDistYear));
+  const ceoh=sel('ceo-runway-hint');
+  if(ceoh){
+    if(rw.months>=18){ceoh.className='nota ok';ceoh.textContent='Runway inicial ≥18m: margen razonable para iterar — igual, cruzar con caja bancaria cada mes (ver Pacto → Gobierno).'}
+    else if(rw.months>=9){ceoh.className='nota';ceoh.textContent='Runway en zona media: si el semáforo cae a amarillo, congelar gastos no esenciales y reforzar pipeline antes de tocar equity.'}
+    else{ceoh.className='nota warn';ceoh.textContent='Runway ajustado: prioridad absoluta ingresos y caja; decisiones del mes deben salir de mesa explícita, no de supuestos en silencio.'}
+  }
+
   // ── Equity anual ──
   html='';
   PERSONS.forEach((p,i)=>{
-    const eqs=dist.map(d=>Math.round(d*p.equity/100));
+    const eqs=dist.map(d=>Math.round(d*(eqById[p.id]||0)/100));
     const acum=eqs.reduce((s,v)=>s+v*12,0);
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${p.equity}%</td>${eqs.map((v,j)=>`<td class="${j>=4?'cv':''}">${v>0?fmt(v):'<span style="color:var(--faint)">—</span>'}</td>`).join('')}<td class="cg">${fmt(acum)}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${(eqById[p.id]||0).toFixed(1)}%</td>${eqs.map((v,j)=>`<td class="${j>=4?'cv':''}">${v>0?fmt(v):'<span style="color:var(--faint)">—</span>'}</td>`).join('')}<td class="cg">${fmt(acum)}</td></tr>`;
   });
   html+=`<tr class="trs"><td>DISTRIBUIBLE</td><td>—</td>${dist.map(d=>`<td>${d>0?fmt(d):'—'}</td>`).join('')}<td>—</td></tr>`;
   sel('tb-ea').innerHTML=html;
+
+  // ── Metas sueldo vs impacto (referencia = curva literal pacto) ──
+  const idx30=4, idx32=6;
+  const dPay30=fact.sued_f[idx30]-factPact.sued_f[idx30];
+  const dPay32=fact.sued_f[idx32]-factPact.sued_f[idx32];
+  const factExtra30=dPay30>0?Math.round(dPay30/P.netoPct):0;
+  const factExtra32=dPay32>0?Math.round(dPay32/P.netoPct):0;
+  const siD30=sel('si-delta-pay-30');
+  if(siD30)siD30.textContent=(dPay30>=0?'+':'')+fmt(dPay30)+'/mes';
+  const siF30=sel('si-fact-extra-30');
+  if(siF30)siF30.textContent=dPay30>0?fmt(factExtra30)+'/mes':'—';
+  const siDr30=sel('si-dist-ref-30'), siDd30=sel('si-dist-dyn-30');
+  if(siDr30)siDr30.textContent=fmt(factPact.dist[idx30]);
+  if(siDd30)siDd30.textContent=fmt(fact.dist[idx30]);
+  const siDelta=sel('si-delta-pay');
+  if(siDelta)siDelta.textContent=(dPay32>=0?'+':'')+fmt(dPay32)+'/mes';
+  const siFact=sel('si-fact-extra');
+  if(siFact)siFact.textContent=dPay32>0?fmt(factExtra32)+'/mes':'—';
+  const siDr=sel('si-dist-ref'), siDd=sel('si-dist-dyn');
+  if(siDr)siDr.textContent=fmt(factPact.dist[idx32]);
+  if(siDd)siDd.textContent=fmt(fact.dist[idx32]);
+  const siTbl=sel('tb-salary-impact');
+  if(siTbl){
+    let sih='';
+    PERSONS.forEach(p=>{
+      const ref30=factPact.suedCurves[p.id][idx30], cur30=fact.suedCurves[p.id][idx30];
+      const ref32=factPact.suedCurves[p.id][idx32], cur32=fact.suedCurves[p.id][idx32];
+      const eq30R=Math.round(factPact.dist[idx30]*(eqById[p.id]||0)/100), eq30C=Math.round(fact.dist[idx30]*(eqById[p.id]||0)/100);
+      const eq32R=Math.round(factPact.dist[idx32]*(eqById[p.id]||0)/100), eq32C=Math.round(fact.dist[idx32]*(eqById[p.id]||0)/100);
+      const totR=ref32+eq32R, totC=cur32+eq32C;
+      sih+=`<tr>
+        <td style="color:${p.c};font-weight:600">${p.name}</td>
+        <td>${fmt(ref30)}</td><td>${fmt(cur30)}</td>
+        <td>${fmt(ref32)}</td><td>${fmt(cur32)}</td>
+        <td>${fmt(eq30R)} → ${fmt(eq30C)}</td>
+        <td>${fmt(eq32R)} → ${fmt(eq32C)}</td>
+        <td class="cg">${fmt(totR)} → ${fmt(totC)}</td>
+      </tr>`;
+    });
+    siTbl.innerHTML=sih;
+  }
+  const siNota=sel('si-nota');
+  if(siNota){
+    const anyUp=dPay30>0||dPay32>0;
+    const bothZero=dPay30===0&&dPay32===0;
+    siNota.className='nota'+(anyUp?' warn':' ok');
+    if(bothZero){
+      siNota.innerHTML='<strong>Curva = pacto base</strong> (metas 2030/2032 iguales a la tabla). Δ planilla y distribuible vs referencia: <strong>cero</strong>.';
+    }else if(anyUp){
+      siNota.innerHTML=`<strong>Equity según modo actual.</strong> Subiste planilla fundadores vs pacto: en 2030 Δ <strong>${fmt(dPay30)}</strong>/mes · en 2032 Δ <strong>${fmt(dPay32)}</strong>/mes. Para acercarte al distribuible del pacto en cada año (aprox.): suma ~<strong>${fmt(factExtra30)}</strong>/mes de facturación bruta en 2030 y ~<strong>${fmt(factExtra32)}</strong>/mes en 2032 (con neto ${(P.netoPct*100).toFixed(0)}%).`;
+    }else{
+      siNota.innerHTML='<strong>En 2030 y 2032 la planilla fundadores no supera al pacto</strong> en la suma total; el distribuible en esos cruces es ≥ referencia. Si solo moviste una meta, revisa años intermedios en la tabla de facturación.';
+    }
+  }
 
   // ── EQUIPO tab ──
   sv('be-op26',fmt(fact.hcost[0]));
@@ -1127,7 +1599,6 @@ function recalc(){
   sv('rw-burn',fmt(rw.burn)+'/mes');
   sv('rw-months',rw.months+'m');
   sv('rw-be',be+'');
-  const monthly=calcMonthly();
   const meses=['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'];
   let caja=rw.capital;
   html='';
@@ -1149,27 +1620,27 @@ function recalc(){
   sel('tb-runway').innerHTML=html;
 
   // ── APUESTA tab ──
-  const hugoEq32=Math.round(dist[6]*PERSONS[0].equity/100);
+  const hugoEq32=Math.round(dist[6]*(eqById[PERSONS[0].id]||0)/100);
   const hugoTot32=P.sue32.hugo+hugoEq32;
   const hugoInv=getTkt('hugo')+PERSONS[0].capital+sw(PERSONS[0]).sw;
   const hugoRet7=AÑOS.reduce((s,_,i)=>{
-    return s+((SUED_F.hugo[i]||0)+Math.round(dist[i]*PERSONS[0].equity/100))*12;
+    return s+((sc.hugo[i]||0)+Math.round(dist[i]*(eqById[PERSONS[0].id]||0)/100))*12;
   },0);
   sv('ap-hugo',fmt(hugoTot32));
   sv('ap-roi-hugo',fmtX(hugoRet7/hugoInv));
-  sv('ap-pat',fmt(5000000*PERSONS[0].equity/100));
-  sv('pat-c',fmt(3000000*PERSONS[0].equity/100));
-  sv('pat-b',fmt(5000000*PERSONS[0].equity/100));
-  sv('pat-o',fmt(7000000*PERSONS[0].equity/100));
+  sv('ap-pat',fmt(5000000*(eqById[PERSONS[0].id]||0)/100));
+  sv('pat-c',fmt(3000000*(eqById[PERSONS[0].id]||0)/100));
+  sv('pat-b',fmt(5000000*(eqById[PERSONS[0].id]||0)/100));
+  sv('pat-o',fmt(7000000*(eqById[PERSONS[0].id]||0)/100));
 
   const mults=PERSONS.map(p=>{
-    const eq32=Math.round(dist[6]*p.equity/100);
+    const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
     return (P.sue32[p.id]+eq32)/p.sueldo;
   });
   const bestIdx=mults.indexOf(Math.max(...mults));
   const minRois=PERSONS.map(p=>{
     const inv=getTkt(p.id)+p.capital+sw(p).sw;
-    const ret=AÑOS.reduce((s,_,i)=>s+((SUED_F[p.id][i]||0)+Math.round(dist[i]*p.equity/100))*12,0);
+    const ret=AÑOS.reduce((s,_,i)=>s+((sc[p.id][i]||0)+Math.round(dist[i]*(eqById[p.id]||0)/100))*12,0);
     return ret/inv;
   });
   const minRoiIdx=minRois.indexOf(Math.min(...minRois));
@@ -1185,16 +1656,16 @@ function recalc(){
 
   html='';
   PERSONS.forEach(p=>{
-    const eq32=Math.round(dist[6]*p.equity/100);
+    const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
     const sue32=P.sue32[p.id];
     const tot32=sue32+eq32;
     const xTot=tot32/p.sueldo;
-    const tot29=(SUED_F[p.id][3]||0)+Math.round(dist[3]*p.equity/100);
+    const tot29=(sc[p.id][3]||0)+Math.round(dist[3]*(eqById[p.id]||0)/100);
     const inv=getTkt(p.id)+p.capital+sw(p).sw;
-    const ret7=AÑOS.reduce((s,_,i)=>s+((SUED_F[p.id][i]||0)+Math.round(dist[i]*p.equity/100))*12,0);
+    const ret7=AÑOS.reduce((s,_,i)=>s+((sc[p.id][i]||0)+Math.round(dist[i]*(eqById[p.id]||0)/100))*12,0);
     html+=`<div class="ap-card">
       <div><div class="ap-nm" style="color:${p.c}">${p.name}</div>
-        <div class="ap-pct">${p.equity}% Qochix</div>
+        <div class="ap-pct">${(eqById[p.id]||0).toFixed(1)}% Qochix</div>
         <div class="ap-hoy">Hoy: ${fmt(p.sueldo)}/m</div></div>
       <div class="brs">
         <div class="br"><span class="bl">HOY</span><div class="bt"><div class="bf" style="width:${(p.sueldo/tot32*100).toFixed(0)}%;background:var(--faint)"></div></div><span class="bv" style="color:var(--muted)">${fmt(p.sueldo)}</span></div>
@@ -1210,20 +1681,21 @@ function recalc(){
   html='';
   PERSONS.forEach((p,i)=>{
     const inv=getTkt(p.id)+p.capital+sw(p).sw;
-    const ret7=AÑOS.reduce((s,_,j)=>s+((SUED_F[p.id][j]||0)+Math.round(dist[j]*p.equity/100))*12,0);
+    const ret7=AÑOS.reduce((s,_,j)=>s+((sc[p.id][j]||0)+Math.round(dist[j]*(eqById[p.id]||0)/100))*12,0);
     const roi=ret7/inv;
-    const eq32=Math.round(dist[6]*p.equity/100);
+    const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
     const xTot=(P.sue32[p.id]+eq32)/p.sueldo;
     const be_p=AÑOS.find((_,j)=>{
       let acum=0;
-      for(let k=0;k<=j;k++) acum+=((SUED_F[p.id][k]||0)+Math.round(dist[k]*p.equity/100))*12;
+      for(let k=0;k<=j;k++) acum+=((sc[p.id][k]||0)+Math.round(dist[k]*(eqById[p.id]||0)/100))*12;
       return acum>=inv;
     });
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${p.equity}%</td><td>${fmt(inv)}</td><td class="cg">${fmt(ret7)}</td><td class="cb">${fmtX(roi)}</td><td class="cv">${fmtX(xTot)}</td><td class="cv">${be_p||'2033+'}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${(eqById[p.id]||0).toFixed(1)}%</td><td>${fmt(inv)}</td><td class="cg">${fmt(ret7)}</td><td class="cb">${fmtX(roi)}</td><td class="cv">${fmtX(xTot)}</td><td class="cv">${be_p||'2033+'}</td></tr>`;
   });
   sel('tb-roi').innerHTML=html;
 
   renderCharts(fact,dist,rw,monthly);
+  scheduleSharedSync();
 }
 
 // ════════════════════════════════════════
@@ -1238,7 +1710,15 @@ const CH_DEFAULTS = {
 function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
 
 function renderCharts(fact,dist,rw,monthly){
-  if(!fact){const f=calcFact();fact=f;dist=f.dist;rw=calcRunway();monthly=calcMonthly();}
+  let eqById={};
+  if(!fact){
+    const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+    fact=derived.fact;dist=fact.dist;rw=derived.runway;monthly=rw.monthly;
+    eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
+  } else {
+    const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+    eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
+  }
   const labels=AÑOS.map(String);
 
   // Facturación stacked area
@@ -1267,8 +1747,8 @@ function renderCharts(fact,dist,rw,monthly){
   const cdn=sel('ch-donut');
   if(cdn){
     charts.donut=new Chart(cdn,{type:'doughnut',data:{
-      labels:PERSONS.map(p=>p.name+' '+p.equity+'%'),
-      datasets:[{data:PERSONS.map(p=>p.equity),backgroundColor:PERSONS.map(p=>p.c+'99'),borderColor:PERSONS.map(p=>p.c),borderWidth:2}]
+      labels:PERSONS.map(p=>p.name+' '+(eqById[p.id]||0).toFixed(1)+'%'),
+      datasets:[{data:PERSONS.map(p=>eqById[p.id]||0),backgroundColor:PERSONS.map(p=>p.c+'99'),borderColor:PERSONS.map(p=>p.c),borderWidth:2}]
     },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#6B7A96',font:{family:'DM Sans',size:11},boxWidth:10}}}}});
   }
 
@@ -1288,7 +1768,8 @@ function renderCharts(fact,dist,rw,monthly){
   if(croi){
     const rois=PERSONS.map(p=>{
       const inv=getTkt(p.id)+p.capital+sw(p).sw;
-      const ret=AÑOS.reduce((s,_,i)=>s+((SUED_F[p.id][i]||0)+Math.round(fact.dist[i]*p.equity/100))*12,0);
+      const cu=fact.suedCurves[p.id];
+      const ret=AÑOS.reduce((s,_,i)=>s+((cu[i]||0)+Math.round(fact.dist[i]*(eqById[p.id]||0)/100))*12,0);
       return parseFloat((ret/inv).toFixed(2));
     });
     charts.roi=new Chart(croi,{type:'bar',data:{
@@ -1305,8 +1786,9 @@ function renderCharts(fact,dist,rw,monthly){
       labels:PERSONS.map(p=>p.name),
       datasets:[
         {label:'Hoy',data:PERSONS.map(p=>p.sueldo),backgroundColor:'rgba(42,51,80,.8)',borderColor:'#3A4257',borderWidth:1,borderRadius:4},
-        {label:'Sueldo 2032',data:PERSONS.map(p=>P.sue32[p.id]),backgroundColor:PERSONS.map(p=>p.c+'66'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:4},
-        {label:'Equity 2032',data:PERSONS.map(p=>Math.round(fact.dist[6]*p.equity/100)),backgroundColor:PERSONS.map(p=>p.c+'33'),borderColor:PERSONS.map(p=>p.c+'99'),borderWidth:1,borderRadius:4,borderDash:[4,4]},
+        {label:'Meta sueldo 2030',data:PERSONS.map(p=>P.sue30[p.id]),backgroundColor:'rgba(155,127,232,.35)',borderColor:'#9B7FE8',borderWidth:1,borderRadius:4},
+        {label:'Meta sueldo 2032',data:PERSONS.map(p=>P.sue32[p.id]),backgroundColor:PERSONS.map(p=>p.c+'66'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:4},
+        {label:'Equity 2032',data:PERSONS.map(p=>Math.round(fact.dist[6]*(eqById[p.id]||0)/100)),backgroundColor:PERSONS.map(p=>p.c+'33'),borderColor:PERSONS.map(p=>p.c+'99'),borderWidth:1,borderRadius:4,borderDash:[4,4]},
       ]
     },options:{...CH_DEFAULTS,scales:{...CH_DEFAULTS.scales,x:{...CH_DEFAULTS.scales.x,stacked:false},y:{...CH_DEFAULTS.scales.y,stacked:false}}}});
   }
@@ -1341,12 +1823,55 @@ function renderCharts(fact,dist,rw,monthly){
 // ════════════════════════════════════════
 function sv(id,v){const el=sel(id);if(el&&el.textContent!==v){el.textContent=v}}
 function sel(id){return document.getElementById(id)}
+function decorateHelp(){
+  if(!window.QochixHelp) return;
+  window.QochixHelp.init({
+    selectors:[
+      '.klbl','.ptitle','.rw-lbl','.be-lbl','.lib-title',
+      '.sb-title','.slw label','.fld label','.hero-sub','.hero-tagline',
+      '.hsm-l','.hsm-v','.hero-why','.hero-foot','.ceo-intro','.sim-foot',
+      '.htable th','.tab-btn','.sc-btn','.topbar .logo','.nota'
+    ],
+    glossaryTitle:'Glosario rápido · Simulador Qochix',
+    customMap:{
+      'a · ticket de entrada':'Dinero que entra al sistema como aporte inicial por socio.',
+      'b · socios fundadores':'Personas que sostienen operación, equity y metas de ingresos.',
+      'c · distribución equity':'Porcentaje de propiedad usado para repartir distribuible.',
+      'd · parámetros financieros':'Supuestos del modelo que cambian resultados globales.',
+      'e · operación y notas':'Contexto operativo y acuerdos de reunión para no perder trazabilidad.',
+      'meta humana #1 — liberación financiera de rossy':'Indicador humano: cuándo Rossy puede dejar su ingreso externo.',
+      'pool equipo ticket capital sweat':'Lectura rápida del aporte combinado del equipo; sirve como referencia de compromiso económico total.',
+      'facturacion / mes 2032':'Ingreso mensual proyectado para 2032 en el escenario activo.',
+      'distribuible socios / mes 2032':'Monto mensual repartible a socios en 2032 después de operación y reserva.',
+      'ingreso total vs hoy 2032':'Comparación entre ingreso actual y el total proyectado (sueldo + equity) en 2032.',
+      'liberación equipo':'Primer año donde al menos una persona cruza su sueldo actual y conteo total de liberación al 2032.',
+      'meta humana — liberación financiera del equipo':'Semáforo de cuántos socios logran cruce de sueldo actual dentro del horizonte 2026-2032.',
+      'sueldo hoy':'Ingreso mensual actual usado como línea base.',
+      's/hora':'Tarifa equivalente por hora según sueldo y dedicación.',
+      'hrs/día':'Horas diarias dedicadas al ecosistema.',
+      'hrs/mes':'Horas mensuales proyectadas de dedicación.',
+      'dashboard':'Vista ejecutiva de KPIs clave del momento.',
+      'graficos':'Proyecciones visuales de ingresos, costos y reparto.',
+      'equipo':'Detalle de sueldos, equity y evolución por persona.',
+      'runway':'Salud de caja y resistencia operativa en meses.',
+      'apuesta':'Riesgo-retorno y narrativa de inversión del equipo.',
+      'vista ceo':'Resumen de mesa para decidir rápido sin abrir todas las pestañas.',
+      'aporte como préstamo':'El aporte no convierte a acciones; impacta caja, pool y ROI.',
+      'aporte compra acciones':'El aporte se convierte a acciones según valorización pre-money definida.',
+      'valorización pre-money de ronda (s/)':'Valor de Qochix antes del aporte. Debes definir este monto para convertir capital en acciones.'
+    }
+  });
+}
 
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
 initSidebar();
+syncControlsFromState();
+decorateHelp();
+loadSimNotes();
 document.querySelectorAll('.panel .pbody').forEach(b=>b.style.display='block');
+QSYS.subscribe((nextState)=>applySharedState(nextState));
 recalc();
 </script>
 </body>
