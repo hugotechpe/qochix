@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QOCHIX — Pacto Económico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0A0D13;
+  --bg2:       #111520;
+  --bg3:       #171D2E;
+  --surface:   #1C2438;
+  --border:    rgba(255,255,255,0.07);
+  --gold:      #D4A853;
+  --gold2:     #F0C878;
+  --teal:      #3ECFCF;
+  --coral:     #E86B5F;
+  --green:     #52C97A;
+  --text:      #E8ECF0;
+  --muted:     #7A8599;
+  --faint:     #3A4257;
+  --serif:     'Playfair Display', Georgia, serif;
+  --sans:      'DM Sans', system-ui, sans-serif;
+  --mono:      'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 64px;
+  background: rgba(10,13,19,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+.nav-links {
+  display: flex; gap: 0.25rem;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.nav-links a:hover, .nav-links a.active {
+  color: var(--text);
+  background: var(--surface);
+}
+.nav-tag {
+  font-size: 0.7rem;
+  color: var(--muted);
+  background: var(--surface);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 8rem 2rem 6rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(212,168,83,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(62,207,207,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 20%, rgba(232,107,95,0.03) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: 
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 70% at center, black 30%, transparent 100%);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.hero-sub {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  color: var(--muted);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+.hero-equity {
+  display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 4rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+.eq-pill {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  min-width: 100px;
+  transition: all 0.3s;
+}
+.eq-pill:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(212,168,83,0.1);
+}
+.eq-pct {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.eq-name {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: bounce 2s infinite;
+}
+.hero-scroll span { width: 1px; height: 40px; background: var(--faint); }
+
+/* ── SECTIONS ── */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 7rem 2rem;
+}
+section.full { max-width: none; }
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.section-label::after {
+  content: '';
+  flex: 1; max-width: 60px;
+  height: 1px;
+  background: var(--faint);
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+.section-title em { color: var(--gold); font-style: italic; }
+.section-body {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 680px;
+  line-height: 1.8;
+}
+.section-body strong { color: var(--text); }
+
+/* ── DIVIDER ── */
+.divider {
+  max-width: 1100px; margin: 0 auto;
+  height: 1px; background: var(--border);
+}
+
+/* ── CALLOUT BOX ── */
+.callout {
+  background: linear-gradient(135deg, rgba(212,168,83,0.08), rgba(212,168,83,0.02));
+  border: 1px solid rgba(212,168,83,0.2);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+}
+.callout-icon { font-size: 2rem; margin-bottom: 1rem; }
+.callout h3 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.callout p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+.callout p strong { color: var(--text); }
+
+/* ── BIG STAT ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.stat-card:hover::before { transform: scaleX(1); }
+.stat-card:hover {
+  border-color: rgba(212,168,83,0.25);
+  transform: translateY(-2px);
+}
+.stat-num {
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.stat-desc { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+
+/* ── PERSON CARDS ── */
+.person-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1.25rem;
+  margin: 3rem 0;
+}
+.person-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: default;
+}
+.person-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212,168,83,0.3);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+.person-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--bg);
+}
+.person-name {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.person-pct {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--serif);
+  color: var(--gold);
+  margin: 0.5rem 0;
+}
+.person-role { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+.person-tag {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--muted);
+}
+
+/* ── TABLE ── */
+.table-wrap {
+  overflow-x: auto;
+  margin: 2.5rem 0;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+thead th {
+  background: var(--bg3);
+  padding: 1rem 1.25rem;
+  text-align: right;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+thead th:first-child { text-align: left; }
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface); }
+tbody td {
+  padding: 1rem 1.25rem;
+  text-align: right;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+tbody td:first-child {
+  text-align: left;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.td-gold { color: var(--gold); font-weight: 600; }
+.td-green { color: var(--green); }
+.td-muted { color: var(--muted); }
+.td-big {
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--serif);
+  color: var(--gold);
+}
+.tr-total td {
+  background: var(--bg3);
+  font-weight: 700;
+  color: var(--gold);
+  border-top: 1px solid var(--border);
+}
+.tr-total td:first-child { font-family: var(--sans); }
+.tr-highlight td { background: rgba(212,168,83,0.04); }
+
+/* ── TWO COL ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; }
+  nav .nav-links { display: none; }
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 2.5rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem; top: 8px; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), var(--faint));
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+.tl-dot {
+  position: absolute;
+  left: -2.5rem;
+  top: 4px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,168,83,0.1);
+}
+.tl-date {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.tl-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.tl-body { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+/* ── BRAND CARDS ── */
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+@media (max-width: 640px) { .brand-grid { grid-template-columns: 1fr; } }
+.brand-card {
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.brand-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.brand-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.brand-name {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.brand-tagline {
+  font-size: 0.8rem;
+  margin-bottom: 1.25rem;
+  font-style: italic;
+}
+.brand-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+.brand-num {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-top: 1.5rem;
+}
+.brand-num span { font-size: 0.75rem; color: var(--muted); display: block; margin-top: 0.2rem; }
+
+/* ── APUESTA FINAL ── */
+.apuesta-grid {
+  display: grid; gap: 1.25rem;
+  margin: 3rem 0;
+}
+.apuesta-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  transition: all 0.3s;
+}
+.apuesta-card:hover {
+  border-color: rgba(212,168,83,0.25);
+  transform: translateX(4px);
+}
+.apuesta-persona .name {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.apuesta-persona .pct {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+.apuesta-persona .hoy {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+.apuesta-bars { display: flex; flex-direction: column; gap: 0.6rem; }
+.bar-row {
+  display: flex; align-items: center; gap: 1rem;
+}
+.bar-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  width: 60px;
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.5s cubic-bezier(.4,0,.2,1);
+}
+.bar-val {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text);
+  width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.apuesta-mult {
+  text-align: right;
+}
+.apuesta-mult .x {
+  font-family: var(--serif);
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+}
+.apuesta-mult .label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+@media (max-width: 768px) {
+  .apuesta-card { grid-template-columns: 1fr; }
+}
+
+/* ── VESTING BOX ── */
+.vesting-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 2.5rem 0;
+}
+.vesting-header {
+  display: grid; grid-template-columns: 120px repeat(4, 1fr);
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.vesting-header div, .vesting-row div {
+  padding: 0.85rem 1rem;
+  font-size: 0.78rem;
+  text-align: center;
+}
+.vesting-header div {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.vesting-header div:first-child, .vesting-row div:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+.vesting-row {
+  display: grid; grid-template-columns: 120px repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.vesting-row:last-child { border-bottom: none; }
+.vesting-row:hover { background: var(--surface); }
+.vesting-row div { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); }
+.vesting-row div:first-child { font-family: var(--sans); color: var(--text); }
+.vesting-row div:last-child { color: var(--green); font-weight: 600; }
+
+/* ── PREGUNTA FINAL ── */
+.pregunta-final {
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  border: 1px solid rgba(212,168,83,0.15);
+  border-radius: 24px;
+  padding: 5rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin: 4rem 0;
+}
+.pregunta-final::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(212,168,83,0.05), transparent);
+}
+.pf-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.pf-title {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  max-width: 700px; margin-left: auto; margin-right: auto;
+}
+.pf-options {
+  display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+.pf-btn {
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+}
+.pf-btn-yes {
+  background: var(--gold);
+  color: var(--bg);
+}
+.pf-btn-yes:hover {
+  background: var(--gold2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(212,168,83,0.3);
+}
+.pf-btn-no {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.pf-btn-no:hover { border-color: var(--coral); color: var(--coral); }
+
+/* ── PATRIMONIO ── */
+.patrimonio-cards {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem;
+  margin: 2.5rem 0;
+}
+@media (max-width: 640px) { .patrimonio-cards { grid-template-columns: 1fr; } }
+.pat-card {
+  border-radius: 16px;
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.pat-scenario { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+.pat-val {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.pat-sub { font-size: 0.8rem; color: var(--muted); }
+
+/* ── NOTA BOXES ── */
+.nota-importante {
+  background: rgba(62,207,207,0.06);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 12px 12px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.nota-importante strong { color: var(--text); }
+
+.nota-alerta {
+  background: rgba(232,107,95,0.06);
+  border-left: 3px solid var(--coral);
+  border-radius: 0 12px 12px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.nota-alerta strong { color: var(--coral); }
+
+/* ── FORMULA ── */
+.formula-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin: 1.5rem 0;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  color: var(--teal);
+  line-height: 1.8;
+}
+.formula-box .comment { color: var(--muted); }
+
+/* ── PROGRESS BARS inline ── */
+.progress-list { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
+.pl-item { display: flex; flex-direction: column; gap: 0.3rem; }
+.pl-top { display: flex; justify-content: space-between; font-size: 0.82rem; }
+.pl-name { color: var(--text); font-weight: 500; }
+.pl-val { color: var(--gold); font-family: var(--mono); }
+.pl-track { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.pl-fill { height: 100%; border-radius: 3px; background: var(--gold); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%     { transform: translateX(-50%) translateY(-8px); }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
+/* ── ROI TABLE special row ── */
+.tr-hugo td { background: rgba(212,168,83,0.04); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">QOCHIX</span>
+  <ul class="nav-links">
+    <li><a href="#por-que">¿Por qué?</a></li>
+    <li><a href="#ecosistema">Ecosistema</a></li>
+    <li><a href="#inversion">Inversión</a></li>
+    <li><a href="#equity">Equity</a></li>
+    <li><a href="#proyeccion">Proyección</a></li>
+    <li><a href="#apuesta">Apuesta</a></li>
+    <li><a href="#reglas">Reglas</a></li>
+  </ul>
+  <span class="nav-tag">2 ABR 2026</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <p class="hero-eyebrow">Pacto Económico · Qochix</p>
+  <h1>Esto no es un<br><em>documento.</em></h1>
+  <p class="hero-sub">
+    Es la conversación más importante que vamos a tener como equipo.
+    Aquí no hay letra chica — hay números reales, sacrificios reales,
+    y una oportunidad que no vas a encontrar en ningún trabajo corporativo.
+  </p>
+  <div class="hero-equity">
+    <div class="eq-pill">
+      <span class="eq-pct">63%</span>
+      <span class="eq-name">Hugo</span>
+    </div>
+    <div class="eq-pill">
+      <span class="eq-pct">17%</span>
+      <span class="eq-name">Rossy</span>
+    </div>
+    <div class="eq-pill">
+      <span class="eq-pct">11%</span>
+      <span class="eq-name">Vera</span>
+    </div>
+    <div class="eq-pill">
+      <span class="eq-pct">6%</span>
+      <span class="eq-name">Carlos</span>
+    </div>
+    <div class="eq-pill">
+      <span class="eq-pct">3%</span>
+      <span class="eq-name">Nicole</span>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    Explora
+    <span></span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 1 — ¿POR QUÉ? -->
+<!-- ══════════════════════════════════════ -->
+<section id="por-que">
+  <div class="reveal">
+    <p class="section-label">Antes de los números</p>
+    <h2 class="section-title">Hay algo que tenés<br>que <em>saber</em></h2>
+    <p class="section-body">
+      Todos tenemos un trabajo. Todos tenemos cuentas que pagar. Nadie acá está jugando con plata que le sobra. <strong>Y por eso mismo, lo que estamos armando tiene un peso distinto.</strong> Porque cada hora que le metemos a Qochix es una hora que podríamos dedicar a descansar, a la familia, a lo seguro. Y aun así, acá estamos.
+    </p>
+  </div>
+
+  <div class="callout reveal" style="margin-top:3rem">
+    <div class="callout-icon">🌊</div>
+    <h3>Qochix = laguna en quechua</h3>
+    <p>
+      Un lugar donde convergen aguas distintas y crean algo más grande. Eso somos:
+      <strong>HugoTech</strong> piensa — transforma personas y equipos del mundo tech.
+      <strong>Almaria</strong> siente — coaching ontológico, plantas con intención, momentos de conexión real.
+      <strong>Trazo</strong> comunica — la capa de ejecución visual que convierte visión en presencia.
+      Tres marcas distintas. Un solo ecosistema. <strong>Tuyo.</strong>
+    </p>
+  </div>
+
+  <div style="margin-top:4rem" class="two-col reveal">
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:1.25rem;">¿Por qué necesitamos un pacto?</h3>
+      <p style="color:var(--muted); font-size:0.95rem; line-height:1.8; margin-bottom:1rem;">
+        Porque las buenas intenciones no son suficientes. Porque hemos visto amigos que empezaron proyectos juntos y terminaron sin hablarse. Porque tu esfuerzo merece estar protegido por escrito, no solo por confianza.
+      </p>
+      <p style="color:var(--muted); font-size:0.95rem; line-height:1.8;">
+        <strong style="color:var(--text);">Este pacto es tu seguro:</strong> define qué pone cada uno, qué le toca, cómo se ganan las acciones, qué pasa si alguien se va, y cuándo empieza a llegar el dinero. Todo negro sobre blanco.
+      </p>
+    </div>
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:1.25rem;">¿Por qué ahora?</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">2 Abril 2026</div>
+          <div class="tl-title">La conversación que importa</div>
+          <div class="tl-body">Hoy se pone todo sobre la mesa. Las dudas se hablan ahora, de frente y con café.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">15 Abril 2026</div>
+          <div class="tl-title">El momento en que dejamos de hablar y hacemos</div>
+          <div class="tl-body">Se firma. Se pone el ticket. Ya no hay vuelta atrás — ahora somos equipo de verdad.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Julio 2026</div>
+          <div class="tl-title">HugoTech sale al mundo</div>
+          <div class="tl-body">Primer lanzamiento público. Primera cohorte B2B. Ahí empieza el juego de verdad.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Abril 2027</div>
+          <div class="tl-title">Primer año cumplido · primera cosecha</div>
+          <div class="tl-body">Sobrevivimos el año más difícil. Las acciones se consolidan. Primer reparto real de equity. Esto ya no es teoría.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 2 — ECOSISTEMA -->
+<!-- ══════════════════════════════════════ -->
+<section id="ecosistema">
+  <div class="reveal">
+    <p class="section-label">Lo que estamos construyendo</p>
+    <h2 class="section-title">Tres marcas.<br>Un solo <em>sueño.</em></h2>
+    <p class="section-body">
+      Cada marca nació de algo real: una necesidad que vimos, un talento que ya teníamos, un mercado que nadie estaba atendiendo bien. No son ideas en un PowerPoint — son negocios que ya están facturando o a punto de hacerlo. Y lo más poderoso: <strong>se retroalimentan entre sí</strong>.
+    </p>
+  </div>
+
+  <div class="brand-grid reveal">
+    <div class="brand-card" style="background:linear-gradient(135deg,#111520,#0e1829); border-color:rgba(62,207,207,0.15)">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name" style="color:var(--teal)">HugoTech</div>
+      <div class="brand-tagline" style="color:rgba(62,207,207,0.6)">"Activa tu beAgile"</div>
+      <div class="brand-desc">
+        Transforma personas y equipos del mundo tech. 3 líneas: sesiones 1:1, talleres B2B para empresas, y RECOprogramando (Full Days, Campamentos, Programa propio de 3 meses).
+      </div>
+      <div class="brand-num" style="color:var(--teal)">
+        S/123,386/mes
+        <span>proyección 2032</span>
+      </div>
+    </div>
+
+    <div class="brand-card" style="background:linear-gradient(135deg,#111520,#0e1d17); border-color:rgba(82,201,122,0.15)">
+      <div class="brand-icon">🌿</div>
+      <div class="brand-name" style="color:var(--green)">Almaria</div>
+      <div class="brand-tagline" style="color:rgba(82,201,122,0.6)">"No vendemos plantas, vendemos momentos"</div>
+      <div class="brand-desc">
+        Coaching ontológico en acción: plantas con intención + frases de introspección. B2C kits delivery, B2B ceremonias S/55/persona, rituales (bodas, quinceañeros). Trabaja desde la emoción y lo simbólico.
+      </div>
+      <div class="brand-num" style="color:var(--green)">
+        S/256,760/mes
+        <span>proyección 2032</span>
+      </div>
+    </div>
+
+    <div class="brand-card" style="background:linear-gradient(135deg,#111520,#1a1220); border-color:rgba(212,168,83,0.15)">
+      <div class="brand-icon">✏️</div>
+      <div class="brand-name" style="color:var(--gold)">Trazo</div>
+      <div class="brand-tagline" style="color:rgba(212,168,83,0.6)">"Convierte visión en presencia real"</div>
+      <div class="brand-desc">
+        La capa de ejecución visual y estratégica. Branding, contenido para redes, campañas digitales, producción audiovisual. Modelo premium: pocos clientes, tickets altos. Referente Lima para 2028.
+      </div>
+      <div class="brand-num" style="color:var(--gold)">
+        S/81,200/mes
+        <span>proyección 2032</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:4rem">
+    <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:2rem;">Facturación proyectada: así crece el ecosistema (S/mes)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Marca</th>
+            <th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>⚡ Trazo</td>
+            <td class="td-muted">S/12,600</td><td>S/28,000</td><td>S/39,200</td><td>S/49,000</td><td>S/58,800</td><td>S/70,000</td><td class="td-gold">S/81,200</td>
+          </tr>
+          <tr>
+            <td>🌿 Almaria</td>
+            <td class="td-muted">S/1,680</td><td>S/11,900</td><td>S/30,800</td><td>S/56,000</td><td>S/137,340</td><td>S/198,660</td><td class="td-gold">S/256,760</td>
+          </tr>
+          <tr>
+            <td>⚡ HugoTech</td>
+            <td class="td-muted">S/5,995</td><td>S/16,076</td><td>S/31,920</td><td>S/55,440</td><td>S/77,676</td><td>S/98,140</td><td class="td-gold">S/123,386</td>
+          </tr>
+          <tr class="tr-total">
+            <td>TOTAL QOCHIX</td>
+            <td>S/20,275</td><td>S/55,976</td><td>S/101,920</td><td>S/160,440</td><td>S/273,816</td><td>S/366,800</td><td>S/461,346</td>
+          </tr>
+          <tr class="tr-highlight">
+            <td>Neto 65%</td>
+            <td class="td-muted">S/13,179</td><td>S/36,384</td><td>S/66,248</td><td>S/104,286</td><td>S/177,980</td><td>S/238,420</td><td class="td-green">S/299,875</td>
+          </tr>
+          <tr>
+            <td>(-) Sueldos fundadores</td>
+            <td class="td-muted">S/7,000</td><td>S/14,000</td><td>S/22,000</td><td>S/31,000</td><td>S/43,500</td><td>S/53,500</td><td class="td-muted">S/66,000</td>
+          </tr>
+          <tr>
+            <td>(-) Equipo operativo</td>
+            <td class="td-muted">S/14,500</td><td>S/16,975</td><td>S/19,904</td><td>S/23,375</td><td>S/27,496</td><td>S/32,395</td><td class="td-muted">S/38,229</td>
+          </tr>
+          <tr>
+            <td>(-) Total planilla</td>
+            <td class="td-muted">S/21,500</td><td>S/30,975</td><td>S/41,904</td><td>S/54,375</td><td>S/70,996</td><td>S/85,895</td><td class="td-muted">S/104,229</td>
+          </tr>
+          <tr class="tr-highlight">
+            <td style="color:var(--gold)">💰 Distribuible socios</td>
+            <td class="td-muted">S/0</td><td class="td-gold">S/2,409</td><td class="td-gold">S/21,344</td><td class="td-gold">S/46,911</td><td class="td-gold">S/103,984</td><td class="td-gold">S/149,525</td><td class="td-big">S/192,646</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota-importante">
+      <strong>Escenario optimista ×1.4, alineado al simulador.</strong> Facturación total × 65% (neto operativo) − planilla total (fundadores + equipo operativo) − reserva mínima S/3,000. Lo que queda se reparte entre socios según su % de equity.
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 3 — LO QUE INVIERTES HOY -->
+<!-- ══════════════════════════════════════ -->
+<section id="inversion">
+  <div class="reveal">
+    <p class="section-label">Lo que pones sobre la mesa</p>
+    <h2 class="section-title">¿Qué te cuesta<br><em>estar acá</em>?</h2>
+    <p class="section-body">
+      Seamos honestos: esto cuesta. Cuesta plata, cuesta tiempo, cuesta noches y fines de semana. Pero lo que diferencia a Qochix de una "idea entre amigos" es que <strong>cada aporte está medido, valorado y protegido</strong>. Nada se pierde en el aire.
+    </p>
+  </div>
+
+  <div style="margin-top:3.5rem" class="two-col reveal">
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1.25rem;">S/5,000 — tu entrada al juego</h3>
+      <p style="color:var(--muted); font-size:0.92rem; line-height:1.8; margin-bottom:1.25rem;">
+        No es mucho. Pero es suficiente para que duela si lo pierdes. <strong style="color:var(--text)">Esa es exactamente la idea.</strong> El ticket no es un pago — es una declaración: "me la juego con ustedes". Cuando todos tenemos algo en riesgo, nadie se va a la primera dificultad.
+      </p>
+      <p style="color:var(--muted); font-size:0.92rem; line-height:1.8; margin-bottom:1.5rem;">
+        Los S/25,000 totales tienen un destino claro: <strong style="color:var(--text)">S/4,800</strong> para ads de las 3 marcas en los primeros 3 meses + <strong style="color:var(--text)">S/20,200</strong> de colchón operativo.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Persona</th><th>Monto</th><th>Plan</th><th>S/cuota</th></tr></thead>
+          <tbody>
+            <tr><td>Hugo</td><td class="td-gold">S/5,000</td><td class="td-muted">1 pago abr</td><td class="td-muted">S/5,000</td></tr>
+            <tr><td>Rossy</td><td class="td-gold">S/5,000</td><td class="td-muted">3 cuotas</td><td class="td-muted">S/1,667</td></tr>
+            <tr><td>Vera</td><td class="td-gold">S/5,000</td><td class="td-muted">3 cuotas</td><td class="td-muted">S/1,667</td></tr>
+            <tr><td>Carlos</td><td class="td-gold">S/5,000</td><td class="td-muted">3 cuotas</td><td class="td-muted">S/1,667</td></tr>
+            <tr><td>Nicole</td><td class="td-gold">S/5,000</td><td class="td-muted">5 cuotas</td><td class="td-muted">S/1,000</td></tr>
+            <tr class="tr-total"><td>TOTAL</td><td>S/25,000</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1.25rem;">Tu tiempo vale. Literal.</h3>
+      <p style="color:var(--muted); font-size:0.92rem; line-height:1.8; margin-bottom:1.25rem;">
+        Cada hora que le metes a Qochix tiene un precio de mercado — es lo que ganarías si dedicaras esas horas a otro trabajo. Eso se llama <strong style="color:var(--text)">sweat equity</strong>, y es la mayor parte de la inversión de todos. Tus madrugadas, tus fines de semana, tus "un ratito más" — todo queda registrado.
+      </p>
+      <div class="formula-box">
+        <span class="comment">// Fórmula del sweat equity:</span><br>
+        Valor/hora × horas/mes × 36 meses × factor ajuste<br><br>
+        <span class="comment">// Factor ajuste:</span><br>
+        × 0.6 si tienes trabajo corporativo (40% de tu tiempo)<br>
+        × 0.7 si tienes otro trabajo (30% de tu tiempo)<br>
+        × 1.0 si son horas adicionales 100% para Qochix
+      </div>
+      <div class="progress-list">
+        <div class="pl-item">
+          <div class="pl-top"><span class="pl-name">Hugo (7hrs/día)</span><span class="pl-val">S/664,936</span></div>
+          <div class="pl-track"><div class="pl-fill" style="width:62%"></div></div>
+        </div>
+        <div class="pl-item">
+          <div class="pl-top"><span class="pl-name">Rossy (6hrs/día)</span><span class="pl-val">S/155,152</span></div>
+          <div class="pl-track"><div class="pl-fill" style="width:15%;background:var(--teal)"></div></div>
+        </div>
+        <div class="pl-item">
+          <div class="pl-top"><span class="pl-name">Vera (6hrs/día)</span><span class="pl-val">S/144,070</span></div>
+          <div class="pl-track"><div class="pl-fill" style="width:13%;background:var(--teal)"></div></div>
+        </div>
+        <div class="pl-item">
+          <div class="pl-top"><span class="pl-name">Carlos (3hrs adicionales)</span><span class="pl-val">S/79,159</span></div>
+          <div class="pl-track"><div class="pl-fill" style="width:7%;background:var(--green)"></div></div>
+        </div>
+        <div class="pl-item">
+          <div class="pl-top"><span class="pl-name">Nicole (3hrs adicionales)</span><span class="pl-val">S/31,664</span></div>
+          <div class="pl-track"><div class="pl-fill" style="width:3%;background:var(--green)"></div></div>
+        </div>
+      </div>
+      <p style="color:var(--muted); font-size:0.8rem; margin-top:1rem;">
+        Total sweat equity ecosistema: <strong style="color:var(--gold)">S/1,074,980</strong> en 3 años
+      </p>
+    </div>
+  </div>
+
+  <div style="margin-top:4rem" class="reveal">
+    <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">Hugo ya puso S/40,243 en cash real</h3>
+    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem;">
+      Este número no es inventado. Es plata real que ya salió del bolsillo de Hugo para que las marcas existan hoy. Herramientas, content creators, ads, capital de arranque. Todo documentado.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Concepto</th><th>Monto</th><th>Destino</th><th>¿Equity?</th></tr></thead>
+        <tbody>
+          <tr><td>Inversión socio Trazo</td><td class="td-gold">S/4,500</td><td class="td-muted">equity Trazo</td><td class="td-green">SÍ ✓</td></tr>
+          <tr><td>Capital inicial Almaria</td><td class="td-gold">S/10,000</td><td class="td-muted">fondo arranque</td><td class="td-green">SÍ ✓</td></tr>
+          <tr><td>Google Workspace + pCloud + Metricool</td><td class="td-gold">S/4,143</td><td class="td-muted">herramientas ecosistema</td><td class="td-green">SÍ ✓</td></tr>
+          <tr><td>Diana content creator (feb + arranque)</td><td class="td-gold">S/4,000</td><td class="td-muted">HugoTech</td><td class="td-green">SÍ ✓</td></tr>
+          <tr><td>Diana continuidad abr-jun (3m)</td><td class="td-gold">S/6,000</td><td class="td-muted">continuidad</td><td class="td-green">SÍ ✓</td></tr>
+          <tr><td>Comercial Trazo × 3 meses</td><td class="td-gold">S/6,000</td><td class="td-muted">B2B Trazo</td><td class="td-green">SÍ ✓</td></tr>
+          <tr><td>Ads 3 marcas + pauta inicial</td><td class="td-gold">S/5,800</td><td class="td-muted">Trazo+Almaria+HugoTech</td><td class="td-green">SÍ ✓</td></tr>
+          <tr class="tr-total"><td>TOTAL INVERSIÓN EQUITY</td><td>S/40,243</td><td>—</td><td>—</td></tr>
+          <tr style="opacity:0.6"><td>+ Préstamos Trazo (deuda separada)</td><td>S/13,000</td><td class="td-muted">Trazo devuelve jul-ene</td><td style="color:var(--coral)">DEUDA ✗</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota-alerta">
+      <strong>Los préstamos NO son equity.</strong> Los S/13,000 que Hugo prestó a Trazo son deuda — Trazo los devuelve a S/2,000/mes desde julio 2026 hasta enero 2027. Su exposición total es S/53,243, pero su inversión permanente en Qochix es S/40,243.
+    </div>
+  </div>
+
+  <!-- Tabla inversión total -->
+  <div style="margin-top:4rem" class="reveal">
+    <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">El pool total: lo que realmente estamos apostando</h3>
+    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem;">
+      Sumando todo — ticket, capital cash y sweat equity — los 5 fundadores estamos poniendo más de <strong style="color:var(--gold)">S/1.16 millones en valor</strong> sobre la mesa. Eso no es un hobby. Eso es una declaración de guerra.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Persona</th><th>% equity</th><th>Ticket</th><th>Capital</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Diferencia</th></tr></thead>
+        <tbody>
+          <tr class="tr-hugo">
+            <td>Hugo</td><td class="td-gold">63%</td>
+            <td>S/5,000</td><td>S/40,243</td><td>S/664,936</td>
+            <td class="td-big">S/710,179</td><td>61.0%</td><td class="td-green">+2.0pts</td>
+          </tr>
+          <tr>
+            <td>Rossy</td><td class="td-gold">17%</td>
+            <td>S/5,000</td><td>S/20,000</td><td>S/155,152</td>
+            <td class="td-gold">S/180,152</td><td>15.5%</td><td class="td-green">+1.5pts</td>
+          </tr>
+          <tr>
+            <td>Vera</td><td class="td-gold">11%</td>
+            <td>S/5,000</td><td>S/4,000</td><td>S/144,070</td>
+            <td class="td-gold">S/153,070</td><td>13.1%</td><td style="color:var(--coral)">-2.1pts</td>
+          </tr>
+          <tr>
+            <td>Carlos</td><td class="td-gold">6%</td>
+            <td>S/5,000</td><td>S/0</td><td>S/79,159</td>
+            <td class="td-gold">S/84,159</td><td>7.1%</td><td style="color:var(--coral)">-1.1pts</td>
+          </tr>
+          <tr>
+            <td>Nicole</td><td class="td-gold">3%</td>
+            <td>S/5,000</td><td>S/0</td><td>S/31,664</td>
+            <td class="td-gold">S/36,664</td><td>3.1%</td><td class="td-muted">-0.1pts</td>
+          </tr>
+          <tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>S/25,000</td><td>S/64,243</td><td>S/1,074,981</td><td>S/1,164,224</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota-importante">
+      <strong>¿Por qué Hugo tiene +2pts sobre la matemática?</strong> Porque HugoTech no existe sin Hugo — él ES la marca. Ese valor intangible no lo captura una fórmula. La diferencia es mínima, pero el reconocimiento es real. Y aun así, El voluntariamente cede puntos para que el equipo tenga un % más motivador.
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 4 — EQUITY -->
+<!-- ══════════════════════════════════════ -->
+<section id="equity">
+  <div class="reveal">
+    <p class="section-label">Tu protección</p>
+    <h2 class="section-title">Las acciones se<br><em>ganan</em>, no se regalan</h2>
+    <p class="section-body">
+      Nadie recibe nada el día 1. Las acciones se consolidan con el tiempo — con tu presencia, tu trabajo, tu compromiso real. Si alguien se va antes de tiempo, el resto queda protegido. Así funciona en serio.
+    </p>
+  </div>
+
+  <div class="stat-grid reveal" style="margin-top:3rem">
+    <div class="stat-card">
+      <div class="stat-num">12</div>
+      <div class="stat-label">meses de cliff</div>
+      <div class="stat-desc">Tiempo mínimo antes de recibir cualquier acción. Si salís antes: perdés todo.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">36</div>
+      <div class="stat-label">meses de vesting</div>
+      <div class="stat-desc">Período total para ganar el 100% de tus acciones. 3 años desde el arranque.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">33%</div>
+      <div class="stat-label">al cumplir el cliff</div>
+      <div class="stat-desc">En abril 2027, al cumplir 12 meses, recibes el primer tercio de golpe.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">S/5k</div>
+      <div class="stat-label">recuperas si salís antes</div>
+      <div class="stat-desc">Solo el ticket de entrada. Las acciones van al ecosistema.</div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:3rem">
+    <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1rem;">¿Cuántas acciones tenés en cada momento?</h3>
+    <div class="vesting-box">
+      <div class="vesting-header">
+        <div>Socio</div>
+        <div>Cliff abr 2027<br>(33%)</div>
+        <div>Sep 2027<br>(+5m)</div>
+        <div>Abr 2028<br>(+12m)</div>
+        <div>Abr 2029<br>(100%) ✓</div>
+      </div>
+      <div class="vesting-row">
+        <div>Hugo</div><div>20.98%</div><div>29.73%</div><div>41.99%</div><div>63.00%</div>
+      </div>
+      <div class="vesting-row">
+        <div>Rossy</div><div>5.66%</div><div>8.02%</div><div>11.33%</div><div>17.00%</div>
+      </div>
+      <div class="vesting-row">
+        <div>Vera</div><div>3.66%</div><div>5.19%</div><div>7.33%</div><div>11.00%</div>
+      </div>
+      <div class="vesting-row">
+        <div>Carlos</div><div>2.00%</div><div>2.83%</div><div>4.00%</div><div>6.00%</div>
+      </div>
+      <div class="vesting-row">
+        <div>Nicole</div><div>1.00%</div><div>1.42%</div><div>2.00%</div><div>3.00%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:3rem">
+    <div class="callout" style="background:linear-gradient(135deg,rgba(82,201,122,0.08),rgba(82,201,122,0.02)); border-color:rgba(82,201,122,0.2)">
+      <div class="callout-icon">✅</div>
+      <h3>Good Leaver</h3>
+      <p>Salida por enfermedad, acuerdo mutuo o cambio de vida. <strong>Conserva las acciones ya ganadas</strong> al precio de valoración actual del mercado. Sale sin quedar mal.</p>
+    </div>
+    <div class="callout" style="background:linear-gradient(135deg,rgba(232,107,95,0.08),rgba(232,107,95,0.02)); border-color:rgba(232,107,95,0.2)">
+      <div class="callout-icon">⚠️</div>
+      <h3>Bad Leaver</h3>
+      <p>Abandono, incumplimiento o conflicto sin acuerdo. <strong>Conserva acciones ganadas</strong> pero a precio nominal S/1 por acción. Pierde el valor real. Esto disuade salidas problemáticas.</p>
+    </div>
+  </div>
+
+  <div class="nota-importante reveal" style="margin-top:1rem">
+    <strong>Derecho de preferencia:</strong> Antes de vender acciones a un tercero externo, hay que ofrecerlas primero a los co-fundadores. Plazo: 30 días. Precio: igual a la oferta externa. Nadie puede meter a un extraño en Qochix sin permiso del equipo.
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 5 — PROYECCIÓN SUELDOS -->
+<!-- ══════════════════════════════════════ -->
+<section id="proyeccion">
+  <div class="reveal">
+    <p class="section-label">Cuándo llega la plata</p>
+    <h2 class="section-title">Dos formas de cobrar.<br><em>Las dos</em> crecen.</h2>
+    <p class="section-body">
+      Hay dos flujos de dinero completamente independientes. Uno es por tu trabajo. Otro es por ser dueño. Ambos crecen cada año. Ambos se suman. Enténdelos bien porque esto es lo que cambia tu vida.
+    </p>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:3rem">
+    <div class="callout">
+      <div class="callout-icon">💼</div>
+      <h3>Sueldo: lo que ganas por trabajar</h3>
+      <p>
+        Es lo que Qochix te paga por <strong>tu trabajo operativo</strong>. Crece gradualmente según la capacidad del ecosistema. 
+        Hugo/Rossy/Vera: es <strong>ADICIONAL</strong> a tu trabajo corporativo — plata extra, no reemplazo. Hasta que el cruce haga obvia la salida.
+        Carlos/Nicole: es su sueldo principal desde el día 1. Ya cobran.
+      </p>
+    </div>
+    <div class="callout" style="background:linear-gradient(135deg,rgba(212,168,83,0.08),rgba(212,168,83,0.02)); border-color:rgba(212,168,83,0.2)">
+      <div class="callout-icon">🏦</div>
+      <h3>Equity: lo que ganas por ser dueño</h3>
+      <p>
+        Esto es lo que cambia todo. Es lo que recibes por ser <strong>DUEÑO</strong> del ecosistema — no empleado, dueño. 
+        Fórmula: <strong>distribuible × tu % equity</strong>. 
+        Empieza en 2027 y crece cada año. Para 2032, el equity es varias veces más grande que el sueldo. Esa es la magia de ser fundador.
+      </p>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:4rem">
+    <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1.5rem;">Sueldos Qochix: crece cada año hasta el punto de cruce</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Persona</th><th>Corp. hoy</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>Cruce</th></tr>
+        </thead>
+        <tbody>
+          <tr class="tr-hugo"><td>Hugo</td><td class="td-muted">S/30k</td><td class="td-muted">—</td><td>S/2,000</td><td>S/5,000</td><td>S/9,000</td><td>S/14,000</td><td>S/20,000</td><td class="td-gold">S/30,000</td><td class="td-green">2032 ★</td></tr>
+          <tr><td>Rossy</td><td class="td-muted">S/7k</td><td class="td-muted">—</td><td>S/1,000</td><td>S/2,500</td><td>S/4,000</td><td>S/7,500</td><td>S/9,000</td><td class="td-gold">S/10,000</td><td class="td-green">2030</td></tr>
+          <tr><td>Vera</td><td class="td-muted">S/6.5k</td><td class="td-muted">—</td><td>S/1,000</td><td>S/2,500</td><td>S/4,000</td><td>S/7,000</td><td>S/8,500</td><td class="td-gold">S/10,000</td><td class="td-green">2030</td></tr>
+          <tr><td>Carlos</td><td class="td-muted">S/5k</td><td>S/5,000</td><td>S/6,000</td><td>S/7,000</td><td>S/8,000</td><td>S/9,000</td><td>S/10,000</td><td class="td-gold">S/10,000</td><td class="td-green">2026 ✓</td></tr>
+          <tr><td>Nicole</td><td class="td-muted">S/2k</td><td>S/2,000</td><td>S/4,000</td><td>S/5,000</td><td>S/6,000</td><td>S/6,000</td><td>S/6,000</td><td class="td-gold">S/6,000</td><td class="td-green">2026 ✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota-importante">
+      <strong>¿Por qué 2032 importa tanto para Hugo?</strong> Ese año Qochix le paga exactamente lo mismo que su trabajo corporativo actual (S/30,000/mes). Es el año en que la decisión de salir del corporativo deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar los S/121,367/mes de equity.
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:4rem">
+    <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:0.5rem;">Equity mensual: esto es lo que te paga ser DUEÑO</h3>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">Lo que recibes cada mes por tu % del ecosistema. Aparte del sueldo. Para anual: × 12. Estos números cambian todo.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Persona</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>Acum 7a</th></tr></thead>
+        <tbody>
+          <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/1,518</td><td>S/13,447</td><td>S/29,554</td><td>S/65,510</td><td>S/94,201</td><td class="td-big">S/121,367</td><td class="td-gold">S/3,907,164</td></tr>
+          <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/410</td><td>S/3,628</td><td>S/7,975</td><td>S/17,677</td><td>S/25,419</td><td class="td-gold">S/32,750</td><td class="td-muted">S/1,054,308</td></tr>
+          <tr><td>Vera</td><td class="td-gold">11%</td><td>S/265</td><td>S/2,348</td><td>S/5,160</td><td>S/11,438</td><td>S/16,448</td><td class="td-gold">S/21,191</td><td class="td-muted">S/682,200</td></tr>
+          <tr><td>Carlos</td><td class="td-gold">6%</td><td>S/145</td><td>S/1,281</td><td>S/2,815</td><td>S/6,239</td><td>S/8,972</td><td class="td-gold">S/11,559</td><td class="td-muted">S/372,132</td></tr>
+          <tr><td>Nicole</td><td class="td-gold">3%</td><td>S/72</td><td>S/640</td><td>S/1,407</td><td>S/3,120</td><td>S/4,486</td><td class="td-gold">S/5,779</td><td class="td-muted">S/186,048</td></tr>
+          <tr class="tr-total"><td>DISTRIBUIBLE</td><td>—</td><td>S/2,409</td><td>S/21,344</td><td>S/46,911</td><td>S/103,984</td><td>S/149,525</td><td>S/192,646</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted); font-size:0.82rem; margin-top:1rem;">
+      Ejemplo Hugo 2032: S/121,367/mes equity × 12 = <strong style="color:var(--gold)">S/1,456,404/año</strong> solo de equity — aparte de su sueldo de S/30,000/mes.
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 6 — LA APUESTA FINAL -->
+<!-- ══════════════════════════════════════ -->
+<section id="apuesta">
+  <div class="reveal">
+    <p class="section-label">La foto completa</p>
+    <h2 class="section-title">Lo que ganas hoy vs<br>lo que <em>ganarás</em></h2>
+    <p class="section-body">
+      Llegó el momento de la verdad. Esta es la tabla más importante de todo el documento. Te muestra dónde estás hoy y dónde podrías estar en 2032 si le metemos con todo. Prené la pantalla.
+    </p>
+  </div>
+
+  <div class="apuesta-grid reveal" style="margin-top:3rem">
+    <!-- Hugo -->
+    <div class="apuesta-card">
+      <div class="apuesta-persona">
+        <div class="name">Hugo</div>
+        <div class="pct">63% Qochix</div>
+        <div class="hoy">Gana hoy: S/30,000/mes</div>
+      </div>
+      <div class="apuesta-bars">
+        <div class="bar-row">
+          <span class="bar-label">HOY</span>
+          <div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--faint)"></div></div>
+          <span class="bar-val">S/30,000</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2029</span>
+          <div class="bar-track"><div class="bar-fill" style="width:31%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/38,554</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2032</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+          <span class="bar-val">S/151,367</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
+          Sueldo <strong style="color:var(--text)">S/30k</strong> + Equity <strong style="color:var(--gold)">S/121,367</strong>
+        </div>
+      </div>
+      <div class="apuesta-mult">
+        <div class="x">×5.0</div>
+        <div class="label">vs hoy</div>
+      </div>
+    </div>
+
+    <!-- Rossy -->
+    <div class="apuesta-card">
+      <div class="apuesta-persona">
+        <div class="name">Rossy</div>
+        <div class="pct">17% Qochix</div>
+        <div class="hoy">Gana hoy: S/7,000/mes</div>
+      </div>
+      <div class="apuesta-bars">
+        <div class="bar-row">
+          <span class="bar-label">HOY</span>
+          <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--faint)"></div></div>
+          <span class="bar-val">S/7,000</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2029</span>
+          <div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/11,975</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2032</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+          <span class="bar-val">S/42,750</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
+          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/32,750</strong>
+        </div>
+      </div>
+      <div class="apuesta-mult">
+        <div class="x">×6.1</div>
+        <div class="label">vs hoy</div>
+      </div>
+    </div>
+
+    <!-- Vera -->
+    <div class="apuesta-card">
+      <div class="apuesta-persona">
+        <div class="name">Vera</div>
+        <div class="pct">11% Qochix</div>
+        <div class="hoy">Gana hoy: S/6,500/mes</div>
+      </div>
+      <div class="apuesta-bars">
+        <div class="bar-row">
+          <span class="bar-label">HOY</span>
+          <div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--faint)"></div></div>
+          <span class="bar-val">S/6,500</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2029</span>
+          <div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/9,160</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2032</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+          <span class="bar-val">S/31,191</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
+          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/21,191</strong>
+        </div>
+      </div>
+      <div class="apuesta-mult">
+        <div class="x">×4.8</div>
+        <div class="label">vs hoy</div>
+      </div>
+    </div>
+
+    <!-- Carlos -->
+    <div class="apuesta-card">
+      <div class="apuesta-persona">
+        <div class="name">Carlos</div>
+        <div class="pct">6% Qochix</div>
+        <div class="hoy">Gana hoy: S/5,000/mes</div>
+      </div>
+      <div class="apuesta-bars">
+        <div class="bar-row">
+          <span class="bar-label">HOY</span>
+          <div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--faint)"></div></div>
+          <span class="bar-val">S/5,000</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2029</span>
+          <div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/10,815</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2032</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+          <span class="bar-val">S/21,559</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
+          Sueldo <strong style="color:var(--text)">S/10k</strong> + Equity <strong style="color:var(--gold)">S/11,559</strong>
+        </div>
+      </div>
+      <div class="apuesta-mult">
+        <div class="x">×4.3</div>
+        <div class="label">vs hoy</div>
+      </div>
+    </div>
+
+    <!-- Nicole -->
+    <div class="apuesta-card">
+      <div class="apuesta-persona">
+        <div class="name">Nicole</div>
+        <div class="pct">3% Qochix</div>
+        <div class="hoy">Gana hoy: S/2,000/mes</div>
+      </div>
+      <div class="apuesta-bars">
+        <div class="bar-row">
+          <span class="bar-label">HOY</span>
+          <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--faint)"></div></div>
+          <span class="bar-val">S/2,000</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2029</span>
+          <div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--teal)"></div></div>
+          <span class="bar-val">S/7,407</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">2032</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div>
+          <span class="bar-val">S/11,779</span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:0.3rem">
+          Sueldo <strong style="color:var(--text)">S/6k</strong> + Equity <strong style="color:var(--gold)">S/5,779</strong>
+        </div>
+      </div>
+      <div class="apuesta-mult">
+        <div class="x">×5.9</div>
+        <div class="label">vs hoy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROI TABLE -->
+  <div class="reveal" style="margin-top:4rem">
+    <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">Tu inversión se paga sola — y después sigue pagando</h3>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">
+      Cada sol que pusiste vuelve multiplicado. El ROI mínimo es 6.9x. El máximo 16.5x. Ningún fondo de inversión te da eso.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Persona</th><th>% equity</th><th>Total invertido</th><th>Retorno 7 años</th><th>ROI</th><th>Punto equilibrio</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/710,179</td><td class="td-gold">S/4,867,164</td><td class="td-big">6.9x</td><td class="td-green">2029</td><td class="td-muted" style="font-family:var(--sans)">Más patrimonio S/1.9M-4.4M</td></tr>
+          <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/180,152</td><td class="td-gold">S/1,462,308</td><td class="td-gold">8.1x</td><td class="td-green">2029</td><td class="td-muted" style="font-family:var(--sans)">Muy buen ROI</td></tr>
+          <tr><td>Vera</td><td class="td-gold">11%</td><td>S/153,070</td><td class="td-gold">S/1,078,200</td><td class="td-gold">7.0x</td><td class="td-green">2029</td><td class="td-muted" style="font-family:var(--sans)">Buen ROI</td></tr>
+          <tr><td>Carlos</td><td class="td-gold">6%</td><td>S/84,159</td><td class="td-gold">S/1,032,132</td><td class="td-gold">12.3x</td><td class="td-green">2027</td><td class="td-muted" style="font-family:var(--sans)">ROI alto — ya cobra Trazo</td></tr>
+          <tr><td>Nicole</td><td class="td-gold">3%</td><td>S/36,664</td><td class="td-gold">S/606,048</td><td class="td-gold">16.5x</td><td class="td-green">2027</td><td class="td-muted" style="font-family:var(--sans)">ROI alto — ya cobra Trazo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Patrimonio Hugo -->
+  <div class="reveal" style="margin-top:4rem">
+    <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:0.5rem;">Patrimonio Hugo: el valor de ser el dueño</h3>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">
+      Esto va más allá del sueldo y del equity mensual. Si Qochix se valorara como empresa — y con estos números va a tener valor real — ser dueño del 63% significa esto:
+    </p>
+    <div class="patrimonio-cards">
+      <div class="pat-card" style="border-color:var(--faint)">
+        <div class="pat-scenario">Escenario conservador</div>
+        <div class="pat-val" style="color:var(--teal)">S/1.9M</div>
+        <div class="pat-sub">si Qochix vale S/3M</div>
+      </div>
+      <div class="pat-card" style="border-color:rgba(212,168,83,0.3); background:rgba(212,168,83,0.04)">
+        <div class="pat-scenario">Escenario base</div>
+        <div class="pat-val" style="color:var(--gold)">S/3.15M</div>
+        <div class="pat-sub">si Qochix vale S/5M</div>
+      </div>
+      <div class="pat-card" style="border-color:var(--faint)">
+        <div class="pat-scenario">Escenario optimista</div>
+        <div class="pat-val" style="color:var(--green)">S/4.41M</div>
+        <div class="pat-sub">si Qochix vale S/7M</div>
+      </div>
+    </div>
+    <p style="color:var(--muted); font-size:0.82rem;">
+      Este patrimonio es <strong style="color:var(--text)">completamente independiente</strong> del sueldo mensual y del equity distribuido. Es el valor de ser dueño mayoritario de un ecosistema que factura medio millón de soles al mes. <strong style="color:var(--gold)">Eso no se compra. Se construye.</strong>
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SECCIÓN 7 — REGLAS -->
+<!-- ══════════════════════════════════════ -->
+<section id="reglas">
+  <div class="reveal">
+    <p class="section-label">Nuestro acuerdo</p>
+    <h2 class="section-title">Las reglas que nos<br><em>protegen</em> a todos</h2>
+    <p class="section-body">
+      El amor no alcanza. La confianza no alcanza. Lo que sí alcanza son reglas escritas que defiendan a cada uno cuando las cosas se pongan difíciles — porque se van a poner difíciles. Eso no es pesimismo, es madurez.
+    </p>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:3rem">
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.3rem; margin-bottom:1.25rem;">¿Qué pasa si alguien se va?</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Antes del cliff (antes de abr 2027)</div>
+          <div class="tl-title" style="color:var(--coral)">No hay acciones. Solo tu ticket.</div>
+          <div class="tl-body">Recuperas tus S/5,000 y nada más. Duro, pero justo. Protege a los que se quedan dando todo.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Durante el vesting (may 2027 - mar 2029)</div>
+          <div class="tl-title">Te llevas lo que ganaste</div>
+          <div class="tl-body">Las acciones ya consolidadas son tuyas. Las que faltan vuelven al ecosistema. Es justo para todos.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-date">Después del vesting (abr 2029+)</div>
+          <div class="tl-title" style="color:var(--green)">Dueño para siempre</div>
+          <div class="tl-body">100% de acciones consolidadas. Aunque dejes las operaciones, tu % del ecosistema sigue siendo tuyo. Eso es lo que construiste.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="font-family:var(--serif); font-size:1.3rem; margin-bottom:1.25rem;">Agenda pendiente para el 2 de Abril</h3>
+      <div style="display:flex; flex-direction:column; gap:0.75rem">
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">①</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Tickets S/5,000 c/u</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Plazos de pago confirmados por cada socio</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">②</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Contrato préstamo Hugo → Trazo S/13,000</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Devolución S/2k/mes desde julio 2026</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:rgba(232,107,95,0.06); border-radius:12px; border:1px solid rgba(232,107,95,0.2)">
+          <span style="color:var(--coral); font-size:1.1rem; flex-shrink:0">⚠️</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem; color:var(--coral)">Renovaciones Trazo URGENTE</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Nativa Fest + Nico Eyzaguirre + D'Advíncula — S/4,800 en riesgo. Antes del 2 de abril.</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">③</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Estructura legal Qochix</div>
+            <div style="font-size:0.8rem; color:var(--muted)">RUC, SAC — formalizar antes de julio 2026</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">④</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Formalizar Nicole como co-fundadora</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Definir términos exactos del acuerdo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PREGUNTA FINAL -->
+<!-- ══════════════════════════════════════ -->
+<section style="padding:4rem 2rem">
+  <div class="pregunta-final reveal">
+    <p class="pf-eyebrow">La única pregunta que importa</p>
+    <h2 class="pf-title">¿Estás dispuesto a apostar por ti mismo — a <em>multiplicar tu ingreso entre ×4.3 y ×6.1 en 6 años</em> — y ser dueño de algo que construiste con tus manos?</h2>
+    <p style="color:var(--muted); max-width:550px; margin:0 auto; font-size:0.95rem; line-height:1.7">
+      Ningún trabajo corporativo te va a dar esto. Ningún ascenso. Ningún bono.
+      Esto solo lo consigues construyéndolo tú. Y no estás solo — somos 5.
+    </p>
+    <div class="pf-options">
+      <button class="pf-btn pf-btn-yes" onclick="alert('¡Qochix arranca! Nos vemos el 2 de abril. A construir. 🚀')">
+        ✅  Estoy adentro
+      </button>
+      <button class="pf-btn pf-btn-no" onclick="alert('Perfecto — el 2 de abril es exactamente para eso. Traé tus preguntas, las resolvemos juntos.')">
+        ⚠️  Necesito hablar algo primero
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  QOCHIX · Pacto Económico · Hugo 63% · Rossy 17% · Vera 11% · Carlos 6% · Nicole 3%<br>
+  <span style="opacity:0.5">Versión definitiva auditada · Escenario optimista ×1.4 · Abril 2026</span>
+</footer>
+
+<script>
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => obs.observe(el));
+
+// ── NAV ACTIVE ──
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+
+// ── BAR ANIMATIONS ──
+const barObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.pl-fill, .bar-fill').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.transition = 'width 1.2s cubic-bezier(.4,0,.2,1)'; bar.style.width = w; }, 100);
+      });
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.progress-list, .apuesta-bars').forEach(el => barObs.observe(el));
+</script>
+</body>
+</html>
