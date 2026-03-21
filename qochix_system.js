@@ -20,6 +20,21 @@
     carlos: [5000, 6000, 7000, 8000, 9000, 10000, 10000],
     nicole: [2000, 4000, 5000, 6000, 6000, 6000, 6000],
   };
+  const SERVICE_LINES = [
+    {id:'tr_branding',brand:'trazo',name:'Branding e identidad visual',unit:'pedido/mes',prices:[1000,1000,1000,1000,1000,1000,1000],vols:[2,4,5,6,7,8,10]},
+    {id:'tr_redes',brand:'trazo',name:'Gestión redes sociales',unit:'cliente/mes',prices:[1000,1000,1000,1000,1000,1000,1000],vols:[2,4,5,6,7,8,9]},
+    {id:'tr_campanas',brand:'trazo',name:'Campañas digitales y pauta',unit:'campaña/mes',prices:[800,800,800,800,800,800,800],vols:[1,2,3,4,5,6,7]},
+    {id:'tr_audiovisual',brand:'trazo',name:'Producción audiovisual',unit:'cliente/mes',prices:[1500,1500,1500,1500,1500,1500,1500],vols:[2,5,7,9,11,13,15]},
+    {id:'tr_consultoria',brand:'trazo',name:'Consultoría estratégica',unit:'sesión/mes',prices:[300,300,300,300,300,300,300],vols:[4,10,17,21,25,33,39]},
+    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,25,25,25,25,25],vols:[20,80,160,280,500,700,900]},
+    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,55,55,55,55,55],vols:[8,60,180,360,1000,1500,1900]},
+    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,55,55,55,55,55],vols:[5,60,150,240,560,760,1020]},
+    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,150,150,150,150,150],vols:[15,20,30,40,50,60,70]},
+    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,1250,1250,1250,1250,1250],vols:[1,3,5,7,9,11,13]},
+    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona/mes',prices:[100,100,100,300,300,300,300],vols:[8,24,32,24,36,44,52]},
+    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[400,400,1250,1250,1250,1250,1250],vols:[0,5,5,8,12,16,18]},
+    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,3,2,3,4,7]},
+  ];
   const DEFAULTS = {
     persons: [
       { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 40243, c: '#D4A853' },
@@ -49,11 +64,12 @@
       sue29: { hugo: 9000, rossy: 4000, vera: 4000, carlos: 8000, nicole: 6000 },
       sue30: { hugo: 14000, rossy: 7500, vera: 7000, carlos: 9000, nicole: 6000 },
       sue32: { hugo: 30000, rossy: 10000, vera: 10000, carlos: 10000, nicole: 6000 },
+      lineOverrides: {},
     },
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 4,
+      schemaVersion: 5,
     },
   };
 
@@ -73,6 +89,10 @@
       if (!s.P.sue29) {
         s.P.sue29 = { hugo: 9000, rossy: 4000, vera: 4000, carlos: 8000, nicole: 6000 };
       }
+    }},
+    { from: 4, to: 5, run(s) {
+      if (!s.P) s.P = {};
+      if (!s.P.lineOverrides) s.P.lineOverrides = {};
     }},
   ];
 
@@ -105,6 +125,7 @@
         sue29: { ...next.P.sue29, ...(raw.P.sue29 || {}) },
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
+        lineOverrides: raw.P.lineOverrides || next.P.lineOverrides || {},
       };
       if (!next.P.equityMode) next.P.equityMode = DEFAULTS.P.equityMode;
     }
@@ -285,11 +306,25 @@
     return AÑOS.map((_, i) => state.persons.reduce((sum, person) => sum + Number((curves[person.id] || [])[i] || 0), 0));
   }
 
-  function calcFactFromCurves(state, curves) {
+  function computeLineRevenue(state) {
     const m = SC[state.P.sc] || 1;
-    const trazo = FACT0.trazo.map((value) => Math.round(value * m));
-    const alm = FACT0.almaria.map((value) => Math.round(value * m));
-    const ht = FACT0.ht.map((value) => Math.round(value * m));
+    const ov = (state.P && state.P.lineOverrides) || {};
+    const lines = SERVICE_LINES.map((def) => {
+      const lo = ov[def.id] || {};
+      const p = lo.prices || def.prices;
+      const v = lo.vols || def.vols;
+      const rev = AÑOS.map((_, i) => Math.round((p[i] || 0) * (v[i] || 0) * m));
+      return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, prices: p.slice(), vols: v.slice(), rev };
+    });
+    const bt = (b) => AÑOS.map((_, i) => lines.filter((l) => l.brand === b).reduce((s, l) => s + l.rev[i], 0));
+    return { lines, trazo: bt('trazo'), almaria: bt('almaria'), ht: bt('ht') };
+  }
+
+  function calcFactFromCurves(state, curves) {
+    const lr = computeLineRevenue(state);
+    const trazo = lr.trazo;
+    const alm = lr.almaria;
+    const ht = lr.ht;
     const total = AÑOS.map((_, i) => trazo[i] + alm[i] + ht[i]);
     const neto = total.map((value) => Math.round(value * Number(state.P.netoPct || 0)));
     const sued_f = suedTotalsFromCurves(state, curves);
@@ -298,7 +333,7 @@
     const colchon = neto.map((value, i) => value - sued_tot[i]);
     const dist = colchon.map((value) => Math.max(0, value - Number(state.P.reserva || 0)));
     const dist_no_op = neto.map((value, i) => Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0)));
-    return { trazo, alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: curves };
+    return { trazo, alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: curves, lineRevenue: lr };
   }
 
   function calcMonthly(state, curves) {
@@ -519,6 +554,7 @@
     SC: { ...SC },
     SC_LABELS: { ...SC_LABELS },
     SUED_F_BASE: clone(SUED_F_BASE),
+    SERVICE_LINES: clone(SERVICE_LINES),
     clone,
     normalizeState,
     getState,
