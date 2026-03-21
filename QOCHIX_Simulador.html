@@ -198,6 +198,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .ksub{font-size:.72rem;color:var(--muted)}
 .kcard.alert{border-color:rgba(232,107,95,.3);animation:pulse .8s 3}
 @keyframes pulse{0%,100%{border-color:rgba(232,107,95,.3)}50%{border-color:var(--coral)}}
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:1.4rem}
+.dash-card{
+  background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:.9rem 1rem;
+  transition:border-color .25s,transform .25s;
+}
+.dash-card:hover{border-color:rgba(255,255,255,.1);transform:translateY(-2px)}
+.dash-lbl{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.28rem}
+.dash-val{font-family:var(--serif);font-size:1.35rem;line-height:1.05;color:var(--gold);margin-bottom:.16rem}
+.dash-sub{font-size:.7rem;line-height:1.45;color:var(--muted)}
+.dash-note{
+  margin:-.2rem 0 1.15rem;font-size:.74rem;color:var(--muted);line-height:1.55;
+  background:rgba(62,207,207,.05);border:1px solid rgba(62,207,207,.12);border-radius:12px;padding:.75rem .9rem;
+}
+.dash-note strong{color:var(--text)}
 
 /* Panels */
 .panel{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);margin-bottom:1.25rem;overflow:hidden;transition:border-color .3s}
@@ -361,7 +375,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .doc-link-row a:hover{color:var(--gold);border-bottom-color:var(--gold)}
 .sim-foot .doc-link-row{margin-top:.55rem;padding:0;max-width:none;justify-content:flex-start}
 
-@media(max-width:900px){.app{grid-template-columns:1fr}.app.sidebar-hidden{grid-template-columns:1fr}.sidebar{height:auto;position:relative;top:0}.main{height:auto;padding:1rem}.ap-card{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.hero-logo{font-size:2.5rem}.hero-tagline{font-size:1.05rem;padding:0 1rem}}
+@media(max-width:900px){.app{grid-template-columns:1fr}.app.sidebar-hidden{grid-template-columns:1fr}.sidebar{height:auto;position:relative;top:0}.main{height:auto;padding:1rem}.ap-card{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:repeat(2,1fr)}.hero-logo{font-size:2.5rem}.hero-tagline{font-size:1.05rem;padding:0 1rem}}
 </style>
 </head>
 <body>
@@ -526,6 +540,53 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
 
+  <div class="dash-note" id="dash-note">
+    Todas las métricas del dashboard salen del mismo motor (`deriveState`) para evitar números inconsistentes entre cards, tablas y gráficos.
+  </div>
+
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="dash-lbl">Facturación 2030</div>
+      <div class="dash-val" id="dash-fact30">—</div>
+      <div class="dash-sub">ingreso total mensual del ecosistema</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Neto 2030</div>
+      <div class="dash-val" id="dash-net30">—</div>
+      <div class="dash-sub">facturación 2030 x neto operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Planilla 2030</div>
+      <div class="dash-val" id="dash-pay30">—</div>
+      <div class="dash-sub">fundadores + equipo operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Colchón 2030</div>
+      <div class="dash-val" id="dash-col30">—</div>
+      <div class="dash-sub">neto menos planilla, antes de reserva</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Distrib. sin equipo 2030</div>
+      <div class="dash-val" id="dash-dist30-noop">—</div>
+      <div class="dash-sub">referencia si no existiera equipo operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Equipo operativo 2032</div>
+      <div class="dash-val" id="dash-op32">—</div>
+      <div class="dash-sub">costo mensual proyectado del equipo no fundador</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Brecha equipo 2030</div>
+      <div class="dash-val" id="dash-gap30">—</div>
+      <div class="dash-sub">faltante agregado para igualar sueldos actuales</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Liberados al 2030</div>
+      <div class="dash-val" id="dash-lib30">—</div>
+      <div class="dash-sub">personas que ya cruzan su sueldo actual</div>
+    </div>
+  </div>
+
   <!-- Liberation meter -->
   <div class="lib-bar">
     <div class="lib-hdr">
@@ -675,6 +736,30 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="ksub">con equipo operativo</div>
     </div>
   </div>
+  <div class="dash-note" id="ceo-note">Lectura ejecutiva de mesa basada en el mismo motor de cálculo del simulador.</div>
+  <div class="dash-grid" style="margin-bottom:1.2rem">
+    <div class="dash-card">
+      <div class="dash-lbl">Facturación 2030</div>
+      <div class="dash-val" id="ceo-fact30">—</div>
+      <div class="dash-sub">ingreso mensual total al año de tensión media</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Planilla 2030</div>
+      <div class="dash-val" id="ceo-pay30">—</div>
+      <div class="dash-sub">fundadores + equipo operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Colchón 2030</div>
+      <div class="dash-val" id="ceo-col30">—</div>
+      <div class="dash-sub">neto menos planilla antes de reserva</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Gap para adelantar 1 año</div>
+      <div class="dash-val" id="ceo-gap-break">—</div>
+      <div class="dash-sub">facturación bruta extra/mes necesaria aprox.</div>
+    </div>
+  </div>
+  <div class="nota" id="ceo-alert" style="margin-bottom:1rem"></div>
   <div class="nota" id="ceo-runway-hint"></div>
   <div class="panel open" style="margin-top:1rem">
     <div class="phdr" onclick="toggleP(this)">
@@ -708,6 +793,30 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- ══ TAB: GRÁFICOS ══ -->
 <div id="tab-graficos" class="tab-content">
+  <div class="dash-note" id="gra-note">Esta pestaña visualiza las mismas curvas que ya alimentan cards, tablas y vistas ejecutivas.</div>
+  <div class="dash-grid" style="margin-bottom:1.2rem">
+    <div class="dash-card">
+      <div class="dash-lbl">Crec. 2026 → 2030</div>
+      <div class="dash-val" id="gra-growth-30">—</div>
+      <div class="dash-sub">crecimiento de facturación total hasta 2030</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Crec. 2030 → 2032</div>
+      <div class="dash-val" id="gra-growth-32">—</div>
+      <div class="dash-sub">aceleración final del modelo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Marca líder 2032</div>
+      <div class="dash-val" id="gra-lead-32">—</div>
+      <div class="dash-sub">línea con mayor aporte al total en el horizonte</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Dependencia líder 2032</div>
+      <div class="dash-val" id="gra-share-32">—</div>
+      <div class="dash-sub">porcentaje del total explicado por esa línea</div>
+    </div>
+  </div>
+  <div class="nota" id="gra-alert" style="margin-bottom:1rem"></div>
   <div class="charts-2">
     <div class="panel open" style="margin-bottom:0">
       <div class="phdr"><span class="ptitle">📈 Facturación por marca (S/mes)</span></div>
@@ -762,6 +871,57 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="be-sub">incluyendo co-fundadores</div>
     </div>
   </div>
+
+  <div class="dash-note" id="team-note">
+    Esta capa usa el mismo motor de cálculo del simulador para medir cuánto pesa el equipo operativo sobre el neto, el distribuible y el break-even.
+  </div>
+
+  <div class="dash-grid" style="margin-bottom:1.1rem">
+    <div class="dash-card">
+      <div class="dash-lbl">Peso sobre neto 2026</div>
+      <div class="dash-val" id="team-share26">—</div>
+      <div class="dash-sub">qué % del neto se consume solo en equipo operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Peso sobre neto 2032</div>
+      <div class="dash-val" id="team-share32">—</div>
+      <div class="dash-sub">presión del equipo no fundador en madurez</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Costo acumulado 7 años</div>
+      <div class="dash-val" id="team-accum">—</div>
+      <div class="dash-sub">suma anualizada 2026–2032 del equipo operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Año bloqueado por equipo</div>
+      <div class="dash-val" id="team-block-year">—</div>
+      <div class="dash-sub">primer año donde sin equipo sí habría reparto, pero con equipo no</div>
+    </div>
+  </div>
+
+  <div class="dash-grid" style="margin-bottom:1.3rem">
+    <div class="dash-card">
+      <div class="dash-lbl">Impacto en distrib. 2030</div>
+      <div class="dash-val" id="team-drag30">—</div>
+      <div class="dash-sub">cuánto distribuye menos por incluir equipo operativo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Impacto en distrib. 2032</div>
+      <div class="dash-val" id="team-drag32">—</div>
+      <div class="dash-sub">arrastre mensual del equipo operativo en el horizonte</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Fundadores vs op 2032</div>
+      <div class="dash-val" id="team-mix32">—</div>
+      <div class="dash-sub">peso relativo entre planilla fundadora y operativa</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Margen tras planilla 2030</div>
+      <div class="dash-val" id="team-postpay30">—</div>
+      <div class="dash-sub">colchón antes de reserva después de pagar toda la estructura</div>
+    </div>
+  </div>
+  <div class="nota" id="team-alert" style="margin-bottom:1rem"></div>
 
   <div class="panel open">
     <div class="phdr" onclick="toggleP(this)">
@@ -828,6 +988,30 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="rw-val" id="rw-be">—</div>
     </div>
   </div>
+  <div class="dash-note" id="runway-note">Aquí vemos si la caja compra tiempo suficiente para que la historia comercial ocurra antes de quedarnos sin aire.</div>
+  <div class="dash-grid" style="margin-bottom:1.2rem">
+    <div class="dash-card">
+      <div class="dash-lbl">Ingreso prom. H1</div>
+      <div class="dash-val" id="rw-h1">—</div>
+      <div class="dash-sub">promedio mensual abr–sep</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Ingreso prom. H2</div>
+      <div class="dash-val" id="rw-h2">—</div>
+      <div class="dash-sub">promedio mensual oct–mar</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Caja mínima año 1</div>
+      <div class="dash-val" id="rw-mincash">—</div>
+      <div class="dash-sub">punto más bajo de caja acumulada</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Mes crítico</div>
+      <div class="dash-val" id="rw-critical">—</div>
+      <div class="dash-sub">momento de máxima tensión financiera</div>
+    </div>
+  </div>
+  <div class="nota" id="runway-alert" style="margin-bottom:1rem"></div>
 
   <div class="panel open">
     <div class="phdr"><span class="ptitle">📅 Caja mensual — Año 1 (abr 2026 – mar 2027)</span></div>
@@ -874,6 +1058,30 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="ksub">retorno acumulado ÷ inversión</div>
     </div>
   </div>
+  <div class="dash-note" id="ap-note">La pestaña Apuesta traduce el modelo a retorno personal: cuánto se pone, cuánto puede volver y en qué momento se vuelve creíble.</div>
+  <div class="dash-grid" style="margin-bottom:1.2rem">
+    <div class="dash-card">
+      <div class="dash-lbl">Retorno equipo 7 años</div>
+      <div class="dash-val" id="ap-team-ret">—</div>
+      <div class="dash-sub">suma de sueldo + equity del equipo completo</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">ROI medio equipo</div>
+      <div class="dash-val" id="ap-team-roi">—</div>
+      <div class="dash-sub">promedio simple de retorno sobre inversión</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Total equipo 2032</div>
+      <div class="dash-val" id="ap-team-2032">—</div>
+      <div class="dash-sub">sueldo + equity mensual agregado</div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-lbl">Brecha equipo a S/10k</div>
+      <div class="dash-val" id="ap-team-gap10">—</div>
+      <div class="dash-sub">faltante agregado para 5 x S/10k/mes</div>
+    </div>
+  </div>
+  <div class="nota" id="ap-alert" style="margin-bottom:1rem"></div>
 
   <div class="panel open">
     <div class="phdr"><span class="ptitle">🎯 La apuesta final — HOY vs 2032 (todo en S/mes)</span></div>
@@ -1427,6 +1635,53 @@ function recalc(){
   const monthly=rw.monthly;
   const eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
   const baseEqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.baseEquity||0)]));
+  const idx30=AÑOS.indexOf(2030);
+  const idx32=AÑOS.indexOf(2032);
+  const teamGap2030=derived.personCards.reduce((sum,person)=>{
+    const basePerson=PERSONS.find((p)=>p.id===person.id);
+    const current=Number(basePerson?.sueldo||0);
+    const total30=Number(person.yearlyTotals[idx30]||0);
+    return sum + Math.max(0,current-total30);
+  },0);
+  const breakYearNum=typeof be==='number'?be:AÑOS[AÑOS.length-1];
+  const targetBreakYear=Math.max(AÑOS[0], breakYearNum-1);
+  const targetBreakIdx=AÑOS.indexOf(targetBreakYear);
+  const gapBreakGross=targetBreakIdx>=0?Math.max(0,Math.round((Math.max(0,fact.sued_tot[targetBreakIdx]+P.reserva-fact.neto[targetBreakIdx]))/Math.max(0.01,P.netoPct))):0;
+  const growth30=fact.total[0]>0?(((fact.total[idx30]/fact.total[0])-1)*100):0;
+  const growth32=fact.total[idx30]>0?(((fact.total[idx32]/fact.total[idx30])-1)*100):0;
+  const brands32=[
+    {name:'Trazo',value:fact.trazo[idx32]},
+    {name:'Almaria',value:fact.alm[idx32]},
+    {name:'HugoTech',value:fact.ht[idx32]},
+  ].sort((a,b)=>b.value-a.value);
+  const lead32=brands32[0];
+  const leadShare32=fact.total[idx32]>0?(lead32.value/fact.total[idx32])*100:0;
+  const h1Avg=Math.round(monthly.slice(0,6).reduce((sum,row)=>sum+Number(row.ingresos||0),0)/6);
+  const h2Avg=Math.round(monthly.slice(6,12).reduce((sum,row)=>sum+Number(row.ingresos||0),0)/6);
+  let cashWalk=rw.capital;
+  let minCash=cashWalk;
+  let minCashMonth='Inicio';
+  const meses=['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'];
+  monthly.forEach((m,i)=>{
+    const neto_m=Math.round(m.ingresos*P.netoPct);
+    const flujo=neto_m-m.burn;
+    cashWalk+=flujo;
+    if(cashWalk<minCash){
+      minCash=cashWalk;
+      minCashMonth=`${meses[i]} ${i<9?2026:2027}`;
+    }
+  });
+  const teamRet7=derived.personCards.reduce((sum,person)=>{
+    const ret=AÑOS.reduce((acc,_,i)=>acc+((sc[person.id][i]||0)+Math.round(dist[i]*(eqById[person.id]||0)/100))*12,0);
+    return sum+ret;
+  },0);
+  const teamInv=derived.personCards.reduce((sum,person)=>sum+Number(person.investment||0),0);
+  const teamRoiAvg=derived.personCards.reduce((sum,person)=>{
+    const ret=AÑOS.reduce((acc,_,i)=>acc+((sc[person.id][i]||0)+Math.round(dist[i]*(eqById[person.id]||0)/100))*12,0);
+    return sum+(ret/Math.max(1,Number(person.investment||1)));
+  },0)/Math.max(1,derived.personCards.length);
+  const team2032=derived.personCards.reduce((sum,person)=>sum+Number(person.total2032||0),0);
+  const teamGap10=Math.max(0,(10000*PERSONS.length)-team2032);
 
   // ── KPIs dashboard ──
   sv('kpi-pool',fmt(pool));
@@ -1440,6 +1695,39 @@ function recalc(){
   const minMult=Math.min(...heroMults);
   const maxMult=Math.max(...heroMults);
   sv('hero-kpi-mult','×'+minMult.toFixed(1)+' – ×'+maxMult.toFixed(1));
+  sv('dash-fact30',fmt(fact.total[idx30]));
+  sv('dash-net30',fmt(fact.neto[idx30]));
+  sv('dash-pay30',fmt(fact.sued_tot[idx30]));
+  sv('dash-col30',fmt(fact.colchon[idx30]));
+  sv('dash-dist30-noop',fmt(fact.dist_no_op[idx30]));
+  sv('dash-op32',fmt(fact.hcost[6]));
+  sv('dash-gap30',fmt(teamGap2030));
+  sv('dash-lib30',`${derived.liberatedBy2030}/${PERSONS.length}`);
+  const dashNote=sel('dash-note');
+  if(dashNote){
+    dashNote.innerHTML='Todas las métricas del dashboard salen del mismo motor (<strong>deriveState</strong>). Ejemplo: <strong>colchón = neto - planilla</strong> y <strong>distribuible = max(0, colchón - reserva)</strong>; así evitamos que cards, tablas y gráficos se contradigan.';
+  }
+  sv('gra-growth-30',growth30.toFixed(0)+'%');
+  sv('gra-growth-32',growth32.toFixed(0)+'%');
+  sv('gra-lead-32',lead32?lead32.name:'—');
+  sv('gra-share-32',leadShare32.toFixed(0)+'%');
+  const graNote=sel('gra-note');
+  if(graNote){
+    graNote.innerHTML=`Estas curvas usan el mismo escenario activo. En 2032 la línea dominante es <strong>${lead32.name}</strong> con ~<strong>${leadShare32.toFixed(0)}%</strong> del total; si esa marca se retrasa, la historia del ecosistema completo se enfría.`;
+  }
+  const graAlert=sel('gra-alert');
+  if(graAlert){
+    if(leadShare32>=50){
+      graAlert.className='nota warn';
+      graAlert.innerHTML=`⚠️ <strong>Dependencia alta de ${lead32.name}:</strong> explica ~${leadShare32.toFixed(0)}% de la facturación 2032. Si esa línea se retrasa, el ecosistema completo pierde temperatura.`;
+    }else if(growth30<150){
+      graAlert.className='nota';
+      graAlert.innerHTML=`ℹ️ <strong>Crecimiento moderado hasta 2030:</strong> la facturación total sube ~${growth30.toFixed(0)}% desde 2026. El quiebre depende más de disciplina y margen que de explosión comercial.`;
+    }else{
+      graAlert.className='nota ok';
+      graAlert.innerHTML=`✅ <strong>Curva de crecimiento fuerte:</strong> 2026→2030 sube ~${growth30.toFixed(0)}% y luego 2030→2032 agrega ~${growth32.toFixed(0)}% más.`;
+    }
+  }
   const eqTotBase=PERSONS.reduce((s,p)=>s+Number(p.equity||0),0);
   const eqSumEl=sel('eq-sum-v');
   if(eqSumEl){
@@ -1467,7 +1755,7 @@ function recalc(){
   sv('kpi-rossy',String(derived.firstLiberationYear));
 
   // Liberation meter (equipo completo, automático por persona)
-  const libIdx30=AÑOS.indexOf(2030);
+  const libIdx30=idx30;
   const liberated2030=derived.liberatedBy2030;
   const liberated2032=derived.liberatedBy2032;
   const pct=Math.round((liberated2032/PERSONS.length)*100);
@@ -1558,6 +1846,27 @@ function recalc(){
   sv('ceo-runway',rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
   sv('ceo-rossy',`${derived.liberatedBy2032}/${PERSONS.length}`);
   sv('ceo-first-dist',String(derived.firstDistYear));
+  sv('ceo-fact30',fmt(fact.total[idx30]));
+  sv('ceo-pay30',fmt(fact.sued_tot[idx30]));
+  sv('ceo-col30',fmt(fact.colchon[idx30]));
+  sv('ceo-gap-break',fmt(gapBreakGross));
+  const ceoNote=sel('ceo-note');
+  if(ceoNote){
+    ceoNote.innerHTML='La mesa ejecutiva usa 4 anclas para decidir: <strong>facturación 2030</strong>, <strong>planilla 2030</strong>, <strong>colchón 2030</strong> y <strong>gap para adelantar el quiebre</strong>. Si esas 4 se mueven bien, el resto del modelo normalmente acompaña.';
+  }
+  const ceoAlert=sel('ceo-alert');
+  if(ceoAlert){
+    if(gapBreakGross>15000){
+      ceoAlert.className='nota warn';
+      ceoAlert.innerHTML=`⚠️ <strong>Quiebre exigente:</strong> para adelantarlo 1 año harían falta ~${fmt(gapBreakGross)}/mes de facturación bruta extra. La discusión de mesa no es “si crecer”, sino “desde qué marca y con qué margen”.`;
+    }else if(fact.colchon[idx30]<0){
+      ceoAlert.className='nota';
+      ceoAlert.innerHTML=`ℹ️ <strong>2030 sigue apretado:</strong> hay progreso, pero el colchón 2030 aún queda en ${fmt(fact.colchon[idx30])}/mes antes de reserva. La historia mejora, aunque todavía no sobra aire.`;
+    }else{
+      ceoAlert.className='nota ok';
+      ceoAlert.innerHTML=`✅ <strong>Lectura ejecutiva sana:</strong> 2030 ya muestra colchón positivo (${fmt(fact.colchon[idx30])}/mes) y el sistema entra a etapa donde discutir escala tiene más sentido que discutir supervivencia.`;
+    }
+  }
   const ceoh=sel('ceo-runway-hint');
   if(ceoh){
     if(rw.months>=18){ceoh.className='nota ok';ceoh.textContent='Runway inicial ≥18m: margen razonable para iterar — igual, cruzar con caja bancaria cada mes (ver Pacto → Gobierno).'}
@@ -1576,7 +1885,6 @@ function recalc(){
   sel('tb-ea').innerHTML=html;
 
   // ── Metas sueldo vs impacto (referencia = curva literal pacto) ──
-  const idx30=4, idx32=6;
   const dPay30=fact.sued_f[idx30]-factPact.sued_f[idx30];
   const dPay32=fact.sued_f[idx32]-factPact.sued_f[idx32];
   const factExtra30=dPay30>0?Math.round(dPay30/P.netoPct):0;
@@ -1633,9 +1941,42 @@ function recalc(){
   sv('be-op26',fmt(fact.hcost[0]));
   sv('be-op32',fmt(fact.hcost[6]));
   sv('be-headcount',(HIRES.length+5)+' personas');
+  const teamShare26 = fact.neto[0] > 0 ? (fact.hcost[0] / fact.neto[0]) * 100 : 0;
+  const teamShare32 = fact.neto[6] > 0 ? (fact.hcost[6] / fact.neto[6]) * 100 : 0;
+  const teamAccum = fact.hcost.reduce((sum,v)=>sum + (v * 12), 0);
+  const teamBlockYear = AÑOS.find((year,idx)=>fact.dist_no_op[idx] > 0 && fact.dist[idx] === 0) || '—';
+  const teamDrag30 = Math.max(0, fact.dist_no_op[4] - fact.dist[4]);
+  const teamDrag32 = Math.max(0, fact.dist_no_op[6] - fact.dist[6]);
+  const founderShare32 = fact.sued_tot[6] > 0 ? (fact.sued_f[6] / fact.sued_tot[6]) * 100 : 0;
+  const opShareMix32 = fact.sued_tot[6] > 0 ? (fact.hcost[6] / fact.sued_tot[6]) * 100 : 0;
+  sv('team-share26', teamShare26.toFixed(0)+'%');
+  sv('team-share32', teamShare32.toFixed(0)+'%');
+  sv('team-accum', fmt(teamAccum));
+  sv('team-block-year', String(teamBlockYear));
+  sv('team-drag30', fmt(teamDrag30));
+  sv('team-drag32', fmt(teamDrag32));
+  sv('team-mix32', founderShare32.toFixed(0)+'% / '+opShareMix32.toFixed(0)+'%');
+  sv('team-postpay30', fmt(fact.colchon[4]));
   const totH26=fact.hcost[0];
   const nh=sel('nota-hires');
   nh.innerHTML=`Planilla operativa: <strong style="color:var(--coral)">${fmt(totH26)}/mes en 2026</strong>, <strong style="color:var(--gold)">${fmt(fact.hcost[6])}/mes en 2032</strong>. Sin este equipo las marcas no escalan — es un costo necesario, no opcional.`;
+  const teamNote=sel('team-note');
+  if(teamNote){
+    teamNote.innerHTML=`El equipo operativo consume <strong>${teamShare26.toFixed(0)}%</strong> del neto en 2026 y <strong>${teamShare32.toFixed(0)}%</strong> en 2032. En términos de distribuible, arrastra <strong>${fmt(teamDrag30)}/mes</strong> en 2030 y <strong>${fmt(teamDrag32)}/mes</strong> en 2032. La lectura correcta no es “esto sobra”: es “esto compra capacidad de ejecución a costa de distribuir más tarde”.`;
+  }
+  const teamAlert=sel('team-alert');
+  if(teamAlert){
+    if(teamBlockYear!=='—'){
+      teamAlert.className='nota warn';
+      teamAlert.innerHTML=`⚠️ <strong>El equipo operativo bloquea reparto en ${teamBlockYear}:</strong> sin esa capa ya habría distribuible, pero con ella el sistema lo consume para ejecutar. Solo vale la pena si esa estructura realmente acelera ventas y entrega.`;
+    }else if(teamShare32>=35){
+      teamAlert.className='nota';
+      teamAlert.innerHTML=`ℹ️ <strong>Peso operativo relevante:</strong> incluso en 2032 el equipo no fundador consume ${teamShare32.toFixed(0)}% del neto. No es una alarma, pero sí una capa que exige productividad visible.`;
+    }else{
+      teamAlert.className='nota ok';
+      teamAlert.innerHTML=`✅ <strong>Peso operativo saludable:</strong> la estructura no fundadora acompaña la escala sin tragarse una porción excesiva del neto al horizonte.`;
+    }
+  }
 
   // Tabla planilla
   html=`<tr class="trh"><td>Fundadores</td>${fact.sued_f.map(v=>`<td class="cg">${fmt(v)}</td>`).join('')}</tr>`;
@@ -1658,7 +1999,27 @@ function recalc(){
   sv('rw-burn',fmt(rw.burn)+'/mes');
   sv('rw-months',rw.months+'m');
   sv('rw-be',be+'');
-  const meses=['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'];
+  sv('rw-h1',fmt(h1Avg));
+  sv('rw-h2',fmt(h2Avg));
+  sv('rw-mincash',fmt(minCash));
+  sv('rw-critical',minCashMonth);
+  const runwayNote=sel('runway-note');
+  if(runwayNote){
+    runwayNote.innerHTML=`El punto más tenso del año 1 ocurre en <strong>${minCashMonth}</strong>, cuando la caja proyectada cae a <strong>${fmt(minCash)}</strong>. Si el segundo semestre no mejora frente al primero (<strong>${fmt(h1Avg)}</strong> → <strong>${fmt(h2Avg)}</strong>), el runway deja de ser colchón y se convierte en cuenta regresiva.`;
+  }
+  const runwayAlert=sel('runway-alert');
+  if(runwayAlert){
+    if(rw.months<9 || minCash<0){
+      runwayAlert.className='nota warn';
+      runwayAlert.innerHTML=`⚠️ <strong>Runway frágil:</strong> ${rw.months} meses y caja mínima de ${fmt(minCash)}. Aquí la prioridad no es optimizar, sino vender antes de quedarnos sin aire.`;
+    }else if(rw.months<18){
+      runwayAlert.className='nota';
+      runwayAlert.innerHTML=`ℹ️ <strong>Runway intermedio:</strong> hay tiempo para iterar, pero el segundo semestre tiene que mejorar frente al primero. Si no, el colchón se vuelve una cuenta regresiva silenciosa.`;
+    }else{
+      runwayAlert.className='nota ok';
+      runwayAlert.innerHTML=`✅ <strong>Runway con aire:</strong> ${rw.months} meses y caja mínima de ${fmt(minCash)}. El riesgo central deja de ser tiempo y pasa a ser ejecución comercial.`;
+    }
+  }
   let caja=rw.capital;
   html='';
   monthly.forEach((m,i)=>{
@@ -1707,6 +2068,27 @@ function recalc(){
   sv('ap-best-who',PERSONS[bestIdx].name+' gana más en 2032');
   sv('ap-min-roi',fmtX(minRois[minRoiIdx]));
   sv('ap-min-who',PERSONS[minRoiIdx].name+' — sigue siendo positivo');
+  sv('ap-team-ret',fmt(teamRet7));
+  sv('ap-team-roi',fmtX(teamRoiAvg));
+  sv('ap-team-2032',fmt(team2032));
+  sv('ap-team-gap10',fmt(teamGap10));
+  const apNote=sel('ap-note');
+  if(apNote){
+    apNote.innerHTML=`La apuesta agregada del equipo suma <strong>${fmt(teamInv)}</strong> de inversión modelada y puede devolver <strong>${fmt(teamRet7)}</strong> en 7 años si el escenario activo se sostiene. La brecha para que las 5 personas estén cerca de S/10k/mes al 2032 es <strong>${fmt(teamGap10)}</strong> mensuales.`;
+  }
+  const apAlert=sel('ap-alert');
+  if(apAlert){
+    if(teamGap10>15000){
+      apAlert.className='nota warn';
+      apAlert.innerHTML=`⚠️ <strong>La apuesta todavía no compra tranquilidad total:</strong> aun al 2032 falta una brecha agregada de ${fmt(teamGap10)}/mes para llevar a las 5 personas a una referencia de S/10k/mes.`;
+    }else if(teamRoiAvg<1.5){
+      apAlert.className='nota';
+      apAlert.innerHTML=`ℹ️ <strong>Retorno positivo pero contenido:</strong> el ROI medio del equipo ronda ${fmtX(teamRoiAvg)}. La historia funciona, pero todavía depende de sostener disciplina comercial y margen.`;
+    }else{
+      apAlert.className='nota ok';
+      apAlert.innerHTML=`✅ <strong>Apuesta con upside claro:</strong> el equipo proyecta ${fmt(team2032)}/mes combinado al 2032, con un ROI medio de ${fmtX(teamRoiAvg)}.`;
+    }
+  }
 
   const scNames={p:'📉 Escenario pesimista — crecimiento al 70%',n:'📊 Escenario neutro — base',o:'🚀 Escenario optimista — +40%'};
   const aN=sel('nota-apuesta');
@@ -1930,6 +2312,23 @@ syncControlsFromState();
 decorateHelp();
 loadSimNotes();
 document.querySelectorAll('.panel .pbody').forEach(b=>b.style.display='block');
+try{
+  if(window.top!==window.self){
+    document.getElementById('hero').style.display='none';
+    const app=document.getElementById('app-root');
+    if(app) app.classList.add('sidebar-hidden');
+    const btn=document.getElementById('sb-toggle');
+    if(btn) btn.textContent='☰';
+    showTab('dashboard');
+  }
+}catch(error){
+  document.getElementById('hero').style.display='none';
+  const app=document.getElementById('app-root');
+  if(app) app.classList.add('sidebar-hidden');
+  const btn=document.getElementById('sb-toggle');
+  if(btn) btn.textContent='☰';
+  showTab('dashboard');
+}
 QSYS.subscribe((nextState,meta={})=>{
   if(meta.via==='local'||meta.via==='poll') return;
   const incomingStamp=(nextState&&nextState.meta&&nextState.meta.updatedAt)||'';
