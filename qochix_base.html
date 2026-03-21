@@ -410,56 +410,71 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
 
 /* HORAS TABLE */
 .hours-table-wrap{
-  flex:1;overflow-x:auto;overflow-y:visible;border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;background:rgba(0,0,0,.12);padding-bottom:2px;
+  flex:1;overflow-x:auto;overflow-y:visible;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;background:rgba(0,0,0,.18);padding:4px 0 4px;
 }
 .hours-table-hint{
-  font-size:.72rem;color:var(--muted);margin:.45rem 0 .35rem;letter-spacing:.02em;
+  font-size:.78rem;color:var(--muted);margin:.55rem 0 .45rem;letter-spacing:.02em;
 }
 .hours-mobile-cards{display:none}
 .hours-mobile-card{
-  border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 12px 10px;background:rgba(18,24,38,.68);
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:14px 14px 12px;background:rgba(18,24,38,.68);
 }
 .hours-mobile-head{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px;
 }
-.hours-mobile-name{font-size:.95rem;font-weight:700;color:var(--text)}
-.hours-mobile-sub{font-size:.72rem;color:var(--muted);margin-top:2px}
+.hours-mobile-name{font-size:1rem;font-weight:700;color:var(--text)}
+.hours-mobile-sub{font-size:.75rem;color:var(--muted);margin-top:3px}
 .hours-mobile-flag{
-  font-size:.67rem;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);white-space:nowrap;
+  font-size:.70rem;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);white-space:nowrap;
 }
 .hours-mobile-flag.red{color:#ff9a8f;background:rgba(232,107,95,.14);border-color:rgba(232,107,95,.3)}
 .hours-mobile-flag.warn{color:var(--amber);background:rgba(230,126,34,.14);border-color:rgba(230,126,34,.3)}
 .hours-mobile-grid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
 }
 .hours-mobile-kpi{
-  border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:7px 8px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 10px;background:rgba(255,255,255,.03);
 }
-.hours-mobile-kpi b{display:block;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-.hours-mobile-kpi span{font-size:.78rem;color:var(--text2);line-height:1.3}
+.hours-mobile-kpi b{display:block;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.hours-mobile-kpi span{font-size:.82rem;color:var(--text2);line-height:1.35}
 .htable{
-  width:100%;min-width:980px;border-collapse:separate;border-spacing:0;font-size:.9rem;border-radius:12px;overflow:hidden;
+  width:100%;min-width:1020px;border-collapse:separate;border-spacing:0;font-size:1rem;border-radius:14px;overflow:hidden;
 }
-.htable th{padding:11px 12px;text-align:center;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);}
-.htable td{padding:10px 12px;text-align:center;border-bottom:1px solid rgba(255,255,255,.06);}
+.htable th{
+  padding:16px 16px;text-align:center;font-size:.82rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text2);
+  border-bottom:2px solid rgba(255,255,255,.08);background:rgba(0,0,0,.2);
+}
+.htable td{
+  padding:18px 16px;text-align:center;vertical-align:middle;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
 .htable tr:last-child td{border-bottom:none;}
-.htable .name-cell{text-align:left;font-weight:700;color:var(--text);font-size:.95rem;}
-.htable .sub{font-size:.74rem;color:var(--muted);display:block;margin-top:3px;}
-.cell-a{background:rgba(26,122,86,.16);color:var(--almaria-l);border-radius:10px;padding:6px 11px;display:inline-block;font-weight:600;}
-.cell-h{background:rgba(30,95,165,.16);color:var(--hugo-l);border-radius:10px;padding:6px 11px;display:inline-block;font-weight:600;}
-.cell-t{background:rgba(176,106,16,.16);color:var(--trazo-l);border-radius:10px;padding:6px 11px;display:inline-block;font-weight:600;}
-.cell-total-ok{background:rgba(82,201,122,.14);color:#7FE0A8;border-radius:10px;padding:6px 13px;display:inline-block;font-weight:700;}
-.cell-total-warn{background:rgba(230,126,34,.16);color:var(--amber);border-radius:10px;padding:6px 13px;display:inline-block;font-weight:700;}
-.cell-total-red{background:rgba(232,107,95,.14);color:#ff9a8f;border-radius:10px;padding:6px 13px;display:inline-block;font-weight:700;}
-.cell-other{color:var(--text2);font-size:.82rem;}
-.htable th:first-child,.htable td:first-child{
-  position:sticky;left:0;z-index:2;background:rgba(10,13,19,.96);
+.htable tr:hover td{background:rgba(255,255,255,.02);}
+.htable .name-cell{
+  text-align:left;font-weight:700;color:var(--text);font-size:1.05rem;
+  min-width:160px;padding-left:20px;
 }
-.htable th:first-child{z-index:3;}
+.htable .sub{font-size:.78rem;color:var(--muted);display:block;margin-top:4px;}
+.cell-a{background:rgba(26,122,86,.18);color:var(--almaria-l);border-radius:12px;padding:10px 14px;display:inline-block;font-weight:600;font-size:.92rem;line-height:1.45;min-width:100px;text-align:center;}
+.cell-h{background:rgba(30,95,165,.18);color:var(--hugo-l);border-radius:12px;padding:10px 14px;display:inline-block;font-weight:600;font-size:.92rem;line-height:1.45;min-width:100px;text-align:center;}
+.cell-t{background:rgba(176,106,16,.18);color:var(--trazo-l);border-radius:12px;padding:10px 14px;display:inline-block;font-weight:600;font-size:.92rem;line-height:1.45;min-width:100px;text-align:center;}
+.cell-total-ok{background:rgba(82,201,122,.16);color:#7FE0A8;border-radius:12px;padding:10px 16px;display:inline-block;font-weight:700;font-size:.95rem;line-height:1.45;min-width:110px;text-align:center;}
+.cell-total-warn{background:rgba(230,126,34,.18);color:var(--amber);border-radius:12px;padding:10px 16px;display:inline-block;font-weight:700;font-size:.95rem;line-height:1.45;min-width:110px;text-align:center;}
+.cell-total-red{background:rgba(232,107,95,.16);color:#ff9a8f;border-radius:12px;padding:10px 16px;display:inline-block;font-weight:700;font-size:.95rem;line-height:1.45;min-width:110px;text-align:center;}
+.cell-other{color:var(--text2);font-size:.88rem;line-height:1.45;}
+.cell-a small,.cell-h small,.cell-t small,.cell-total-ok small,.cell-total-warn small,.cell-total-red small{
+  display:block;margin-top:3px;font-size:.78rem;opacity:.75;
+}
+.htable th:first-child,.htable td:first-child{
+  position:sticky;left:0;z-index:2;background:rgba(10,13,19,.97);
+}
+.htable th:first-child{z-index:3;padding-left:20px;text-align:left;}
 @media(max-width:780px){
   .hours-table-hint,.hours-table-wrap{display:none}
-  .hours-mobile-cards{display:grid;gap:10px;margin-top:2px}
+  .hours-mobile-cards{display:grid;gap:12px;margin-top:4px}
 }
 
 /* TIMELINE */
@@ -1024,14 +1039,14 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
         </div>
       </article>
     </div>
-    <div class="g2" style="margin-top:12px;gap:10px;">
-      <div style="background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);border-radius:10px;padding:12px 16px;">
-        <p style="font-size:12px;color:#E74C3C;font-weight:500;margin-bottom:4px;">Hugo y Rossy — zona roja 🚨</p>
-        <p style="font-size:11px;">Hugo: 17-19 hrs/día totales. Rossy: 10-12 hrs Qochix + trabajo propio. Hay que definir techos reales antes de arrancar.</p>
+    <div class="g2" style="margin-top:18px;gap:14px;">
+      <div style="background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);border-radius:14px;padding:18px 22px;">
+        <p style="font-size:14px;color:#E74C3C;font-weight:600;margin-bottom:6px;">Hugo y Rossy — zona roja 🚨</p>
+        <p style="font-size:13px;line-height:1.55;">Hugo: 17-19 hrs/día totales. Rossy: 10-12 hrs Qochix + trabajo propio. Hay que definir techos reales antes de arrancar.</p>
       </div>
-      <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:10px;padding:12px 16px;">
-        <p style="font-size:12px;color:var(--amber);font-weight:500;margin-bottom:4px;">Carlos, Vera y Nicole — zona de alerta ⚠️</p>
-        <p style="font-size:11px;">Carlos y Nicole: 10-12 hrs/día en Qochix pero sin otro trabajo encima — manejable. Vera: 6-9 hrs/día con flexibilidad.</p>
+      <div style="background:rgba(230,126,18,.1);border:1px solid rgba(230,126,18,.25);border-radius:14px;padding:18px 22px;">
+        <p style="font-size:14px;color:var(--amber);font-weight:600;margin-bottom:6px;">Carlos, Vera y Nicole — zona de alerta ⚠️</p>
+        <p style="font-size:13px;line-height:1.55;">Carlos y Nicole: 10-12 hrs/día en Qochix pero sin otro trabajo encima — manejable. Vera: 6-9 hrs/día con flexibilidad.</p>
       </div>
     </div>
     <div class="qbox">
