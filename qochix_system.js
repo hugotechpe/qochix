@@ -52,7 +52,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 2,
+      schemaVersion: 3,
     },
   };
 
@@ -62,6 +62,10 @@
       if (carlos && (carlos.capital === 0 || carlos.capital === undefined)) {
         carlos.capital = 52830;
       }
+    }},
+    { from: 2, to: 3, run(s) {
+      if (!s.P) s.P = {};
+      if (!s.P.equityMode) s.P.equityMode = 'auto_pool';
     }},
   ];
 
@@ -94,6 +98,7 @@
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
       };
+      if (!next.P.equityMode) next.P.equityMode = DEFAULTS.P.equityMode;
     }
     if (raw.meta && typeof raw.meta === 'object') {
       next.meta = { ...next.meta, ...raw.meta };
