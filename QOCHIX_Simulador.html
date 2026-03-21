@@ -2997,8 +2997,19 @@ function paintEquityExplainer(derived, fact){
   h+='</div>';
 
   h+='<div style="margin-top:1rem;padding:.7rem .9rem;background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.2);border-radius:8px;font-size:.72rem;color:var(--muted);line-height:1.65">';
-  h+='<strong style="color:var(--gold)">💡 Nota:</strong> Todos estos valores son editables arriba. Si cambias el sueldo de mercado, horas, factor de ajuste, tickets o capital invertido de cualquier socio, el % de equity se recalcula automáticamente. ';
-  h+='El <strong>factor de ajuste</strong> (×0.1 a ×1.0) es la palanca principal para calibrar el peso del sweat equity de cada persona.';
+  h+='<strong style="color:var(--gold)">💡 Nota:</strong> Todos estos valores son editables arriba. Si cambias el sueldo de mercado, horas, factor de ajuste, tickets o capital invertido de cualquier socio, el % de equity se recalcula automáticamente.';
+  h+='</div>';
+
+  h+='<div style="margin-top:.8rem;padding:.7rem .9rem;background:rgba(62,207,207,.06);border:1px solid rgba(62,207,207,.15);border-radius:8px;font-size:.72rem;color:var(--muted);line-height:1.7">';
+  h+='<strong style="color:var(--teal)">⚖️ ¿Qué es el Factor de Ajuste?</strong><br>';
+  h+='Es un multiplicador de <strong>×0.1 a ×1.0</strong> que representa <em>qué tan exclusivo y estratégico</em> es el tiempo que cada socio dedica a Qochix. Sirve para calibrar el peso real del sweat equity:<br>';
+  h+='<div style="margin:.5rem 0;display:grid;grid-template-columns:auto 1fr;gap:.2rem .6rem;font-size:.70rem">';
+  h+='<span style="color:var(--teal);font-weight:700">×1.0</span><span>= Dedicación total o casi total. Esa persona priorizaría Qochix y difícilmente podría hacer lo mismo en otro lado. Su costo de oportunidad es real al 100%.</span>';
+  h+='<span style="color:var(--gold);font-weight:700">×0.7</span><span>= Alta dedicación pero con otros compromisos. Su tiempo es muy valioso para Qochix pero no es 100% exclusivo.</span>';
+  h+='<span style="color:var(--coral);font-weight:700">×0.5</span><span>= Dedicación media. Aporta mucho valor pero mantiene otras fuentes de ingreso principales en paralelo.</span>';
+  h+='<span style="color:var(--muted);font-weight:700">×0.3</span><span>= Dedicación parcial. Colabora activamente pero su actividad principal está fuera de Qochix.</span>';
+  h+='</div>';
+  h+='<strong>Ejemplo:</strong> Si alguien vale S/30,000/mes en el mercado y dedica 7h/día pero su factor es ×0.5, su sweat se cuenta como la mitad: reconoce que esa persona tiene otros ingresos y no está sacrificando el 100% de su capacidad por Qochix.';
   h+='</div>';
 
   box.innerHTML=h;
