@@ -711,6 +711,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
         Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo Qochix</strong> año a año (curva del pacto o meta editada), el <strong>ingreso por equity</strong> (su porción del distribuible) y el <strong>total mensual</strong>. Los montos cambian con el escenario activo.
       </p>
       <div class="partner-grid" id="partner-grid"></div>
+
+      <div id="equity-explainer" style="margin-top:1.5rem;background:var(--bg1);border:1px solid var(--brd);border-radius:var(--radius);padding:1.2rem 1.4rem"></div>
     </div>
   </div>
 
@@ -2862,6 +2864,144 @@ function paintPartnerCards(derived, fact, eqById){
     html+='</div>';
     return html;
   }).join('');
+
+  paintEquityExplainer(derived, fact);
+}
+
+function paintEquityExplainer(derived, fact){
+  var box=sel('equity-explainer');
+  if(!box) return;
+  var fmt=QSYS.fmtCurrency;
+  var base=QSYS.SUED_F_BASE;
+  var AÑOS=[2026,2027,2028,2029,2030,2031,2032];
+
+  var h='';
+  h+='<div style="font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.06em">📐 ¿Cómo se calcula el % de equity de cada socio?</div>';
+
+  h+='<div style="font-size:.76rem;color:var(--muted);line-height:1.65;margin-bottom:1rem">';
+  h+='El equity efectivo de cada socio se calcula automáticamente según su <strong style="color:var(--text)">aporte total al pool</strong>. ';
+  h+='El aporte de cada persona tiene 3 componentes:';
+  h+='<div style="margin:.6rem 0 .4rem;padding:.6rem .8rem;background:var(--bg2);border-radius:8px;font-family:var(--mono);font-size:.72rem;line-height:1.8;color:var(--teal)">';
+  h+='Aporte = <span style="color:var(--gold)">Ticket Qochix</span> + <span style="color:var(--coral)">Capital invertido en marcas</span> + <span style="color:var(--green)">Sweat Equity (valor del trabajo no pagado)</span>';
+  h+='</div>';
+  h+='<div style="margin-bottom:.4rem"><strong style="color:var(--gold)">Ticket Qochix:</strong> Capital fresco que cada socio aporta directamente al holding.</div>';
+  h+='<div style="margin-bottom:.4rem"><strong style="color:var(--coral)">Capital en marcas:</strong> Lo que cada persona ya invirtió construyendo Trazo, Almaria o HugoTech (dinero histórico, no recuperable).</div>';
+  h+='<div style="margin-bottom:.4rem"><strong style="color:var(--green)">Sweat Equity:</strong> El valor de mercado del tiempo que cada socio dedica a Qochix <u>sin cobrar</u> (o cobrando menos de lo que vale). Se calcula así:</div>';
+  h+='<div style="padding:.5rem .8rem;background:var(--bg2);border-radius:8px;font-family:var(--mono);font-size:.70rem;line-height:1.8;color:var(--green);margin-bottom:.5rem">';
+  h+='Sweat = Σ cada año [ max(0, <span style="color:var(--teal)">valor_mercado/mes</span> − <span style="color:var(--gold)">compensación_extra_Qochix/mes</span>) × 12 ] × factor_ajuste<br>';
+  h+='<span style="color:var(--muted)">donde:</span><br>';
+  h+='&nbsp;&nbsp;valor_mercado/mes = (<span style="color:var(--teal)">sueldo_hoy</span> ÷ 176 hrs) × (<span style="color:var(--teal)">hrs/día</span> × 6 días × 4.3 sem)<br>';
+  h+='&nbsp;&nbsp;compensación_extra = max(0, <span style="color:var(--gold)">sueldo_curva_Qochix</span> − <span style="color:var(--coral)">sueldo_marca_actual</span>)';
+  h+='</div>';
+  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem">Si alguien ya cobra sueldo de su marca (ej. Carlos S/5,000 de Trazo), ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
+  h+='</div>';
+
+  h+='<div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.6rem">Desglose por socio</div>';
+
+  h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.72rem">';
+  h+='<thead><tr style="border-bottom:1px solid var(--brd);color:var(--muted);text-transform:uppercase;font-size:.65rem;letter-spacing:.05em">';
+  h+='<th style="text-align:left;padding:.4rem .5rem">Socio</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Sueldo mercado</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Hrs/día</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Valor/mes</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Sue. marca</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Factor</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Ticket</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Cap. marcas</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem;color:var(--green)">Sweat</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem;color:var(--gold);font-weight:700">Aporte total</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem;color:var(--teal);font-weight:700">% Equity</th>';
+  h+='</tr></thead><tbody>';
+
+  var poolTotal=0;
+  var rows=[];
+  PERSONS.forEach(function(p){
+    var pc=derived.personCards.find(function(c){return c.id===p.id;});
+    if(!pc)return;
+    var hr=p.sueldo/(22*8);
+    var hm=p.hrs*6*4.3;
+    var vm=hr*hm;
+    var bm=Number(p.sueldoMarca||0);
+    var curve=base[p.id]||[];
+    var swTotal=0;
+    for(var i=0;i<7;i++){
+      var extra=Math.max(0,Number(curve[i]||0)-bm);
+      swTotal+=Math.max(0,vm-extra)*12;
+    }
+    swTotal*=Number(p.adj||0);
+    var tkt=pc.ticket;
+    var bcap=pc.brandCapitalTotal;
+    var aporte=tkt+bcap+swTotal;
+    poolTotal+=aporte;
+    rows.push({p:p,pc:pc,hr:hr,hm:hm,vm:vm,bm:bm,sw:swTotal,tkt:tkt,bcap:bcap,aporte:aporte});
+  });
+
+  rows.forEach(function(r){
+    var pct=poolTotal>0?(r.aporte/poolTotal*100):0;
+    h+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)">';
+    h+='<td style="padding:.45rem .5rem;color:'+r.p.c+';font-weight:600">'+r.p.name+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem">'+fmt(r.p.sueldo)+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem">'+r.p.hrs+'h</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem">'+fmt(Math.round(r.vm))+'/m</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:'+(r.bm>0?'var(--coral)':'var(--muted)')+'">'+fmt(r.bm)+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem">×'+r.p.adj+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold)">'+fmt(r.tkt)+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--coral)">'+fmt(r.bcap)+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--green)">'+fmt(Math.round(r.sw))+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold);font-weight:700">'+fmt(Math.round(r.aporte))+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--teal);font-weight:700;font-size:.8rem">'+pct.toFixed(1)+'%</td>';
+    h+='</tr>';
+  });
+
+  h+='<tr style="border-top:2px solid var(--brd);font-weight:700">';
+  h+='<td style="padding:.45rem .5rem" colspan="6">TOTAL</td>';
+  h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold)">'+fmt(rows.reduce(function(s,r){return s+r.tkt;},0))+'</td>';
+  h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--coral)">'+fmt(rows.reduce(function(s,r){return s+r.bcap;},0))+'</td>';
+  h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--green)">'+fmt(rows.reduce(function(s,r){return s+Math.round(r.sw);},0))+'</td>';
+  h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold)">'+fmt(Math.round(poolTotal))+'</td>';
+  h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--teal)">100%</td>';
+  h+='</tr>';
+  h+='</tbody></table></div>';
+
+  h+='<div style="margin-top:1.2rem;font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.5rem">¿Por qué algunos socios tienen más %?</div>';
+  h+='<div style="font-size:.74rem;color:var(--muted);line-height:1.7">';
+
+  var sorted=rows.slice().sort(function(a,b){return b.aporte-a.aporte;});
+  sorted.forEach(function(r, idx){
+    var pct=poolTotal>0?(r.aporte/poolTotal*100):0;
+    h+='<div style="margin-bottom:.7rem;padding:.6rem .8rem;background:var(--bg2);border-left:3px solid '+r.p.c+';border-radius:0 8px 8px 0">';
+    h+='<div style="font-weight:700;color:'+r.p.c+';margin-bottom:.3rem">'+r.p.name+' — '+pct.toFixed(1)+'% del equity</div>';
+
+    if(r.sw > 0){
+      var swPct = poolTotal>0?(r.sw/poolTotal*100):0;
+      h+='<div>💼 <strong>Sweat equity ('+swPct.toFixed(1)+'% del pool):</strong> En el mercado gana S/'+r.p.sueldo.toLocaleString()+'/mes. ';
+      h+='Dedica <strong>'+r.p.hrs+'h al día</strong> a Qochix = <strong>'+fmt(Math.round(r.vm))+'/mes</strong> de valor. ';
+      if(r.bm > 0){
+        h+='Ya cobra <strong>'+fmt(r.bm)+'/mes de su marca</strong>, así que solo se cuenta como sweat lo que Qochix NO le paga por encima de eso. ';
+      } else {
+        h+='<strong>No cobra sueldo de ninguna marca actualmente</strong>, así que todo su tiempo es donado hasta que Qochix le pague. ';
+      }
+      h+='Con factor de ajuste ×'+r.p.adj+', su sweat total en 7 años = <strong>'+fmt(Math.round(r.sw))+'</strong>.</div>';
+    } else {
+      h+='<div>💼 Sin sweat equity (su sueldo Qochix ya cubre su valor de mercado desde el inicio).</div>';
+    }
+    if(r.bcap > 0){
+      h+='<div style="margin-top:.25rem">🏭 <strong>Inversión en marcas:</strong> '+fmt(r.bcap)+' invertidos en construir marcas del ecosistema.</div>';
+    }
+    if(r.tkt > 0){
+      h+='<div style="margin-top:.25rem">🎟️ <strong>Ticket Qochix:</strong> '+fmt(r.tkt)+' de capital fresco.</div>';
+    }
+    h+='</div>';
+  });
+
+  h+='</div>';
+
+  h+='<div style="margin-top:1rem;padding:.7rem .9rem;background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.2);border-radius:8px;font-size:.72rem;color:var(--muted);line-height:1.65">';
+  h+='<strong style="color:var(--gold)">💡 Nota:</strong> Todos estos valores son editables arriba. Si cambias el sueldo de mercado, horas, factor de ajuste, tickets o capital invertido de cualquier socio, el % de equity se recalcula automáticamente. ';
+  h+='El <strong>factor de ajuste</strong> (×0.1 a ×1.0) es la palanca principal para calibrar el peso del sweat equity de cada persona.';
+  h+='</div>';
+
+  box.innerHTML=h;
 }
 
 function paintFlowTab(){
