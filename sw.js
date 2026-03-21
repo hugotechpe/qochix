@@ -1,11 +1,11 @@
-const CACHE_NAME = 'qochix-v1';
+const CACHE_NAME = 'qochix-v4';
 const ASSETS = [
   'index.html',
   'QOCHIX_Simulador.html',
   'QOCHIX_Pacto_Economico.html',
   'qochix_base.html',
-  'qochix_system.js',
-  'qochix_help.js',
+  'qochix_system.js?v=4',
+  'qochix_help.js?v=2',
 ];
 
 self.addEventListener('install', (event) => {

@@ -239,8 +239,8 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <script src="qochix_help.js"></script>
-  <script src="qochix_system.js"></script>
+  <script src="qochix_help.js?v=2"></script>
+  <script src="qochix_system.js?v=4"></script>
   <script>
     const tabs = document.querySelectorAll('#tabs .btn');
     const frame = document.getElementById('frame');
@@ -451,29 +451,31 @@
     });
 
     function paint(){
-      const d = Q.deriveState(Q.getState());
-      byId('k-scn').textContent = d.scenarioLabel;
-      byId('k-dist').textContent = d.fmtCurrency(d.dist2032);
-      byId('k-pool').textContent = d.fmtCurrency(d.pool);
-      byId('k-lib').textContent = `${d.liberatedBy2032}/${d.personCards.length}`;
-      byId('k-lib-detail').textContent = `Primer cruce: ${d.firstLiberationYear}`;
-      byId('k-upd').textContent = d.updatedAtLabel;
-      paintScenarioButtons(d.state.P.sc);
-      paintCapMode(d.state.P.capitalMode || 'loan');
-      paintPresetButtons(detectPreset(d.state));
-      syncingControls = true;
-      ctlNeto.value = Math.round((d.state.P.netoPct || 0) * 100);
-      ctlNetoLbl.textContent = ctlNeto.value + '%';
-      ctlRsv.value = Math.round(d.state.P.reserva || 0);
-      const pmValue = Math.max(100000, Math.round((d.state.P.preMoney || 5000000) / 50000) * 50000);
-      ctlPm.value = pmValue;
-      ctlPmLbl.textContent = 'S/' + pmValue.toLocaleString('es-PE');
-      const ticketValue = clampTicket(d.state.P.ticket || 5000);
-      ctlTkt.value = ticketValue;
-      ctlTktNum.value = ticketValue;
-      ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
-      syncingControls = false;
-      paintExec();
+      try{
+        const d = Q.deriveState(Q.getState());
+        byId('k-scn').textContent = d.scenarioLabel;
+        byId('k-dist').textContent = d.fmtCurrency(d.dist2032);
+        byId('k-pool').textContent = d.fmtCurrency(d.pool);
+        byId('k-lib').textContent = d.liberatedBy2032+'/'+d.personCards.length;
+        byId('k-lib-detail').textContent = 'Primer cruce: '+d.firstLiberationYear;
+        byId('k-upd').textContent = d.updatedAtLabel;
+        paintScenarioButtons(d.state.P.sc);
+        paintCapMode(d.state.P.capitalMode || 'loan');
+        paintPresetButtons(detectPreset(d.state));
+        syncingControls = true;
+        ctlNeto.value = Math.round((d.state.P.netoPct || 0) * 100);
+        ctlNetoLbl.textContent = ctlNeto.value + '%';
+        ctlRsv.value = Math.round(d.state.P.reserva || 0);
+        var pmValue = Math.max(100000, Math.round((d.state.P.preMoney || 5000000) / 50000) * 50000);
+        ctlPm.value = pmValue;
+        ctlPmLbl.textContent = 'S/' + pmValue.toLocaleString('es-PE');
+        var ticketValue = clampTicket(d.state.P.ticket || 5000);
+        ctlTkt.value = ticketValue;
+        ctlTktNum.value = ticketValue;
+        ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
+        syncingControls = false;
+        paintExec();
+      }catch(err){console.error('Hub paint() error:',err);}
     }
     function openModal(id){document.getElementById(id).classList.add('open')}
     function closeModal(id){document.getElementById(id).classList.remove('open')}
