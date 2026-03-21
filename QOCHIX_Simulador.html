@@ -773,7 +773,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>Sueldo hoy</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat 3a</th><th>% del pool</th>
+        <th>Socio</th><th>Sueldo hoy</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat neto</th><th>% del pool</th>
       </tr></thead><tbody id="tb-sweat"></tbody></table></div>
     </div>
   </div>
@@ -1891,9 +1891,15 @@ function toggleSidebar(){
 // ════════════════════════════════════════
 // CÁLCULOS
 // ════════════════════════════════════════
-function sw(p){
+function sw(p,curve){
   const hr=p.sueldo/(22*8),hm=p.hrs*6*4.3,vm=hr*hm;
-  return{hr,hm,vm,sw:vm*36*p.adj};
+  const adj=Number(p.adj||0);
+  if(curve&&curve.length>0){
+    let total=0;
+    for(let i=0;i<7;i++){total+=Math.max(0,vm-Number(curve[i]||0))*12;}
+    return{hr,hm,vm,sw:total*adj};
+  }
+  return{hr,hm,vm,sw:vm*36*adj};
 }
 
 function calcFactFromCurves(suedCurves){
@@ -2082,7 +2088,7 @@ function recalc(){
   // Update pcard footers
   PERSONS.forEach(p=>{
     const tkt=getTkt(p.id);
-    const s=sw(p);
+    const s=sw(p,sc[p.id]);
     const bcTot=Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0);
     sv('ptot-'+p.id,fmt(tkt+bcTot+s.sw));
   });
@@ -2134,12 +2140,12 @@ function recalc(){
 
   // ── Sweat table ──
   let html='';let tvm=0,tsw=0;
+  const tswAll=PERSONS.reduce((s,p)=>s+sw(p,sc[p.id]).sw,0);
   PERSONS.forEach((p,i)=>{
-    const s=sw(p);tvm+=s.vm;tsw+=s.sw;
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td>${fmt(p.sueldo)}</td><td class="cg">S/${s.hr.toFixed(0)}/hr</td><td>${p.hrs}h</td><td>${s.hm.toFixed(0)}</td><td>${fmt(s.vm)}/m</td><td class="cm">×${p.adj}</td><td class="cg">${fmt(s.sw)}</td><td class="cm">${(s.sw/tsw_calc()*100).toFixed(0)}%</td></tr>`;
+    const s=sw(p,sc[p.id]);tvm+=s.vm;tsw+=s.sw;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td>${fmt(p.sueldo)}</td><td class="cg">S/${s.hr.toFixed(0)}/hr</td><td>${p.hrs}h</td><td>${s.hm.toFixed(0)}</td><td>${fmt(s.vm)}/m</td><td class="cm">×${p.adj}</td><td class="cg">${fmt(s.sw)}</td><td class="cm">${tswAll>0?(s.sw/tswAll*100).toFixed(0)+'%':'—'}</td></tr>`;
   });
-  function tsw_calc(){return PERSONS.reduce((s,p)=>s+sw(p).sw,0)}
-  html+=`<tr class="trs"><td>TOTAL</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="ct">${fmt(tvm)}/m</td><td>—</td><td class="cg cb">${fmt(tsw_calc())}</td><td>—</td></tr>`;
+  html+=`<tr class="trs"><td>TOTAL</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="ct">${fmt(tvm)}/m</td><td>—</td><td class="cg cb">${fmt(tswAll)}</td><td>—</td></tr>`;
   sel('tb-sweat').innerHTML=html;
 
   // ── Equity table ──
@@ -2148,7 +2154,7 @@ function recalc(){
     const tkt=getTkt(p.id);
     const bc=p.brandCapital||{};
     const bcTot=Object.values(bc).reduce((a,v)=>a+Number(v||0),0);
-    const s=sw(p),inv=tkt+bcTot+s.sw,mat=pool>0?inv/pool:0;
+    const s=sw(p,sc[p.id]),inv=tkt+bcTot+s.sw,mat=pool>0?inv/pool:0;
     const effEq=eqById[p.id]||0;
     const baseEq=baseEqById[p.id]||0;
     const diff=effEq/100-mat,ds=(diff>0?'+':'')+(diff*100).toFixed(1)+'pts';
@@ -2402,9 +2408,9 @@ function recalc(){
   });
   const bestIdx=mults.indexOf(Math.max(...mults));
   const minRois=PERSONS.map(p=>{
-    const inv=getTkt(p.id)+p.capital+sw(p).sw;
+    const inv=getTkt(p.id)+p.capital+sw(p,sc[p.id]).sw;
     const ret=AÑOS.reduce((s,_,i)=>s+((sc[p.id][i]||0)+Math.round(dist[i]*(eqById[p.id]||0)/100))*12,0);
-    return ret/inv;
+    return inv>0?ret/inv:0;
   });
   const minRoiIdx=minRois.indexOf(Math.min(...minRois));
   sv('ap-best-x',fmtX(mults[bestIdx]));
@@ -2445,7 +2451,7 @@ function recalc(){
     const tot32=sue32+eq32;
     const xTot=tot32/p.sueldo;
     const tot29=(sc[p.id][3]||0)+Math.round(dist[3]*(eqById[p.id]||0)/100);
-    const inv=getTkt(p.id)+p.capital+sw(p).sw;
+    const inv=getTkt(p.id)+p.capital+sw(p,sc[p.id]).sw;
     const ret7=AÑOS.reduce((s,_,i)=>s+((sc[p.id][i]||0)+Math.round(dist[i]*(eqById[p.id]||0)/100))*12,0);
     html+=`<div class="ap-card">
       <div><div class="ap-nm" style="color:${p.c}">${p.name}</div>
@@ -2455,7 +2461,7 @@ function recalc(){
         <div class="br"><span class="bl">HOY</span><div class="bt"><div class="bf" style="width:${(p.sueldo/tot32*100).toFixed(0)}%;background:var(--faint)"></div></div><span class="bv" style="color:var(--muted)">${fmt(p.sueldo)}</span></div>
         <div class="br"><span class="bl">2029</span><div class="bt"><div class="bf" style="width:${(tot29/tot32*100).toFixed(0)}%;background:var(--teal)"></div></div><span class="bv">${fmt(tot29)}</span></div>
         <div class="br"><span class="bl">2032</span><div class="bt"><div class="bf" style="width:100%;background:linear-gradient(90deg,${p.c},${p.c}cc)"></div></div><span class="bv" style="color:${p.c};font-weight:600">${fmt(tot32)}</span></div>
-        <div style="font-size:.65rem;color:var(--muted);margin-top:.15rem">Sueldo <strong style="color:var(--text)">${fmt(sue32)}</strong> + Equity <strong style="color:var(--gold)">${fmt(eq32)}</strong> · ROI ${fmtX(ret7/inv)}</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-top:.15rem">Sueldo <strong style="color:var(--text)">${fmt(sue32)}</strong> + Equity <strong style="color:var(--gold)">${fmt(eq32)}</strong>${inv>0?' · ROI '+fmtX(ret7/inv):''}</div>
       </div>
       <div style="text-align:center"><div class="ap-x" style="color:${p.c}">×${xTot.toFixed(1)}</div><div class="ap-xl">vs hoy</div></div>
     </div>`;
@@ -2464,9 +2470,9 @@ function recalc(){
 
   html='';
   PERSONS.forEach((p,i)=>{
-    const inv=getTkt(p.id)+p.capital+sw(p).sw;
+    const inv=getTkt(p.id)+p.capital+sw(p,sc[p.id]).sw;
     const ret7=AÑOS.reduce((s,_,j)=>s+((sc[p.id][j]||0)+Math.round(dist[j]*(eqById[p.id]||0)/100))*12,0);
-    const roi=ret7/inv;
+    const roi=inv>0?ret7/inv:0;
     const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
     const xTot=(P.sue32[p.id]+eq32)/p.sueldo;
     const be_p=AÑOS.find((_,j)=>{
@@ -2551,7 +2557,7 @@ function renderCharts(fact,dist,rw,monthly){
   const croi=sel('ch-roi');
   if(croi){
     const rois=PERSONS.map(p=>{
-      const inv=getTkt(p.id)+p.capital+sw(p).sw;
+      const inv=getTkt(p.id)+p.capital+sw(p,sc[p.id]).sw;
       const cu=fact.suedCurves[p.id];
       const ret=AÑOS.reduce((s,_,i)=>s+((cu[i]||0)+Math.round(fact.dist[i]*(eqById[p.id]||0)/100))*12,0);
       return parseFloat((ret/inv).toFixed(2));

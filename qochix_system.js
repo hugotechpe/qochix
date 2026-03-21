@@ -341,11 +341,20 @@
     return state.P.tktMode === 'equal' ? state.P.ticket : Number(state.P.tickets[id] || 0);
   }
 
-  function sw(person) {
+  function sw(person, curve) {
     const hr = Number(person.sueldo || 0) / (22 * 8);
     const hm = Number(person.hrs || 0) * 6 * 4.3;
     const vm = hr * hm;
-    return { hr, hm, vm, sw: vm * 36 * Number(person.adj || 0) };
+    const adj = Number(person.adj || 0);
+    if (curve && curve.length > 0) {
+      let total = 0;
+      for (let i = 0; i < AÑOS.length; i++) {
+        const gap = Math.max(0, vm - Number(curve[i] || 0));
+        total += gap * 12;
+      }
+      return { hr, hm, vm, sw: total * adj };
+    }
+    return { hr, hm, vm, sw: vm * 36 * adj };
   }
 
   function founderCurvesPact() {
@@ -445,12 +454,12 @@
     return monthlyFact.map((ingresos) => ({ ingresos, burn: burnFijo }));
   }
 
-  function calcPool(state) {
+  function calcPool(state, curves) {
     return state.persons.reduce((sum, person) =>
-      sum + getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person).sw, 0);
+      sum + getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person, curves[person.id]).sw, 0);
   }
 
-  function calcEffectiveEquity(state) {
+  function calcEffectiveEquity(state, curves) {
     const base = {};
     state.persons.forEach((person) => {
       base[person.id] = Number(person.equity || 0);
@@ -459,7 +468,7 @@
       const poolById = {};
       let totalPool = 0;
       state.persons.forEach((person) => {
-        const pool = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person).sw;
+        const pool = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person, curves[person.id]).sw;
         poolById[person.id] = pool;
         totalPool += pool;
       });
@@ -589,15 +598,17 @@
     const fact = calcFactFromCurves(state, curves);
     const factPact = calcFactFromCurves(state, founderCurvesPact());
     const lr = fact.lineRevenue;
-    const pool = calcPool(state);
+    const pool = calcPool(state, curves);
     const brandFin = calcBrandFinancials(state, lr, curves);
     const runway = calcRunway(state, curves, lr);
     const breakEven = calcBreakEven(fact);
     const firstDistYear = AÑOS.find((year, index) => fact.dist[index] > 0) || '2033+';
-    const effectiveEquity = calcEffectiveEquity(state);
+    const effectiveEquity = calcEffectiveEquity(state, curves);
     const personCards = state.persons.map((person) => {
+      const pCurve = curves[person.id] || [];
+      const swData = sw(person, pCurve);
       const yearlyTotals = AÑOS.map((_, index) => {
-        const sue = Number((curves[person.id] || [])[index] || 0);
+        const sue = Number(pCurve[index] || 0);
         const eq = Math.round(Number(fact.dist[index] || 0) * Number(effectiveEquity[person.id] || 0) / 100);
         return sue + eq;
       });
@@ -606,7 +617,7 @@
       const sue2032 = Number(state.P.sue32[person.id] || 0);
       const total2032 = sue2032 + eq2032;
       const brandCap = totalBrandCapital(person);
-      const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + sw(person).sw;
+      const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + swData.sw;
       return {
         id: person.id,
         name: person.name,
