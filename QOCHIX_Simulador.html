@@ -2685,7 +2685,7 @@ try{
   showTab('dashboard');
 }
 QSYS.subscribe((nextState,meta={})=>{
-  if(meta.via==='local'||meta.via==='poll') return;
+  if(meta.via==='local') return;
   const incomingStamp=(nextState&&nextState.meta&&nextState.meta.updatedAt)||'';
   if(incomingStamp&&incomingStamp===_lastLocalSavedAt) return;
   applySharedState(nextState);
