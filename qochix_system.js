@@ -46,13 +46,14 @@
       capitalMode: 'loan',
       equityMode: 'auto_pool',
       preMoney: 5000000,
+      sue29: { hugo: 9000, rossy: 4000, vera: 4000, carlos: 8000, nicole: 6000 },
       sue30: { hugo: 14000, rossy: 7500, vera: 7000, carlos: 9000, nicole: 6000 },
       sue32: { hugo: 30000, rossy: 10000, vera: 10000, carlos: 10000, nicole: 6000 },
     },
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 3,
+      schemaVersion: 4,
     },
   };
 
@@ -66,6 +67,12 @@
     { from: 2, to: 3, run(s) {
       if (!s.P) s.P = {};
       if (!s.P.equityMode) s.P.equityMode = 'auto_pool';
+    }},
+    { from: 3, to: 4, run(s) {
+      if (!s.P) s.P = {};
+      if (!s.P.sue29) {
+        s.P.sue29 = { hugo: 9000, rossy: 4000, vera: 4000, carlos: 8000, nicole: 6000 };
+      }
     }},
   ];
 
@@ -95,6 +102,7 @@
         ...next.P,
         ...raw.P,
         tickets: { ...next.P.tickets, ...(raw.P.tickets || {}) },
+        sue29: { ...next.P.sue29, ...(raw.P.sue29 || {}) },
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
       };
@@ -233,15 +241,17 @@
     return out;
   }
 
-  function buildSuedCurve(id, target30, target32) {
+  function buildSuedCurve(id, target29, target30, target32) {
     const base = SUED_F_BASE[id];
+    const t29 = target29 != null && !Number.isNaN(+target29) ? Math.max(0, Math.round(+target29)) : (base[3] || 0);
     const t30 = target30 != null && !Number.isNaN(+target30) ? Math.max(0, Math.round(+target30)) : (base[4] || 0);
     const t32 = target32 != null && !Number.isNaN(+target32) ? Math.max(0, Math.round(+target32)) : (base[6] || 0);
     const b0 = base[0] || 0;
     const arr = [];
-    for (let i = 0; i < 4; i += 1) {
-      arr[i] = Math.round(b0 + (t30 - b0) * (i / 4));
+    for (let i = 0; i < 3; i += 1) {
+      arr[i] = Math.round(b0 + (t29 - b0) * (i / 3));
     }
+    arr[3] = t29;
     arr[4] = t30;
     arr[5] = Math.round(t30 + (t32 - t30) * 0.5);
     arr[6] = t32;
@@ -250,6 +260,7 @@
 
   function metasMatchPactAnchors(state) {
     return state.persons.every((person) => (
+      Number((state.P.sue29 || {})[person.id]) === SUED_F_BASE[person.id][3] &&
       Number(state.P.sue30[person.id]) === SUED_F_BASE[person.id][4] &&
       Number(state.P.sue32[person.id]) === SUED_F_BASE[person.id][6]
     ));
@@ -259,7 +270,7 @@
     if (metasMatchPactAnchors(state)) return founderCurvesPact();
     const out = {};
     state.persons.forEach((person) => {
-      out[person.id] = buildSuedCurve(person.id, state.P.sue30[person.id], state.P.sue32[person.id]);
+      out[person.id] = buildSuedCurve(person.id, (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id]);
     });
     return out;
   }

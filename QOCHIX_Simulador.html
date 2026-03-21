@@ -1342,30 +1342,33 @@ function founderCurvesPact(){
 }
 
 /**
- * Curva activa: tramo lineal 2026→2030 (índices 0–4) y 2030→2032 (4–6).
- * 2031 = punto medio entre metas 2030 y 2032.
+ * Curva activa: 3 anclas editables (2029, 2030, 2032).
+ * 2026→2029: lineal (3 pasos). 2029→2030: directo. 2031: midpoint 2030–2032.
  */
-function buildSuedCurve(id, target30, target32){
+function buildSuedCurve(id, target29, target30, target32){
   const b=SUED_F_BASE[id];
+  const t29=target29!=null&&!isNaN(+target29)?Math.max(0,Math.round(+target29)):(b[3]||0);
   const t30=target30!=null&&!isNaN(+target30)?Math.max(0,Math.round(+target30)):(b[4]||0);
   const t32=target32!=null&&!isNaN(+target32)?Math.max(0,Math.round(+target32)):(b[6]||0);
   const b0=b[0]||0;
   const arr=[];
-  for(let i=0;i<4;i++){
-    arr[i]=Math.round(b0+(t30-b0)*(i/4));
+  for(let i=0;i<3;i++){
+    arr[i]=Math.round(b0+(t29-b0)*(i/3));
   }
+  arr[3]=t29;
   arr[4]=t30;
   arr[5]=Math.round(t30+(t32-t30)*0.5);
   arr[6]=t32;
   return arr;
 }
 
-function buildCurvesFromMetas(s30map,s32map){
+function buildCurvesFromMetas(s29map,s30map,s32map){
+  const s29=s29map||P.sue29;
   const s30=s30map||P.sue30;
   const s32=s32map||P.sue32;
   const out={};
   PERSONS.forEach(p=>{
-    out[p.id]=buildSuedCurve(p.id,s30[p.id],s32[p.id]);
+    out[p.id]=buildSuedCurve(p.id,s29[p.id],s30[p.id],s32[p.id]);
   });
   return out;
 }
@@ -1373,6 +1376,7 @@ function buildCurvesFromMetas(s30map,s32map){
 /** Si las metas 2030/2032 = tabla pacto para todos, usamos la curva literal (años intermedios idénticos al HTML). */
 function metasMatchPactAnchors(){
   return PERSONS.every(p=>
+    (+P.sue29[p.id]===SUED_F_BASE[p.id][3]) &&
     (+P.sue30[p.id]===SUED_F_BASE[p.id][4]) &&
     (+P.sue32[p.id]===SUED_F_BASE[p.id][6])
   );
@@ -1380,7 +1384,7 @@ function metasMatchPactAnchors(){
 
 function activeFounderCurves(){
   if(metasMatchPactAnchors()) return founderCurvesPact();
-  return buildCurvesFromMetas(P.sue30,P.sue32);
+  return buildCurvesFromMetas(P.sue29,P.sue30,P.sue32);
 }
 
 function suedTotalsFromCurves(curves){
@@ -1513,13 +1517,16 @@ function initSidebar() {
       <div class="slw"><label>Factor ajuste <span id="lla-${p.id}">${p.adj}</span></label>
         <input type="range" min="0.3" max="1.0" step="0.05" value="${p.adj}" oninput="onA('${p.id}',this.value)"></div>
     </div>
-    <div class="g2" style="margin-top:.45rem">
-      <div class="fld"><label>Meta sueldo Qochix 2030</label>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem;margin-top:.45rem">
+      <div class="fld"><label>Meta 2029</label>
+        <input type="number" id="inp-s29-${p.id}" value="${P.sue29[p.id]}" step="500" min="0" max="100000"
+          title="Ancla 2029: interpola 2026→2029 lineal" oninput="onS29('${p.id}',this.value)"></div>
+      <div class="fld"><label>Meta 2030</label>
         <input type="number" id="inp-s30-${p.id}" value="${P.sue30[p.id]}" step="500" min="0" max="100000"
-          title="Tope ene 2030; junto con 2032 define la curva intermedia" oninput="onS30('${p.id}',this.value)"></div>
-      <div class="fld"><label>Meta sueldo Qochix 2032</label>
+          title="Ancla 2030: define el salto 2029→2030" oninput="onS30('${p.id}',this.value)"></div>
+      <div class="fld"><label>Meta 2032</label>
         <input type="number" id="inp-s32-${p.id}" value="${P.sue32[p.id]}" step="500" min="0" max="100000"
-          title="Tope ene 2032" oninput="onS32('${p.id}',this.value)"></div>
+          title="Ancla 2032: tope final. 2031=punto medio" oninput="onS32('${p.id}',this.value)"></div>
     </div>
     <div class="pcard-footer">
       <span>Aporte total:</span>
@@ -1678,6 +1685,10 @@ function onA(id,v){
   const n=toNumLoose(v); if(n===null) return;
   PERSONS.find(x=>x.id===id).adj=n;document.getElementById('lla-'+id).textContent=n.toFixed(2);recalc();
 }
+function onS29(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  P.sue29[id]=n;recalc();
+}
 function onS30(id,v){
   const n=toNumLoose(v); if(n===null) return;
   P.sue30[id]=n;recalc();
@@ -1688,9 +1699,11 @@ function onS32(id,v){
 }
 function resetSueMetasToPact(){
   PERSONS.forEach(p=>{
+    P.sue29[p.id]=SUED_F_BASE[p.id][3];
     P.sue30[p.id]=SUED_F_BASE[p.id][4];
     P.sue32[p.id]=SUED_F_BASE[p.id][6];
-    const e30=sel('inp-s30-'+p.id), e32=sel('inp-s32-'+p.id);
+    const e29=sel('inp-s29-'+p.id), e30=sel('inp-s30-'+p.id), e32=sel('inp-s32-'+p.id);
+    if(e29) e29.value=P.sue29[p.id];
     if(e30) e30.value=P.sue30[p.id];
     if(e32) e32.value=P.sue32[p.id];
   });
