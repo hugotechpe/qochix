@@ -4,8 +4,8 @@ const ASSETS = [
   'QOCHIX_Simulador.html',
   'QOCHIX_Pacto_Economico.html',
   'qochix_base.html',
-  'qochix_system.js?v=7',
-  'qochix_help.js?v=2',
+  'qochix_system.js?v=8',
+  'qochix_help.js?v=3',
 ];
 
 self.addEventListener('install', (event) => {
