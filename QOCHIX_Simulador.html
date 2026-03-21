@@ -1360,8 +1360,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </main>
 </div><!-- /app -->
 
-<script src="qochix_help.js?v=9"></script>
-<script src="qochix_system.js?v=9"></script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
+</script>
+<script src="qochix_help.js?v=10"></script>
+<script src="qochix_system.js?v=10"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QOCHIX Hub</title>
-  <link rel="manifest" href="manifest.json">
+  <!-- manifest desactivado para evitar SW automático -->
   <meta name="theme-color" content="#d4a853">
   <style>
     :root{
@@ -239,9 +239,27 @@
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
+  <div id="hub-error" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a0000;border-top:2px solid #f55;padding:12px 16px;font-size:13px;color:#faa;z-index:9999"></div>
 
-  <script src="qochix_help.js?v=9"></script>
-  <script src="qochix_system.js?v=9"></script>
+  <script>
+  (function(){
+    if(!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      if(regs.length===0) return;
+      var p=regs.map(function(r){return r.unregister()});
+      Promise.all(p).then(function(){return caches.keys()}).then(function(keys){
+        return Promise.all(keys.map(function(k){return caches.delete(k)}));
+      }).then(function(){
+        if(!sessionStorage.getItem('qx_sw_killed')){
+          sessionStorage.setItem('qx_sw_killed','1');
+          location.reload();
+        }
+      });
+    });
+  })();
+  </script>
+  <script src="qochix_help.js?v=10"></script>
+  <script src="qochix_system.js?v=10"></script>
   <script>
     const tabs = document.querySelectorAll('#tabs .btn');
     const frame = document.getElementById('frame');
@@ -258,8 +276,10 @@
       if(btn) openSrc(src,btn);
     }
 
+    var hubErr=document.getElementById('hub-error');
+    function showHubError(msg){if(hubErr){hubErr.style.display='block';hubErr.innerHTML=msg+' <button onclick="localStorage.clear();sessionStorage.clear();location.reload()" style="margin-left:8px;padding:4px 10px;background:#f55;color:#fff;border:none;border-radius:4px;cursor:pointer">Reset todo y recargar</button>';}}
     const Q = window.QochixSystem;
-    if(!Q){document.body.innerHTML='<div style="padding:2rem;color:#f55;font-size:1.2rem">Error: QochixSystem no cargó.<br>Abre DevTools (F12) → Application → Service Workers → Unregister, luego recarga.</div>';throw new Error('QochixSystem missing');}
+    if(!Q){showHubError('QochixSystem no cargó. Posible cache viejo.');throw new Error('QochixSystem missing');}
     const byId = (id)=>document.getElementById(id);
     const layout = document.querySelector('.layout');
     const sideToggle = byId('side-toggle');
@@ -489,7 +509,7 @@
         ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
         syncingControls = false;
         paintExec();
-      }catch(err){console.error('Hub paint() error:',err);}
+      }catch(err){console.error('Hub paint() error:',err);showHubError('Error en paint(): '+err.message);}
     }
     function openModal(id){document.getElementById(id).classList.add('open')}
     function closeModal(id){document.getElementById(id).classList.remove('open')}
