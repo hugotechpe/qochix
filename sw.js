@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qochix-v7';
+const CACHE_NAME = 'qochix-v8';
 const ASSETS = [
   'index.html',
   'QOCHIX_Simulador.html',

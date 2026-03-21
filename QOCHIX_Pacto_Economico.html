@@ -1741,7 +1741,7 @@ footer {
       <div class="brand-desc">
         Transforma personas y equipos del mundo tech. 3 líneas: sesiones 1:1, talleres B2B para empresas, y RECOprogramando (Full Days, Campamentos, Programa propio de 3 meses).
       </div>
-      <div class="brand-num" style="color:var(--teal)">
+      <div class="brand-num" id="pact-bnum-ht" style="color:var(--teal)">
         S/61,693/mes
         <span>proyección 2032 · ×0,7</span>
       </div>
@@ -1754,7 +1754,7 @@ footer {
       <div class="brand-desc">
         Coaching ontológico en acción: plantas con intención + frases de introspección. B2C kits delivery, B2B ceremonias S/55/persona, rituales (bodas, quinceañeros). Trabaja desde la emoción y lo simbólico.
       </div>
-      <div class="brand-num" style="color:var(--green)">
+      <div class="brand-num" id="pact-bnum-alm" style="color:var(--green)">
         S/128,380/mes
         <span>proyección 2032 · ×0,7</span>
       </div>
@@ -1767,7 +1767,7 @@ footer {
       <div class="brand-desc">
         La capa de ejecución visual y estratégica. Branding, contenido para redes, campañas digitales, producción audiovisual. Modelo premium: pocos clientes, tickets altos. Referente Lima para 2028.
       </div>
-      <div class="brand-num" style="color:var(--gold)">
+      <div class="brand-num" id="pact-bnum-trazo" style="color:var(--gold)">
         S/40,600/mes
         <span>proyección 2032 · ×0,7</span>
       </div>
@@ -1784,7 +1784,7 @@ footer {
             <th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="pact-fact-tbody">
           <tr>
             <td>⚡ Trazo</td>
             <td class="td-muted">S/6,300</td><td>S/14,000</td><td>S/19,600</td><td>S/24,500</td><td>S/29,400</td><td>S/35,000</td><td class="td-gold">S/40,600</td>
@@ -1824,8 +1824,8 @@ footer {
         </tbody>
       </table>
     </div>
-    <div class="nota-importante">
-      <strong>Escenario pesimista ×0,7 — mismas fórmulas que el simulador.</strong> Facturación total × 65% (neto operativo) − planilla total (fundadores + equipo operativo) − reserva mínima S/3,000. Con equipo operativo, el primer distribuible positivo aparece en <strong>2030</strong>; en neutro u optimista ese momento se adelanta. Lo repartible se aplica según tu % de equity.
+    <div class="nota-importante" id="pact-fact-note">
+      <strong>Escenario pesimista ×0,7 — mismas fórmulas que el simulador.</strong> Cargando...
     </div>
   </div>
 </section>
@@ -1939,12 +1939,12 @@ footer {
   <div style="margin-top:4rem" class="reveal">
     <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">El pool total: lo que realmente estamos apostando</h3>
     <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem;">
-      Sumando todo — ticket, capital cash y sweat equity — los 5 fundadores estamos poniendo más de <strong style="color:var(--gold)">S/1.16 millones en valor</strong> sobre la mesa. Eso no es un hobby. Eso es una declaración de guerra.
+      Sumando todo — ticket, capital cash y sweat equity — los 5 fundadores estamos poniendo más de <strong style="color:var(--gold)" id="pact-pool-label">S/1.16 millones en valor</strong> sobre la mesa. Eso no es un hobby. Eso es una declaración de guerra.
     </p>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Persona</th><th>% equity</th><th>Ticket</th><th>Capital</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Diferencia</th></tr></thead>
-        <tbody>
+        <tbody id="pact-pool-tbody">
           <tr class="tr-hugo">
             <td>Hugo</td><td class="td-gold">63%</td>
             <td>S/5,000</td><td>S/40,243</td><td>S/664,936</td>
@@ -2115,7 +2115,7 @@ footer {
       </table>
     </div>
     <div class="nota-importante">
-      <strong>¿Por qué 2032 importa tanto para Hugo?</strong> Ese año Qochix le paga exactamente lo mismo que su trabajo corporativo actual (S/30,000/mes). Es el año en que la decisión de salir del corporativo deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar los <strong>S/26.906/mes</strong> de equity (pesimista ×0,7).
+      <strong>¿Por qué 2032 importa tanto para Hugo?</strong> Ese año Qochix le paga exactamente lo mismo que su trabajo corporativo actual (S/30,000/mes). Es el año en que la decisión de salir del corporativo deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar el equity mensual <span id="pact-hugo-eq-note">(pesimista ×0,7)</span>.
     </div>
   </div>
 
@@ -2125,7 +2125,7 @@ footer {
     <div class="table-wrap">
       <table>
         <thead><tr><th>Persona</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>Acum 7a</th></tr></thead>
-        <tbody>
+        <tbody id="pact-eq-tbody">
           <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/9,446</td><td>S/19,098</td><td class="td-big">S/26,906</td><td class="td-gold">S/665,400</td></tr>
           <tr><td>Rossy</td><td class="td-gold">17%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/2,549</td><td>S/5,154</td><td class="td-gold">S/7,260</td><td class="td-muted">S/179,556</td></tr>
           <tr><td>Vera</td><td class="td-gold">11%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/1,649</td><td>S/3,335</td><td class="td-gold">S/4,698</td><td class="td-muted">S/116,184</td></tr>
@@ -2136,7 +2136,7 @@ footer {
       </table>
     </div>
     <p style="color:var(--muted); font-size:0.82rem; margin-top:1rem;">
-      Ejemplo Hugo 2032 (pesimista): S/26,906/mes equity × 12 = <strong style="color:var(--gold)">S/322,872/año</strong> solo de equity — aparte de su sueldo de S/30,000/mes.
+      <span id="pact-eq-example">Ejemplo Hugo 2032 (pesimista): cargando...</span>
     </p>
   </div>
 </section>
@@ -2155,7 +2155,7 @@ footer {
     </p>
   </div>
 
-  <div class="apuesta-grid reveal" style="margin-top:3rem">
+  <div class="apuesta-grid reveal" id="pact-apuesta-grid" style="margin-top:3rem">
     <!-- Hugo -->
     <div class="apuesta-card">
       <div class="apuesta-persona">
@@ -2331,7 +2331,7 @@ footer {
     <div class="table-wrap">
       <table>
         <thead><tr><th>Persona</th><th>% equity</th><th>Total invertido</th><th>Retorno 7 años</th><th>ROI</th><th>Punto equilibrio</th><th>Nota</th></tr></thead>
-        <tbody>
+        <tbody id="pact-roi-tbody">
           <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/710,179</td><td class="td-gold">S/1,625,400</td><td class="td-big">2.3x</td><td class="td-green">2031</td><td class="td-muted" style="font-family:var(--sans)">Más patrimonio S/1.9M-4.4M</td></tr>
           <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/180,152</td><td class="td-gold">S/587,556</td><td class="td-gold">3.3x</td><td class="td-green">2030</td><td class="td-muted" style="font-family:var(--sans)">Muy buen ROI</td></tr>
           <tr><td>Vera</td><td class="td-gold">11%</td><td>S/153,070</td><td class="td-gold">S/512,184</td><td class="td-gold">3.3x</td><td class="td-green">2030</td><td class="td-muted" style="font-family:var(--sans)">Buen ROI</td></tr>
@@ -3225,6 +3225,130 @@ function showTermTab(panelId, btn) {
 
   QSYS.subscribe(renderLivePact);
   renderLivePact();
+
+  function renderPactNumbers(){
+    var d=QSYS.deriveState(QSYS.getState());
+    var f=d.fact,fmt=QSYS.fmtCurrency,pc=d.personCards;
+    var scL=d.scenarioLabel;
+    // Brand cards
+    var bht=document.getElementById('pact-bnum-ht');
+    var balm=document.getElementById('pact-bnum-alm');
+    var btr=document.getElementById('pact-bnum-trazo');
+    if(bht)bht.innerHTML=fmt(f.ht[6])+'/mes<span>proyección 2032 · '+scL+'</span>';
+    if(balm)balm.innerHTML=fmt(f.alm[6])+'/mes<span>proyección 2032 · '+scL+'</span>';
+    if(btr)btr.innerHTML=fmt(f.trazo[6])+'/mes<span>proyección 2032 · '+scL+'</span>';
+    // Facturación table
+    var ftb=document.getElementById('pact-fact-tbody');
+    if(ftb){
+      var brands=[{n:'⚡ Trazo',a:f.trazo,c:'gold'},{n:'🌿 Almaria',a:f.alm,c:'green'},{n:'💻 HugoTech',a:f.ht,c:'teal'}];
+      var h='';
+      brands.forEach(function(b){h+='<tr><td>'+b.n+'</td>';for(var i=0;i<7;i++){var cls=i===0?'td-muted':(i===6?'td-'+b.c:'');h+='<td class="'+cls+'">'+fmt(b.a[i])+'</td>';}h+='</tr>';});
+      h+='<tr class="tr-total"><td>TOTAL QOCHIX</td>';for(var j=0;j<7;j++){h+='<td>'+fmt(f.total[j])+'</td>';}h+='</tr>';
+      h+='<tr class="tr-highlight"><td>Neto '+Math.round((d.state.P.netoPct||0.65)*100)+'%</td>';for(var k=0;k<7;k++){var cls2=k===0?'td-muted':(k===6?'td-green':'');h+='<td class="'+cls2+'">'+fmt(f.neto[k])+'</td>';}h+='</tr>';
+      h+='<tr><td>(-) Sueldos fundadores</td>';for(var m=0;m<7;m++){h+='<td class="td-muted">'+fmt(f.sued_f[m])+'</td>';}h+='</tr>';
+      h+='<tr><td>(-) Equipo operativo</td>';for(var n=0;n<7;n++){h+='<td class="td-muted">'+fmt(f.hcost[n])+'</td>';}h+='</tr>';
+      h+='<tr><td>(-) Total planilla</td>';for(var o=0;o<7;o++){h+='<td class="td-muted">'+fmt(f.sued_tot[o])+'</td>';}h+='</tr>';
+      h+='<tr class="tr-highlight"><td style="color:var(--gold)">💰 Distribuible socios</td>';for(var p=0;p<7;p++){var dc=f.dist[p]>0?'td-gold':'td-muted';h+='<td class="'+dc+'">'+fmt(f.dist[p])+'</td>';}h+='</tr>';
+      ftb.innerHTML=h;
+    }
+    // Fact note
+    var fnote=document.getElementById('pact-fact-note');
+    if(fnote){
+      var netPct=Math.round((d.state.P.netoPct||0.65)*100);
+      var resPct=fmt(Number(d.state.P.reserva||3000));
+      var firstDist=null;for(var fd=0;fd<7;fd++){if(f.dist[fd]>0){firstDist=2026+fd;break;}}
+      fnote.innerHTML='<strong>'+scL+' — mismas fórmulas que el simulador.</strong> Facturación total × '+netPct+'% (neto operativo) − planilla total (fundadores + equipo operativo) − reserva mínima '+resPct+'. '+(firstDist?'El primer distribuible positivo aparece en <strong>'+firstDist+'</strong>; en neutro u optimista ese momento se adelanta.':'No hay distribuible en el horizonte — ajusta escenario.')+' Lo repartible se aplica según tu % de equity.';
+    }
+    // Pool label
+    var plbl=document.getElementById('pact-pool-label');
+    if(plbl){var mll=(d.pool/1000000).toFixed(2);plbl.textContent='S/'+mll+' millones en valor';}
+    // Pool table
+    var ptb=document.getElementById('pact-pool-tbody');
+    if(ptb){
+      var sw=function(pr){var hr=Number(pr.sueldo||0)/(22*8);var hm=Number(pr.hrs||0)*6*4.3;var vm=hr*hm;return{sw:vm*36*Number(pr.adj||0)};};
+      var totalTk=0,totalCap=0,totalSw=0,totalAll=0;
+      var ph='';
+      d.state.persons.forEach(function(pr){
+        var pcard=pc.find(function(c){return c.id===pr.id});
+        var tk=pcard?pcard.ticket:5000;var cap=Number(pr.capital||0);var swv=sw(pr).sw;var tot=tk+cap+swv;
+        var eq=pcard?pcard.equity:0;var matPct=d.pool>0?(tot/d.pool*100):0;var diff=eq-matPct;
+        var diffCls=diff>=0?'td-green':'';if(diff<-0.5)diffCls='style="color:var(--coral)"';
+        var diffStr=diff>=0?'+'+diff.toFixed(1)+'pts':diff.toFixed(1)+'pts';
+        ph+='<tr'+(pr.id==='hugo'?' class="tr-hugo"':'')+'><td>'+pr.name+'</td><td class="td-gold">'+eq.toFixed(1)+'%</td><td>'+fmt(tk)+'</td><td>'+fmt(cap)+'</td><td>'+fmt(Math.round(swv))+'</td><td class="'+(pr.id==='hugo'?'td-big':'td-gold')+'">'+fmt(Math.round(tot))+'</td><td>'+matPct.toFixed(1)+'%</td><td '+(diff>=0?'class="td-green"':'style="color:var(--coral)"')+'>'+diffStr+'</td></tr>';
+        totalTk+=tk;totalCap+=cap;totalSw+=swv;totalAll+=tot;
+      });
+      ph+='<tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>'+fmt(totalTk)+'</td><td>'+fmt(totalCap)+'</td><td>'+fmt(Math.round(totalSw))+'</td><td>'+fmt(Math.round(totalAll))+'</td><td>—</td><td>—</td></tr>';
+      ptb.innerHTML=ph;
+    }
+    // Equity mensual table
+    var eqtb=document.getElementById('pact-eq-tbody');
+    if(eqtb){
+      var eh='';
+      pc.forEach(function(p){
+        eh+='<tr'+(p.id==='hugo'?' class="tr-hugo"':'')+'><td>'+p.name+'</td><td class="td-gold">'+p.equity.toFixed(1)+'%</td>';
+        var acum=0;
+        for(var i=1;i<=6;i++){
+          var eqM=Math.round(f.dist[i]*(p.equity/100));acum+=eqM*12;
+          eh+='<td class="'+(eqM>0?(i===6?(p.id==='hugo'?'td-big':'td-gold'):''):'td-muted')+'">'+(eqM>0?fmt(eqM):'—')+'</td>';
+        }
+        eh+='<td class="'+(p.id==='hugo'?'td-gold':'td-muted')+'">'+fmt(acum)+'</td></tr>';
+      });
+      eh+='<tr class="tr-total"><td>DISTRIBUIBLE</td><td>—</td>';
+      for(var i=1;i<=6;i++){eh+='<td>'+(f.dist[i]>0?fmt(f.dist[i]):'—')+'</td>';}
+      eh+='<td>—</td></tr>';
+      eqtb.innerHTML=eh;
+    }
+    // Hugo equity note
+    var hn=document.getElementById('pact-hugo-eq-note');
+    var hugoCard=pc.find(function(c){return c.id==='hugo'});
+    if(hn&&hugoCard)hn.textContent='de '+fmt(hugoCard.eq2032)+'/mes de equity ('+scL+')';
+    var eqEx=document.getElementById('pact-eq-example');
+    if(eqEx&&hugoCard){
+      var ann=hugoCard.eq2032*12;
+      eqEx.innerHTML='Ejemplo Hugo 2032 ('+scL+'): '+fmt(hugoCard.eq2032)+'/mes equity × 12 = <strong style="color:var(--gold)">'+fmt(ann)+'/año</strong> solo de equity — aparte de su sueldo de '+fmt(hugoCard.sue2032)+'/mes.';
+    }
+    // Apuesta cards
+    var ag=document.getElementById('pact-apuesta-grid');
+    if(ag){
+      var ah='';
+      pc.forEach(function(p){
+        var pr=d.state.persons.find(function(x){return x.id===p.id});
+        var hoy=Number(pr.sueldo||0);
+        var sue29=Number((d.state.P.sue29||{})[p.id]||0);
+        var tot32=p.total2032;
+        var mult=hoy>0?(tot32/hoy).toFixed(1):'—';
+        var barHoy=100,bar29=hoy>0?Math.round(sue29/tot32*100):0,bar32=100;
+        ah+='<div class="apuesta-card"><div class="apuesta-persona"><div class="name">'+p.name+'</div><div class="pct">'+p.equity.toFixed(1)+'% Qochix</div><div class="hoy">Gana hoy: '+fmt(hoy)+'/mes</div></div>';
+        ah+='<div class="apuesta-bars"><div class="bar-row"><span class="bar-label">HOY</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(hoy/tot32*100)+'%;background:var(--faint)"></div></div><span class="bar-val">'+fmt(hoy)+'</span></div>';
+        ah+='<div class="bar-row"><span class="bar-label">2029</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(sue29/tot32*100)+'%;background:var(--teal)"></div></div><span class="bar-val">'+fmt(sue29)+'</span></div>';
+        ah+='<div class="bar-row"><span class="bar-label">2032</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div><span class="bar-val">'+fmt(tot32)+'</span></div>';
+        ah+='<div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">Sueldo <strong style="color:var(--text)">'+fmt(p.sue2032)+'</strong> + Equity <strong style="color:var(--gold)">'+fmt(p.eq2032)+'</strong> · '+scL+'</div>';
+        ah+='</div><div class="apuesta-mult"><div class="x">×'+mult+'</div><div class="label">vs hoy</div></div></div>';
+      });
+      ag.innerHTML=ah;
+    }
+    // ROI table
+    var rtb=document.getElementById('pact-roi-tbody');
+    if(rtb){
+      var swCalc=function(pr){var hr=Number(pr.sueldo||0)/(22*8);var hm=Number(pr.hrs||0)*6*4.3;var vm=hr*hm;return vm*36*Number(pr.adj||0);};
+      var rh='';
+      pc.forEach(function(p){
+        var pr=d.state.persons.find(function(x){return x.id===p.id});
+        var invest=p.investment;
+        var totalReturn=0;
+        for(var i=0;i<7;i++){
+          var sue=Number((d.fact.suedCurves[p.id]||[])[i]||0);
+          var eq=Math.round(f.dist[i]*(p.equity/100));
+          totalReturn+=(sue+eq)*12;
+        }
+        var roi=invest>0?(totalReturn/invest).toFixed(1):'—';
+        rh+='<tr'+(p.id==='hugo'?' class="tr-hugo"':'')+'><td>'+p.name+'</td><td class="td-gold">'+p.equity.toFixed(1)+'%</td><td>'+fmt(Math.round(invest))+'</td><td class="td-gold">'+fmt(Math.round(totalReturn))+'</td><td class="'+(p.id==='hugo'?'td-big':'td-gold')+'">'+roi+'x</td><td class="td-green">'+p.liberationYear+'</td><td class="td-muted" style="font-family:var(--sans)">'+((+roi)>=5?'ROI excelente':(+roi)>=3?'Muy buen ROI':'Buen ROI')+'</td></tr>';
+      });
+      rtb.innerHTML=rh;
+    }
+  }
+  QSYS.subscribe(renderPactNumbers);
+  renderPactNumbers();
 })();
 
 (function () {
