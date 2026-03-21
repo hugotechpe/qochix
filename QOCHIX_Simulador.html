@@ -312,6 +312,21 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .ptnr-divider{height:1px;background:var(--brd);margin:.4rem 0}
 .ptnr-section-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem;margin-top:.35rem}
 
+/* Effort breakdown cards */
+.effort-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:.85rem}
+@media(max-width:800px){.effort-grid{grid-template-columns:1fr}}
+.effort-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1rem;position:relative;overflow:hidden}
+.effort-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.effort-brand{font-size:.82rem;font-weight:700;margin-bottom:.55rem}
+.effort-lines{display:grid;gap:.35rem}
+.effort-line{display:flex;justify-content:space-between;align-items:baseline;font-size:.72rem;padding:.2rem 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.effort-line:last-child{border-bottom:none}
+.effort-line-name{color:var(--muted)}
+.effort-line-val{font-family:var(--mono);font-weight:600;color:var(--text)}
+.effort-line-pct{font-size:.62rem;color:var(--muted);margin-left:.3rem}
+.effort-total{margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--brd);display:flex;justify-content:space-between;font-size:.78rem;font-weight:700}
+.effort-daily{font-size:.65rem;color:var(--muted);margin-top:.3rem;text-align:right;font-family:var(--mono)}
+
 /* Monthly table (runway) */
 .runway-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.25rem}
 .rw-card{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--radius);padding:1.1rem 1.2rem;transition:all .3s}
@@ -700,6 +715,24 @@ tr:hover td{background:rgba(255,255,255,.02)}
         Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo Qochix</strong> año a año (curva del pacto o meta editada), el <strong>ingreso por equity</strong> (su porción del distribuible) y el <strong>total mensual</strong>. Los montos cambian con el escenario activo.
       </p>
       <div class="partner-grid" id="partner-grid"></div>
+    </div>
+  </div>
+
+  <!-- Esfuerzo comercial por marca -->
+  <div class="panel open" style="margin-top:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">🎯 Esfuerzo comercial — ¿cuánto necesita facturar cada marca?</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
+        Para pagar todos los sueldos y generar distribuible, el ecosistema necesita esta facturación <strong>por marca y por año</strong>. Los números cambian con el escenario activo. La columna "Por día" indica cuánto debería facturar cada marca en promedio por día laboral (22 días/mes).
+      </p>
+      <div class="tw" style="margin-bottom:.85rem"><table><thead><tr>
+        <th style="text-align:left">Marca / Línea</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th style="font-size:.65rem">/ día 2032</th>
+      </tr></thead><tbody id="tb-effort"></tbody></table></div>
+      <div id="effort-breakdown"></div>
+      <div class="nota" id="nota-effort" style="margin-top:.65rem"></div>
     </div>
   </div>
 
@@ -2058,6 +2091,7 @@ function recalc(){
   }
 
   paintPartnerCards(derived, fact, eqById);
+  paintEffortTable(fact);
 
   // ── Sweat table ──
   let html='';let tvm=0,tsw=0;
@@ -2565,6 +2599,7 @@ function decorateHelp(){
       'vista ceo':'Resumen de mesa para decidir rápido sin abrir todas las pestañas.',
       'flujo $':'Estructura de ingresos: cómo fluye el dinero desde cada marca hasta el bolsillo de cada socio.',
       'socios — equity, sueldo y proyección 2027–2032':'Card por persona con equity, sueldo año a año, ingreso por equity, total mensual, capital y año de liberación.',
+      'esfuerzo comercial':'Tabla que muestra cuánto necesita facturar cada marca por año para cubrir planilla y generar distribuible. Incluye desglose por línea de ingreso y facturación diaria.',
       'auto por pool':'El equity se recalcula automáticamente proporcionalmente al pool de cada socio (ticket + capital + sweat equity). Cambia capital u horas y el % se ajusta.',
       'manual':'Tú defines manualmente el % de equity de cada socio. No cambia al modificar capital u horas.',
       'aporte como préstamo':'El aporte no convierte a acciones; impacta caja, pool y ROI.',
@@ -2572,6 +2607,91 @@ function decorateHelp(){
       'valorización pre-money de ronda (s/)':'Valor de Qochix antes del aporte. Debes definir este monto para convertir capital en acciones.'
     }
   });
+}
+
+function paintEffortTable(fact){
+  const el=sel('tb-effort');
+  if(!el)return;
+  const fmt=QSYS.fmtCurrency;
+  var html='';
+  const brands=[
+    {name:'⚡ Trazo',arr:fact.trazo,color:'var(--gold)',lines:[
+      {name:'Producción audiovisual',pct:0.45},
+      {name:'Consultoría / capacitación',pct:0.25},
+      {name:'Proyectos marca (branding)',pct:0.20},
+      {name:'Otros servicios',pct:0.10},
+    ]},
+    {name:'🌿 Almaria',arr:fact.alm,color:'var(--green)',lines:[
+      {name:'Eventos y talleres',pct:0.35},
+      {name:'Consultoría bienestar',pct:0.25},
+      {name:'Programas corporativos',pct:0.25},
+      {name:'Productos / retail',pct:0.15},
+    ]},
+    {name:'💻 HugoTech',arr:fact.ht,color:'var(--teal)',lines:[
+      {name:'Desarrollo web/app',pct:0.40},
+      {name:'Automatización / IA',pct:0.25},
+      {name:'Mantenimiento recurrente',pct:0.20},
+      {name:'Consultoría tech',pct:0.15},
+    ]},
+  ];
+  brands.forEach(function(b){
+    html+='<tr><td style="color:'+b.color+';font-weight:600">'+b.name+'</td>';
+    for(var i=1;i<=6;i++){
+      html+='<td class="cm">'+fmt(b.arr[i])+'</td>';
+    }
+    html+='<td class="cm" style="font-size:.68rem;color:var(--muted)">'+fmt(Math.round(b.arr[6]/22))+'/d</td></tr>';
+  });
+  html+='<tr class="trs"><td><strong>TOTAL ECOSISTEMA</strong></td>';
+  for(var j=1;j<=6;j++){
+    html+='<td class="cg cb">'+fmt(fact.total[j])+'</td>';
+  }
+  html+='<td class="cg" style="font-size:.68rem">'+fmt(Math.round(fact.total[6]/22))+'/d</td></tr>';
+  html+='<tr><td style="color:var(--teal)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
+  for(var k=1;k<=6;k++){
+    html+='<td class="ct">'+fmt(fact.neto[k])+'</td>';
+  }
+  html+='<td></td></tr>';
+  html+='<tr><td style="color:var(--coral)">(-) Planilla total</td>';
+  for(var l=1;l<=6;l++){
+    html+='<td class="cc">'+fmt(fact.sued_tot[l])+'</td>';
+  }
+  html+='<td></td></tr>';
+  html+='<tr class="trh"><td style="color:var(--gold)"><strong>💰 DISTRIBUIBLE</strong></td>';
+  for(var n=1;n<=6;n++){
+    var cls=fact.dist[n]>0?'cg cb':'cc';
+    html+='<td class="'+cls+'">'+fmt(fact.dist[n])+'</td>';
+  }
+  html+='<td></td></tr>';
+  el.innerHTML=html;
+
+  var bdEl=sel('effort-breakdown');
+  if(bdEl){
+    var bhtml='<div class="effort-grid">';
+    brands.forEach(function(b){
+      var v32=b.arr[6];
+      bhtml+='<div class="effort-card"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+b.color+'"></div>';
+      bhtml+='<div class="effort-brand" style="color:'+b.color+'">'+b.name.replace(/[⚡🌿💻] /,'')+' — líneas de ingreso 2032</div>';
+      bhtml+='<div class="effort-lines">';
+      b.lines.forEach(function(line){
+        var lv=Math.round(v32*line.pct);
+        bhtml+='<div class="effort-line"><span class="effort-line-name">'+line.name+'</span><span><span class="effort-line-val">'+fmt(lv)+'</span><span class="effort-line-pct">('+Math.round(line.pct*100)+'%)</span></span></div>';
+      });
+      bhtml+='</div>';
+      bhtml+='<div class="effort-total"><span>Total/mes</span><span style="color:'+b.color+'">'+fmt(v32)+'</span></div>';
+      bhtml+='<div class="effort-daily">≈ '+fmt(Math.round(v32/22))+' por día laboral</div>';
+      bhtml+='</div>';
+    });
+    bhtml+='</div>';
+    bdEl.innerHTML=bhtml;
+  }
+
+  var noteEl=sel('nota-effort');
+  if(noteEl){
+    var scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
+    var firstDistYr=null;
+    for(var y=1;y<=6;y++){if(fact.dist[y]>0){firstDistYr=2026+y;break;}}
+    noteEl.innerHTML='Escenario <strong>'+scn[P.sc]+'</strong>. '+(firstDistYr?'El primer año con distribuible es <strong>'+firstDistYr+'</strong>. ':'No hay distribuible en el horizonte. ')+'Para que el equipo reciba equity, la facturación total debe superar <strong>'+fmt(Math.round(fact.sued_tot[6]/P.netoPct))+'</strong>/mes (planilla ÷ neto%). Todo lo que pase por encima de eso, menos reserva, se reparte.';
+  }
 }
 
 function paintPartnerCards(derived, fact, eqById){
