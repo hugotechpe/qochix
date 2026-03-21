@@ -14,6 +14,11 @@
     .app{display:grid;grid-template-rows:auto 1fr;height:100vh}
     .top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(10,13,19,.96)}
     .brand{font-weight:700;letter-spacing:.08em;color:var(--gold)}
+    .side-toggle{
+      border:1px solid var(--line);background:var(--bg2);color:var(--muted);
+      padding:7px 10px;border-radius:10px;font-size:12px;cursor:pointer
+    }
+    .side-toggle:hover{border-color:rgba(62,207,207,.45);color:var(--text)}
     .btns{display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:1px solid var(--line);background:var(--bg2);color:var(--muted);
@@ -22,6 +27,8 @@
     .btn.active{color:var(--text);border-color:rgba(62,207,207,.45);background:rgba(62,207,207,.08)}
     .meta{margin-left:auto;font-size:12px;color:var(--muted)}
     .layout{display:grid;grid-template-columns:290px 1fr;min-height:0}
+    .layout.side-collapsed{grid-template-columns:0 1fr}
+    .layout.side-collapsed .side{opacity:0;pointer-events:none;padding:0;border-right:none}
     .side{border-right:1px solid var(--line);padding:12px;background:var(--bg2);overflow:auto}
     .k{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
     .k .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
@@ -71,6 +78,7 @@
   <div class="app">
     <header class="top">
       <div class="brand">QOCHIX HUB</div>
+      <button class="side-toggle" id="side-toggle" title="Ocultar/mostrar panel izquierdo">☰ Panel</button>
       <div class="btns" id="tabs">
         <button class="btn active" data-src="QOCHIX_Simulador.html">Simulador</button>
         <button class="btn" data-src="QOCHIX_Pacto_Economico.html">Pacto</button>
@@ -158,6 +166,8 @@
 
     const Q = window.QochixSystem;
     const byId = (id)=>document.getElementById(id);
+    const layout = document.querySelector('.layout');
+    const sideToggle = byId('side-toggle');
     const ctlNeto = byId('ctl-neto');
     const ctlNetoLbl = byId('ctl-neto-lbl');
     const ctlRsv = byId('ctl-rsv');
@@ -173,6 +183,22 @@
     let rsvTimer = 0;
     let pmTimer = 0;
     let tktTimer = 0;
+    const SIDE_KEY='qochix_hub_side_collapsed_v1';
+    function paintSideToggle(){
+      const collapsed = layout.classList.contains('side-collapsed');
+      sideToggle.textContent = collapsed ? '☰ Panel' : '✕ Panel';
+    }
+    function setSideCollapsed(next){
+      layout.classList.toggle('side-collapsed', !!next);
+      paintSideToggle();
+      try{localStorage.setItem(SIDE_KEY, next ? '1' : '0')}catch(e){}
+    }
+    sideToggle.addEventListener('click',()=>setSideCollapsed(!layout.classList.contains('side-collapsed')));
+    try{
+      if(localStorage.getItem(SIDE_KEY)==='1') layout.classList.add('side-collapsed');
+    }catch(e){}
+    paintSideToggle();
+
     const PRESETS = {
       conservador: { sc: 'p', netoPct: 0.58, reserva: 4500, label: 'Conservador: ×0.7, neto 58%, reserva S/4,500' },
       base: { sc: 'n', netoPct: 0.65, reserva: 3000, label: 'Base: ×1.0, neto 65%, reserva S/3,000' },

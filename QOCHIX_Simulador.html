@@ -1309,9 +1309,9 @@ function onEq(id,v){
   const el=document.getElementById('eq-sum-v');
   el.textContent=tot.toFixed(1)+'%';el.className=Math.abs(tot-100)<.5?'ok':'bad';
   document.getElementById('eqb-'+id).style.width=Math.min(100,n)+'%';
-  const n=document.getElementById('eq-nota');
-  if(Math.abs(tot-100)<.5){n.className='nota ok';n.textContent='✓ Suma 100%.'}
-  else{n.className='nota warn';n.textContent=`⚠️ Suma ${tot.toFixed(1)}% — debe ser 100%. Diferencia: ${(tot-100>0?'+':'')}${(tot-100).toFixed(1)}pts`}
+  const eqNote=document.getElementById('eq-nota');
+  if(Math.abs(tot-100)<.5){eqNote.className='nota ok';eqNote.textContent='✓ Suma 100%.'}
+  else{eqNote.className='nota warn';eqNote.textContent=`⚠️ Suma ${tot.toFixed(1)}% — debe ser 100%. Diferencia: ${(tot-100>0?'+':'')}${(tot-100).toFixed(1)}pts`}
   recalc();
 }
 function setScenario(s){
