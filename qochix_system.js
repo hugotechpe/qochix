@@ -43,8 +43,8 @@
       { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 40243, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 20000, c: '#3ECFCF' },
       { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 4000, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 52830, c: '#9B7FE8' },
-      { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0, c: '#E86B5F' },
+      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0, c: '#9B7FE8' },
+      { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 2500, c: '#E86B5F' },
     ],
     hires: [
       { role: 'Diana — Content HugoTech', brand: 'HugoTech', sue: 2000, growth: 1.15 },
