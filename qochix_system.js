@@ -65,7 +65,7 @@
     persons: [
       { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 0,
         brandCapital: { almaria: 10000, ht: 24000 },
-        brandCash: { almaria: 10000, ht: 16000 }, c: '#D4A853' },
+        brandCash: { trazo: 12000, almaria: 10000, ht: 16000 }, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 20000 }, c: '#3ECFCF' },
@@ -74,7 +74,7 @@
         brandCash: { almaria: 4000 }, c: '#52C97A' },
       { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
         brandCapital: { trazo: 62000 },
-        brandCash: { trazo: 12000 }, c: '#9B7FE8' },
+        brandCash: {}, c: '#9B7FE8' },
       { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E86B5F' },
@@ -157,10 +157,10 @@
     }},
     { from: 6, to: 7, run(s) {
       const cashDefaults = {
-        hugo: { almaria: 10000, ht: 16000 },
+        hugo: { trazo: 12000, almaria: 10000, ht: 16000 },
         rossy: { almaria: 20000 },
         vera: { almaria: 4000 },
-        carlos: { trazo: 12000 },
+        carlos: {},
         nicole: {},
       };
       if (s.persons) {
@@ -381,7 +381,7 @@
       state.hires.reduce((sum, hire) => {
         const startYi = hire.startYear ? Math.max(0, AÑOS.indexOf(hire.startYear)) : 0;
         if (startYi < 0 || yi < startYi) return sum;
-        return sum + Number(hire.sue || 0) * Math.pow(Number(hire.growth || 1), yi);
+        return sum + Number(hire.sue || 0) * Math.pow(Number(hire.growth || 1), yi - startYi);
       }, 0)
     ));
   }
@@ -518,7 +518,7 @@
       if (b === 'mixto') {
         AÑOS.forEach((_, i) => {
           if (startYi > 0 && i < startYi) return;
-          const cost = Math.round(Number(h.sue || 0) * Math.pow(Number(h.growth || 1), i));
+          const cost = Math.round(Number(h.sue || 0) * Math.pow(Number(h.growth || 1), i - startYi));
           const half = Math.round(cost / 2);
           brands.almaria.burn[i] += half;
           brands.ht.burn[i] += cost - half;
@@ -526,7 +526,7 @@
       } else if (brands[b]) {
         AÑOS.forEach((_, i) => {
           if (startYi > 0 && i < startYi) return;
-          brands[b].burn[i] += Math.round(Number(h.sue || 0) * Math.pow(Number(h.growth || 1), i));
+          brands[b].burn[i] += Math.round(Number(h.sue || 0) * Math.pow(Number(h.growth || 1), i - startYi));
         });
       }
     });
@@ -618,10 +618,11 @@
     const total2032 = personCards.reduce((sum, person) => sum + person.total2032, 0);
     const liberatedBy2030 = personCards.filter((person) => person.liberationYear !== '2033+' && person.liberationYear <= 2030).length;
     const liberatedBy2032 = personCards.filter((person) => person.liberationYear !== '2033+' && person.liberationYear <= 2032).length;
-    const firstLiberationYear = personCards
-      .filter((person) => person.liberationYear !== '2033+')
-      .map((person) => person.liberationYear)
-      .sort((a, b) => a - b)[0] || '2033+';
+    const initiallyUnderPaid = personCards.filter((p) => p.yearlyTotals[0] < Number(state.persons.find(x => x.id === p.id).sueldo || 0));
+    const firstLiberationYear = (initiallyUnderPaid.length > 0
+      ? initiallyUnderPaid.filter((p) => p.liberationYear !== '2033+').map((p) => p.liberationYear).sort((a, b) => a - b)[0]
+      : personCards.filter((p) => p.liberationYear !== '2033+').map((p) => p.liberationYear).sort((a, b) => a - b)[0]
+    ) || '2033+';
     const rossyCard = personCards.find((person) => person.id === 'rossy');
     return {
       state,
