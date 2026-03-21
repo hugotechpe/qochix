@@ -402,6 +402,32 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
   .dots{display:none}
   .nav-hint{display:none}
 }
+.embedded html{font-size:clamp(18px,0.8vw + 14px,21px);}
+.embedded .slide{
+  padding:clamp(1rem,2.4vw,1.8rem) clamp(.9rem,2.2vw,2rem);
+  padding-bottom:clamp(4.6rem,8vh,5.8rem);
+}
+.embedded #s1 .content{
+  max-width:min(100%,1120px) !important;
+  width:100%;
+  margin:0 auto;
+}
+.embedded #s1 p[style*="max-width:36rem"]{max-width:58rem !important;}
+.embedded .deck-live{
+  width:min(100%,1120px);
+  padding:1.25rem 1.35rem;
+}
+.embedded .deck-live-story{font-size:.84rem;line-height:1.6;}
+.embedded .deck-live-narrative-item{font-size:.73rem;}
+.embedded .deck-live-person-copy{font-size:.68rem;}
+.embedded .deck-live-person-point{font-size:.66rem;}
+.embedded .deck-res{display:none;}
+.embedded .dots,.embedded .nav-hint{display:none !important;}
+.embedded nav{
+  gap:8px;padding:7px 9px;border-radius:12px;bottom:max(.25rem,env(safe-area-inset-bottom));
+}
+.embedded .nc{font-size:.78rem;min-width:46px;}
+.embedded .nb{min-width:34px;min-height:34px;padding:6px 8px;}
 
 /* Slides con tipografía inline muy pequeña: escalar sin tocar cada línea */
 .slide [style*="font-size:9px"]{font-size:.72rem !important;line-height:1.55 !important;}
@@ -3020,6 +3046,12 @@ document.addEventListener('keydown',e=>{
       'mapa de documentos + ritual 90 min':'Define dónde vive cada decisión y cómo se revisa periódicamente.'
     }
   });
+})();
+
+(function(){
+  let embedded=false;
+  try{embedded=window.top!==window.self;}catch(error){embedded=true;}
+  if(embedded) document.body.classList.add('embedded');
 })();
 
 init();
