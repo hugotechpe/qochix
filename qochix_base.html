@@ -1107,28 +1107,7 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
           <p style="font-size:11px;">Hugo · Rossy · Vera: sin sueldo. Todo el excedente se reinvierte. Carlos mantiene S/5,000 de Trazo. Nicole mantiene su sueldo actual.</p>
         </div>
         <h3>Meta de sueldos Qochix</h3>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:11px;">2027-2028 · Nicole</span>
-            <span style="color:var(--gold);font-size:13px;font-weight:600;">S/5,000</span>
-          </div>
-          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:11px;">2029 · Rossy · Vera · Carlos · Nicole</span>
-            <span style="color:var(--almaria-l);font-size:13px;font-weight:600;">S/8,000</span>
-          </div>
-          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:11px;">2028-2029 · Hugo</span>
-            <span style="color:var(--hugo-l);font-size:13px;font-weight:600;">S/15,000</span>
-          </div>
-          <div class="card" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:11px;">2030 · Rossy · Vera · Carlos · Nicole</span>
-            <span style="color:var(--almaria-l);font-size:13px;font-weight:600;">S/10,000</span>
-          </div>
-          <div class="bc bq" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="font-size:11px;">2029-2030 · Hugo</span>
-            <span style="color:var(--gold);font-size:14px;font-weight:700;">S/30,000</span>
-          </div>
-        </div>
+        <div id="deck-sue-metas" style="display:flex;flex-direction:column;gap:6px;"></div>
       </div>
     </div>
     <div class="qbox">
@@ -1145,58 +1124,13 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
 <!-- S6 HOJA DE RUTA -->
 <div class="slide" id="s6">
   <div class="content">
-    <div class="eyebrow">Visión 2026–2029</div>
+    <div class="eyebrow" id="deck-road-eyebrow">Visión 2026–2032</div>
     <h2>El camino a vivir de Qochix — visión realista</h2>
-    <div class="tl" style="flex:1;align-items:flex-start;">
-      <div class="tli">
-        <div class="tld tld-g"></div>
-        <div class="tly">2026 · Q2–Q3</div>
-        <h4>Construcción</h4>
-        <p>Almaria primeras ventas. HugoTech 1:1 + talleres. Trazo escala a S/12-15k. Full Day julio. Sin sueldos — todo se reinvierte.</p>
-      </div>
-      <div class="tli">
-        <div class="tld tld-g"></div>
-        <div class="tly">2026–2027</div>
-        <h4>Aceleración</h4>
-        <p>Almaria S/10-15k. Campamento + B2B. Trazo S/15-20k. MC 5.0 piloto. <span style="color:var(--almaria-l);">Rossy apunta a liberarse mediados 2027.</span></p>
-      </div>
-      <div class="tli">
-        <div class="tld tld-a"></div>
-        <div class="tly">2027–2028</div>
-        <h4>Rossy se libera</h4>
-        <p>HugoTech S/15-20k. Trazo S/20-25k. Almaria S/15k+. <span style="color:var(--almaria-l);">Rossy deja su otro trabajo.</span> Nicole: S/5k de Qochix. Hugo aún en corporativo.</p>
-      </div>
-      <div class="tli">
-        <div class="tld tld-b"></div>
-        <div class="tly">2028–2029</div>
-        <h4>Hugo se libera</h4>
-        <p>HugoTech ~S/21k+ (×0,7 vs plan). <span style="color:var(--hugo-l);">Hugo deja el corporativo.</span> Rossy · Vera · Carlos · Nicole: <span style="color:var(--gold);">S/8k de Qochix.</span> Primeros retornos de inversión.</p>
-      </div>
-      <div class="tli">
-        <div class="tld tld-p"></div>
-        <div class="tly">2029–2030</div>
-        <h4>Escala total</h4>
-        <p><span style="color:var(--gold);">Todos: S/10k+. Hugo: S/30k.</span> Qochix ~S/84k+/mes facturación total (referencia pesimista ×0,7; <a href="QOCHIX_Simulador.html" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">abrir simulador</a>). Metas 2030/2032 y facturación extra: <a href="QOCHIX_Pacto_Economico.html#gobierno" target="_blank" rel="noopener noreferrer" style="color:var(--teal);text-decoration:none;border-bottom:1px dashed rgba(62,207,207,.5);">pacto y gobierno</a>. Retorno sobre capital. <em>El ecosistema vive solo.</em></p>
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px;padding:12px 20px;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:10px;">
-      <div style="text-align:center;"><div class="mv" style="font-size:20px;">S/15-22k</div><div class="ml">Dic 2026/mes · ×0,7 vs plan</div></div>
-      <div style="width:1px;height:30px;background:var(--border);"></div>
-      <div style="text-align:center;"><div class="mv" style="font-size:20px;">S/28-39k</div><div class="ml">2027/mes · ×0,7 vs plan</div></div>
-      <div style="width:1px;height:30px;background:var(--border);"></div>
-      <div style="text-align:center;"><div class="mv" style="font-size:20px;">~S/84k</div><div class="ml">2029-2030/mes · ×0,7</div></div>
-      <div style="width:1px;height:30px;background:var(--border);"></div>
-      <div style="text-align:center;"><div class="mv" style="font-size:20px;">5</div><div class="ml">Socios viviendo de Qochix</div></div>
-      <div style="width:1px;height:30px;background:var(--border);"></div>
-      <div style="text-align:center;"><div class="mv" style="font-size:20px;">2</div><div class="ml">Flujos: sueldo + retorno</div></div>
-    </div>
+    <div class="tl" style="flex:1;align-items:flex-start;" id="deck-road-timeline"></div>
+    <div class="card" style="margin-top:16px;padding:12px 20px;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:10px;" id="deck-road-kpis"></div>
     <div class="qbox">
       <h4>Preguntas abiertas</h4>
-      <ul>
-        <li>¿Los plazos (Rossy 2027-2028, Hugo 2028-2029, todos 2029) les parecen alcanzables?</li>
-        <li>¿Qué condición concreta activaría el pool de Qochix?</li>
-        <li>¿Cómo manejamos si alguien necesita ingresos antes de 2028?</li>
-      </ul>
+      <ul id="deck-road-questions"></ul>
     </div>
   </div>
 </div>
@@ -3363,8 +3297,110 @@ document.addEventListener('keydown',e=>{
       }).join('');
     }
   }
+  function renderDeckStatic(){
+    var derived=QSYS.deriveState(QSYS.getState());
+    var fmt=derived.fmtCurrency;
+    var state=derived.state;
+    var years=derived.years;
+    var fact=derived.fact;
+    var sc=state.P.sc||'p';
+    var scLabels={p:'×0.7 pesi.',n:'×1.0 neutro',o:'×1.4 opti.'};
+    var scShort=scLabels[sc]||'';
+
+    var sueMetas=byId('deck-sue-metas');
+    if(sueMetas){
+      var sue29=state.P.sue29||{};
+      var sue30=state.P.sue30||{};
+      var sue32=state.P.sue32||{};
+      var ids=['hugo','rossy','vera','carlos','nicole'];
+      var names={hugo:'Hugo',rossy:'Rossy',vera:'Vera',carlos:'Carlos',nicole:'Nicole'};
+      var rows=[];
+      rows.push({label:'2029 · '+ids.filter(function(id){return id!=='hugo'}).map(function(id){return names[id]}).join(' · '),val:fmt(Math.round(ids.filter(function(id){return id!=='hugo'}).reduce(function(s,id){return s+Number(sue29[id]||0)},0)/Math.max(1,ids.length-1))),color:'var(--almaria-l)',note:'promedio'});
+      rows.push({label:'2029 · Hugo',val:fmt(Number(sue29.hugo||0)),color:'var(--hugo-l)',note:''});
+      rows.push({label:'2030 · '+ids.filter(function(id){return id!=='hugo'}).map(function(id){return names[id]}).join(' · '),val:fmt(Math.round(ids.filter(function(id){return id!=='hugo'}).reduce(function(s,id){return s+Number(sue30[id]||0)},0)/Math.max(1,ids.length-1))),color:'var(--almaria-l)',note:'promedio'});
+      rows.push({label:'2030 · Hugo',val:fmt(Number(sue30.hugo||0)),color:'var(--hugo-l)',note:''});
+      rows.push({label:'2032 · Hugo',val:fmt(Number(sue32.hugo||0)),color:'var(--gold)',note:'',highlight:true});
+      var html='';
+      rows.forEach(function(r){
+        var cls=r.highlight?'bc bq':'card';
+        var fs=r.highlight?'14px':'13px';
+        var fw=r.highlight?'700':'600';
+        html+='<div class="'+cls+'" style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">'
+          +'<span style="font-size:11px;">'+r.label+(r.note?' <span style="font-size:9px;color:var(--muted)">('+r.note+')</span>':'')+'</span>'
+          +'<span style="color:'+r.color+';font-size:'+fs+';font-weight:'+fw+';">'+r.val+'</span></div>';
+      });
+      sueMetas.innerHTML=html;
+    }
+
+    var roadTimeline=byId('deck-road-timeline');
+    if(roadTimeline){
+      var phases=[];
+      var breakYr=clampYear(years,derived.breakEven);
+      var libPersons={};
+      derived.personCards.forEach(function(p){
+        var ly=p.liberationYear;
+        if(ly&&ly!=='2033+'){
+          if(!libPersons[ly]) libPersons[ly]=[];
+          libPersons[ly].push(p.name);
+        }
+      });
+      years.forEach(function(yr,idx){
+        var total=Number(fact.total[idx]||0);
+        var trazo=Number(fact.trazo[idx]||0);
+        var alm=Number(fact.alm[idx]||0);
+        var ht=Number(fact.ht[idx]||0);
+        var dist=Number(fact.dist[idx]||0);
+        var dotClass=yr<breakYr?'tld-g':(yr===breakYr?'tld-a':'tld-p');
+        var phaseName=yr<breakYr?'Construcción':(yr===breakYr?'Punto de quiebre':'Aceleración');
+        var libHere=libPersons[yr];
+        var libText=libHere?'<span style="color:var(--gold);">Se liberan: '+libHere.join(', ')+'.</span> ':'';
+        var descParts=[];
+        descParts.push('Trazo '+fmt(trazo)+', Almaria '+fmt(alm)+', HugoTech '+fmt(ht)+'.');
+        if(dist>0) descParts.push('Distribuible: <span style="color:var(--gold);">'+fmt(dist)+'/mes</span>.');
+        else descParts.push('Sin distribuible aún.');
+        phases.push(
+          '<div class="tli"><div class="tld '+dotClass+'"></div>'
+          +'<div class="tly">'+yr+(yr<years[years.length-1]?'–'+(yr+1):'+')+'</div>'
+          +'<h4>'+phaseName+'</h4>'
+          +'<p>Facturación total: <strong>'+fmt(total)+'/mes</strong> ('+scShort+'). '+descParts.join(' ')+' '+libText+'</p></div>'
+        );
+      });
+      roadTimeline.innerHTML=phases.join('');
+    }
+
+    var roadKpis=byId('deck-road-kpis');
+    if(roadKpis){
+      var sep='<div style="width:1px;height:30px;background:var(--border);"></div>';
+      var totalFirst=Number(fact.total[0]||0);
+      var totalMid=Number(fact.total[Math.min(1,years.length-1)]||0);
+      var totalEnd=Number(fact.total[years.length-1]||0);
+      var libCount=derived.personCards.filter(function(p){return p.liberationYear&&p.liberationYear!=='2033+'}).length;
+      roadKpis.innerHTML=
+        '<div style="text-align:center;"><div class="mv" style="font-size:20px;">'+fmt(totalFirst)+'</div><div class="ml">'+years[0]+'/mes · '+scShort+'</div></div>'+sep
+        +'<div style="text-align:center;"><div class="mv" style="font-size:20px;">'+fmt(totalMid)+'</div><div class="ml">'+years[Math.min(1,years.length-1)]+'/mes · '+scShort+'</div></div>'+sep
+        +'<div style="text-align:center;"><div class="mv" style="font-size:20px;">'+fmt(totalEnd)+'</div><div class="ml">'+years[years.length-1]+'/mes · '+scShort+'</div></div>'+sep
+        +'<div style="text-align:center;"><div class="mv" style="font-size:20px;">'+libCount+'/'+derived.personCards.length+'</div><div class="ml">Socios que se liberan</div></div>'+sep
+        +'<div style="text-align:center;"><div class="mv" style="font-size:20px;">2</div><div class="ml">Flujos: sueldo + equity</div></div>';
+    }
+
+    var roadEye=byId('deck-road-eyebrow');
+    if(roadEye) roadEye.textContent='Visión '+years[0]+'–'+years[years.length-1];
+
+    var roadQ=byId('deck-road-questions');
+    if(roadQ){
+      var firstLib=clampYear(years,derived.firstLiberationYear);
+      var libNames=derived.personCards.filter(function(p){return Number(p.liberationYear)===firstLib}).map(function(p){return p.name});
+      roadQ.innerHTML=
+        '<li>Primera liberación estimada: <strong>'+firstLib+'</strong>'+(libNames.length?' ('+libNames.join(', ')+')':'')+ ' — ¿les parece alcanzable?</li>'
+        +'<li>¿Qué condición concreta activaría el pool de Qochix?</li>'
+        +'<li>Si alguien necesita ingresos antes del quiebre ('+clampYear(years,derived.breakEven)+'), ¿cómo lo manejamos?</li>';
+    }
+  }
+
   QSYS.subscribe(renderDeckLive);
+  QSYS.subscribe(renderDeckStatic);
   renderDeckLive();
+  renderDeckStatic();
 })();
 
 (function(){
