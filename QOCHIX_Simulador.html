@@ -561,7 +561,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <button class="tkt-mode-btn" id="eq-mode-auto" onclick="setEquityMode('auto_pool')" style="flex:1">Auto por pool</button>
       <button class="tkt-mode-btn" id="eq-mode-manual" onclick="setEquityMode('manual')" style="flex:1">Manual</button>
     </div>
-    <div class="nota" id="eq-mode-hint" style="margin-bottom:.5rem;font-size:.68rem">Modo <strong>auto</strong>: el equity se calcula proporcional al pool de cada socio (ticket + capital + sweat). Cambia capital u horas y el % se ajusta solo.</div>
+    <div class="nota" id="eq-mode-hint" style="margin-bottom:.5rem;font-size:.68rem">Modo <strong>auto</strong>: el equity se calcula proporcional al pool de cada socio (ticket + inversión por marca + sweat). Cambia la inversión u horas y el % se ajusta solo.</div>
     <div id="equity-box"></div>
     <div class="eq-sum">Suma: <b id="eq-sum-v" class="ok">100.0%</b> <button id="eq-normalize-btn" style="display:none;margin-left:8px;padding:3px 10px;border-radius:6px;border:1px solid rgba(62,207,207,.35);background:rgba(62,207,207,.08);color:#3ECFCF;font-size:.68rem;cursor:pointer" onclick="normalizeEquity()">Auto-normalizar a 100%</button></div>
     <div class="nota" id="eq-nota" style="margin-top:.4rem">✓ Suma 100% (cap table base).</div>
@@ -786,7 +786,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>% equity</th><th>Ticket</th><th>Capital</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Dif.</th>
+        <th>Socio</th><th>% equity</th><th>Ticket</th><th>Inv. marca</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Dif.</th>
       </tr></thead><tbody id="tb-equity"></tbody></table></div>
     </div>
   </div>
@@ -1096,20 +1096,30 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <div id="tab-runway" class="tab-content">
 
   <div class="nota warn" style="margin-bottom:1rem">
-    <strong>¿Cuánto tiempo aguanta Qochix si las ventas tardan en llegar?</strong> El runway es el número de meses que el capital inicial puede cubrir los costos fijos, asumiendo facturación cero. Es el peor escenario — sirve para saber cuánto tiempo tienen para traccionarse.
+    <strong>¿Cuánto tiempo aguanta cada marca?</strong> El runway real considera la caja en mano, los ingresos actuales y los costos fijos de cada marca por separado.
+  </div>
+
+  <div class="panel open" style="margin-bottom:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">🏢 Estado operativo por marca</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <div id="brand-ops-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem"></div>
+    </div>
   </div>
 
   <div class="runway-grid">
     <div class="rw-card">
-      <div class="rw-lbl">Capital inicial disponible</div>
+      <div class="rw-lbl">Capital total disponible</div>
       <div class="rw-val cg" id="rw-capital">—</div>
     </div>
     <div class="rw-card">
-      <div class="rw-lbl">Burn rate mensual</div>
+      <div class="rw-lbl">Burn neto mensual</div>
       <div class="rw-val cc" id="rw-burn">—</div>
     </div>
     <div class="rw-card">
-      <div class="rw-lbl">Runway (meses)</div>
+      <div class="rw-lbl">Runway global (meses)</div>
       <div class="rw-val" id="rw-months" style="color:var(--gold)">—</div>
     </div>
     <div class="rw-card">
@@ -1518,11 +1528,19 @@ function applySharedState(nextState){
 function initSidebar() {
   // Persons
   const pb = document.getElementById('persons-box');
+  const BL = QSYS.BRAND_LABELS || {trazo:'Trazo',almaria:'Almaria',ht:'HugoTech'};
+  const BIDs = QSYS.BRAND_IDS || ['trazo','almaria','ht'];
   pb.innerHTML = PERSONS.map(p=>{
     const hr=Math.round(p.sueldo/(22*8));
     const s=sw(p);
     const tkt=getTkt(p.id);
-    const tot=tkt+p.capital+s.sw;
+    const bc=p.brandCapital||{};
+    const bcTotal=Object.values(bc).reduce((a,v)=>a+Number(v||0),0);
+    const tot=tkt+bcTotal+s.sw;
+    const brandInputs=BIDs.map(b=>`
+      <div class="fld"><label>${BL[b]}</label>
+        <input type="number" value="${bc[b]||0}" step="1000" min="0" max="500000"
+          oninput="onBrandCap('${p.id}','${b}',this.value)"></div>`).join('');
     return `
   <div class="pcard">
     <div class="pcard-hdr">
@@ -1536,9 +1554,14 @@ function initSidebar() {
       <div class="fld"><label>Sueldo hoy (S/)</label>
         <input type="number" value="${p.sueldo}" step="500" min="500" max="80000"
           id="inp-sue-${p.id}" oninput="onS('${p.id}',this.value)"></div>
-      <div class="fld"><label>Capital aportado (S/)</label>
-        <input type="number" value="${p.capital}" step="500" min="0" max="200000"
-          oninput="onCap('${p.id}',this.value)"></div>
+      <div class="fld"><label>Marca asignada</label>
+        <select onchange="onFounderBrand('${p.id}',this.value)" style="width:100%;padding:6px;background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:8px;font-size:.78rem">
+          ${BIDs.map(b=>'<option value="'+b+'"'+(((P.founderBrand||{})[p.id]||'')=== b?' selected':'')+'>'+BL[b]+'</option>').join('')}
+        </select></div>
+    </div>
+    <div style="margin-bottom:.45rem">
+      <label style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Inversión por marca (S/)</label>
+      <div class="g3">${brandInputs}</div>
     </div>
     <div class="g2">
       <div class="slw"><label>Hrs/día Qochix <span id="lhl-${p.id}">${p.hrs}h</span></label>
@@ -1705,6 +1728,18 @@ function onS(id,v){
 function onCap(id,v){
   const n=toNumLoose(v); if(n===null) return;
   PERSONS.find(x=>x.id===id).capital=n;recalc();
+}
+function onBrandCap(id,brand,v){
+  const n=toNumLoose(v); if(n===null) return;
+  const p=PERSONS.find(x=>x.id===id);
+  if(!p.brandCapital) p.brandCapital={};
+  p.brandCapital[brand]=n;
+  recalc();
+}
+function onFounderBrand(id,brand){
+  if(!P.founderBrand) P.founderBrand={};
+  P.founderBrand[id]=brand;
+  recalc();
 }
 function onH(id,v){
   const n=toNumLoose(v); if(n===null) return;
@@ -2029,7 +2064,8 @@ function recalc(){
   PERSONS.forEach(p=>{
     const tkt=getTkt(p.id);
     const s=sw(p);
-    sv('ptot-'+p.id,fmt(tkt+p.capital+s.sw));
+    const bcTot=Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0);
+    sv('ptot-'+p.id,fmt(tkt+bcTot+s.sw));
   });
 
   sv('kpi-rossy',String(derived.firstLiberationYear));
@@ -2091,14 +2127,17 @@ function recalc(){
   html='';
   PERSONS.forEach((p,i)=>{
     const tkt=getTkt(p.id);
-    const s=sw(p),inv=tkt+p.capital+s.sw,mat=inv/pool;
+    const bc=p.brandCapital||{};
+    const bcTot=Object.values(bc).reduce((a,v)=>a+Number(v||0),0);
+    const s=sw(p),inv=tkt+bcTot+s.sw,mat=pool>0?inv/pool:0;
     const effEq=eqById[p.id]||0;
     const baseEq=baseEqById[p.id]||0;
     const diff=effEq/100-mat,ds=(diff>0?'+':'')+(diff*100).toFixed(1)+'pts';
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${effEq.toFixed(1)}% <span style="color:var(--muted);font-size:.64rem">(base ${baseEq.toFixed(1)}%)</span></td><td>${fmt(tkt)}</td><td>${fmt(p.capital)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${effEq.toFixed(1)}% <span style="color:var(--muted);font-size:.64rem">(base ${baseEq.toFixed(1)}%)</span></td><td>${fmt(tkt)}</td><td>${fmt(bcTot)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
   });
   const tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
-  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(PERSONS.reduce((s,p)=>s+p.capital,0))}</td><td>${fmt(tsw_calc())}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
+  const bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
+  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(bcAll)}</td><td>${fmt(tsw_calc())}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
   sel('tb-equity').innerHTML=html;
 
   // ── Facturación table ──
@@ -2279,9 +2318,10 @@ function recalc(){
   }
 
   // ── RUNWAY tab ──
+  paintBrandOps(derived);
   sv('rw-capital',fmt(rw.capital));
-  sv('rw-burn',fmt(rw.burn)+'/mes');
-  sv('rw-months',rw.months+'m');
+  sv('rw-burn',fmt(rw.netBurn||rw.burn)+'/mes (neto)');
+  sv('rw-months',rw.months>=99?'∞':rw.months+'m');
   sv('rw-be',be+'');
   sv('rw-h1',fmt(h1Avg));
   sv('rw-h2',fmt(h2Avg));
@@ -2591,6 +2631,43 @@ function decorateHelp(){
       'valorización pre-money de ronda (s/)':'Valor de Qochix antes del aporte. Debes definir este monto para convertir capital en acciones.'
     }
   });
+}
+
+function paintBrandOps(derived){
+  const grid=sel('brand-ops-grid');
+  if(!grid)return;
+  const bf=derived.brandFinancials;
+  if(!bf)return;
+  const BL=QSYS.BRAND_LABELS||{};
+  const statusColors={sustentable:'var(--teal)',estable:'var(--gold)',quemando:'var(--coral)',sin_caja:'#f55'};
+  const statusLabels={sustentable:'Sustentable',estable:'Estable',quemando:'Quemando caja',sin_caja:'Sin caja'};
+  grid.innerHTML=(QSYS.BRAND_IDS||['trazo','almaria','ht']).map(b=>{
+    const br=bf[b];if(!br)return '';
+    const rwTxt=br.runway>=999?'∞':br.runway+'m';
+    const invList=br.inversores.map(i=>i.name+' '+fmt(i.monto)).join(', ')||'Ninguno';
+    return `<div style="background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:.85rem;border-top:3px solid ${statusColors[br.status]||'var(--brd)'}">
+      <div style="font-weight:600;font-size:.85rem;margin-bottom:.5rem">${BL[b]||b}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem;font-size:.72rem;margin-bottom:.5rem">
+        <div><span style="color:var(--muted)">Caja:</span> <input type="number" value="${br.caja}" step="1000" min="0" max="500000" style="width:70px;background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:3px 5px;font-size:.72rem" onchange="onBrandCaja('${b}',this.value)"></div>
+        <div><span style="color:var(--muted)">Revenue:</span> <strong style="color:var(--teal)">${fmt(br.revenue[0])}/mes</strong></div>
+        <div><span style="color:var(--muted)">Burn:</span> <strong style="color:var(--coral)">${fmt(br.burn[0])}/mes</strong></div>
+        <div><span style="color:var(--muted)">Neto:</span> <strong style="color:${br.net[0]<=0?'var(--teal)':'var(--coral)'}">${fmt(Math.abs(br.net[0]))}/mes ${br.net[0]<=0?'(superávit)':'(déficit)'}</strong></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:.72rem;margin-bottom:.4rem">
+        <span style="color:${statusColors[br.status]};font-weight:600">${statusLabels[br.status]||br.status}</span>
+        <span style="font-family:var(--mono);font-size:.85rem;color:var(--gold)">${rwTxt}</span>
+      </div>
+      <div style="font-size:.65rem;color:var(--muted)">Inversión total: ${fmt(br.capitalInvertido)}</div>
+      <div style="font-size:.62rem;color:var(--muted)">Inversores: ${invList}</div>
+    </div>`;
+  }).join('');
+}
+function onBrandCaja(brand,v){
+  const n=Number(v);if(!Number.isFinite(n))return;
+  if(!P.brandOps)P.brandOps={trazo:{caja:0},almaria:{caja:0},ht:{caja:0}};
+  if(!P.brandOps[brand])P.brandOps[brand]={caja:0};
+  P.brandOps[brand].caja=Math.max(0,n);
+  recalc();
 }
 
 function paintEffortTable(fact){

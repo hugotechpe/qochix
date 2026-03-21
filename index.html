@@ -149,6 +149,7 @@
         <div class="k"><div class="l">Distribuible 2032</div><div class="v" id="k-dist">—</div></div>
         <div class="k"><div class="l">Pool</div><div class="v" id="k-pool">—</div></div>
         <div class="k"><div class="l">Liberación equipo</div><div class="v" id="k-lib">—</div><div class="s" id="k-lib-detail">—</div></div>
+        <div class="k"><div class="l">Runway por marca</div><div id="k-brand-fin" style="display:grid;gap:6px;margin-top:6px"></div></div>
         <div class="k"><div class="l">Última sync</div><div style="font-size:13px;color:var(--muted)" id="k-upd">—</div></div>
         <div class="k ctl">
           <div class="l">Controles rápidos</div>
@@ -460,6 +461,18 @@
         byId('k-lib').textContent = d.liberatedBy2032+'/'+d.personCards.length;
         byId('k-lib-detail').textContent = 'Primer cruce: '+d.firstLiberationYear;
         byId('k-upd').textContent = d.updatedAtLabel;
+        var bfEl = byId('k-brand-fin');
+        if(bfEl && d.brandFinancials){
+          var BL = Q.BRAND_LABELS || {};
+          var stColors = {sustentable:'#3ecfcf',estable:'#d4a853',quemando:'#E86B5F',sin_caja:'#f55'};
+          bfEl.innerHTML = (Q.BRAND_IDS||[]).map(function(b){
+            var br=d.brandFinancials[b]; if(!br) return '';
+            var rwT = br.runway>=999?'∞':br.runway+'m';
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.06)">'+
+              '<span style="color:'+stColors[br.status]+'">●</span> <span style="margin-left:4px">'+(BL[b]||b)+'</span>'+
+              '<span style="margin-left:auto;font-family:monospace;color:'+stColors[br.status]+'">'+rwT+'</span></div>';
+          }).join('');
+        }
         paintScenarioButtons(d.state.P.sc);
         paintCapMode(d.state.P.capitalMode || 'loan');
         paintPresetButtons(detectPreset(d.state));
@@ -500,7 +513,7 @@
           '<div class="cmp-row"><span class="cmp-label">Fact. 2032</span><span class="cmp-value">'+d.fmtCurrency(d.totalFact2032)+'</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">Distribuible 2032</span><span class="cmp-value">'+d.fmtCurrency(d.dist2032)+'</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">Break-even</span><span class="cmp-value">'+d.breakEven+'</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Runway</span><span class="cmp-value">'+d.runway.months+' meses</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Runway</span><span class="cmp-value">'+(d.runway.months>=99?'∞':d.runway.months)+' meses</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">Liberados 2032</span><span class="cmp-value">'+d.liberatedBy2032+'/'+d.personCards.length+'</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">1er cruce</span><span class="cmp-value">'+d.firstLiberationYear+'</span></div>'+
           d.personCards.map(function(p){

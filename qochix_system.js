@@ -38,20 +38,43 @@
     {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[0,400,1500,1500,1500,1500,1500],vols:[0,5,3,5,7,10,12]},
     {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6]},
   ];
+  const BRAND_IDS = ['trazo', 'almaria', 'ht'];
+  const BRAND_LABELS = { trazo: 'Trazo', almaria: 'Almaria', ht: 'HugoTech' };
+
+  function normalizeBrandId(b) {
+    if (!b) return '';
+    const l = String(b).toLowerCase().replace(/\s+/g, '');
+    if (l === 'hugotech' || l === 'ht') return 'ht';
+    if (l === 'almaria') return 'almaria';
+    if (l === 'trazo') return 'trazo';
+    if (l === 'mixto') return 'mixto';
+    return l;
+  }
+
+  function totalBrandCapital(person) {
+    const bc = person.brandCapital || {};
+    return Object.values(bc).reduce((s, v) => s + Number(v || 0), 0);
+  }
+
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 40243, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 20000, c: '#3ECFCF' },
-      { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 4000, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0, c: '#9B7FE8' },
-      { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 2500, c: '#E86B5F' },
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 0,
+        brandCapital: { almaria: 10000, ht: 24000 }, c: '#D4A853' },
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 0,
+        brandCapital: { almaria: 20000 }, c: '#3ECFCF' },
+      { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 0,
+        brandCapital: { almaria: 4000 }, c: '#52C97A' },
+      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
+        brandCapital: { trazo: 62000 }, c: '#9B7FE8' },
+      { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
+        brandCapital: {}, c: '#E86B5F' },
     ],
     hires: [
       { role: 'Diana — Content HugoTech', brand: 'HugoTech', sue: 2000, growth: 1.15 },
       { role: 'María — Content Almaria', brand: 'Almaria', sue: 2000, growth: 1.15 },
       { role: 'Content creator Trazo', brand: 'Trazo', sue: 2000, growth: 1.10 },
-      { role: 'Comercial HugoTech+Almaria', brand: 'Mixto', sue: 3000, growth: 1.20 },
-      { role: 'Comercial Trazo', brand: 'Trazo', sue: 3000, growth: 1.15 },
+      { role: 'Comercial HugoTech+Almaria', brand: 'Mixto', sue: 3000, growth: 1.20, startYear: 2027 },
+      { role: 'Comercial Trazo', brand: 'Trazo', sue: 3000, growth: 1.15, startYear: 2027 },
       { role: 'Facilitadora Almaria', brand: 'Almaria', sue: 2500, growth: 1.25 },
     ],
     P: {
@@ -68,21 +91,28 @@
       sue30: { hugo: 14000, rossy: 7500, vera: 7000, carlos: 9000, nicole: 6000 },
       sue32: { hugo: 30000, rossy: 10000, vera: 10000, carlos: 10000, nicole: 6000 },
       lineOverrides: {},
+      brandOps: {
+        trazo: { caja: 0 },
+        almaria: { caja: 34000 },
+        ht: { caja: 0 },
+      },
+      founderBrand: {
+        hugo: 'ht',
+        rossy: 'almaria',
+        vera: 'almaria',
+        carlos: 'trazo',
+        nicole: 'trazo',
+      },
     },
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 5,
+      schemaVersion: 6,
     },
   };
 
   const MIGRATIONS = [
-    { from: undefined, to: 2, run(s) {
-      const carlos = s.persons && s.persons.find(p => p.id === 'carlos');
-      if (carlos && (carlos.capital === 0 || carlos.capital === undefined)) {
-        carlos.capital = 52830;
-      }
-    }},
+    { from: undefined, to: 2, run(s) {} },
     { from: 2, to: 3, run(s) {
       if (!s.P) s.P = {};
       if (!s.P.equityMode) s.P.equityMode = 'auto_pool';
@@ -96,6 +126,28 @@
     { from: 4, to: 5, run(s) {
       if (!s.P) s.P = {};
       if (!s.P.lineOverrides) s.P.lineOverrides = {};
+    }},
+    { from: 5, to: 6, run(s) {
+      const bcDefaults = {
+        hugo: { almaria: 10000, ht: 24000 },
+        rossy: { almaria: 20000 },
+        vera: { almaria: 4000 },
+        carlos: { trazo: 62000 },
+        nicole: {},
+      };
+      if (s.persons) {
+        s.persons.forEach(p => {
+          if (!p.brandCapital) p.brandCapital = bcDefaults[p.id] || {};
+          p.capital = 0;
+        });
+      }
+      if (!s.P) s.P = {};
+      if (!s.P.brandOps) {
+        s.P.brandOps = { trazo: { caja: 0 }, almaria: { caja: 34000 }, ht: { caja: 0 } };
+      }
+      if (!s.P.founderBrand) {
+        s.P.founderBrand = { hugo: 'ht', rossy: 'almaria', vera: 'almaria', carlos: 'trazo', nicole: 'trazo' };
+      }
     }},
   ];
 
@@ -111,7 +163,9 @@
     if (Array.isArray(raw.persons)) {
       next.persons = next.persons.map((person) => {
         const incoming = raw.persons.find((entry) => entry && entry.id === person.id);
-        return mergePerson(person, incoming);
+        const merged = mergePerson(person, incoming);
+        merged.brandCapital = { ...(person.brandCapital || {}), ...((incoming && incoming.brandCapital) || {}) };
+        return merged;
       });
     }
     if (Array.isArray(raw.hires)) {
@@ -129,6 +183,12 @@
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
         lineOverrides: raw.P.lineOverrides || next.P.lineOverrides || {},
+        brandOps: {
+          trazo: { ...next.P.brandOps.trazo, ...((raw.P.brandOps || {}).trazo || {}) },
+          almaria: { ...next.P.brandOps.almaria, ...((raw.P.brandOps || {}).almaria || {}) },
+          ht: { ...next.P.brandOps.ht, ...((raw.P.brandOps || {}).ht || {}) },
+        },
+        founderBrand: { ...next.P.founderBrand, ...(raw.P.founderBrand || {}) },
       };
       if (!next.P.equityMode) next.P.equityMode = DEFAULTS.P.equityMode;
     }
@@ -301,7 +361,11 @@
 
   function hiresCostByYear(state) {
     return AÑOS.map((_, yi) => Math.round(
-      state.hires.reduce((sum, hire) => sum + Number(hire.sue || 0) * Math.pow(Number(hire.growth || 1), yi), 0)
+      state.hires.reduce((sum, hire) => {
+        const startYi = hire.startYear ? Math.max(0, AÑOS.indexOf(hire.startYear)) : 0;
+        if (startYi < 0 || yi < startYi) return sum;
+        return sum + Number(hire.sue || 0) * Math.pow(Number(hire.growth || 1), yi);
+      }, 0)
     ));
   }
 
@@ -351,7 +415,8 @@
   }
 
   function calcPool(state) {
-    return state.persons.reduce((sum, person) => sum + getTkt(state, person.id) + Number(person.capital || 0) + sw(person).sw, 0);
+    return state.persons.reduce((sum, person) =>
+      sum + getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person).sw, 0);
   }
 
   function calcEffectiveEquity(state) {
@@ -363,7 +428,7 @@
       const poolById = {};
       let totalPool = 0;
       state.persons.forEach((person) => {
-        const pool = getTkt(state, person.id) + Number(person.capital || 0) + sw(person).sw;
+        const pool = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person).sw;
         poolById[person.id] = pool;
         totalPool += pool;
       });
@@ -380,7 +445,7 @@
     const cashById = {};
     let totalCash = 0;
     state.persons.forEach((person) => {
-      const cash = getTkt(state, person.id) + Number(person.capital || 0);
+      const cash = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person);
       cashById[person.id] = cash;
       totalCash += cash;
     });
@@ -394,12 +459,85 @@
     return effective;
   }
 
-  function calcRunway(state, curves) {
-    const capital = state.persons.reduce((sum, person) => sum + getTkt(state, person.id) + Number(person.capital || 0), 0);
+  function calcBrandFinancials(state, lr, curves) {
+    const ops = state.P.brandOps || {};
+    const fb = state.P.founderBrand || {};
+    const brands = {};
+    BRAND_IDS.forEach(b => {
+      brands[b] = {
+        id: b, label: BRAND_LABELS[b],
+        caja: (ops[b] && Number(ops[b].caja || 0)) || 0,
+        capitalInvertido: 0,
+        inversores: [],
+        revenue: lr[b === 'almaria' ? 'almaria' : b].slice(),
+        burn: AÑOS.map(() => 0),
+      };
+    });
+    state.persons.forEach(p => {
+      const bc = p.brandCapital || {};
+      BRAND_IDS.forEach(b => {
+        const v = Number(bc[b] || 0);
+        if (v > 0) {
+          brands[b].capitalInvertido += v;
+          brands[b].inversores.push({ id: p.id, name: p.name, monto: v });
+        }
+      });
+    });
+    state.persons.forEach(p => {
+      const b = fb[p.id];
+      if (!b || !brands[b]) return;
+      const curve = curves[p.id] || [];
+      AÑOS.forEach((_, i) => { brands[b].burn[i] += Number(curve[i] || 0); });
+    });
+    state.hires.forEach(h => {
+      const b = normalizeBrandId(h.brand);
+      const startYi = h.startYear ? Math.max(0, AÑOS.indexOf(h.startYear)) : 0;
+      if (b === 'mixto') {
+        AÑOS.forEach((_, i) => {
+          if (startYi > 0 && i < startYi) return;
+          const cost = Math.round(Number(h.sue || 0) * Math.pow(Number(h.growth || 1), i));
+          const half = Math.round(cost / 2);
+          brands.almaria.burn[i] += half;
+          brands.ht.burn[i] += cost - half;
+        });
+      } else if (brands[b]) {
+        AÑOS.forEach((_, i) => {
+          if (startYi > 0 && i < startYi) return;
+          brands[b].burn[i] += Math.round(Number(h.sue || 0) * Math.pow(Number(h.growth || 1), i));
+        });
+      }
+    });
+    BRAND_IDS.forEach(b => {
+      const br = brands[b];
+      br.net = AÑOS.map((_, i) => br.burn[i] - br.revenue[i]);
+      const net0 = br.net[0];
+      if (net0 <= 0) {
+        br.runway = 999;
+        br.status = 'sustentable';
+      } else if (br.caja <= 0) {
+        br.runway = 0;
+        br.status = 'sin_caja';
+      } else {
+        br.runway = Math.floor(br.caja / net0);
+        br.status = br.runway >= 12 ? 'estable' : 'quemando';
+      }
+    });
+    return brands;
+  }
+
+  function calcRunway(state, curves, lr) {
+    const ops = state.P.brandOps || {};
+    const totalCaja = BRAND_IDS.reduce((s, b) => s + Number((ops[b] || {}).caja || 0), 0);
+    const totalTickets = state.persons.reduce((s, p) => s + getTkt(state, p.id), 0);
+    const capital = totalCaja + totalTickets;
+    const revenue0 = (lr.trazo[0] || 0) + (lr.almaria[0] || 0) + (lr.ht[0] || 0);
+    const founderBurn0 = state.persons.reduce((sum, p) => sum + Number((curves[p.id] || [])[0] || 0), 0);
+    const hireBurn0 = hiresCostByYear(state)[0];
+    const totalBurn0 = founderBurn0 + hireBurn0;
+    const netBurn = Math.max(0, totalBurn0 - revenue0);
     const monthly = calcMonthly(state, curves);
-    const burn = monthly[0] ? monthly[0].burn : 0;
-    if (burn <= 0) return { months: 99, capital, burn: 0, monthly };
-    return { months: Math.floor(capital / burn), capital, burn, monthly };
+    if (netBurn <= 0) return { months: 99, capital, burn: totalBurn0, revenue: revenue0, netBurn: 0, monthly };
+    return { months: Math.floor(capital / netBurn), capital, burn: totalBurn0, revenue: revenue0, netBurn, monthly };
   }
 
   function calcBreakEven(fact) {
@@ -414,8 +552,10 @@
     const curves = activeFounderCurves(state);
     const fact = calcFactFromCurves(state, curves);
     const factPact = calcFactFromCurves(state, founderCurvesPact());
+    const lr = fact.lineRevenue;
     const pool = calcPool(state);
-    const runway = calcRunway(state, curves);
+    const brandFin = calcBrandFinancials(state, lr, curves);
+    const runway = calcRunway(state, curves, lr);
     const breakEven = calcBreakEven(fact);
     const firstDistYear = AÑOS.find((year, index) => fact.dist[index] > 0) || '2033+';
     const effectiveEquity = calcEffectiveEquity(state);
@@ -429,7 +569,8 @@
       const eq2032 = Math.round(fact.dist[6] * Number(effectiveEquity[person.id] || 0) / 100);
       const sue2032 = Number(state.P.sue32[person.id] || 0);
       const total2032 = sue2032 + eq2032;
-      const investment = getTkt(state, person.id) + Number(person.capital || 0) + sw(person).sw;
+      const brandCap = totalBrandCapital(person);
+      const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + sw(person).sw;
       return {
         id: person.id,
         name: person.name,
@@ -438,7 +579,9 @@
         baseEquity: Number(person.equity || 0),
         ticket: getTkt(state, person.id),
         capital: Number(person.capital || 0),
-        cashContribution: getTkt(state, person.id) + Number(person.capital || 0),
+        brandCapital: person.brandCapital || {},
+        brandCapitalTotal: brandCap,
+        cashContribution: getTkt(state, person.id) + Number(person.capital || 0) + brandCap,
         sue2030: Number(state.P.sue30[person.id] || 0),
         sue2032,
         eq2032,
@@ -466,6 +609,7 @@
       factPact,
       curves,
       pool,
+      brandFinancials: brandFin,
       runway,
       breakEven,
       firstDistYear,
@@ -558,7 +702,11 @@
     SC_LABELS: { ...SC_LABELS },
     SUED_F_BASE: clone(SUED_F_BASE),
     SERVICE_LINES: clone(SERVICE_LINES),
+    BRAND_IDS: BRAND_IDS.slice(),
+    BRAND_LABELS: { ...BRAND_LABELS },
     clone,
+    normalizeBrandId,
+    totalBrandCapital,
     normalizeState,
     getState,
     saveState,

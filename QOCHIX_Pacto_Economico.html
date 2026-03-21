@@ -1943,7 +1943,7 @@ footer {
     </p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Persona</th><th>% equity</th><th>Ticket</th><th>Capital</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Diferencia</th></tr></thead>
+        <thead><tr><th>Persona</th><th>% equity</th><th>Ticket</th><th>Inv. marca</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Diferencia</th></tr></thead>
         <tbody id="pact-pool-tbody">
           <tr class="tr-hugo">
             <td>Hugo</td><td class="td-gold">63%</td>
@@ -3270,12 +3270,14 @@ function showTermTab(panelId, btn) {
       var ph='';
       d.state.persons.forEach(function(pr){
         var pcard=pc.find(function(c){return c.id===pr.id});
-        var tk=pcard?pcard.ticket:5000;var cap=Number(pr.capital||0);var swv=sw(pr).sw;var tot=tk+cap+swv;
+        var tk=pcard?pcard.ticket:5000;
+        var bc=pr.brandCapital||{};var bcTot=Object.values(bc).reduce(function(a,v){return a+Number(v||0)},0);
+        var swv=sw(pr).sw;var tot=tk+bcTot+swv;
         var eq=pcard?pcard.equity:0;var matPct=d.pool>0?(tot/d.pool*100):0;var diff=eq-matPct;
         var diffCls=diff>=0?'td-green':'';if(diff<-0.5)diffCls='style="color:var(--coral)"';
         var diffStr=diff>=0?'+'+diff.toFixed(1)+'pts':diff.toFixed(1)+'pts';
-        ph+='<tr'+(pr.id==='hugo'?' class="tr-hugo"':'')+'><td>'+pr.name+'</td><td class="td-gold">'+eq.toFixed(1)+'%</td><td>'+fmt(tk)+'</td><td>'+fmt(cap)+'</td><td>'+fmt(Math.round(swv))+'</td><td class="'+(pr.id==='hugo'?'td-big':'td-gold')+'">'+fmt(Math.round(tot))+'</td><td>'+matPct.toFixed(1)+'%</td><td '+(diff>=0?'class="td-green"':'style="color:var(--coral)"')+'>'+diffStr+'</td></tr>';
-        totalTk+=tk;totalCap+=cap;totalSw+=swv;totalAll+=tot;
+        ph+='<tr'+(pr.id==='hugo'?' class="tr-hugo"':'')+'><td>'+pr.name+'</td><td class="td-gold">'+eq.toFixed(1)+'%</td><td>'+fmt(tk)+'</td><td>'+fmt(bcTot)+'</td><td>'+fmt(Math.round(swv))+'</td><td class="'+(pr.id==='hugo'?'td-big':'td-gold')+'">'+fmt(Math.round(tot))+'</td><td>'+matPct.toFixed(1)+'%</td><td '+(diff>=0?'class="td-green"':'style="color:var(--coral)"')+'>'+diffStr+'</td></tr>';
+        totalTk+=tk;totalCap+=bcTot;totalSw+=swv;totalAll+=tot;
       });
       ph+='<tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>'+fmt(totalTk)+'</td><td>'+fmt(totalCap)+'</td><td>'+fmt(Math.round(totalSw))+'</td><td>'+fmt(Math.round(totalAll))+'</td><td>—</td><td>—</td></tr>';
       ptb.innerHTML=ph;
