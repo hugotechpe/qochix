@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QOCHIX — Simulador v3</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#d4a853">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
@@ -294,6 +296,58 @@ tr:hover td{background:rgba(255,255,255,.02)}
 @keyframes flash{0%{opacity:.4}100%{opacity:1}}
 .updated{animation:flash .5s}
 
+/* Flow diagram */
+.flow-intro{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem;max-width:52rem}
+.flow-intro strong{color:var(--text)}
+.flow-diagram{display:flex;flex-direction:column;gap:0;margin-bottom:1.5rem;max-width:680px}
+.flow-step{display:grid;grid-template-columns:44px 1fr auto;gap:.75rem;align-items:center;padding:.85rem 1rem;background:var(--bg2);border:1px solid var(--brd);position:relative}
+.flow-step:first-child{border-radius:var(--radius) var(--radius) 0 0}
+.flow-step:last-child{border-radius:0 0 var(--radius) var(--radius)}
+.flow-step+.flow-step{border-top:none}
+.flow-step::before{content:'';position:absolute;top:-1px;left:21px;width:2px;height:calc(100% + 2px);background:rgba(212,168,83,.25);z-index:1}
+.flow-step:first-child::before{top:50%;height:50%}
+.flow-step:last-child::before{height:50%}
+.flow-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;position:relative;z-index:2;flex-shrink:0}
+.flow-icon.brand{background:rgba(62,207,207,.12);border:1px solid rgba(62,207,207,.3)}
+.flow-icon.calc{background:rgba(212,168,83,.12);border:1px solid rgba(212,168,83,.3)}
+.flow-icon.pay{background:rgba(155,127,232,.12);border:1px solid rgba(155,127,232,.3)}
+.flow-icon.rsv{background:rgba(232,107,95,.12);border:1px solid rgba(232,107,95,.3)}
+.flow-icon.dist{background:rgba(82,201,122,.12);border:1px solid rgba(82,201,122,.3)}
+.flow-icon.person{background:rgba(212,168,83,.12);border:1px solid rgba(212,168,83,.3)}
+.flow-text{min-width:0}
+.flow-title{font-size:.82rem;font-weight:600;color:var(--text)}
+.flow-desc{font-size:.72rem;color:var(--muted);line-height:1.45;margin-top:.15rem}
+.flow-amount{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--gold);text-align:right;white-space:nowrap}
+.flow-amount.negative{color:var(--coral)}
+.flow-amount.green{color:var(--green)}
+.flow-brands{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:.75rem}
+.flow-brand-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1rem;text-align:center;transition:all .3s}
+.flow-brand-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px)}
+.flow-brand-name{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:.4rem}
+.flow-brand-val{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--gold);line-height:1.1}
+.flow-brand-pct{font-size:.68rem;color:var(--muted);margin-top:.2rem}
+.flow-split{display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;margin-top:.75rem}
+@media(max-width:900px){.flow-split{grid-template-columns:repeat(2,1fr)}.flow-brands{grid-template-columns:1fr}.flow-calc-row{grid-template-columns:1fr}}
+@media(max-width:600px){.flow-step{grid-template-columns:36px 1fr;gap:.5rem}.flow-amount{grid-column:1/-1;text-align:left;padding-left:2.8rem}}
+.flow-person-card{background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:.85rem .75rem;text-align:center;transition:all .3s}
+.flow-person-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px)}
+.flow-person-name{font-size:.78rem;font-weight:600;margin-bottom:.3rem}
+.flow-person-eq{font-size:.65rem;color:var(--muted);margin-bottom:.35rem}
+.flow-person-sue{font-size:.82rem;color:var(--teal);font-family:var(--mono);margin-bottom:.15rem}
+.flow-person-eqi{font-size:.82rem;color:var(--gold);font-family:var(--mono);margin-bottom:.15rem}
+.flow-person-total{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--text);padding-top:.35rem;border-top:1px solid var(--brd)}
+.flow-person-vs{font-size:.62rem;color:var(--muted);margin-top:.2rem}
+.flow-calc{background:var(--bg2);border:1px solid rgba(212,168,83,.2);border-radius:var(--radius);padding:1.25rem;margin-top:1.5rem}
+.flow-calc-title{font-size:.82rem;font-weight:600;color:var(--gold);margin-bottom:.85rem;text-transform:uppercase;letter-spacing:.06em}
+.flow-calc-row{display:grid;grid-template-columns:200px 1fr;gap:.75rem;align-items:center;margin-bottom:.6rem}
+.flow-calc-row label{font-size:.75rem;color:var(--muted)}
+.flow-calc-row input,.flow-calc-row select{background:var(--surf);border:1px solid var(--brd);border-radius:8px;color:var(--teal);font-family:var(--mono);font-size:.85rem;padding:.4rem .6rem;outline:none;width:100%;max-width:200px}
+.flow-calc-row input:focus,.flow-calc-row select:focus{border-color:var(--teal)}
+.flow-calc-result{margin-top:1rem;padding:1rem;background:rgba(82,201,122,.05);border:1px solid rgba(82,201,122,.15);border-radius:12px}
+.flow-callout{background:rgba(62,207,207,.05);border:1px solid rgba(62,207,207,.15);border-radius:12px;padding:1rem;margin-top:1.25rem;font-size:.78rem;color:var(--muted);line-height:1.6}
+.flow-callout strong{color:var(--text)}
+.flow-callout .gold{color:var(--gold);font-weight:700}
+
 .sim-foot{border-top:1px solid var(--brd);margin-top:1.25rem;padding-top:.85rem;font-size:.68rem;color:var(--muted);font-family:var(--mono);line-height:1.5}
 .sim-foot details summary{cursor:pointer;color:var(--muted)}
 .ceo-intro{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:1.1rem;max-width:48rem}
@@ -430,6 +484,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <button class="tab-btn" onclick="showTab('runway', this)">Runway</button>
     <button class="tab-btn" onclick="showTab('apuesta', this)">Apuesta</button>
     <button class="tab-btn" onclick="showTab('ceo', this)">Vista CEO</button>
+    <button class="tab-btn" onclick="showTab('flujo', this)" style="border-color:rgba(212,168,83,.35);color:var(--gold)">Flujo $</button>
   </div>
 </div>
 
@@ -466,7 +521,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div class="sb-sec">
     <div class="sb-title">C · Distribución equity</div>
     <div id="equity-box"></div>
-    <div class="eq-sum">Suma: <b id="eq-sum-v" class="ok">100.0%</b></div>
+    <div class="eq-sum">Suma: <b id="eq-sum-v" class="ok">100.0%</b> <button id="eq-normalize-btn" style="display:none;margin-left:8px;padding:3px 10px;border-radius:6px;border:1px solid rgba(62,207,207,.35);background:rgba(62,207,207,.08);color:#3ECFCF;font-size:.68rem;cursor:pointer" onclick="normalizeEquity()">Auto-normalizar a 100%</button></div>
     <div class="nota" id="eq-nota" style="margin-top:.4rem">✓ Suma 100% (cap table base).</div>
   </div>
 
@@ -521,12 +576,12 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="kcard k-teal">
       <div class="klbl">Distribuible 2032/mes</div>
       <div class="kval" id="kpi-dist">—</div>
-      <div class="ksub">después del equipo operativo</div>
+      <div class="ksub" id="kpi-dist-range">después del equipo operativo</div>
     </div>
     <div class="kcard k-green">
       <div class="klbl">Break-even Qochix</div>
       <div class="kval" id="kpi-be">—</div>
-      <div class="ksub">mes en que colchón ≥ 0</div>
+      <div class="ksub" id="kpi-be-range">mes en que colchón ≥ 0</div>
     </div>
     <div class="kcard k-coral">
       <div class="klbl">Runway inicial</div>
@@ -536,7 +591,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="kcard k-purple">
       <div class="klbl">Liberación equipo</div>
       <div class="kval" id="kpi-rossy">—</div>
-      <div class="ksub">primer año de cruce del equipo</div>
+      <div class="ksub" id="kpi-lib-range">primer año de cruce del equipo</div>
     </div>
   </div>
 
@@ -1120,6 +1175,91 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 </div><!-- /apuesta -->
 
+<!-- ══ TAB: FLUJO DE INGRESOS ══ -->
+<div id="tab-flujo" class="tab-content">
+
+  <p class="flow-intro">
+    <strong>¿Si entran S/10,000 a Almaria, qué pasa?</strong> Las marcas no son empresas independientes — son líneas de negocio del ecosistema QOCHIX. Todo lo que factura cualquier marca entra al mismo embudo y se distribuye según las reglas del pacto. Aquí ves el flujo completo con números vivos del escenario activo.
+  </p>
+
+  <!-- Brands revenue -->
+  <div class="panel open">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">1. Facturación por marca (2032/mes)</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <div class="flow-brands" id="flow-brands"></div>
+      <div class="nota">Cada marca factura de forma independiente, pero <strong>todo entra al ecosistema QOCHIX</strong>. No importa cuál marca generó el ingreso — el flujo de distribución es uno solo.</div>
+    </div>
+  </div>
+
+  <!-- Flow diagram -->
+  <div class="panel open">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">2. El embudo: de facturación a tu bolsillo (2032/mes)</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <div class="flow-diagram" id="flow-diagram"></div>
+    </div>
+  </div>
+
+  <!-- Per-person split -->
+  <div class="panel open">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">3. ¿Cuánto recibe cada socio? (2032/mes)</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">Cada socio recibe <strong>dos fuentes de ingreso</strong>: (1) un <span style="color:var(--teal)">sueldo Qochix</span> que crece cada año según la curva del pacto, y (2) un <span style="color:var(--gold)">pago por equity</span> que es su porcentaje del distribuible. Ambos se suman.</p>
+      <div class="flow-split" id="flow-split"></div>
+      <div class="flow-callout">
+        <strong>¿Rossy recibe "lo de Almaria"?</strong> No. Rossy es CEO de Almaria pero su ingreso no viene de lo que Almaria facture, sino de: (1) su <span class="gold">sueldo pactado</span> que crece con los años, y (2) su <span class="gold">17% del distribuible total</span> de las 3 marcas juntas. Lo mismo aplica para todos. El equity ya refleja quién puso más capital, más horas y más riesgo.
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive calculator -->
+  <div class="panel open">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">4. Calculadora: "Si entran X soles a una marca…"</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <div class="flow-calc">
+        <div class="flow-calc-title">Simulador de ingreso puntual</div>
+        <div class="flow-calc-row">
+          <label>Monto que entra (S/)</label>
+          <input type="number" id="flow-calc-amount" value="10000" min="0" step="500" oninput="paintFlowCalc()">
+        </div>
+        <div class="flow-calc-row">
+          <label>Marca que factura</label>
+          <select id="flow-calc-brand" onchange="paintFlowCalc()">
+            <option value="almaria">Almaria</option>
+            <option value="hugotech">HugoTech</option>
+            <option value="trazo">Trazo</option>
+          </select>
+        </div>
+        <div class="flow-calc-result" id="flow-calc-result"></div>
+      </div>
+      <div class="nota" style="margin-top:.75rem">Esta calculadora muestra el destino de un ingreso puntual. En la realidad, el distribuible depende del <strong>total acumulado del mes</strong> menos toda la planilla y reserva. Un sol de Almaria tiene exactamente el mismo destino que un sol de HugoTech o Trazo.</div>
+    </div>
+  </div>
+
+  <!-- Key takeaways -->
+  <div class="flow-callout" style="margin-top:1.25rem;border-color:rgba(212,168,83,.25);background:rgba(212,168,83,.05)">
+    <strong style="color:var(--gold)">Resumen para el equipo:</strong><br>
+    <strong>1.</strong> Las 3 marcas son líneas de negocio de QOCHIX, no empresas separadas.<br>
+    <strong>2.</strong> Todo lo que facture cualquier marca entra al mismo embudo.<br>
+    <strong>3.</strong> Después de costos (neto operativo), planilla y reserva, lo que sobra es el <strong>distribuible</strong>.<br>
+    <strong>4.</strong> El distribuible se reparte por <strong>% de equity</strong> (no por marca).<br>
+    <strong>5.</strong> Cada socio recibe <strong>sueldo + equity</strong>. El sueldo crece con los años; el equity crece con la facturación.<br>
+    <strong>6.</strong> El % de equity ya refleja: capital puesto, horas dedicadas, riesgo asumido y sweat equity.
+  </div>
+
+</div><!-- /flujo -->
+
 <div class="sim-foot">
   QOCHIX Simulador <strong>v3.1</strong> · Mar 2026 · Escenario por defecto: pesimista ×0,7
   <div class="doc-link-row" aria-label="Enlaces al pacto y deck">
@@ -1543,6 +1683,7 @@ function showTab(t,btn){
     if(fallback) fallback.classList.add('active');
   }
   if(t==='graficos'||t==='equipo'||t==='runway') setTimeout(renderCharts, 50);
+  if(t==='flujo') setTimeout(paintFlowTab, 30);
 }
 function toggleP(hdr){
   const panel=hdr.closest('.panel');panel.classList.toggle('open');
@@ -1691,6 +1832,17 @@ function recalc(){
   sv('hero-kpi-pool',fmt(pool));
   sv('hero-kpi-fact',fmt(fact.total[6]));
   sv('hero-kpi-dist',fmt(dist[6]));
+
+  // Rangos de confianza cross-escenario
+  try{
+    const cmpAll=QSYS.compareScenarios();
+    const distRangeEl=sel('kpi-dist-range');
+    if(distRangeEl) distRangeEl.textContent='Rango: '+fmt(cmpAll.p.dist2032)+' (×0.7) → '+fmt(cmpAll.o.dist2032)+' (×1.4)';
+    const beRangeEl=sel('kpi-be-range');
+    if(beRangeEl) beRangeEl.textContent='Rango: '+cmpAll.p.breakEven+' (×0.7) → '+cmpAll.o.breakEven+' (×1.4)';
+    const libRangeEl=sel('kpi-lib-range');
+    if(libRangeEl) libRangeEl.textContent='1er cruce: '+cmpAll.p.firstLiberationYear+' (×0.7) → '+cmpAll.o.firstLiberationYear+' (×1.4)';
+  }catch(e){}
   const heroMults=derived.personCards.map((person)=>person.total2032/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
   const minMult=Math.min(...heroMults);
   const maxMult=Math.max(...heroMults);
@@ -1730,18 +1882,25 @@ function recalc(){
   }
   const eqTotBase=PERSONS.reduce((s,p)=>s+Number(p.equity||0),0);
   const eqSumEl=sel('eq-sum-v');
+  const eqNormBtn=sel('eq-normalize-btn');
   if(eqSumEl){
     eqSumEl.textContent=eqTotBase.toFixed(1)+'%';
     eqSumEl.className=Math.abs(eqTotBase-100)<.5?'ok':'bad';
+  }
+  if(eqNormBtn){
+    eqNormBtn.style.display=Math.abs(eqTotBase-100)<.5?'none':'inline-block';
   }
   const eqNote=sel('eq-nota');
   if(eqNote){
     if(P.capitalMode==='equity_round'){
       eqNote.className='nota';
       eqNote.innerHTML='Modo <strong>compra de acciones</strong> activo. El % de reparto usa equity efectivo de ronda (pre-money: <strong>'+fmt(P.preMoney)+'</strong>). El cap table base sigue editable en esta sección.';
+    }else if(Math.abs(eqTotBase-100)<.5){
+      eqNote.className='nota ok';
+      eqNote.textContent='✓ Suma 100% (cap table base).';
     }else{
-      eqNote.className=Math.abs(eqTotBase-100)<.5?'nota ok':'nota warn';
-      eqNote.textContent=Math.abs(eqTotBase-100)<.5?'✓ Suma 100% (cap table base).':'⚠️ Suma '+eqTotBase.toFixed(1)+'% — debe ser 100% en cap table base.';
+      eqNote.className='nota warn';
+      eqNote.innerHTML='⚠️ Suma '+eqTotBase.toFixed(1)+'% — debe ser 100%. Diferencia: '+(eqTotBase-100>0?'+':'')+(eqTotBase-100).toFixed(1)+'pts. Usa <strong>auto-normalizar</strong> para corregir proporcionalmente.';
     }
   }
 
@@ -2298,11 +2457,119 @@ function decorateHelp(){
       'runway':'Salud de caja y resistencia operativa en meses.',
       'apuesta':'Riesgo-retorno y narrativa de inversión del equipo.',
       'vista ceo':'Resumen de mesa para decidir rápido sin abrir todas las pestañas.',
+      'flujo $':'Estructura de ingresos: cómo fluye el dinero desde cada marca hasta el bolsillo de cada socio.',
       'aporte como préstamo':'El aporte no convierte a acciones; impacta caja, pool y ROI.',
       'aporte compra acciones':'El aporte se convierte a acciones según valorización pre-money definida.',
       'valorización pre-money de ronda (s/)':'Valor de Qochix antes del aporte. Debes definir este monto para convertir capital en acciones.'
     }
   });
+}
+
+function paintFlowTab(){
+  const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+  const fact=derived.fact;
+  const yr=6;
+  const fmt=QSYS.fmtCurrency;
+  const totalFact=fact.total[yr];
+  const neto=fact.neto[yr];
+  const suedF=fact.sued_f[yr];
+  const hcost=fact.hcost[yr];
+  const suedTot=fact.sued_tot[yr];
+  const reserva=Math.round(Number(P.reserva||0));
+  const colchon=fact.colchon[yr];
+  const dist=fact.dist[yr];
+
+  const brandsEl=sel('flow-brands');
+  if(brandsEl){
+    const brands=[
+      {name:'Trazo',val:fact.trazo[yr],color:'var(--gold)'},
+      {name:'Almaria',val:fact.alm[yr],color:'var(--green)'},
+      {name:'HugoTech',val:fact.ht[yr],color:'var(--teal)'},
+    ];
+    brandsEl.innerHTML=brands.map(function(b){
+      const pct=totalFact>0?Math.round(b.val/totalFact*100):0;
+      return '<div class="flow-brand-card"><div class="flow-brand-name" style="color:'+b.color+'">'+b.name+'</div><div class="flow-brand-val">'+fmt(b.val)+'</div><div class="flow-brand-pct">'+pct+'% del total</div></div>';
+    }).join('');
+  }
+
+  const diagramEl=sel('flow-diagram');
+  if(diagramEl){
+    const netoPct=Math.round((P.netoPct||0.65)*100);
+    diagramEl.innerHTML=[
+      {icon:'brand',emoji:'📥',title:'Facturación total ecosistema',desc:'Trazo + Almaria + HugoTech (2032/mes)',amount:fmt(totalFact),cls:''},
+      {icon:'calc',emoji:'📊',title:'Neto operativo ('+netoPct+'%)',desc:'Después de costos directos de producción, herramientas, comisiones',amount:fmt(neto),cls:''},
+      {icon:'pay',emoji:'👥',title:'Planilla fundadores',desc:'Sueldos pactados de los 5 socios (crece cada año)',amount:'−'+fmt(suedF),cls:'negative'},
+      {icon:'pay',emoji:'🏢',title:'Equipo operativo',desc:'Content creators, comerciales, facilitadores',amount:'−'+fmt(hcost),cls:'negative'},
+      {icon:'rsv',emoji:'🛡️',title:'Reserva mensual',desc:'Colchón mínimo antes de distribuir',amount:'−'+fmt(reserva),cls:'negative'},
+      {icon:'dist',emoji:'💰',title:'DISTRIBUIBLE',desc:'Lo que se reparte entre socios por equity',amount:fmt(dist),cls:'green'},
+    ].map(function(s){
+      return '<div class="flow-step"><div class="flow-icon '+s.icon+'">'+s.emoji+'</div><div class="flow-text"><div class="flow-title">'+s.title+'</div><div class="flow-desc">'+s.desc+'</div></div><div class="flow-amount '+s.cls+'">'+s.amount+'</div></div>';
+    }).join('');
+  }
+
+  const splitEl=sel('flow-split');
+  if(splitEl){
+    splitEl.innerHTML=derived.personCards.map(function(p){
+      const base=PERSONS.find(function(x){return x.id===p.id;});
+      const sueLabel=fmt(p.sue2032);
+      const eqLabel=fmt(p.eq2032);
+      const totalLabel=fmt(p.total2032);
+      const vsHoy=base?p.total2032/Math.max(1,base.sueldo):0;
+      return '<div class="flow-person-card"><div class="flow-person-name" style="color:'+p.color+'">'+p.name+'</div><div class="flow-person-eq">'+p.equity.toFixed(1)+'% equity</div><div class="flow-person-sue">Sueldo: '+sueLabel+'</div><div class="flow-person-eqi">Equity: '+eqLabel+'</div><div class="flow-person-total">'+totalLabel+'</div><div class="flow-person-vs">×'+vsHoy.toFixed(1)+' vs sueldo actual</div></div>';
+    }).join('');
+  }
+
+  paintFlowCalc();
+}
+
+function paintFlowCalc(){
+  const amtEl=document.getElementById('flow-calc-amount');
+  if(!amtEl)return;
+  const amount=Number(amtEl.value||0);
+  if(!Number.isFinite(amount)||amount<=0){
+    const r=sel('flow-calc-result'); if(r) r.innerHTML='<div style="font-size:.82rem;color:var(--muted)">Ingresa un monto mayor a 0.</div>';
+    return;
+  }
+  const netoPct=Number(P.netoPct||0.65);
+  const neto=Math.round(amount*netoPct);
+  const costos=amount-neto;
+  const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+  const fmt=QSYS.fmtCurrency;
+  const resultEl=sel('flow-calc-result');
+  if(!resultEl)return;
+
+  var html='<div style="font-size:.82rem;line-height:1.7;color:var(--text)">';
+  html+='<div style="margin-bottom:.5rem"><strong>Si entran '+fmt(amount)+'</strong> a <strong>'+document.getElementById('flow-calc-brand').value+'</strong>:</div>';
+  html+='<div style="display:grid;gap:.35rem">';
+  html+='<div>📥 Facturación bruta: <strong>'+fmt(amount)+'</strong></div>';
+  html+='<div>📊 Neto operativo ('+Math.round(netoPct*100)+'%): <strong>'+fmt(neto)+'</strong> <span style="color:var(--muted);font-size:.72rem">('+fmt(costos)+' se fue en costos directos)</span></div>';
+  html+='<div style="margin-top:.35rem;padding-top:.35rem;border-top:1px solid rgba(255,255,255,.08)">💰 <strong>De esos '+fmt(neto)+'</strong>, lo que no se use en planilla ni reserva es distribuible:</div>';
+  html+='</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;margin-top:.65rem">';
+  derived.personCards.forEach(function(p){
+    var share=Math.round(neto*(p.equity/100));
+    html+='<div style="text-align:center;padding:.5rem;background:var(--bg3);border:1px solid var(--brd);border-radius:10px">';
+    html+='<div style="font-size:.72rem;font-weight:600;color:'+p.color+'">'+p.name+'</div>';
+    html+='<div style="font-size:.62rem;color:var(--muted)">'+p.equity.toFixed(1)+'%</div>';
+    html+='<div style="font-family:var(--serif);font-size:.95rem;color:var(--gold);font-weight:700;margin-top:.25rem">'+fmt(share)+'</div>';
+    html+='<div style="font-size:.58rem;color:var(--muted)">máx. equity de '+fmt(neto)+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div style="margin-top:.65rem;font-size:.72rem;color:var(--muted);line-height:1.55"><strong>Nota:</strong> Esto muestra la porción proporcional del neto. En la práctica, primero se paga toda la planilla y reserva del mes; el distribuible es lo que sobra. Un sol de Almaria vale exactamente igual que un sol de HugoTech o Trazo.</div>';
+  html+='</div>';
+  resultEl.innerHTML=html;
+}
+
+function normalizeEquity(){
+  const tot=PERSONS.reduce((s,p)=>s+Number(p.equity||0),0);
+  if(Math.abs(tot-100)<0.01||tot===0)return;
+  const factor=100/tot;
+  PERSONS.forEach(p=>{p.equity=Math.round(p.equity*factor*10)/10;});
+  const adj=100-PERSONS.reduce((s,p)=>s+p.equity,0);
+  if(Math.abs(adj)>0.01) PERSONS[0].equity=Math.round((PERSONS[0].equity+adj)*10)/10;
+  scheduleSharedSync();
+  recalc();
 }
 
 // ════════════════════════════════════════
@@ -2337,6 +2604,10 @@ QSYS.subscribe((nextState,meta={})=>{
   applySharedState(nextState);
 });
 recalc();
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
 </script>
 </body>
 </html>

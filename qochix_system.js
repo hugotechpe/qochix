@@ -25,7 +25,7 @@
       { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 40243, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 20000, c: '#3ECFCF' },
       { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 4000, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0, c: '#9B7FE8' },
+      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 52830, c: '#9B7FE8' },
       { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0, c: '#E86B5F' },
     ],
     hires: [
@@ -51,8 +51,18 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
+      schemaVersion: 2,
     },
   };
+
+  const MIGRATIONS = [
+    { from: undefined, to: 2, run(s) {
+      const carlos = s.persons && s.persons.find(p => p.id === 'carlos');
+      if (carlos && (carlos.capital === 0 || carlos.capital === undefined)) {
+        carlos.capital = 52830;
+      }
+    }},
+  ];
 
   const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -90,10 +100,25 @@
     return next;
   }
 
+  function applyMigrations(state) {
+    const v = (state.meta && state.meta.schemaVersion) || 0;
+    const target = DEFAULTS.meta.schemaVersion || 0;
+    if (v >= target) return state;
+    MIGRATIONS.forEach(function(m) {
+      if ((m.from === undefined || m.from === v) && m.to <= target) m.run(state);
+    });
+    state.meta = state.meta || {};
+    state.meta.schemaVersion = target;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    return state;
+  }
+
   function getState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? normalizeState(JSON.parse(raw)) : clone(DEFAULTS);
+      if (!raw) return clone(DEFAULTS);
+      const state = normalizeState(JSON.parse(raw));
+      return applyMigrations(state);
     } catch (error) {
       return clone(DEFAULTS);
     }
@@ -143,14 +168,16 @@
       listener(next, { via: 'local' });
     };
     let lastStamp = '';
+    const pollMs = channel ? 2000 : 600;
     const pollId = window.setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
       const next = getState();
       const stamp = (next.meta && next.meta.updatedAt) || '';
       if (stamp && stamp !== lastStamp) {
         lastStamp = stamp;
         listener(next, { via: 'poll' });
       }
-    }, 400);
+    }, pollMs);
     const boot = getState();
     lastStamp = (boot.meta && boot.meta.updatedAt) || '';
     window.addEventListener('storage', onStorage);
@@ -391,12 +418,74 @@
     };
   }
 
+  const HISTORY_KEY = 'qochix_history_v1';
+  const MAX_HISTORY = 30;
+
+  function getHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  function saveSnapshot(label) {
+    const state = getState();
+    const snap = { label: label || '', ts: new Date().toISOString(), state: clone(state) };
+    const hist = getHistory();
+    hist.push(snap);
+    if (hist.length > MAX_HISTORY) hist.splice(0, hist.length - MAX_HISTORY);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(hist)); } catch (e) {}
+    return snap;
+  }
+
+  function clearHistory() {
+    try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
+  }
+
+  function compareScenarios(baseState) {
+    const base = normalizeState(baseState || getState());
+    const out = {};
+    ['p', 'n', 'o'].forEach((sc) => {
+      const v = clone(base);
+      v.P.sc = sc;
+      out[sc] = deriveState(v);
+    });
+    return out;
+  }
+
+  function validateEquity(rawState) {
+    const s = normalizeState(rawState || getState());
+    const sum = s.persons.reduce((a, p) => a + Number(p.equity || 0), 0);
+    return { sum, valid: Math.abs(sum - 100) < 0.01, delta: sum - 100 };
+  }
+
+  function exportSnapshot() {
+    const state = getState();
+    const d = deriveState(state);
+    return {
+      ts: new Date().toISOString(),
+      scenario: d.scenarioLabel,
+      pool: d.pool,
+      dist2032: d.dist2032,
+      breakEven: d.breakEven,
+      runwayMonths: d.runway.months,
+      liberatedBy2032: d.liberatedBy2032,
+      persons: d.personCards.map((p) => ({
+        name: p.name, equity: +p.equity.toFixed(2), total2032: p.total2032,
+        liberationYear: p.liberationYear, investment: p.investment,
+      })),
+      raw: state,
+    };
+  }
+
   window.QochixSystem = {
     STORAGE_KEY,
     DEFAULTS: clone(DEFAULTS),
     AÑOS: AÑOS.slice(),
     FACT0: clone(FACT0),
     SC: { ...SC },
+    SC_LABELS: { ...SC_LABELS },
     SUED_F_BASE: clone(SUED_F_BASE),
     clone,
     normalizeState,
@@ -406,5 +495,11 @@
     deriveState,
     fmtCurrency,
     fmtDateTime,
+    getHistory,
+    saveSnapshot,
+    clearHistory,
+    compareScenarios,
+    validateEquity,
+    exportSnapshot,
   };
 })();

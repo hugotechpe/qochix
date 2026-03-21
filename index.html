@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QOCHIX Hub</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d4a853">
   <style>
     :root{
       --bg:#0a0d13;--bg2:#111520;--panel:#171d2e;--line:rgba(255,255,255,.1);
@@ -71,7 +73,47 @@
     .mini{margin-top:6px;font-size:11px;color:var(--muted)}
     .frame-wrap{min-height:0}
     iframe{width:100%;height:100%;border:0;background:#fff}
-    @media (max-width:1000px){.layout{grid-template-columns:1fr}.side{display:none}}
+    .exec{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px}
+    .exec-item{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+    .exec-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    .exec-val{font-size:16px;color:var(--gold);font-weight:700;line-height:1.2}
+    .exec-range{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+    .top-actions{display:flex;gap:6px;align-items:center}
+    .act-btn{
+      border:1px solid var(--line);background:var(--bg2);color:var(--muted);
+      padding:6px 10px;border-radius:10px;font-size:11px;cursor:pointer;white-space:nowrap
+    }
+    .act-btn:hover{border-color:rgba(62,207,207,.45);color:var(--text)}
+    .modal{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(5,8,12,.75)}
+    .modal.open{display:flex}
+    .modal-card{width:min(980px,96vw);max-height:85vh;overflow:auto;background:#111520;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:1.2rem}
+    .modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+    .modal-hdr h3{color:var(--gold);font-size:1rem;margin:0}
+    .modal-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
+    .modal-close:hover{color:var(--text)}
+    .cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .cmp-col{background:rgba(10,13,19,.6);border:1px solid var(--line);border-radius:12px;padding:12px}
+    .cmp-title{font-size:13px;font-weight:700;text-align:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+    .cmp-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .cmp-row:last-child{border-bottom:none}
+    .cmp-label{color:var(--muted)}.cmp-value{color:var(--text);font-weight:600}
+    .cmp-person{margin-top:6px;padding-top:4px;border-top:1px solid var(--line)}
+    .cmp-pname{font-size:11px;color:var(--gold);font-weight:600;margin-bottom:3px}
+    .hist-list{display:grid;gap:8px;max-height:50vh;overflow:auto}
+    .hist-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(10,13,19,.6);border:1px solid var(--line);border-radius:10px}
+    .hist-info{font-size:12px}.hist-ts{color:var(--muted)}.hist-label{color:var(--text);font-weight:600;margin-left:8px}
+    .hist-btn{border:1px solid var(--line);background:var(--bg2);color:var(--muted);padding:5px 10px;border-radius:8px;font-size:11px;cursor:pointer}
+    .hist-btn:hover{border-color:rgba(62,207,207,.45);color:var(--text)}
+    .faq-section details{border-bottom:1px solid var(--line);padding:6px 0}
+    .faq-section summary{font-size:12px;color:var(--text);cursor:pointer;padding:4px 0;list-style:none}
+    .faq-section summary::-webkit-details-marker{display:none}
+    .faq-section summary::before{content:'▸ ';color:var(--gold);font-size:10px}
+    .faq-section details[open] summary::before{content:'▾ '}
+    .faq-section summary:hover{color:var(--gold)}
+    .faq-section .faq-a{font-size:11px;color:var(--muted);line-height:1.5;padding:4px 0 6px}
+    .toast{position:fixed;bottom:20px;right:20px;z-index:6000;background:#111520;border:1px solid rgba(82,201,122,.3);color:#52C97A;padding:10px 16px;border-radius:10px;font-size:12px;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+    .toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:1000px){.layout{grid-template-columns:1fr}.side{display:none}.cmp-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -84,10 +126,25 @@
         <button class="btn" data-src="QOCHIX_Pacto_Economico.html">Pacto</button>
         <button class="btn" data-src="qochix_base.html">Deck</button>
       </div>
+      <div class="top-actions">
+        <button class="act-btn" onclick="openComparator()" title="Comparar los 3 escenarios lado a lado">Comparar</button>
+        <button class="act-btn" onclick="doExport()" title="Exportar snapshot JSON">Exportar</button>
+        <button class="act-btn" onclick="openHistory()" title="Ver y restaurar snapshots">Historial</button>
+        <button class="act-btn" onclick="startTour()" title="Tour guiado del hub">Tour</button>
+      </div>
       <div class="meta">Un solo link · todo integrado</div>
     </header>
     <div class="layout">
       <aside class="side">
+        <div class="k">
+          <div class="l">Si solo lees una cosa</div>
+          <div class="exec">
+            <div class="exec-item"><div class="exec-lbl">Pool equipo</div><div class="exec-val" id="exec-pool">—</div></div>
+            <div class="exec-item"><div class="exec-lbl">Distrib. 2032</div><div class="exec-val" id="exec-dist">—</div></div>
+            <div class="exec-item"><div class="exec-lbl">1er cruce</div><div class="exec-val" id="exec-cross">—</div></div>
+          </div>
+          <div class="exec-range" id="exec-range">Rango pesimista → optimista: cargando…</div>
+        </div>
         <div class="k"><div class="l">Escenario</div><div class="v" id="k-scn">—</div></div>
         <div class="k"><div class="l">Distribuible 2032</div><div class="v" id="k-dist">—</div></div>
         <div class="k"><div class="l">Pool</div><div class="v" id="k-pool">—</div></div>
@@ -140,12 +197,47 @@
           </div>
           <div class="mini">Estos cambios se guardan en el sistema compartido.</div>
         </div>
+        <div class="k faq-section">
+          <div class="l">Preguntas frecuentes</div>
+          <details><summary>¿Qué es el pool?</summary><p class="faq-a">Valor total invertido por el equipo: ticket de entrada + capital previo + trabajo valorizado (sweat equity a 3 años). Mide el compromiso real de cada socio.</p></details>
+          <details><summary>¿Qué es el distribuible?</summary><p class="faq-a">Monto mensual que se reparte entre socios después de pagar planilla, equipo operativo y reserva. Fórmula: (Facturación × Neto%) − Planilla − Reserva.</p></details>
+          <details><summary>¿Cuándo «cruzo» mi sueldo?</summary><p class="faq-a">Cuando tu ingreso total de Qochix (sueldo Qochix + pago por equity) iguala o supera tu sueldo actual. Es tu año de liberación financiera.</p></details>
+          <details><summary>¿Préstamo vs compra de acciones?</summary><p class="faq-a">En modo préstamo tu aporte es deuda: no cambia el % de equity. En compra de acciones, tu aporte entra como capital y recalcula el equity efectivo según valorización pre-money.</p></details>
+          <details><summary>¿Los números son una promesa?</summary><p class="faq-a">No. Son hipótesis basadas en proyecciones. El pesimista (×0.7) es el piso; neutro y optimista muestran qué pasa si el mercado responde mejor. Sirven para decidir juntos.</p></details>
+          <details><summary>¿Qué es el neto operativo?</summary><p class="faq-a">Porcentaje de la facturación bruta que queda después de costos directos de operación (producción, herramientas, comisiones). Típicamente 55-75% según el mix de servicios.</p></details>
+          <details><summary>Si entran S/10K a Almaria, ¿Rossy se lleva eso?</summary><p class="faq-a">No. Las marcas no son empresas separadas — son líneas de negocio del ecosistema. Todo ingreso (sea de Almaria, HugoTech o Trazo) entra al mismo embudo: se aplica neto operativo, se paga planilla y reserva, y lo que sobra (distribuible) se reparte por equity. Rossy recibe su sueldo pactado + 17% del distribuible total. Abre la pestaña "Flujo $" del Simulador para verlo con números.</p></details>
+          <details><summary>¿Qué pasa si un socio se va?</summary><p class="faq-a">Se rige por las reglas del Pacto Económico → Gobierno. El equity tiene vesting implícito por permanencia y los aportes quedan documentados.</p></details>
+        </div>
       </aside>
       <main class="frame-wrap">
         <iframe id="frame" src="QOCHIX_Simulador.html" title="Qochix integrador"></iframe>
       </main>
     </div>
   </div>
+
+  <!-- Comparator Modal -->
+  <div class="modal" id="modal-comparator">
+    <div class="modal-card">
+      <div class="modal-hdr"><h3>Comparador: Pesimista vs Neutro vs Optimista</h3><button class="modal-close" onclick="closeModal('modal-comparator')">✕</button></div>
+      <div class="cmp-grid" id="cmp-grid"></div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div class="modal" id="modal-history">
+    <div class="modal-card">
+      <div class="modal-hdr"><h3>Historial de snapshots</h3><button class="modal-close" onclick="closeModal('modal-history')">✕</button></div>
+      <div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <input type="text" id="snap-label" placeholder="Etiqueta (ej: Reunión 15 mar)" style="flex:1;min-width:180px;background:rgba(10,13,19,.55);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e8ecf0;padding:7px 10px;font-size:12px">
+        <button class="act-btn" onclick="saveSnap()">Guardar snapshot</button>
+        <button class="act-btn" style="border-color:rgba(232,107,95,.35);color:#f0c1b9" onclick="clearHist()">Limpiar todo</button>
+      </div>
+      <div class="hist-list" id="hist-list"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <script src="qochix_help.js"></script>
   <script src="qochix_system.js"></script>
@@ -381,13 +473,116 @@
       ctlTktNum.value = ticketValue;
       ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
       syncingControls = false;
+      paintExec();
     }
+    function openModal(id){document.getElementById(id).classList.add('open')}
+    function closeModal(id){document.getElementById(id).classList.remove('open')}
+    document.querySelectorAll('.modal').forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('open')})});
+
+    function showToast(msg){
+      const t=document.getElementById('toast');
+      t.textContent=msg;t.classList.add('show');
+      setTimeout(function(){t.classList.remove('show')},2500);
+    }
+
+    function openComparator(){
+      const cmp=Q.compareScenarios();
+      const grid=document.getElementById('cmp-grid');
+      const labels={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
+      const colors={p:'#E86B5F',n:'#3ECFCF',o:'#52C97A'};
+      grid.innerHTML=['p','n','o'].map(function(sc){
+        const d=cmp[sc];
+        return '<div class="cmp-col" style="border-top:3px solid '+colors[sc]+'">'+
+          '<div class="cmp-title" style="color:'+colors[sc]+'">'+labels[sc]+'</div>'+
+          '<div class="cmp-row"><span class="cmp-label">Fact. 2032</span><span class="cmp-value">'+d.fmtCurrency(d.totalFact2032)+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Distribuible 2032</span><span class="cmp-value">'+d.fmtCurrency(d.dist2032)+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Break-even</span><span class="cmp-value">'+d.breakEven+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Runway</span><span class="cmp-value">'+d.runway.months+' meses</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Liberados 2032</span><span class="cmp-value">'+d.liberatedBy2032+'/'+d.personCards.length+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">1er cruce</span><span class="cmp-value">'+d.firstLiberationYear+'</span></div>'+
+          d.personCards.map(function(p){
+            return '<div class="cmp-person"><div class="cmp-pname" style="color:'+p.color+'">'+p.name+'</div>'+
+              '<div class="cmp-row"><span class="cmp-label">Sueldo+Equity 2032</span><span class="cmp-value">'+d.fmtCurrency(p.total2032)+'</span></div>'+
+              '<div class="cmp-row"><span class="cmp-label">Cruce</span><span class="cmp-value">'+p.liberationYear+'</span></div>'+
+            '</div>';
+          }).join('')+
+        '</div>';
+      }).join('');
+      openModal('modal-comparator');
+    }
+
+    function doExport(){
+      const data=Q.exportSnapshot();
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;a.download='qochix_snapshot_'+new Date().toISOString().slice(0,10)+'.json';
+      a.click();URL.revokeObjectURL(url);
+      showToast('Snapshot exportado como JSON');
+    }
+
+    function openHistory(){
+      const list=document.getElementById('hist-list');
+      const history=Q.getHistory();
+      if(!history.length){
+        list.innerHTML='<div style="text-align:center;color:#8b95a8;padding:2rem;font-size:13px">Sin snapshots guardados. Usa "Guardar snapshot" para crear el primero.</div>';
+        openModal('modal-history');return;
+      }
+      list.innerHTML=history.slice().reverse().map(function(h,i){
+        const idx=history.length-1-i;
+        const dt=new Date(h.ts);
+        const ts=dt.toLocaleString('es-PE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        return '<div class="hist-item"><div class="hist-info"><span class="hist-ts">'+ts+'</span><span class="hist-label">'+(h.label||'Sin etiqueta')+'</span></div><button class="hist-btn" onclick="restoreSnap('+idx+')">Restaurar</button></div>';
+      }).join('');
+      openModal('modal-history');
+    }
+
+    function saveSnap(){
+      const label=document.getElementById('snap-label').value.trim();
+      Q.saveSnapshot(label);
+      document.getElementById('snap-label').value='';
+      showToast('Snapshot guardado'+(label?' · '+label:''));
+      openHistory();
+    }
+
+    function clearHist(){
+      if(!confirm('¿Eliminar todo el historial de snapshots?'))return;
+      Q.clearHistory();
+      openHistory();
+      showToast('Historial limpiado');
+    }
+
+    function restoreSnap(idx){
+      const history=Q.getHistory();
+      if(!history[idx])return;
+      Q.saveState(history[idx].state,{source:'restore-snapshot'});
+      closeModal('modal-history');
+      showToast('Estado restaurado desde snapshot');
+      paint();
+    }
+
+    function startTour(){
+      if(window.QochixHelp && window.QochixHelp.tour) window.QochixHelp.tour();
+    }
+
+    function paintExec(){
+      try{
+        const cmp=Q.compareScenarios();
+        const dp=cmp.p, dn=cmp.n, doOpt=cmp.o;
+        byId('exec-pool').textContent=dp.fmtCurrency(dp.pool);
+        byId('exec-dist').textContent=dp.fmtCurrency(dp.dist2032)+' – '+dp.fmtCurrency(doOpt.dist2032);
+        byId('exec-cross').textContent=dp.firstLiberationYear+(dp.firstLiberationYear!==doOpt.firstLiberationYear?' – '+doOpt.firstLiberationYear:'');
+        byId('exec-range').textContent='Pesimista: '+dp.fmtCurrency(dp.dist2032)+' · Neutro: '+dn.fmtCurrency(dn.dist2032)+' · Optimista: '+doOpt.fmtCurrency(doOpt.dist2032);
+      }catch(e){}
+    }
+
     Q.subscribe(paint);
     paint();
+    paintExec();
 
     if(window.QochixHelp){
       window.QochixHelp.init({
-        selectors:['.brand','.meta','.k .l','.k .v','.ctl-lbl','.mini','#ctl-tkt-lbl','#ctl-pm-lbl'],
+        selectors:['.brand','.meta','.k .l','.k .v','.ctl-lbl','.mini','#ctl-tkt-lbl','#ctl-pm-lbl','.exec-lbl','.faq-section .l'],
         glossaryTitle:'Glosario rápido · Hub Qochix',
         customMap:{
           'qochix hub':'Entrada única para operar simulador, pacto y deck sin perder sincronía.',
@@ -397,9 +592,21 @@
           'modo comité':'Preset de reunión para mover el modelo rápidamente entre prudencia, base y aceleración.',
           'ticket base':'Aporte inicial por socio. Desde el hub se aplica en modo igual para todo el equipo.',
           'tratamiento de aportes':'Define si el aporte es préstamo o compra de acciones. Si eliges compra de acciones, completa la valorización pre-money.',
-          'restaurar base':'Vuelve al baseline del modelo: pesimista ×0.7, neto 65%, reserva S/3,000 y ticket base S/5,000.'
+          'restaurar base':'Vuelve al baseline del modelo: pesimista ×0.7, neto 65%, reserva S/3,000 y ticket base S/5,000.',
+          'si solo lees una cosa':'Resumen ejecutivo: pool del equipo, distribuible 2032 y primer año de cruce en rango pesimista–optimista.',
+          'pool equipo':'Valor total invertido por los 5 socios (ticket + capital + sweat). No varía con el escenario.',
+          'distrib 2032':'Rango mensual del distribuible 2032 desde pesimista hasta optimista.',
+          '1er cruce':'Primer año en que algún socio iguala su sueldo actual con ingresos Qochix.',
+          'preguntas frecuentes':'Respuestas rápidas a las dudas más comunes sobre el modelo económico.'
         }
       });
+      if(window.QochixHelp.shouldShowTour()){
+        setTimeout(function(){startTour();},800);
+      }
+    }
+
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
     }
   </script>
 </body>

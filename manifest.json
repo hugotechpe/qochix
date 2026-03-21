@@ -1,0 +1,12 @@
+{
+  "name": "QOCHIX Hub",
+  "short_name": "QOCHIX",
+  "description": "Ecosistema de marcas · Simulador financiero y pacto económico",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0d13",
+  "theme_color": "#d4a853",
+  "orientation": "any",
+  "categories": ["finance", "business"],
+  "icons": []
+}

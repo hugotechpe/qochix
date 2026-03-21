@@ -348,5 +348,93 @@
     ensureRuntimeTooltip();
   }
 
-  window.QochixHelp = { init, normalize };
+  const TOUR_KEY = 'qochix_tour_done_v1';
+
+  function tour(customSteps) {
+    const steps = customSteps || [
+      { sel: '.brand,.logo,.nav-logo', text: 'Bienvenido a QOCHIX — desde aquí controlas todo el ecosistema: simulador, pacto y deck en un solo lugar.' },
+      { sel: '.sc-btn,.scs,.topbar-center,#tabs', text: 'Cambia entre escenarios (pesimista ×0.7, neutro ×1.0, optimista ×1.4) para ver cómo impacta cada supuesto en tus números.' },
+      { sel: '.k,.kcard,.kpi-grid,.exec-summary', text: 'Los KPIs principales se actualizan en tiempo real. Pool, distribuible, liberación y último sync siempre al día.' },
+      { sel: '.ctl,.sidebar,.sb-sec', text: 'Panel de controles: ajusta ticket, neto operativo, reserva, modo de aportes y presets de comité.' },
+      { sel: '.q-help-badge,.hint-badge', text: 'Los íconos ? tienen explicaciones de cada término financiero. Pasa el mouse encima para verlas.' },
+      { sel: '.frame-wrap,.main,iframe', text: 'El área principal carga el simulador, el pacto o el deck. Todo comparte el mismo estado.' },
+    ];
+
+    let overlay = document.getElementById('q-tour-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'q-tour-overlay';
+      const st = document.createElement('style');
+      st.textContent = [
+        '#q-tour-overlay{position:fixed;inset:0;z-index:9000;pointer-events:none}',
+        '#q-tour-overlay.active{pointer-events:all}',
+        '.q-tour-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9001}',
+        '.q-tour-hl{position:fixed;z-index:9003;box-shadow:0 0 0 4px #D4A853,0 0 0 9999px rgba(0,0,0,.55);border-radius:8px;pointer-events:none;transition:all .35s ease}',
+        '.q-tour-pop{position:fixed;z-index:9004;max-width:360px;padding:1rem 1.1rem;border-radius:14px;background:rgba(10,13,19,.97);border:1px solid rgba(212,168,83,.3);color:#e8ecf0;font-size:.88rem;line-height:1.55;box-shadow:0 16px 40px rgba(0,0,0,.5)}',
+        '.q-tour-pop .q-tour-btns{display:flex;gap:8px;margin-top:.75rem;justify-content:flex-end}',
+        '.q-tour-pop button{padding:.4rem .9rem;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:#e8ecf0;transition:all .2s}',
+        '.q-tour-pop button:hover{background:rgba(212,168,83,.15);border-color:rgba(212,168,83,.4)}',
+        '.q-tour-pop button.q-primary{background:rgba(212,168,83,.9);color:#0a0d13;border-color:transparent}',
+        '.q-tour-pop button.q-primary:hover{background:#D4A853}',
+        '.q-tour-cnt{font-size:.68rem;color:#8b95a8;margin-bottom:.4rem}',
+      ].join('\n');
+      document.head.appendChild(st);
+      document.body.appendChild(overlay);
+    }
+
+    let idx = 0;
+
+    function show(i) {
+      idx = i;
+      if (idx >= steps.length) { close(); return; }
+      const step = steps[idx];
+      const el = document.querySelector(step.sel);
+      const r = el ? el.getBoundingClientRect() : { top: window.innerHeight / 2 - 30, left: window.innerWidth / 2 - 100, width: 200, height: 40 };
+      const pad = 6;
+      overlay.innerHTML = '';
+      overlay.classList.add('active');
+
+      const bd = document.createElement('div');
+      bd.className = 'q-tour-backdrop';
+      bd.onclick = close;
+      overlay.appendChild(bd);
+
+      const hl = document.createElement('div');
+      hl.className = 'q-tour-hl';
+      hl.style.cssText = 'top:' + (r.top - pad) + 'px;left:' + (r.left - pad) + 'px;width:' + (r.width + pad * 2) + 'px;height:' + (r.height + pad * 2) + 'px';
+      overlay.appendChild(hl);
+
+      const pop = document.createElement('div');
+      pop.className = 'q-tour-pop';
+      const prevBtn = idx > 0 ? '<button onclick="window.QochixHelp._tp()">Anterior</button>' : '';
+      const nextLbl = idx < steps.length - 1 ? 'Siguiente' : 'Finalizar';
+      pop.innerHTML = '<div class="q-tour-cnt">' + (idx + 1) + ' / ' + steps.length + '</div><div>' + step.text + '</div><div class="q-tour-btns">' + prevBtn + '<button class="q-primary" onclick="window.QochixHelp._tn()">' + nextLbl + '</button></div>';
+
+      let py = r.bottom + 14;
+      let px = r.left;
+      if (py + 180 > window.innerHeight) py = Math.max(10, r.top - 180);
+      if (px + 360 > window.innerWidth) px = Math.max(10, window.innerWidth - 370);
+      pop.style.cssText = 'top:' + py + 'px;left:' + px + 'px';
+      overlay.appendChild(pop);
+
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function close() {
+      overlay.classList.remove('active');
+      overlay.innerHTML = '';
+      try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) {}
+    }
+
+    window.QochixHelp._tn = function () { show(idx + 1); };
+    window.QochixHelp._tp = function () { show(idx - 1); };
+    window.QochixHelp._tc = close;
+    show(0);
+  }
+
+  function shouldShowTour() {
+    try { return !localStorage.getItem(TOUR_KEY); } catch (e) { return false; }
+  }
+
+  window.QochixHelp = { init, normalize, tour, shouldShowTour };
 })();

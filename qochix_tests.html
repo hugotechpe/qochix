@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QOCHIX — Tests del motor financiero</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;background:#0a0d13;color:#e8ecf0;padding:2rem;max-width:800px;margin:0 auto}
+  h1{color:#d4a853;margin-bottom:.5rem;font-size:1.5rem}
+  .sub{color:#8b95a8;margin-bottom:1.5rem;font-size:.88rem}
+  .pass{color:#52C97A}.fail{color:#E86B5F}
+  .test{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.88rem;display:flex;gap:8px;align-items:baseline}
+  .test small{color:#8b95a8;font-size:.76rem}
+  .group{margin-top:1.5rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:#d4a853;padding-bottom:6px;border-bottom:1px solid rgba(212,168,83,.2)}
+  .summary{margin-top:2rem;padding:1rem 1.2rem;border-radius:12px;font-size:1rem;font-weight:700}
+  .summary.ok{background:rgba(82,201,122,.08);border:1px solid rgba(82,201,122,.25);color:#52C97A}
+  .summary.bad{background:rgba(232,107,95,.08);border:1px solid rgba(232,107,95,.25);color:#E86B5F}
+  .time{margin-top:.75rem;font-size:.78rem;color:#8b95a8}
+</style>
+</head>
+<body>
+<h1>QOCHIX — Tests</h1>
+<p class="sub">Suite de tests para el motor financiero (qochix_system.js)</p>
+<div id="results"></div>
+<div id="summary"></div>
+<div id="timing" class="time"></div>
+
+<script src="qochix_system.js"></script>
+<script>
+(function () {
+  const Q = window.QochixSystem;
+  const results = [];
+  const container = document.getElementById('results');
+  const t0 = performance.now();
+
+  function assert(name, condition, detail) {
+    results.push({ name, ok: !!condition, detail: detail || '' });
+  }
+
+  function group(label) {
+    results.push({ group: label });
+  }
+
+  group('Defaults y estructura');
+  assert('DEFAULTS tiene 5 personas', Q.DEFAULTS.persons.length === 5);
+  assert('DEFAULTS tiene 6 hires', Q.DEFAULTS.hires.length === 6);
+  assert('DEFAULTS.P.sc es "p"', Q.DEFAULTS.P.sc === 'p');
+  assert('AÑOS tiene 7 elementos (2026-2032)', Q.AÑOS.length === 7);
+  assert('SC tiene 3 escenarios', Object.keys(Q.SC).length === 3);
+  assert('FACT0 tiene trazo, almaria, ht', Q.FACT0.trazo && Q.FACT0.almaria && Q.FACT0.ht);
+
+  group('normalizeState');
+  const s1 = Q.normalizeState(null);
+  assert('normalizeState(null) retorna 5 personas', s1.persons.length === 5);
+  assert('normalizeState(null).P.netoPct es 0.65', s1.P.netoPct === 0.65);
+  assert('normalizeState(null).P.reserva es 3000', s1.P.reserva === 3000);
+  const s2 = Q.normalizeState({ P: { sc: 'o' } });
+  assert('normalizeState parcial mantiene sc=o', s2.P.sc === 'o');
+  assert('normalizeState parcial conserva netoPct default', s2.P.netoPct === 0.65);
+  assert('normalizeState parcial conserva tickets', s2.P.tickets && typeof s2.P.tickets === 'object');
+
+  group('clone');
+  const orig = { a: { b: 1 } };
+  const copy = Q.clone(orig);
+  copy.a.b = 99;
+  assert('clone es deep (no muta original)', orig.a.b === 1);
+
+  group('deriveState básico');
+  const d = Q.deriveState(Q.DEFAULTS);
+  assert('retorna personCards con 5 elementos', d.personCards.length === 5);
+  assert('retorna years con 7 elementos', d.years.length === 7);
+  assert('pool > 0', d.pool > 0, 'pool=' + d.pool);
+  assert('scenarioLabel existe', typeof d.scenarioLabel === 'string' && d.scenarioLabel.length > 0);
+  assert('runway.months > 0', d.runway.months > 0, 'months=' + d.runway.months);
+  assert('breakEven es número o 2033+', typeof d.breakEven === 'number' || d.breakEven === '2033+', 'be=' + d.breakEven);
+  assert('fact tiene 7 arrays', d.fact.trazo.length === 7 && d.fact.neto.length === 7);
+
+  group('Escenarios impactan facturación');
+  const dp = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'p' }) }));
+  const dn = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'n' }) }));
+  const doOpt = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'o' }) }));
+  assert('Fact 2032 pesimista < neutro', dp.totalFact2032 < dn.totalFact2032, dp.totalFact2032 + '<' + dn.totalFact2032);
+  assert('Fact 2032 neutro < optimista', dn.totalFact2032 < doOpt.totalFact2032, dn.totalFact2032 + '<' + doOpt.totalFact2032);
+  assert('Dist 2032 pesimista <= neutro', dp.dist2032 <= dn.dist2032);
+  assert('Dist 2032 neutro <= optimista', dn.dist2032 <= doOpt.dist2032);
+
+  group('Equity');
+  const eqSum = d.personCards.reduce(function (s, p) { return s + p.baseEquity; }, 0);
+  assert('Base equity suma 100', Math.abs(eqSum - 100) < 0.1, 'suma=' + eqSum);
+
+  const eqState = Q.clone(Q.DEFAULTS);
+  eqState.P.capitalMode = 'equity_round';
+  eqState.P.preMoney = 5000000;
+  const deq = Q.deriveState(eqState);
+  const eqEffSum = deq.personCards.reduce(function (s, p) { return s + p.equity; }, 0);
+  assert('Equity efectivo en equity_round suma ~100', Math.abs(eqEffSum - 100) < 0.5, 'suma=' + eqEffSum.toFixed(2));
+
+  group('Inversión y pool');
+  const hugoCard = d.personCards.find(function (p) { return p.id === 'hugo'; });
+  assert('Hugo investment > capital + ticket', hugoCard.investment > hugoCard.capital + hugoCard.ticket);
+  assert('Pool >= suma de investments', d.pool >= d.personCards.reduce(function (s, p) { return s + p.investment; }, 0) * 0.99);
+
+  group('Formatos');
+  assert('fmtCurrency(1000) contiene S/', Q.fmtCurrency(1000).indexOf('S/') >= 0);
+  assert('fmtCurrency(null) retorna —', Q.fmtCurrency(null) === '—');
+  assert('fmtCurrency(NaN) retorna —', Q.fmtCurrency(NaN) === '—');
+  assert('fmtDateTime(null) retorna "sin guardar"', Q.fmtDateTime(null) === 'sin guardar');
+
+  group('Liberación');
+  const libYears = d.personCards.map(function (p) { return p.liberationYear; });
+  assert('Todos tienen liberationYear', libYears.every(function (y) { return typeof y === 'number' || y === '2033+'; }));
+  assert('firstLiberationYear existe', d.firstLiberationYear !== undefined);
+
+  group('compareScenarios');
+  if (Q.compareScenarios) {
+    var cmp = Q.compareScenarios();
+    assert('Retorna 3 keys (p,n,o)', Object.keys(cmp).length === 3);
+    assert('p.dist2032 existe', typeof cmp.p.dist2032 === 'number');
+    assert('n.dist2032 >= p.dist2032', cmp.n.dist2032 >= cmp.p.dist2032);
+    assert('o.dist2032 >= n.dist2032', cmp.o.dist2032 >= cmp.n.dist2032);
+    assert('Pool es igual en los 3', cmp.p.pool === cmp.n.pool && cmp.n.pool === cmp.o.pool);
+  } else {
+    assert('compareScenarios existe', false, 'función no encontrada');
+  }
+
+  group('validateEquity');
+  if (Q.validateEquity) {
+    var v = Q.validateEquity();
+    assert('sum close to 100', Math.abs(v.sum - 100) < 0.1, 'sum=' + v.sum);
+    assert('valid es true con defaults', v.valid === true);
+    assert('delta ~0', Math.abs(v.delta) < 0.1);
+  } else {
+    assert('validateEquity existe', false, 'función no encontrada');
+  }
+
+  group('exportSnapshot');
+  if (Q.exportSnapshot) {
+    var exp = Q.exportSnapshot();
+    assert('Tiene timestamp', typeof exp.ts === 'string');
+    assert('Tiene scenario', typeof exp.scenario === 'string');
+    assert('Tiene persons array', Array.isArray(exp.persons) && exp.persons.length === 5);
+    assert('Tiene raw state', exp.raw && typeof exp.raw === 'object');
+  } else {
+    assert('exportSnapshot existe', false, 'función no encontrada');
+  }
+
+  group('History');
+  if (Q.saveSnapshot && Q.getHistory && Q.clearHistory) {
+    Q.clearHistory();
+    assert('Historia limpia tiene 0 items', Q.getHistory().length === 0);
+    Q.saveSnapshot('test-snap');
+    assert('Después de saveSnapshot tiene 1 item', Q.getHistory().length === 1);
+    assert('Snapshot tiene label', Q.getHistory()[0].label === 'test-snap');
+    assert('Snapshot tiene state', Q.getHistory()[0].state && typeof Q.getHistory()[0].state === 'object');
+    Q.clearHistory();
+    assert('clearHistory vuelve a 0', Q.getHistory().length === 0);
+  } else {
+    assert('History functions existen', false, 'funciones no encontradas');
+  }
+
+  group('Sensibilidad: neto operativo');
+  var highNeto = Q.clone(Q.DEFAULTS);
+  highNeto.P.netoPct = 0.80;
+  var lowNeto = Q.clone(Q.DEFAULTS);
+  lowNeto.P.netoPct = 0.50;
+  var dHigh = Q.deriveState(highNeto);
+  var dLow = Q.deriveState(lowNeto);
+  assert('Mayor neto% → mayor dist2032', dHigh.dist2032 >= dLow.dist2032, dHigh.dist2032 + '>=' + dLow.dist2032);
+
+  group('Sensibilidad: reserva');
+  var highRsv = Q.clone(Q.DEFAULTS);
+  highRsv.P.reserva = 10000;
+  var lowRsv = Q.clone(Q.DEFAULTS);
+  lowRsv.P.reserva = 0;
+  var dHR = Q.deriveState(highRsv);
+  var dLR = Q.deriveState(lowRsv);
+  assert('Mayor reserva → menor o igual dist2032', dHR.dist2032 <= dLR.dist2032);
+
+  var elapsed = (performance.now() - t0).toFixed(1);
+  var pass = 0, fail = 0;
+  results.forEach(function (r) {
+    if (r.group) {
+      var div = document.createElement('div');
+      div.className = 'group';
+      div.textContent = r.group;
+      container.appendChild(div);
+      return;
+    }
+    if (r.ok) pass++; else fail++;
+    var div = document.createElement('div');
+    div.className = 'test';
+    div.innerHTML = '<span class="' + (r.ok ? 'pass' : 'fail') + '">' + (r.ok ? '✓' : '✗') + '</span> ' + r.name + (r.detail ? ' <small>(' + r.detail + ')</small>' : '');
+    container.appendChild(div);
+  });
+
+  var summary = document.getElementById('summary');
+  summary.className = 'summary ' + (fail === 0 ? 'ok' : 'bad');
+  summary.textContent = pass + ' passed, ' + fail + ' failed de ' + (pass + fail) + ' tests';
+  document.getElementById('timing').textContent = 'Ejecutado en ' + elapsed + 'ms';
+})();
+</script>
+</body>
+</html>
