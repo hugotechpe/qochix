@@ -26,11 +26,11 @@
     {id:'tr_redes',brand:'trazo',name:'Gestión redes sociales',unit:'cliente/mes',prices:[1000,1000,1500,1500,1500,1500,1500],vols:[2,3,4,5,6,7,8]},
     {id:'tr_campanas',brand:'trazo',name:'Campañas y producciones',unit:'campaña/mes',prices:[4000,4000,10000,10000,10000,10000,10000],vols:[0,1,1,1,1,2,2]},
     {id:'tr_audiovisual',brand:'trazo',name:'Producción audiovisual (paquete)',unit:'marca/mes',prices:[1500,1500,5000,5000,5000,5000,5000],vols:[2,3,1,2,3,3,4]},
-    {id:'tr_consultoria',brand:'trazo',name:'Consultoría estratégica de marca',unit:'sesión/mes',prices:[300,300,300,300,300,300,300],vols:[5,8,10,12,14,16,18]},
-    // ── Almaria (3) — precios corp/rituales suben 2029 ──
-    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,25,25,25,25,25],vols:[16,80,160,280,500,700,900]},
-    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,55,75,75,75,75],vols:[8,60,160,250,700,1000,1200]},
-    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,55,75,75,75,75],vols:[5,60,150,180,450,680,950]},
+    {id:'tr_consultoria',brand:'trazo',name:'Consultoría estratégica de marca',unit:'sesión/mes',prices:[300,300,450,450,500,500,500],vols:[5,8,10,12,14,16,18]},
+    // ── Almaria (3) — todos los precios suben 2028 ──
+    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,35,35,35,35,35],vols:[16,80,160,280,500,700,900]},
+    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,75,75,75,75,75],vols:[8,60,160,250,700,1000,1200]},
+    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,75,75,75,75,75],vols:[5,60,150,180,450,680,950]},
     // ── HugoTech (5) — precios suben 2028 ──
     {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,200,200,200,200,200],vols:[15,20,28,35,48,55,65]},
     {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,2000,2000,2000,2000,2000],vols:[1,3,3,4,7,8,10]},
