@@ -98,10 +98,10 @@ body{
 .deck-live-card{background:rgba(10,13,19,.36);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:.8rem .75rem}
 .deck-live-label{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
 .deck-live-value{font-family:var(--serif);font-size:1.45rem;line-height:1.05;color:var(--gold)}
-.deck-live-note{margin-top:.8rem;font-size:.8rem;color:var(--text2);line-height:1.55}
+.deck-live-note{margin-top:.8rem;font-size:.9rem;color:var(--text2);line-height:1.62}
 .deck-live-story{
   margin-top:.7rem;padding:.62rem .72rem;border:1px solid rgba(62,207,207,.18);border-radius:12px;
-  background:rgba(62,207,207,.06);font-size:.77rem;color:var(--text2);line-height:1.58;
+  background:rgba(62,207,207,.06);font-size:.93rem;color:var(--text2);line-height:1.68;
 }
 .deck-live-story strong{color:var(--text)}
 .deck-live-acts{
@@ -114,12 +114,12 @@ body{
   display:flex;justify-content:space-between;align-items:center;gap:.42rem;margin-bottom:.18rem;
 }
 .deck-live-act-title{
-  font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
 }
-.deck-live-act-copy{font-size:.61rem;color:var(--text2);line-height:1.45}
+.deck-live-act-copy{font-size:.8rem;color:var(--text2);line-height:1.58}
 .deck-live-act-copy strong{color:var(--text)}
 .deck-live-tag-mini{
-  font-size:.52rem;line-height:1;padding:.2rem .36rem;border-radius:999px;border:1px solid rgba(255,255,255,.16);
+  font-size:.58rem;line-height:1;padding:.24rem .4rem;border-radius:999px;border:1px solid rgba(255,255,255,.16);
   text-transform:uppercase;letter-spacing:.08em;color:var(--muted);white-space:nowrap;
 }
 .deck-live-tag-mini.early{color:#7FE0A8;border-color:rgba(82,201,122,.35);background:rgba(82,201,122,.1)}
@@ -129,7 +129,7 @@ body{
   margin-top:.7rem;padding:.55rem .6rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(10,13,19,.26);
 }
 .deck-live-mini-title{
-  font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.28rem
+  font-size:.68rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.28rem
 }
 .deck-live-mini table{width:100%;border-collapse:collapse}
 .deck-live-mini th,.deck-live-mini td{
@@ -141,7 +141,7 @@ body{
   margin-top:.7rem;padding:.58rem .62rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(10,13,19,.28);
 }
 .deck-live-narrative-item{
-  font-size:.69rem;color:var(--text2);line-height:1.55;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:.84rem;color:var(--text2);line-height:1.62;padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.07);
 }
 .deck-live-narrative-item:last-child{border-bottom:none}
 .deck-live-narrative-item strong{color:var(--text)}
@@ -154,15 +154,15 @@ body{
 .deck-live-person-head{
   display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.28rem;
 }
-.deck-live-person-name{font-size:.72rem;font-weight:700}
-.deck-live-person-role{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-.deck-live-person-copy{font-size:.62rem;color:var(--text2);line-height:1.45}
+.deck-live-person-name{font-size:.9rem;font-weight:700}
+.deck-live-person-role{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.deck-live-person-copy{font-size:.8rem;color:var(--text2);line-height:1.62}
 .deck-live-person-copy + .deck-live-person-copy{margin-top:.32rem}
 .deck-live-person-points{
   margin-top:.4rem;display:grid;gap:.22rem;
 }
 .deck-live-person-point{
-  font-size:.64rem;color:var(--text2);line-height:1.5;padding-left:.72rem;position:relative;
+  font-size:.75rem;color:var(--text2);line-height:1.58;padding-left:.72rem;position:relative;
 }
 .deck-live-person-point::before{
   content:'•';position:absolute;left:.08rem;top:0;color:var(--gold);opacity:.9;
@@ -411,16 +411,18 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
   max-width:min(100%,1120px) !important;
   width:100%;
   margin:0 auto;
+  justify-content:flex-start !important;
 }
 .embedded #s1 p[style*="max-width:36rem"]{max-width:58rem !important;}
 .embedded .deck-live{
   width:min(100%,1120px);
   padding:1.25rem 1.35rem;
 }
-.embedded .deck-live-story{font-size:.84rem;line-height:1.6;}
-.embedded .deck-live-narrative-item{font-size:.73rem;}
-.embedded .deck-live-person-copy{font-size:.68rem;}
-.embedded .deck-live-person-point{font-size:.66rem;}
+.embedded .deck-live-story{font-size:1.02rem;line-height:1.7;}
+.embedded .deck-live-act-copy{font-size:.9rem;line-height:1.62;}
+.embedded .deck-live-narrative-item{font-size:.92rem;}
+.embedded .deck-live-person-copy{font-size:.88rem;}
+.embedded .deck-live-person-point{font-size:.82rem;}
 .embedded .deck-res{display:none;}
 .embedded .dots,.embedded .nav-hint{display:none !important;}
 .embedded nav{
@@ -2954,23 +2956,23 @@ document.addEventListener('keydown',e=>{
     const note=byId('deck-live-note');
     const story=byId('deck-live-story');
     if(!note)return;
-    note.innerHTML='Pool actual: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.pool)+'</strong> · Facturación 2032 del escenario activo: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.totalFact2032)+'</strong>/mes. Esta lectura se alimenta del mismo motor que el simulador.';
+    note.innerHTML='Hoy el equipo ya puso sobre la mesa <strong style="color:var(--text)">'+derived.fmtCurrency(derived.pool)+'</strong> entre dinero y esfuerzo valorizado. En este escenario, la facturación estimada al final del horizonte es <strong style="color:var(--text)">'+derived.fmtCurrency(derived.totalFact2032)+'</strong> por mes.';
     if(story){
-      story.innerHTML='Historia viva: en <strong>'+derived.scenarioLabel+'</strong>, el relato no termina en 2032: cambia según el quiebre real. El sistema llega a colchón positivo en <strong>'+breakYear+'</strong>, habilita distribución en <strong>'+firstDist+'</strong> y muestra su primer cruce de liberación en <strong>'+firstLib+'</strong>. Si subes ingresos o mejoras margen, estos hitos se adelantan automáticamente.';
+      story.innerHTML='En <strong>'+derived.scenarioLabel+'</strong>, esta es la historia en palabras simples: primero sostenemos la operación, luego llegamos al punto donde la caja deja de sufrir, y recién ahí empezamos a repartir con tranquilidad. En números, el quiebre llega en <strong>'+breakYear+'</strong>, el reparto arranca en <strong>'+firstDist+'</strong> y la primera liberación real aparece en <strong>'+firstLib+'</strong>. Si suben ingresos o mejora el margen, estas fechas se adelantan automáticamente.';
     }
     if(acts){
       acts.innerHTML=
         '<article class="deck-live-act">'+
           '<div class="deck-live-act-head"><div class="deck-live-act-title">Acto 1 · Arranque '+years[0]+'</div><span class="deck-live-tag-mini base">Base</span></div>'+
-          '<div class="deck-live-act-copy">El ecosistema parte con foco en sostener operación: facturación mensual de <strong>'+derived.fmtCurrency(derived.fact.total[0])+'</strong> y distribuible de <strong>'+derived.fmtCurrency(derived.fact.dist[0])+'</strong>. Prioridad: consolidar caja y ritmo comercial.</div>'+
+          '<div class="deck-live-act-copy">Arrancamos con foco en aguantar y ordenar. En ese punto, el sistema mueve <strong>'+derived.fmtCurrency(derived.fact.total[0])+'</strong> al mes y todavía casi no hay espacio para repartir (<strong>'+derived.fmtCurrency(derived.fact.dist[0])+'</strong>). La prioridad es caja, disciplina y ritmo comercial.</div>'+
         '</article>'+
         '<article class="deck-live-act">'+
           '<div class="deck-live-act-head"><div class="deck-live-act-title">Acto 2 · Punto de quiebre '+breakYear+'</div><span class="deck-live-tag-mini '+breakTag.cls+'">'+breakTag.label+'</span></div>'+
-          '<div class="deck-live-act-copy">Cuando el colchón cruza a positivo, Qochix pasa de resistencia a expansión. En ese año, la facturación estimada llega a <strong>'+derived.fmtCurrency(derived.fact.total[breakIdx])+'/mes</strong> y la distribución arranca en <strong>'+firstDist+'</strong> <span class="deck-live-tag-mini '+distTag.cls+'" style="margin-left:.28rem">'+distTag.label+'</span>.</div>'+
+          '<div class="deck-live-act-copy">Aquí cambia el juego: el colchón pasa a positivo y dejamos de pelear por sobrevivir. En ese año la facturación estimada llega a <strong>'+derived.fmtCurrency(derived.fact.total[breakIdx])+'/mes</strong>, y el reparto empieza en <strong>'+firstDist+'</strong> <span class="deck-live-tag-mini '+distTag.cls+'" style="margin-left:.28rem">'+distTag.label+'</span>.</div>'+
         '</article>'+
         '<article class="deck-live-act">'+
           '<div class="deck-live-act-head"><div class="deck-live-act-title">Acto 3 · Aceleración '+horizon+'</div><span class="deck-live-tag-mini '+libTag.cls+'">'+libTag.label+'</span></div>'+
-          '<div class="deck-live-act-copy">Con el sistema estabilizado, el distribuible alcanza <strong>'+derived.fmtCurrency(derived.dist2032)+'/mes</strong> y <strong>'+derived.liberatedBy2032+'/'+derived.personCards.length+'</strong> socios logran liberar su sueldo actual dentro del horizonte. El primer cruce humano aparece en <strong>'+firstLib+'</strong>.</div>'+
+          '<div class="deck-live-act-copy">Con el sistema más estable, el distribuible sube hasta <strong>'+derived.fmtCurrency(derived.dist2032)+'/mes</strong>. En esta proyección, <strong>'+derived.liberatedBy2032+'/'+derived.personCards.length+'</strong> socios logran cubrir su sueldo actual dentro del horizonte. El primer cruce humano aparece en <strong>'+firstLib+'</strong>.</div>'+
         '</article>';
     }
     if(teamStory){
@@ -2985,7 +2987,7 @@ document.addEventListener('keydown',e=>{
         const status=person.liberationYear==='2033+'
           ? 'aún no cruza al '+horizon
           : 'cruza en '+person.liberationYear;
-        return '<div class="deck-live-narrative-item"><strong style="color:'+person.color+'">'+person.name+'</strong>: '+status+'; su punto narrativo cae en <strong>'+personalYear+'</strong> con <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong>. Al 2030 proyecta <strong>'+derived.fmtCurrency(total30)+'/mes</strong>'+(gap>0?' y mantiene brecha de <strong>'+derived.fmtCurrency(gap)+'/mes</strong> frente a su sueldo actual.':' y ya iguala/supera su sueldo actual.')+'</div>';
+        return '<div class="deck-live-narrative-item"><strong style="color:'+person.color+'">'+person.name+'</strong>: '+status+'. En su año clave ('+personalYear+') proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong>. Para 2030 llega a <strong>'+derived.fmtCurrency(total30)+'/mes</strong>'+(gap>0?', y todavía le faltarían <strong>'+derived.fmtCurrency(gap)+'/mes</strong> para igualar su sueldo actual.':', con lo que ya alcanza o supera su sueldo actual.')+'</div>';
       }).join('');
     }
     if(people){
@@ -3012,15 +3014,15 @@ document.addEventListener('keydown',e=>{
               '<div style="font-size:.55rem;color:var(--muted)">Liberación: <strong style="color:var(--text)">'+person.liberationYear+'</strong> <span class="deck-live-tag-mini '+personalTag.cls+'" style="margin-left:.2rem">'+personalTag.label+'</span></div>'+
             '</div>'+
             '<div class="deck-live-person-copy">'+
-              'Aporta <strong>'+derived.fmtCurrency(person.cashContribution)+'</strong> en caja ('+capMode+'), suma <strong>'+derived.fmtCurrency(sweat)+'</strong> en esfuerzo valorizado y sostiene foco en '+ctx.focus+
+              '<strong>'+person.name+'</strong> hoy aporta <strong>'+derived.fmtCurrency(person.cashContribution)+'</strong> en caja ('+capMode+'), más <strong>'+derived.fmtCurrency(sweat)+'</strong> en esfuerzo valorizado. Su foco principal: '+ctx.focus+
             '</div>'+
             '<div class="deck-live-person-copy">'+
-              'Su quiebre personal ocurre en <strong>'+personalYear+'</strong>: en ese punto proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong> ('+derived.fmtCurrency(personalAnnual)+'/año). Si sigue la aceleración hasta '+horizon+', puede cerrar en <strong>'+derived.fmtCurrency(person.total2032)+'/mes</strong> y un ROI estimado de <strong>'+roi(annual2032,person.investment)+'</strong> sobre su aporte total.'+
+              'Su quiebre personal aparece en <strong>'+personalYear+'</strong>: en ese momento proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong> ('+derived.fmtCurrency(personalAnnual)+'/año). Si la tendencia se mantiene hasta '+horizon+', cerraría cerca de <strong>'+derived.fmtCurrency(person.total2032)+'/mes</strong> con un ROI estimado de <strong>'+roi(annual2032,person.investment)+'</strong> sobre su aporte total.'+
             '</div>'+
             '<div class="deck-live-person-points">'+
-              '<div class="deck-live-person-point"><strong>Aporte total:</strong> '+derived.fmtCurrency(person.investment)+' (equity efectivo '+eqLabel+').</div>'+
-              '<div class="deck-live-person-point"><strong>Meta '+horizon+':</strong> sueldo '+derived.fmtCurrency(person.sue2032)+'/mes + equity '+derived.fmtCurrency(person.eq2032)+'/mes.</div>'+
-              '<div class="deck-live-person-point"><strong>Dedicación modelada:</strong> '+Number(base.hrs||0)+' h/día · factor '+Number(base.adj||0).toFixed(2)+'.</div>'+
+              '<div class="deck-live-person-point"><strong>Aporte total acumulado:</strong> '+derived.fmtCurrency(person.investment)+' (equity efectivo '+eqLabel+').</div>'+
+              '<div class="deck-live-person-point"><strong>Foto objetivo '+horizon+':</strong> sueldo '+derived.fmtCurrency(person.sue2032)+'/mes + equity '+derived.fmtCurrency(person.eq2032)+'/mes.</div>'+
+              '<div class="deck-live-person-point"><strong>Dedicación modelada hoy:</strong> '+Number(base.hrs||0)+' h/día · factor '+Number(base.adj||0).toFixed(2)+'.</div>'+
             '</div>'+
           '</article>'
         );
