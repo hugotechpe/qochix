@@ -773,7 +773,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>Sueldo hoy</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat neto</th><th>% del pool</th>
+        <th>Socio</th><th>Sueldo hoy</th><th>Sue. marca</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat neto</th><th>% del pool</th>
       </tr></thead><tbody id="tb-sweat"></tbody></table></div>
     </div>
   </div>
@@ -1364,7 +1364,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=10"></script>
+<script src="qochix_system.js?v=11"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1562,6 +1562,11 @@ function initSidebar() {
       <div class="fld"><label>Sueldo hoy (S/)</label>
         <input type="number" value="${p.sueldo}" step="500" min="500" max="80000"
           id="inp-sue-${p.id}" oninput="onS('${p.id}',this.value)"></div>
+      <div class="fld"><label title="Lo que ya cobra de su marca (Trazo, etc). Se resta del sueldo Qochix para calcular sweat equity.">Sueldo marca actual (S/) ℹ️</label>
+        <input type="number" value="${p.sueldoMarca||0}" step="500" min="0" max="80000"
+          id="inp-smarca-${p.id}" oninput="onSueldoMarca('${p.id}',this.value)"></div>
+    </div>
+    <div class="g2" style="margin-bottom:.5rem">
       <div class="fld"><label>Marca asignada</label>
         <select onchange="onFounderBrand('${p.id}',this.value)" style="width:100%;padding:6px;background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:8px;font-size:.78rem">
           ${BIDs.map(b=>'<option value="'+b+'"'+(((P.founderBrand||{})[p.id]||'')=== b?' selected':'')+'>'+BL[b]+'</option>').join('')}
@@ -1737,6 +1742,11 @@ function onS(id,v){
   if(badge)badge.value=Math.round(n/(22*8));
   recalc();
 }
+function onSueldoMarca(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  const p=PERSONS.find(x=>x.id===id);p.sueldoMarca=n;
+  recalc();
+}
 function onCap(id,v){
   const n=toNumLoose(v); if(n===null) return;
   PERSONS.find(x=>x.id===id).capital=n;recalc();
@@ -1894,9 +1904,13 @@ function toggleSidebar(){
 function sw(p,curve){
   const hr=p.sueldo/(22*8),hm=p.hrs*6*4.3,vm=hr*hm;
   const adj=Number(p.adj||0);
+  const baseMarca=Number(p.sueldoMarca||0);
   if(curve&&curve.length>0){
     let total=0;
-    for(let i=0;i<7;i++){total+=Math.max(0,vm-Number(curve[i]||0))*12;}
+    for(let i=0;i<7;i++){
+      const extraQ=Math.max(0,Number(curve[i]||0)-baseMarca);
+      total+=Math.max(0,vm-extraQ)*12;
+    }
     return{hr,hm,vm,sw:total*adj};
   }
   return{hr,hm,vm,sw:vm*36*adj};
@@ -2143,9 +2157,9 @@ function recalc(){
   const tswAll=PERSONS.reduce((s,p)=>s+sw(p,sc[p.id]).sw,0);
   PERSONS.forEach((p,i)=>{
     const s=sw(p,sc[p.id]);tvm+=s.vm;tsw+=s.sw;
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td>${fmt(p.sueldo)}</td><td class="cg">S/${s.hr.toFixed(0)}/hr</td><td>${p.hrs}h</td><td>${s.hm.toFixed(0)}</td><td>${fmt(s.vm)}/m</td><td class="cm">×${p.adj}</td><td class="cg">${fmt(s.sw)}</td><td class="cm">${tswAll>0?(s.sw/tswAll*100).toFixed(0)+'%':'—'}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td>${fmt(p.sueldo)}</td><td>${fmt(p.sueldoMarca||0)}</td><td class="cg">S/${s.hr.toFixed(0)}/hr</td><td>${p.hrs}h</td><td>${s.hm.toFixed(0)}</td><td>${fmt(s.vm)}/m</td><td class="cm">×${p.adj}</td><td class="cg">${fmt(s.sw)}</td><td class="cm">${tswAll>0?(s.sw/tswAll*100).toFixed(0)+'%':'—'}</td></tr>`;
   });
-  html+=`<tr class="trs"><td>TOTAL</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="ct">${fmt(tvm)}/m</td><td>—</td><td class="cg cb">${fmt(tswAll)}</td><td>—</td></tr>`;
+  html+=`<tr class="trs"><td>TOTAL</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="ct">${fmt(tvm)}/m</td><td>—</td><td class="cg cb">${fmt(tswAll)}</td><td>—</td></tr>`;
   sel('tb-sweat').innerHTML=html;
 
   // ── Equity table ──

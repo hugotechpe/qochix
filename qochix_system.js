@@ -63,19 +63,19 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 0,
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 7, adj: 0.6, equity: 63, capital: 0,
         brandCapital: { trazo: 12000, almaria: 10000, ht: 24000 },
         brandCash: { trazo: 12000, almaria: 9400, ht: 16000 }, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 0,
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 17, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 18800 }, c: '#3ECFCF' },
-      { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 0,
+      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 11, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
+      { id: 'carlos', name: 'Carlos', sueldo: 5000, sueldoMarca: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
         brandCapital: { trazo: 62000 },
         brandCash: {}, c: '#9B7FE8' },
-      { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
+      { id: 'nicole', name: 'Nicole', sueldo: 2000, sueldoMarca: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E86B5F' },
     ],
@@ -113,7 +113,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 8,
+      schemaVersion: 9,
     },
   };
 
@@ -182,6 +182,14 @@
         p.brandCapital = { ...(p.brandCapital || {}), ...f.bc };
         p.brandCash = { ...(p.brandCash || {}), ...f.cash };
       });
+    }},
+    { from: 8, to: 9, run(s) {
+      const smDefaults = { carlos: 5000, nicole: 2000 };
+      if (s.persons) {
+        s.persons.forEach(p => {
+          if (p.sueldoMarca == null) p.sueldoMarca = smDefaults[p.id] || 0;
+        });
+      }
     }},
   ];
 
@@ -346,10 +354,12 @@
     const hm = Number(person.hrs || 0) * 6 * 4.3;
     const vm = hr * hm;
     const adj = Number(person.adj || 0);
+    const baseMarca = Number(person.sueldoMarca || 0);
     if (curve && curve.length > 0) {
       let total = 0;
       for (let i = 0; i < AÑOS.length; i++) {
-        const gap = Math.max(0, vm - Number(curve[i] || 0));
+        const extraQochix = Math.max(0, Number(curve[i] || 0) - baseMarca);
+        const gap = Math.max(0, vm - extraQochix);
         total += gap * 12;
       }
       return { hr, hm, vm, sw: total * adj };
