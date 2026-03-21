@@ -155,6 +155,7 @@
     function openSrc(src, btn){
       frame.src = src;
       tabs.forEach(b=>b.classList.toggle('active', b===btn));
+      if(src==='QOCHIX_Simulador.html') setSideCollapsed(false);
       history.replaceState(null,'','#'+encodeURIComponent(src));
     }
     tabs.forEach(btn=>btn.addEventListener('click',()=>openSrc(btn.dataset.src,btn)));
@@ -195,7 +196,9 @@
     }
     sideToggle.addEventListener('click',()=>setSideCollapsed(!layout.classList.contains('side-collapsed')));
     try{
-      if(localStorage.getItem(SIDE_KEY)==='1') layout.classList.add('side-collapsed');
+      const savedSide=localStorage.getItem(SIDE_KEY);
+      if(savedSide==='1') layout.classList.add('side-collapsed');
+      if(savedSide!=='1' && savedSide!=='0') layout.classList.remove('side-collapsed');
     }catch(e){}
     paintSideToggle();
 

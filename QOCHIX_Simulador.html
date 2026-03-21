@@ -412,7 +412,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<div class="app sidebar-hidden" id="app-root">
+<div class="app" id="app-root">
 
 <!-- TOPBAR -->
 <div class="topbar">
@@ -2316,17 +2316,17 @@ try{
   if(window.top!==window.self){
     document.getElementById('hero').style.display='none';
     const app=document.getElementById('app-root');
-    if(app) app.classList.add('sidebar-hidden');
+    if(app) app.classList.remove('sidebar-hidden');
     const btn=document.getElementById('sb-toggle');
-    if(btn) btn.textContent='☰';
+    if(btn) btn.textContent='✕';
     showTab('dashboard');
   }
 }catch(error){
   document.getElementById('hero').style.display='none';
   const app=document.getElementById('app-root');
-  if(app) app.classList.add('sidebar-hidden');
+  if(app) app.classList.remove('sidebar-hidden');
   const btn=document.getElementById('sb-toggle');
-  if(btn) btn.textContent='☰';
+  if(btn) btn.textContent='✕';
   showTab('dashboard');
 }
 QSYS.subscribe((nextState,meta={})=>{

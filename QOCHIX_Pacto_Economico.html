@@ -1264,6 +1264,169 @@ footer {
   line-height: 1.65;
 }
 .live-note strong { color: var(--text); }
+.live-story {
+  margin-top: 0.9rem;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(62,207,207,0.18);
+  background: rgba(62,207,207,0.06);
+  color: var(--text);
+  font-size: 0.94rem;
+  line-height: 1.7;
+}
+.live-story strong { color: var(--gold2); }
+.live-panorama {
+  margin-top: 0.9rem;
+  border: 1px solid rgba(212,168,83,0.16);
+  border-radius: 14px;
+  padding: 0.85rem;
+  background: rgba(212,168,83,0.05);
+}
+.live-pan-title {
+  font-size: 0.7rem;
+  color: var(--gold2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+.live-pan-copy {
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.68;
+}
+.live-pan-copy strong { color: var(--gold2); }
+.live-pan-grid {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+.live-pan-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 0.8rem 0.85rem;
+  background: rgba(10,13,19,0.32);
+}
+.live-pan-card .lbl {
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+.live-pan-card .val {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--gold);
+  line-height: 1.08;
+  margin-bottom: 0.18rem;
+}
+.live-pan-card .sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.live-steps {
+  margin-top: 0.85rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+.live-step {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 0.82rem 0.88rem;
+  background: rgba(10,13,19,0.32);
+}
+.live-step-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.3rem;
+}
+.live-step-title {
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.live-step-tag {
+  font-size: 0.56rem;
+  line-height: 1;
+  padding: 0.22rem 0.36rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  color: var(--muted);
+}
+.live-step-tag.ok { color: var(--green); border-color: rgba(82,201,122,0.35); background: rgba(82,201,122,0.08); }
+.live-step-tag.mid { color: var(--gold2); border-color: rgba(212,168,83,0.35); background: rgba(212,168,83,0.08); }
+.live-step-tag.risk { color: #ffb37d; border-color: rgba(230,126,34,0.35); background: rgba(230,126,34,0.08); }
+.live-step-copy {
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.live-people {
+  margin-top: 0.95rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+}
+.live-person {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  background: rgba(10,13,19,0.32);
+}
+.live-person-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.34rem;
+}
+.live-person-name {
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+.live-person-role {
+  font-size: 0.66rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.live-person-copy {
+  margin-top: 0.34rem;
+  color: var(--text);
+  font-size: 0.84rem;
+  line-height: 1.66;
+}
+.live-person-copy strong { color: var(--gold2); }
+.live-person-metrics {
+  margin-top: 0.55rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.45rem;
+}
+.live-person-metric {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 0.54rem 0.6rem;
+  background: rgba(255,255,255,0.03);
+}
+.live-person-metric .lbl {
+  font-size: 0.54rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.14rem;
+}
+.live-person-metric .val {
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
 .live-mini {
   margin-top: 0.9rem;
   border: 1px solid rgba(255,255,255,0.08);
@@ -1297,11 +1460,14 @@ footer {
 .live-mini tr:last-child td { border-bottom: none; }
 @media (max-width: 1100px) {
   .live-grid { grid-template-columns: repeat(3, 1fr); }
+  .live-pan-grid, .live-steps { grid-template-columns: repeat(2, 1fr); }
+  .live-people { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .live-system { padding: 0 1rem 3rem; }
   .live-grid { grid-template-columns: repeat(2, 1fr); }
   .live-value { font-size: 1.45rem; }
+  .live-pan-grid, .live-steps, .live-person-metrics { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .terminos-tabs { flex-direction: column; }
@@ -1460,6 +1626,13 @@ footer {
       </div>
     </div>
     <div class="live-note" id="live-pacto-note">Cargando estado compartido…</div>
+    <div class="live-story" id="live-pacto-story">Construyendo lectura narrativa del pacto…</div>
+    <div class="live-panorama" id="live-pacto-panorama">
+      <div class="live-pan-title">Panorama cuantitativo del pacto</div>
+      <div class="live-pan-copy">Cargando panorama…</div>
+      <div class="live-pan-grid" id="live-pacto-math"></div>
+      <div class="live-steps" id="live-pacto-steps"></div>
+    </div>
     <div class="live-mini">
       <div class="live-mini-title">Liberación financiera por persona (solo lectura)</div>
       <table>
@@ -1470,6 +1643,9 @@ footer {
           <tr><td colspan="3" style="color:var(--muted)">Cargando…</td></tr>
         </tbody>
       </table>
+    </div>
+    <div class="live-people" id="live-pacto-people">
+      <div class="live-person"><div class="live-person-copy">Cargando lectura por socio…</div></div>
     </div>
   </div>
 </section>
@@ -2810,10 +2986,49 @@ function showTermTab(panelId, btn) {
 (function () {
   const QSYS = window.QochixSystem;
   const byId = (id) => document.getElementById(id);
+  const STORY_CTX = {
+    hugo: { role: 'Arquitectura + negocio', source: 'HugoTech + caja transversal' },
+    rossy: { role: 'CEO Almaria', source: 'Almaria + crecimiento comercial' },
+    vera: { role: 'Estrategia operativa', source: 'Operación transversal + soporte Almaria' },
+    carlos: { role: 'CEO Trazo', source: 'Trazo + producción/ventas creativas' },
+    nicole: { role: 'Operaciones', source: 'Trazo + ejecución diaria' },
+  };
+  const pct = (n) => Number(n || 0).toFixed(1) + '%';
+  const toYear = (value) => {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+    const hit = String(value || '').match(/\d{4}/);
+    return hit ? Number(hit[0]) : null;
+  };
+  const idxYear = (years, year) => {
+    const idx = years.indexOf(year);
+    return idx >= 0 ? idx : years.length - 1;
+  };
+  const clampYear = (years, year) => {
+    const first = years[0], last = years[years.length - 1];
+    const y = toYear(year);
+    if (!y) return last;
+    return Math.max(first, Math.min(last, y));
+  };
+  const paceTag = (years, year) => {
+    const y = clampYear(years, year);
+    const first = years[0], last = years[years.length - 1];
+    const p = (y - first) / Math.max(1, last - first);
+    if (p <= 0.34) return { cls: 'ok', label: 'Temprano' };
+    if (p <= 0.67) return { cls: 'mid', label: 'Base' };
+    return { cls: 'risk', label: 'Tardío' };
+  };
 
   function renderLivePact() {
     const derived = QSYS.deriveState(QSYS.getState());
     const hugo = derived.personCards.find((person) => person.id === 'hugo');
+    const years = derived.years;
+    const horizon = years[years.length - 1];
+    const breakYear = clampYear(years, derived.breakEven);
+    const firstDist = clampYear(years, derived.firstDistYear);
+    const firstLib = clampYear(years, derived.firstLiberationYear);
+    const idx30 = idxYear(years, 2030);
+    const breakIdx = idxYear(years, breakYear);
+    const firstLibPeople = derived.personCards.filter((person) => person.liberationYear === firstLib).map((person) => person.name);
     const multiples = derived.personCards.map((person) => person.total2032 / derived.state.persons.find((p) => p.id === person.id).sueldo);
     const minX = Math.min(...multiples);
     const maxX = Math.max(...multiples);
@@ -2837,12 +3052,50 @@ function showTermTab(panelId, btn) {
     note.innerHTML =
       '<strong>Lectura rápida.</strong> Equity total: <strong>' + derived.eqSum.toFixed(1) + '%</strong>. ' +
       'Facturación total 2032 del escenario activo: <strong>' + derived.fmtCurrency(derived.totalFact2032) + '</strong>/mes. ' +
+      'En 2030 el sistema ya proyecta <strong>' + derived.fmtCurrency(derived.fact.total[idx30]) + '</strong>/mes de facturación y un distribuible de <strong>' + derived.fmtCurrency(derived.dist2030) + '</strong>/mes. ' +
       (derived.state.P.sc === 'p'
         ? 'Estás viendo el mismo piso conservador que estructura el cuerpo del pacto.'
         : 'El cuerpo del pacto sigue defendiendo el piso pesimista ×0,7; este bloque solo te muestra el sistema vivo actual.');
+    const story = byId('live-pacto-story');
+    if (story) {
+      story.innerHTML =
+        'En <strong>' + derived.scenarioLabel + '</strong>, el pacto cuenta esta historia: hoy el equipo pone caja y tiempo para comprar pista; durante los primeros años la facturación sí crece, pero el neto todavía pelea contra planilla + reserva. El sistema recién deja de asfixiarse en <strong>' + breakYear + '</strong>; por eso el primer año distribuible con aire real es <strong>' + firstDist + '</strong>. La primera liberación aparece en <strong>' + firstLib + '</strong>' + (firstLibPeople.length ? ', empujada sobre todo por <strong>' + firstLibPeople.join(' y ') + '</strong>' : '') + '.';
+    }
+    const panorama = byId('live-pacto-panorama');
+    const math = byId('live-pacto-math');
+    const steps = byId('live-pacto-steps');
+    if (panorama) {
+      const p = derived.state.P || {};
+      const cashTotal = derived.personCards.reduce((sum, person) => sum + Number(person.cashContribution || 0), 0);
+      const sweatTotal = Math.max(0, Number(derived.pool || 0) - cashTotal);
+      const reserve = Number(p.reserva || 0);
+      const neto2030 = Number(derived.fact.neto[idx30] || 0);
+      const pay2030 = Number(derived.fact.sued_tot[idx30] || 0);
+      const col2030 = Number(derived.fact.colchon[idx30] || 0);
+      const paceBreak = paceTag(years, breakYear);
+      const paceDist = paceTag(years, firstDist);
+      const paceLib = paceTag(years, firstLib);
+      const panCopy = panorama.querySelector('.live-pan-copy');
+      if (panCopy) {
+        panCopy.innerHTML =
+          'El pacto no mira solo % de equity; también mira <strong>si el motor realmente puede pagar</strong>. En <strong>' + breakYear + '</strong>, el neto mensual proyectado llega a <strong>' + derived.fmtCurrency(derived.fact.neto[breakIdx]) + '/mes</strong> contra una planilla total de <strong>' + derived.fmtCurrency(derived.fact.sued_tot[breakIdx]) + '/mes</strong>. Recién cuando esa diferencia deja de ser negativa y todavía cabe una reserva de <strong>' + derived.fmtCurrency(reserve) + '/mes</strong>, el sistema pasa de sobrevivir a repartir.';
+      }
+      if (math) {
+        math.innerHTML =
+          '<div class="live-pan-card"><div class="lbl">Caja real inicial</div><div class="val">' + derived.fmtCurrency(cashTotal) + '</div><div class="sub">ticket + capital que sí entra como caja inmediata.</div></div>' +
+          '<div class="live-pan-card"><div class="lbl">Esfuerzo valorizado</div><div class="val">' + derived.fmtCurrency(sweatTotal) + '</div><div class="sub">tiempo convertido a valor económico a 36 meses.</div></div>' +
+          '<div class="live-pan-card"><div class="lbl">Neto 2030</div><div class="val">' + derived.fmtCurrency(neto2030) + '/mes</div><div class="sub">con neto operativo ' + pct((p.netoPct || 0) * 100).replace('.0','') + ' del escenario activo.</div></div>' +
+          '<div class="live-pan-card"><div class="lbl">Planilla 2030</div><div class="val">' + derived.fmtCurrency(pay2030) + '/mes</div><div class="sub">fundadores + equipo operativo; colchón previo: ' + derived.fmtCurrency(col2030) + '/mes.</div></div>';
+      }
+      if (steps) {
+        steps.innerHTML =
+          '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 1 · Arranque</div><span class="live-step-tag mid">Base</span></div><div class="live-step-copy">En ' + years[0] + ' el sistema mueve <strong>' + derived.fmtCurrency(derived.fact.total[0]) + '/mes</strong>; de eso solo quedan <strong>' + derived.fmtCurrency(derived.fact.neto[0]) + '/mes</strong> de neto y todavía no sobra aire para repartir.</div></div>' +
+          '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 2 · Quiebre</div><span class="live-step-tag ' + paceBreak.cls + '">' + paceBreak.label + '</span></div><div class="live-step-copy">En ' + breakYear + ' el colchón se vuelve no negativo. No es abundancia todavía: es el punto donde la estructura deja de comer más aire del que el negocio produce.</div></div>' +
+          '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 3 · Reparto</div><span class="live-step-tag ' + paceDist.cls + '">' + paceDist.label + '</span></div><div class="live-step-copy">En ' + firstDist + ' aparece el primer reparto real; al ' + horizon + ' el distribuible llega a <strong>' + derived.fmtCurrency(derived.dist2032) + '/mes</strong> y el equipo liberado ya suma <strong>' + derived.liberatedBy2032 + '/' + derived.personCards.length + '</strong>.</div></div>';
+      }
+    }
     const table = byId('live-pacto-lib-table');
     if (table) {
-      const idx30 = derived.years.indexOf(2030);
       table.innerHTML = derived.personCards.map((person) => (
         '<tr>' +
           '<td style="color:' + person.color + ';font-weight:600">' + person.name + '</td>' +
@@ -2850,6 +3103,36 @@ function showTermTab(panelId, btn) {
           '<td>' + derived.fmtCurrency(person.yearlyTotals[idx30] || 0) + '/mes</td>' +
         '</tr>'
       )).join('');
+    }
+    const people = byId('live-pacto-people');
+    if (people) {
+      const capMode = derived.state.P.capitalMode === 'equity_round' ? 'compra de acciones' : 'préstamo interno';
+      people.innerHTML = derived.personCards.map((person) => {
+        const base = derived.state.persons.find((p) => p.id === person.id) || {};
+        const ctx = STORY_CTX[person.id] || { role: 'Socio/a', source: 'Frente principal del ecosistema' };
+        const sweat = Math.max(0, Number(person.investment || 0) - Number(person.cashContribution || 0));
+        const hrToday = Math.round(Number(base.sueldo || 0) / (22 * 8));
+        const total30 = Number(person.yearlyTotals[idx30] || 0);
+        const gap30 = Math.max(0, Number(base.sueldo || 0) - total30);
+        return (
+          '<article class="live-person">' +
+            '<div class="live-person-head">' +
+              '<div><div class="live-person-name" style="color:' + person.color + '">' + person.name + '</div><div class="live-person-role">' + ctx.role + ' · ' + ctx.source + '</div></div>' +
+              '<div class="live-step-tag ' + paceTag(years, person.liberationYear === '2033+' ? horizon : person.liberationYear).cls + '">' + person.liberationYear + '</div>' +
+            '</div>' +
+            '<div class="live-person-copy"><strong>' + person.name + '</strong> entra al pacto con <strong>' + derived.fmtCurrency(person.cashContribution) + '</strong> de caja real (' + derived.fmtCurrency(person.ticket) + ' de ticket + ' + derived.fmtCurrency(person.capital) + ' de capital adicional) y <strong>' + derived.fmtCurrency(sweat) + '</strong> de esfuerzo valorizado. Esa mezcla explica por qué su inversión modelada total llega a <strong>' + derived.fmtCurrency(person.investment) + '</strong>.</div>' +
+            '<div class="live-person-copy">Hoy parte desde <strong>' + derived.fmtCurrency(base.sueldo) + '/mes</strong>; para 2030 el modelo lo lleva a <strong>' + derived.fmtCurrency(total30) + '/mes</strong>' + (gap30 > 0 ? ', todavía con una brecha de <strong>' + derived.fmtCurrency(gap30) + '/mes</strong> frente a su ingreso actual.' : ', ya por encima de su sueldo actual.') + ' Al ' + horizon + ' la foto pactada sube a <strong>' + derived.fmtCurrency(person.total2032) + '/mes</strong> entre sueldo y equity.</div>' +
+            '<div class="live-person-metrics">' +
+              '<div class="live-person-metric"><div class="lbl">Sueldo hoy</div><div class="val">' + derived.fmtCurrency(base.sueldo) + '/mes</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">Valor/hora hoy</div><div class="val">S/' + hrToday.toLocaleString('es-PE') + '/hr</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">Caja real</div><div class="val">' + derived.fmtCurrency(person.cashContribution) + ' vía ' + capMode + '</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">Sweat 3 años</div><div class="val">' + derived.fmtCurrency(sweat) + '</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">2030 proyectado</div><div class="val">' + derived.fmtCurrency(total30) + '/mes</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">2032 total</div><div class="val">' + derived.fmtCurrency(person.total2032) + '/mes</div></div>' +
+            '</div>' +
+          '</article>'
+        );
+      }).join('');
     }
   }
 
