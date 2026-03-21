@@ -286,6 +286,32 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .lib-item-sub{margin-top:.2rem;font-size:.68rem;color:var(--muted);line-height:1.4}
 @media(max-width:900px){.lib-team{grid-template-columns:1fr}}
 
+/* Partner overview cards */
+.partner-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin:1.25rem 0}
+@media(max-width:1100px){.partner-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.partner-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.partner-grid{grid-template-columns:1fr}}
+.ptnr-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1rem;transition:all .3s;position:relative;overflow:hidden}
+.ptnr-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px);box-shadow:var(--glow-gold)}
+.ptnr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
+.ptnr-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
+.ptnr-name{font-size:.88rem;font-weight:700}
+.ptnr-eq{font-family:var(--serif);font-size:1.15rem;font-weight:800;color:var(--gold)}
+.ptnr-role{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.ptnr-row{display:flex;justify-content:space-between;align-items:baseline;padding:.22rem 0;font-size:.72rem;border-bottom:1px solid rgba(255,255,255,.03)}
+.ptnr-row:last-child{border-bottom:none}
+.ptnr-yr{color:var(--muted);font-family:var(--mono);font-size:.65rem}
+.ptnr-sue{color:var(--teal);font-family:var(--mono);font-weight:600}
+.ptnr-eqi{color:var(--gold);font-family:var(--mono);font-size:.65rem}
+.ptnr-total{color:var(--text);font-family:var(--mono);font-weight:700;font-size:.75rem}
+.ptnr-foot{margin-top:.55rem;padding-top:.5rem;border-top:1px solid var(--brd);display:grid;grid-template-columns:1fr 1fr;gap:.35rem;font-size:.65rem;text-align:center}
+.ptnr-foot-item{display:flex;flex-direction:column;gap:.1rem}
+.ptnr-foot-lbl{color:var(--muted);font-size:.58rem;text-transform:uppercase;letter-spacing:.04em}
+.ptnr-foot-val{font-family:var(--mono);font-weight:700}
+.ptnr-year-grid{display:grid;gap:.15rem}
+.ptnr-divider{height:1px;background:var(--brd);margin:.4rem 0}
+.ptnr-section-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem;margin-top:.35rem}
+
 /* Monthly table (runway) */
 .runway-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.25rem}
 .rw-card{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--radius);padding:1.1rem 1.2rem;transition:all .3s}
@@ -656,6 +682,20 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="nota ok" id="lib-nota" style="margin-top:.5rem"></div>
     <div class="lib-team" id="lib-team"></div>
+  </div>
+
+  <!-- Partner overview cards -->
+  <div class="panel open" style="margin-top:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">👤 Socios — Equity, sueldo y proyección 2027–2032</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
+        Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo Qochix</strong> año a año (curva del pacto o meta editada), el <strong>ingreso por equity</strong> (su porción del distribuible) y el <strong>total mensual</strong>. Los montos cambian con el escenario activo.
+      </p>
+      <div class="partner-grid" id="partner-grid"></div>
+    </div>
   </div>
 
   <!-- Metas sueldo Qochix — impacto -->
@@ -1953,6 +1993,8 @@ function recalc(){
     }).join('');
   }
 
+  paintPartnerCards(derived, fact, eqById);
+
   // ── Sweat table ──
   let html='';let tvm=0,tsw=0;
   PERSONS.forEach((p,i)=>{
@@ -2458,11 +2500,56 @@ function decorateHelp(){
       'apuesta':'Riesgo-retorno y narrativa de inversión del equipo.',
       'vista ceo':'Resumen de mesa para decidir rápido sin abrir todas las pestañas.',
       'flujo $':'Estructura de ingresos: cómo fluye el dinero desde cada marca hasta el bolsillo de cada socio.',
+      'socios — equity, sueldo y proyección 2027–2032':'Card por persona con equity, sueldo año a año, ingreso por equity, total mensual, capital y año de liberación.',
       'aporte como préstamo':'El aporte no convierte a acciones; impacta caja, pool y ROI.',
       'aporte compra acciones':'El aporte se convierte a acciones según valorización pre-money definida.',
       'valorización pre-money de ronda (s/)':'Valor de Qochix antes del aporte. Debes definir este monto para convertir capital en acciones.'
     }
   });
+}
+
+function paintPartnerCards(derived, fact, eqById){
+  const el=sel('partner-grid');
+  if(!el)return;
+  const fmt=QSYS.fmtCurrency;
+  const curves=fact.suedCurves;
+  const roles={hugo:'CEO · HugoTech',rossy:'CEO · Almaria',vera:'CEO · Trazo',carlos:'Fundador · Equipos',nicole:'Operaciones'};
+  el.innerHTML=derived.personCards.map(function(pc){
+    const p=PERSONS.find(function(x){return x.id===pc.id;});
+    if(!p) return '';
+    var html='<div class="ptnr-card" style="--ac:'+p.c+'">';
+    html+='<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+p.c+';border-radius:16px 16px 0 0"></div>';
+    html+='<div class="ptnr-hdr"><span class="ptnr-name" style="color:'+p.c+'">'+p.name+'</span><span class="ptnr-eq">'+pc.equity.toFixed(1)+'%</span></div>';
+    html+='<div class="ptnr-role">'+(roles[p.id]||'Socio')+'</div>';
+    html+='<div class="ptnr-section-lbl">Sueldo Qochix / mes</div>';
+    html+='<div class="ptnr-year-grid">';
+    for(var i=1;i<=6;i++){
+      var yr=2026+i;
+      var sue=curves[p.id]?curves[p.id][i]:0;
+      html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr+'</span><span class="ptnr-sue">'+fmt(sue)+'</span></div>';
+    }
+    html+='</div>';
+    html+='<div class="ptnr-divider"></div>';
+    html+='<div class="ptnr-section-lbl">Sueldo + Equity / mes</div>';
+    html+='<div class="ptnr-year-grid">';
+    for(var j=1;j<=6;j++){
+      var yr2=2026+j;
+      var sue2=curves[p.id]?curves[p.id][j]:0;
+      var eqAmt=Math.round(fact.dist[j]*(pc.equity/100));
+      var total=sue2+eqAmt;
+      html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr2+'</span><span class="ptnr-eqi">+'+fmt(eqAmt)+'</span><span class="ptnr-total">'+fmt(total)+'</span></div>';
+    }
+    html+='</div>';
+    html+='<div class="ptnr-foot">';
+    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Sueldo hoy</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
+    var mult=pc.total2032/Math.max(1,p.sueldo);
+    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">×Mult 2032</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
+    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(p.capital)+'</span></div>';
+    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Liberación</span><span class="ptnr-foot-val" style="color:var(--gold)">'+pc.liberationYear+'</span></div>';
+    html+='</div>';
+    html+='</div>';
+    return html;
+  }).join('');
 }
 
 function paintFlowTab(){
