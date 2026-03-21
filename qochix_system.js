@@ -44,6 +44,7 @@
       reserva: 3000,
       sc: 'p',
       capitalMode: 'loan',
+      equityMode: 'auto_pool',
       preMoney: 5000000,
       sue30: { hugo: 14000, rossy: 7500, vera: 7000, carlos: 9000, nicole: 6000 },
       sue32: { hugo: 30000, rossy: 10000, vera: 10000, carlos: 10000, nicole: 6000 },
@@ -304,6 +305,21 @@
     state.persons.forEach((person) => {
       base[person.id] = Number(person.equity || 0);
     });
+    if (state.P.equityMode === 'auto_pool') {
+      const poolById = {};
+      let totalPool = 0;
+      state.persons.forEach((person) => {
+        const pool = getTkt(state, person.id) + Number(person.capital || 0) + sw(person).sw;
+        poolById[person.id] = pool;
+        totalPool += pool;
+      });
+      if (totalPool <= 0) return base;
+      const auto = {};
+      state.persons.forEach((person) => {
+        auto[person.id] = Math.round((poolById[person.id] / totalPool) * 1000) / 10;
+      });
+      return auto;
+    }
     if (state.P.capitalMode !== 'equity_round') return base;
     const preMoney = Math.max(0, Number(state.P.preMoney || 0));
     if (!preMoney) return base;

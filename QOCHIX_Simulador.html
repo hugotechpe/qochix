@@ -546,6 +546,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <!-- C. Equity -->
   <div class="sb-sec">
     <div class="sb-title">C · Distribución equity</div>
+    <div style="display:flex;gap:.25rem;margin-bottom:.65rem">
+      <button class="tkt-mode-btn" id="eq-mode-auto" onclick="setEquityMode('auto_pool')" style="flex:1">Auto por pool</button>
+      <button class="tkt-mode-btn" id="eq-mode-manual" onclick="setEquityMode('manual')" style="flex:1">Manual</button>
+    </div>
+    <div class="nota" id="eq-mode-hint" style="margin-bottom:.5rem;font-size:.68rem">Modo <strong>auto</strong>: el equity se calcula proporcional al pool de cada socio (ticket + capital + sweat). Cambia capital u horas y el % se ajusta solo.</div>
     <div id="equity-box"></div>
     <div class="eq-sum">Suma: <b id="eq-sum-v" class="ok">100.0%</b> <button id="eq-normalize-btn" style="display:none;margin-left:8px;padding:3px 10px;border-radius:6px;border:1px solid rgba(62,207,207,.35);background:rgba(62,207,207,.08);color:#3ECFCF;font-size:.68rem;cursor:pointer" onclick="normalizeEquity()">Auto-normalizar a 100%</button></div>
     <div class="nota" id="eq-nota" style="margin-top:.4rem">✓ Suma 100% (cap table base).</div>
@@ -1460,6 +1465,7 @@ function syncControlsFromState(){
   sv('lbl-neto',Math.round(P.netoPct*100)+'%');
   sv('lbl-rsv',fmt(P.reserva));
   document.querySelectorAll('.sc-btn').forEach(b=>{b.classList.toggle('active',b.classList.contains(P.sc));b.style.transform=''});
+  syncEquityModeUI();
   updateTktTot();
 }
 function applySharedState(nextState){
@@ -1689,6 +1695,46 @@ function resetSueMetasToPact(){
     if(e32) e32.value=P.sue32[p.id];
   });
   recalc();
+}
+function setEquityMode(mode){
+  P.equityMode=mode;
+  syncEquityModeUI();
+  recalc();
+}
+function syncEquityModeUI(){
+  const isAuto=P.equityMode==='auto_pool';
+  sel('eq-mode-auto').classList.toggle('active',isAuto);
+  sel('eq-mode-manual').classList.toggle('active',!isAuto);
+  const hint=sel('eq-mode-hint');
+  if(hint){
+    if(isAuto){
+      hint.style.display='block';
+      hint.innerHTML='Modo <strong>auto</strong>: el equity se calcula proporcional al pool (ticket + capital + sweat). Cambia capital u horas y el % se ajusta solo.';
+    } else {
+      hint.style.display='block';
+      hint.innerHTML='Modo <strong>manual</strong>: tú defines el % de cada socio. Los inputs de equity están habilitados.';
+    }
+  }
+  document.querySelectorAll('.eq-inp').forEach(function(inp){
+    inp.disabled=isAuto;
+    inp.style.opacity=isAuto?'0.5':'1';
+  });
+}
+function syncEquityBarsFromDerived(derived){
+  if(P.equityMode!=='auto_pool')return;
+  derived.personCards.forEach(function(pc){
+    const inp=document.getElementById('eqi-'+pc.id);
+    if(inp){inp.value=pc.equity.toFixed(1);}
+    const bar=document.getElementById('eqb-'+pc.id);
+    if(bar) bar.style.width=Math.min(100,pc.equity)+'%';
+  });
+  const eSum=derived.personCards.reduce(function(s,pc){return s+pc.equity;},0);
+  const el=sel('eq-sum-v');
+  if(el){el.textContent=eSum.toFixed(1)+'%';el.className=Math.abs(eSum-100)<.5?'ok':'bad';}
+  const eqNote=sel('eq-nota');
+  if(eqNote){eqNote.className='nota ok';eqNote.textContent='✓ Auto-calculado por pool. Suma '+eSum.toFixed(1)+'%.';}
+  const eqNormBtn=sel('eq-normalize-btn');
+  if(eqNormBtn) eqNormBtn.style.display='none';
 }
 function onEq(id,v){
   const n=toNumLoose(v); if(n===null) return;
@@ -1920,27 +1966,32 @@ function recalc(){
       graAlert.innerHTML=`✅ <strong>Curva de crecimiento fuerte:</strong> 2026→2030 sube ~${growth30.toFixed(0)}% y luego 2030→2032 agrega ~${growth32.toFixed(0)}% más.`;
     }
   }
-  const eqTotBase=PERSONS.reduce((s,p)=>s+Number(p.equity||0),0);
-  const eqSumEl=sel('eq-sum-v');
-  const eqNormBtn=sel('eq-normalize-btn');
-  if(eqSumEl){
-    eqSumEl.textContent=eqTotBase.toFixed(1)+'%';
-    eqSumEl.className=Math.abs(eqTotBase-100)<.5?'ok':'bad';
-  }
-  if(eqNormBtn){
-    eqNormBtn.style.display=Math.abs(eqTotBase-100)<.5?'none':'inline-block';
-  }
-  const eqNote=sel('eq-nota');
-  if(eqNote){
-    if(P.capitalMode==='equity_round'){
-      eqNote.className='nota';
-      eqNote.innerHTML='Modo <strong>compra de acciones</strong> activo. El % de reparto usa equity efectivo de ronda (pre-money: <strong>'+fmt(P.preMoney)+'</strong>). El cap table base sigue editable en esta sección.';
-    }else if(Math.abs(eqTotBase-100)<.5){
-      eqNote.className='nota ok';
-      eqNote.textContent='✓ Suma 100% (cap table base).';
-    }else{
-      eqNote.className='nota warn';
-      eqNote.innerHTML='⚠️ Suma '+eqTotBase.toFixed(1)+'% — debe ser 100%. Diferencia: '+(eqTotBase-100>0?'+':'')+(eqTotBase-100).toFixed(1)+'pts. Usa <strong>auto-normalizar</strong> para corregir proporcionalmente.';
+  syncEquityModeUI();
+  if(P.equityMode==='auto_pool'){
+    syncEquityBarsFromDerived(derived);
+  } else {
+    const eqTotBase=PERSONS.reduce((s,p)=>s+Number(p.equity||0),0);
+    const eqSumEl=sel('eq-sum-v');
+    const eqNormBtn=sel('eq-normalize-btn');
+    if(eqSumEl){
+      eqSumEl.textContent=eqTotBase.toFixed(1)+'%';
+      eqSumEl.className=Math.abs(eqTotBase-100)<.5?'ok':'bad';
+    }
+    if(eqNormBtn){
+      eqNormBtn.style.display=Math.abs(eqTotBase-100)<.5?'none':'inline-block';
+    }
+    const eqNote=sel('eq-nota');
+    if(eqNote){
+      if(P.capitalMode==='equity_round'){
+        eqNote.className='nota';
+        eqNote.innerHTML='Modo <strong>compra de acciones</strong> activo. El % de reparto usa equity efectivo de ronda (pre-money: <strong>'+fmt(P.preMoney)+'</strong>). El cap table base sigue editable en esta sección.';
+      }else if(Math.abs(eqTotBase-100)<.5){
+        eqNote.className='nota ok';
+        eqNote.textContent='✓ Suma 100% (cap table base).';
+      }else{
+        eqNote.className='nota warn';
+        eqNote.innerHTML='⚠️ Suma '+eqTotBase.toFixed(1)+'% — debe ser 100%. Diferencia: '+(eqTotBase-100>0?'+':'')+(eqTotBase-100).toFixed(1)+'pts. Usa <strong>auto-normalizar</strong> para corregir proporcionalmente.';
+      }
     }
   }
 
@@ -2501,6 +2552,8 @@ function decorateHelp(){
       'vista ceo':'Resumen de mesa para decidir rápido sin abrir todas las pestañas.',
       'flujo $':'Estructura de ingresos: cómo fluye el dinero desde cada marca hasta el bolsillo de cada socio.',
       'socios — equity, sueldo y proyección 2027–2032':'Card por persona con equity, sueldo año a año, ingreso por equity, total mensual, capital y año de liberación.',
+      'auto por pool':'El equity se recalcula automáticamente proporcionalmente al pool de cada socio (ticket + capital + sweat equity). Cambia capital u horas y el % se ajusta.',
+      'manual':'Tú defines manualmente el % de equity de cada socio. No cambia al modificar capital u horas.',
       'aporte como préstamo':'El aporte no convierte a acciones; impacta caja, pool y ROI.',
       'aporte compra acciones':'El aporte se convierte a acciones según valorización pre-money definida.',
       'valorización pre-money de ronda (s/)':'Valor de Qochix antes del aporte. Debes definir este monto para convertir capital en acciones.'
