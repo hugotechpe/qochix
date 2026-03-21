@@ -1,10 +1,10 @@
-const CACHE_NAME = 'qochix-v5';
+const CACHE_NAME = 'qochix-v6';
 const ASSETS = [
   'index.html',
   'QOCHIX_Simulador.html',
   'QOCHIX_Pacto_Economico.html',
   'qochix_base.html',
-  'qochix_system.js?v=5',
+  'qochix_system.js?v=6',
   'qochix_help.js?v=2',
 ];
 

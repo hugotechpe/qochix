@@ -21,19 +21,22 @@
     nicole: [2000, 4000, 5000, 6000, 6000, 6000, 6000],
   };
   const SERVICE_LINES = [
-    {id:'tr_branding',brand:'trazo',name:'Branding e identidad visual',unit:'pedido/mes',prices:[1000,1000,1000,1000,1000,1000,1000],vols:[2,4,5,6,7,8,10]},
-    {id:'tr_redes',brand:'trazo',name:'Gestión redes sociales',unit:'cliente/mes',prices:[1000,1000,1000,1000,1000,1000,1000],vols:[2,4,5,6,7,8,9]},
-    {id:'tr_campanas',brand:'trazo',name:'Campañas digitales y pauta',unit:'campaña/mes',prices:[800,800,800,800,800,800,800],vols:[1,2,3,4,5,6,7]},
-    {id:'tr_audiovisual',brand:'trazo',name:'Producción audiovisual',unit:'cliente/mes',prices:[1500,1500,1500,1500,1500,1500,1500],vols:[2,5,7,9,11,13,15]},
-    {id:'tr_consultoria',brand:'trazo',name:'Consultoría estratégica',unit:'sesión/mes',prices:[300,300,300,300,300,300,300],vols:[4,10,17,21,25,33,39]},
-    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,25,25,25,25,25],vols:[20,80,160,280,500,700,900]},
-    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,55,55,55,55,55],vols:[8,60,180,360,1000,1500,1900]},
-    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,55,55,55,55,55],vols:[5,60,150,240,560,760,1020]},
-    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,150,150,150,150,150],vols:[15,20,30,40,50,60,70]},
-    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,1250,1250,1250,1250,1250],vols:[1,3,5,7,9,11,13]},
-    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona/mes',prices:[100,100,100,300,300,300,300],vols:[8,24,32,24,36,44,52]},
-    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[400,400,1250,1250,1250,1250,1250],vols:[0,5,5,8,12,16,18]},
-    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,3,2,3,4,7]},
+    // ── Trazo (5) — precios suben 2028 ──
+    {id:'tr_branding',brand:'trazo',name:'Branding e identidad visual',unit:'proyecto/mes',prices:[1000,1000,1500,1500,1500,1500,1500],vols:[2,3,3,4,5,6,7]},
+    {id:'tr_redes',brand:'trazo',name:'Gestión redes sociales',unit:'cliente/mes',prices:[1000,1000,1500,1500,1500,1500,1500],vols:[2,3,4,5,6,7,8]},
+    {id:'tr_campanas',brand:'trazo',name:'Campañas y producciones',unit:'campaña/mes',prices:[4000,4000,10000,10000,10000,10000,10000],vols:[0,1,1,1,1,2,2]},
+    {id:'tr_audiovisual',brand:'trazo',name:'Producción audiovisual (paquete)',unit:'marca/mes',prices:[1500,1500,5000,5000,5000,5000,5000],vols:[2,3,1,2,3,3,4]},
+    {id:'tr_consultoria',brand:'trazo',name:'Consultoría estratégica de marca',unit:'sesión/mes',prices:[300,300,300,300,300,300,300],vols:[5,8,10,12,14,16,18]},
+    // ── Almaria (3) — precios corp/rituales suben 2029 ──
+    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,25,25,25,25,25],vols:[16,80,160,280,500,700,900]},
+    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,55,75,75,75,75],vols:[8,60,160,250,700,1000,1200]},
+    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,55,75,75,75,75],vols:[5,60,150,180,450,680,950]},
+    // ── HugoTech (5) — precios suben 2028 ──
+    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,200,200,200,200,200],vols:[15,20,28,35,48,55,65]},
+    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,2000,2000,2000,2000,2000],vols:[1,3,3,4,7,8,10]},
+    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona/mes',prices:[100,100,400,400,400,400,400],vols:[8,24,14,18,24,32,40]},
+    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[0,400,1500,1500,1500,1500,1500],vols:[0,5,3,5,7,10,12]},
+    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6]},
   ];
   const DEFAULTS = {
     persons: [
