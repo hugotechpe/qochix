@@ -1778,7 +1778,8 @@ function recalc(){
   if(libTeam){
     libTeam.innerHTML=derived.personCards.map((person)=>{
       const total30=person.yearlyTotals[libIdx30]||0;
-      const gap=Math.round(Number(person.sueldo||0)-total30);
+      const basePerson=PERSONS.find((p)=>p.id===person.id);
+      const gap=Math.round(Number(basePerson?.sueldo||0)-total30);
       const ok=person.liberationYear!=='2033+';
       const sub=ok
         ? `Cruce en ${person.liberationYear} · total 2030: ${fmt(total30)}/mes`

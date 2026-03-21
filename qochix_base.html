@@ -3113,7 +3113,7 @@ document.addEventListener('keydown',e=>{
       const capitalTotal=derived.personCards.reduce((sum,person)=>sum+Number(person.capital||0),0);
       const effortHrs=derived.state.persons.reduce((sum,person)=>sum+Number(person.hrs||0),0);
       const avgHourToday=Math.round(derived.state.persons.reduce((sum,person)=>sum+(Number(person.sueldo||0)/(22*8)),0)/Math.max(1,derived.state.persons.length));
-      const dist2030Gap=Math.max(0,Math.round((Number(derived.total2032||0)-Number(derived.dist2030||0))));
+      const dist2030Gap=Math.max(0,Math.round(Number(derived.dist2032||0)-Number(derived.dist2030||0)));
       const netoPct=Math.max(0.01,Number(p.netoPct||0.65));
       const targetBreakYear=Math.max(years[0],breakYear-1);
       const targetBreakIdx=idxYear(years,targetBreakYear);
