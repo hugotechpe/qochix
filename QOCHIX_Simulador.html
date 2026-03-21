@@ -1015,6 +1015,27 @@ let _notesTimer;
 let _sharedSyncTimer;
 let _suspendSharedSync=false;
 let _lastLocalSavedAt='';
+let _isEditingNumeric=false;
+
+function toNumLoose(v){
+  const cleaned=String(v??'').replace(/[^\d.-]/g,'').trim();
+  if(!cleaned||cleaned==='-'||cleaned==='.'||cleaned==='-.') return null;
+  const n=Number(cleaned);
+  return Number.isFinite(n)?n:null;
+}
+
+function enhanceNumericInputs(){
+  document.querySelectorAll('input[type="number"]').forEach((inp)=>{
+    if(inp.dataset.numericUx==='1') return;
+    inp.dataset.numericUx='1';
+    inp.addEventListener('focus',()=>{
+      _isEditingNumeric=true;
+      try{inp.select();}catch(e){}
+    });
+    inp.addEventListener('blur',()=>{_isEditingNumeric=false;});
+    inp.addEventListener('wheel',(e)=>e.preventDefault(),{passive:false});
+  });
+}
 function scheduleSharedSync(){
   if(_suspendSharedSync)return;
   clearTimeout(_sharedSyncTimer);
@@ -1054,6 +1075,7 @@ function syncControlsFromState(){
   updateTktTot();
 }
 function applySharedState(nextState){
+  if(_isEditingNumeric) return;
   const normalized=QSYS.normalizeState(nextState);
   PERSONS.splice(0,PERSONS.length,...normalized.persons);
   HIRES=normalized.hires;
@@ -1125,6 +1147,7 @@ function initSidebar() {
   renderTktIndiv();
 
   renderHires();
+  enhanceNumericInputs();
 }
 
 function renderTktIndiv(){
@@ -1163,7 +1186,10 @@ function renderHires() {
   </div>`).join('');
 }
 
-function onHireSue(i,v) { HIRES[i].sue=+v; recalc(); }
+function onHireSue(i,v) {
+  const n=toNumLoose(v); if(n===null) return;
+  HIRES[i].sue=n; recalc();
+}
 function delHire(i) { HIRES.splice(i,1); renderHires(); recalc(); }
 function addHire() {
   HIRES.push({role:'Nuevo rol',brand:'Mixto',sue:2500,growth:1.1});
@@ -1181,14 +1207,16 @@ function hiresCostByYear() {
 // HANDLERS
 // ════════════════════════════════════════
 function onTkt(v){
-  P.ticket=+v;
-  document.getElementById('lbl-tkt').textContent=fmt(+v);
-  if(P.tktMode==='equal') PERSONS.forEach(p=>{P.tickets[p.id]=+v});
+  const n=toNumLoose(v); if(n===null) return;
+  P.ticket=n;
+  document.getElementById('lbl-tkt').textContent=fmt(n);
+  if(P.tktMode==='equal') PERSONS.forEach(p=>{P.tickets[p.id]=n});
   updateTktTot();
   recalc();
 }
 function onTktIndiv(id,v){
-  P.tickets[id]=+v;
+  const n=toNumLoose(v); if(n===null) return;
+  P.tickets[id]=n;
   updateTktTot();
   recalc();
 }
@@ -1207,35 +1235,63 @@ function updateTktTot(){
   document.getElementById('lbl-tkt-tot').textContent=fmt(tot);
 }
 function onHr(id,v){
+  const n=toNumLoose(v); if(n===null) return;
   const p=PERSONS.find(x=>x.id===id);
-  p.sueldo=Math.round(+v*22*8);
+  p.sueldo=Math.round(n*22*8);
   const inp=document.getElementById('inp-sue-'+id);
   if(inp)inp.value=p.sueldo;
   recalc();
 }
-function onNeto(v){P.netoPct=+v/100;document.getElementById('lbl-neto').textContent=v+'%';recalc()}
-function onRsv(v){P.reserva=+v;document.getElementById('lbl-rsv').textContent=fmt(+v);recalc()}
+function onNeto(v){
+  const n=toNumLoose(v); if(n===null) return;
+  P.netoPct=n/100;
+  document.getElementById('lbl-neto').textContent=n+'%';
+  recalc();
+}
+function onRsv(v){
+  const n=toNumLoose(v); if(n===null) return;
+  P.reserva=n;
+  document.getElementById('lbl-rsv').textContent=fmt(n);
+  recalc();
+}
 function setCapitalMode(mode){
   P.capitalMode=mode;
   syncControlsFromState();
   recalc();
 }
 function onPreMoney(v){
-  const next=Math.max(100000,Math.round(Number(v||0)));
+  const raw=toNumLoose(v); if(raw===null) return;
+  const next=Math.max(100000,Math.round(raw));
   P.preMoney=Number.isFinite(next)?next:5000000;
   recalc();
 }
 function onS(id,v){
-  const p=PERSONS.find(x=>x.id===id);p.sueldo=+v;
+  const n=toNumLoose(v); if(n===null) return;
+  const p=PERSONS.find(x=>x.id===id);p.sueldo=n;
   const badge=document.querySelector('#badge-'+id+' input');
-  if(badge)badge.value=Math.round(+v/(22*8));
+  if(badge)badge.value=Math.round(n/(22*8));
   recalc();
 }
-function onCap(id,v){PERSONS.find(x=>x.id===id).capital=+v;recalc()}
-function onH(id,v){PERSONS.find(x=>x.id===id).hrs=+v;document.getElementById('lhl-'+id).textContent=v+'h';recalc()}
-function onA(id,v){PERSONS.find(x=>x.id===id).adj=+v;document.getElementById('lla-'+id).textContent=(+v).toFixed(2);recalc()}
-function onS30(id,v){P.sue30[id]=+v;recalc()}
-function onS32(id,v){P.sue32[id]=+v;recalc()}
+function onCap(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  PERSONS.find(x=>x.id===id).capital=n;recalc();
+}
+function onH(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  PERSONS.find(x=>x.id===id).hrs=n;document.getElementById('lhl-'+id).textContent=n+'h';recalc();
+}
+function onA(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  PERSONS.find(x=>x.id===id).adj=n;document.getElementById('lla-'+id).textContent=n.toFixed(2);recalc();
+}
+function onS30(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  P.sue30[id]=n;recalc();
+}
+function onS32(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  P.sue32[id]=n;recalc();
+}
 function resetSueMetasToPact(){
   PERSONS.forEach(p=>{
     P.sue30[p.id]=SUED_F_BASE[p.id][4];
@@ -1247,11 +1303,12 @@ function resetSueMetasToPact(){
   recalc();
 }
 function onEq(id,v){
-  PERSONS.find(x=>x.id===id).equity=+v;
+  const n=toNumLoose(v); if(n===null) return;
+  PERSONS.find(x=>x.id===id).equity=n;
   const tot=PERSONS.reduce((s,p)=>s+p.equity,0);
   const el=document.getElementById('eq-sum-v');
   el.textContent=tot.toFixed(1)+'%';el.className=Math.abs(tot-100)<.5?'ok':'bad';
-  document.getElementById('eqb-'+id).style.width=Math.min(100,+v)+'%';
+  document.getElementById('eqb-'+id).style.width=Math.min(100,n)+'%';
   const n=document.getElementById('eq-nota');
   if(Math.abs(tot-100)<.5){n.className='nota ok';n.textContent='✓ Suma 100%.'}
   else{n.className='nota warn';n.textContent=`⚠️ Suma ${tot.toFixed(1)}% — debe ser 100%. Diferencia: ${(tot-100>0?'+':'')}${(tot-100).toFixed(1)}pts`}
@@ -1873,7 +1930,8 @@ syncControlsFromState();
 decorateHelp();
 loadSimNotes();
 document.querySelectorAll('.panel .pbody').forEach(b=>b.style.display='block');
-QSYS.subscribe((nextState)=>{
+QSYS.subscribe((nextState,meta={})=>{
+  if(meta.via==='local'||meta.via==='poll') return;
   const incomingStamp=(nextState&&nextState.meta&&nextState.meta.updatedAt)||'';
   if(incomingStamp&&incomingStamp===_lastLocalSavedAt) return;
   applySharedState(nextState);

@@ -104,6 +104,27 @@ body{
   background:rgba(62,207,207,.06);font-size:.7rem;color:var(--text2);line-height:1.55;
 }
 .deck-live-story strong{color:var(--text)}
+.deck-live-acts{
+  margin-top:.65rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem;
+}
+.deck-live-act{
+  border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.5rem .55rem;background:rgba(11,15,23,.4);
+}
+.deck-live-act-head{
+  display:flex;justify-content:space-between;align-items:center;gap:.42rem;margin-bottom:.18rem;
+}
+.deck-live-act-title{
+  font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+}
+.deck-live-act-copy{font-size:.61rem;color:var(--text2);line-height:1.45}
+.deck-live-act-copy strong{color:var(--text)}
+.deck-live-tag-mini{
+  font-size:.52rem;line-height:1;padding:.2rem .36rem;border-radius:999px;border:1px solid rgba(255,255,255,.16);
+  text-transform:uppercase;letter-spacing:.08em;color:var(--muted);white-space:nowrap;
+}
+.deck-live-tag-mini.early{color:#7FE0A8;border-color:rgba(82,201,122,.35);background:rgba(82,201,122,.1)}
+.deck-live-tag-mini.base{color:var(--gold);border-color:rgba(212,168,83,.35);background:rgba(212,168,83,.12)}
+.deck-live-tag-mini.late{color:#ffb37d;border-color:rgba(230,126,34,.35);background:rgba(230,126,34,.12)}
 .deck-live-mini{
   margin-top:.7rem;padding:.55rem .6rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(10,13,19,.26);
 }
@@ -116,6 +137,14 @@ body{
 }
 .deck-live-mini th{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .deck-live-mini tr:last-child td{border-bottom:none}
+.deck-live-narrative{
+  margin-top:.7rem;padding:.58rem .62rem;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(10,13,19,.28);
+}
+.deck-live-narrative-item{
+  font-size:.64rem;color:var(--text2);line-height:1.5;padding:.28rem 0;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.deck-live-narrative-item:last-child{border-bottom:none}
+.deck-live-narrative-item strong{color:var(--text)}
 .deck-live-people{
   margin-top:.7rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;
 }
@@ -128,6 +157,17 @@ body{
 .deck-live-person-name{font-size:.72rem;font-weight:700}
 .deck-live-person-role{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .deck-live-person-copy{font-size:.62rem;color:var(--text2);line-height:1.45}
+.deck-live-person-copy + .deck-live-person-copy{margin-top:.32rem}
+.deck-live-person-points{
+  margin-top:.4rem;display:grid;gap:.22rem;
+}
+.deck-live-person-point{
+  font-size:.59rem;color:var(--text2);line-height:1.45;padding-left:.72rem;position:relative;
+}
+.deck-live-person-point::before{
+  content:'•';position:absolute;left:.08rem;top:0;color:var(--gold);opacity:.9;
+}
+.deck-live-person-point strong{color:var(--text)}
 .deck-live-person-kpis{
   margin-top:.38rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.3rem;
 }
@@ -136,6 +176,7 @@ body{
 }
 .deck-live-person-kpi strong{display:block;color:var(--text);font-size:.63rem;line-height:1.25}
 @media(max-width:780px){.deck-live-people{grid-template-columns:1fr}}
+@media(max-width:780px){.deck-live-acts{grid-template-columns:1fr}}
 @media(max-width:780px){.deck-live-grid{grid-template-columns:repeat(2,1fr)}}
 nav{
   position:fixed;
@@ -414,12 +455,15 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
       </div>
       <div class="deck-live-note" id="deck-live-note">Cargando estado del sistema…</div>
       <div class="deck-live-story" id="deck-live-story">Construyendo relato dinámico…</div>
-      <div class="deck-live-mini">
-        <div class="deck-live-mini-title">Liberación por persona (lectura)</div>
-        <table>
-          <thead><tr><th>Persona</th><th>Cruce</th><th>2030</th></tr></thead>
-          <tbody id="deck-live-lib-table"><tr><td colspan="3">Cargando…</td></tr></tbody>
-        </table>
+      <div class="deck-live-acts" id="deck-live-acts">
+        <article class="deck-live-act">
+          <div class="deck-live-act-title">Acto 1 · Inicio</div>
+          <div class="deck-live-act-copy">Cargando…</div>
+        </article>
+      </div>
+      <div class="deck-live-mini-title" style="margin-top:.62rem;">Lectura ejecutiva por persona (sin tabla)</div>
+      <div class="deck-live-narrative" id="deck-live-team-story">
+        <div class="deck-live-narrative-item">Construyendo lectura narrativa del equipo…</div>
       </div>
       <div class="deck-live-mini-title" style="margin-top:.62rem;">Storytelling por socio (dinámico)</div>
       <div class="deck-live-people" id="deck-live-people">
@@ -2832,11 +2876,46 @@ document.addEventListener('keydown',e=>{
     if(!base||base<=0) return '—';
     return pct(((gain/base)-1)*100);
   };
+  const toYear=(value)=>{
+    if(typeof value==='number'&&Number.isFinite(value)) return value;
+    const hit=String(value||'').match(/\d{4}/);
+    return hit?Number(hit[0]):null;
+  };
+  const idxYear=(years,year)=>{
+    const idx=years.indexOf(year);
+    return idx>=0?idx:years.length-1;
+  };
+  const clampYear=(years,year)=>{
+    const first=years[0],last=years[years.length-1];
+    const y=toYear(year);
+    if(!y) return last;
+    return Math.max(first,Math.min(last,y));
+  };
+  const tempoTag=(years,year)=>{
+    const y=clampYear(years,year);
+    const first=years[0],last=years[years.length-1];
+    const span=Math.max(1,last-first);
+    const p=(y-first)/span;
+    if(p<=0.34) return { cls:'early', label:'Temprano' };
+    if(p<=0.67) return { cls:'base', label:'Base' };
+    return { cls:'late', label:'Tardío' };
+  };
   function renderDeckLive(){
     const derived=QSYS.deriveState(QSYS.getState());
     const hugo=derived.personCards.find((person)=>person.id==='hugo');
-    const idx30=derived.years.indexOf(2030);
+    const years=derived.years;
+    const horizon=years[years.length-1];
+    const idx30=idxYear(years,2030);
+    const breakYear=clampYear(years,derived.breakEven);
+    const firstDist=clampYear(years,derived.firstDistYear);
+    const firstLib=clampYear(years,derived.firstLiberationYear);
+    const breakIdx=idxYear(years,breakYear);
+    const breakTag=tempoTag(years,breakYear);
+    const distTag=tempoTag(years,firstDist);
+    const libTag=tempoTag(years,firstLib);
+    const acts=byId('deck-live-acts');
     const people=byId('deck-live-people');
+    const teamStory=byId('deck-live-team-story');
     byId('deck-live-updated').textContent=derived.updatedAtLabel;
     byId('deck-live-scn').textContent=derived.scenarioLabel;
     byId('deck-live-dist').textContent=derived.fmtCurrency(derived.dist2032);
@@ -2844,16 +2923,40 @@ document.addEventListener('keydown',e=>{
     byId('deck-live-hugo').textContent=hugo?derived.fmtCurrency(hugo.total2032):'—';
     const note=byId('deck-live-note');
     const story=byId('deck-live-story');
-    const libTable=byId('deck-live-lib-table');
     if(!note)return;
-    note.innerHTML='Pool actual: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.pool)+'</strong> · Facturación 2032 del escenario activo: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.totalFact2032)+'</strong>/mes. Si cambias el simulador, esta portada se actualiza automáticamente.';
+    note.innerHTML='Pool actual: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.pool)+'</strong> · Facturación 2032 del escenario activo: <strong style="color:var(--text)">'+derived.fmtCurrency(derived.totalFact2032)+'</strong>/mes. Esta lectura se alimenta del mismo motor que el simulador.';
     if(story){
-      story.innerHTML='Historia viva: en <strong>'+derived.scenarioLabel+'</strong>, Qochix proyecta <strong>'+derived.fmtCurrency(derived.dist2032)+'/mes</strong> distribuible al 2032, con primer año positivo en <strong>'+derived.firstDistYear+'</strong>. El aporte acumulado ya suma <strong>'+derived.fmtCurrency(derived.pool)+'</strong> y hoy <strong>'+derived.liberatedBy2032+'/'+derived.personCards.length+'</strong> socios alcanzan su liberación financiera al 2032.';
+      story.innerHTML='Historia viva: en <strong>'+derived.scenarioLabel+'</strong>, el relato no termina en 2032: cambia según el quiebre real. El sistema llega a colchón positivo en <strong>'+breakYear+'</strong>, habilita distribución en <strong>'+firstDist+'</strong> y muestra su primer cruce de liberación en <strong>'+firstLib+'</strong>. Si subes ingresos o mejoras margen, estos hitos se adelantan automáticamente.';
     }
-    if(libTable){
-      libTable.innerHTML=derived.personCards.map((person)=>(
-        '<tr><td style="color:'+person.color+';font-weight:600">'+person.name+'</td><td>'+person.liberationYear+'</td><td>'+derived.fmtCurrency(person.yearlyTotals[idx30]||0)+'/mes</td></tr>'
-      )).join('');
+    if(acts){
+      acts.innerHTML=
+        '<article class="deck-live-act">'+
+          '<div class="deck-live-act-head"><div class="deck-live-act-title">Acto 1 · Arranque '+years[0]+'</div><span class="deck-live-tag-mini base">Base</span></div>'+
+          '<div class="deck-live-act-copy">El ecosistema parte con foco en sostener operación: facturación mensual de <strong>'+derived.fmtCurrency(derived.fact.total[0])+'</strong> y distribuible de <strong>'+derived.fmtCurrency(derived.fact.dist[0])+'</strong>. Prioridad: consolidar caja y ritmo comercial.</div>'+
+        '</article>'+
+        '<article class="deck-live-act">'+
+          '<div class="deck-live-act-head"><div class="deck-live-act-title">Acto 2 · Punto de quiebre '+breakYear+'</div><span class="deck-live-tag-mini '+breakTag.cls+'">'+breakTag.label+'</span></div>'+
+          '<div class="deck-live-act-copy">Cuando el colchón cruza a positivo, Qochix pasa de resistencia a expansión. En ese año, la facturación estimada llega a <strong>'+derived.fmtCurrency(derived.fact.total[breakIdx])+'/mes</strong> y la distribución arranca en <strong>'+firstDist+'</strong> <span class="deck-live-tag-mini '+distTag.cls+'" style="margin-left:.28rem">'+distTag.label+'</span>.</div>'+
+        '</article>'+
+        '<article class="deck-live-act">'+
+          '<div class="deck-live-act-head"><div class="deck-live-act-title">Acto 3 · Aceleración '+horizon+'</div><span class="deck-live-tag-mini '+libTag.cls+'">'+libTag.label+'</span></div>'+
+          '<div class="deck-live-act-copy">Con el sistema estabilizado, el distribuible alcanza <strong>'+derived.fmtCurrency(derived.dist2032)+'/mes</strong> y <strong>'+derived.liberatedBy2032+'/'+derived.personCards.length+'</strong> socios logran liberar su sueldo actual dentro del horizonte. El primer cruce humano aparece en <strong>'+firstLib+'</strong>.</div>'+
+        '</article>';
+    }
+    if(teamStory){
+      teamStory.innerHTML=derived.personCards.map((person)=>{
+        const base=derived.state.persons.find((p)=>p.id===person.id)||{};
+        const total30=Number(person.yearlyTotals[idx30]||0);
+        const personalYear=clampYear(years,person.liberationYear==='2033+'?firstDist:person.liberationYear);
+        const personalIdx=idxYear(years,personalYear);
+        const personalTotal=Number(person.yearlyTotals[personalIdx]||0);
+        const current=Number(base.sueldo||0);
+        const gap=Math.max(0,current-total30);
+        const status=person.liberationYear==='2033+'
+          ? 'aún no cruza al '+horizon
+          : 'cruza en '+person.liberationYear;
+        return '<div class="deck-live-narrative-item"><strong style="color:'+person.color+'">'+person.name+'</strong>: '+status+'; su punto narrativo cae en <strong>'+personalYear+'</strong> con <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong>. Al 2030 proyecta <strong>'+derived.fmtCurrency(total30)+'/mes</strong>'+(gap>0?' y mantiene brecha de <strong>'+derived.fmtCurrency(gap)+'/mes</strong> frente a su sueldo actual.':' y ya iguala/supera su sueldo actual.')+'</div>';
+      }).join('');
     }
     if(people){
       const capMode=derived.state.P.capitalMode==='equity_round'?'Compra acciones':'Préstamo';
@@ -2863,6 +2966,11 @@ document.addEventListener('keydown',e=>{
         const sweat=Math.max(0, Number(person.investment||0)-Number(person.cashContribution||0));
         const hasDilution=Math.abs(Number(person.equity||0)-Number(person.baseEquity||0))>0.05;
         const eqLabel=hasDilution?pct(person.baseEquity)+' → '+pct(person.equity):pct(person.equity);
+        const personalYear=clampYear(years,person.liberationYear==='2033+'?firstDist:person.liberationYear);
+        const personalTag=tempoTag(years,personalYear);
+        const personalIdx=idxYear(years,personalYear);
+        const personalTotal=Number(person.yearlyTotals[personalIdx]||0);
+        const personalAnnual=personalTotal*12;
         const annual2032=Number(person.total2032||0)*12;
         return (
           '<article class="deck-live-person">'+
@@ -2871,20 +2979,18 @@ document.addEventListener('keydown',e=>{
                 '<div class="deck-live-person-name" style="color:'+person.color+'">'+person.name+'</div>'+
                 '<div class="deck-live-person-role">'+ctx.role+'</div>'+
               '</div>'+
-              '<div style="font-size:.55rem;color:var(--muted)">Liberación: <strong style="color:var(--text)">'+person.liberationYear+'</strong></div>'+
+              '<div style="font-size:.55rem;color:var(--muted)">Liberación: <strong style="color:var(--text)">'+person.liberationYear+'</strong> <span class="deck-live-tag-mini '+personalTag.cls+'" style="margin-left:.2rem">'+personalTag.label+'</span></div>'+
             '</div>'+
             '<div class="deck-live-person-copy">'+
               'Aporta <strong>'+derived.fmtCurrency(person.cashContribution)+'</strong> en caja ('+capMode+'), suma <strong>'+derived.fmtCurrency(sweat)+'</strong> en esfuerzo valorizado y sostiene foco en '+ctx.focus+
             '</div>'+
-            '<div class="deck-live-person-kpis">'+
-              '<div class="deck-live-person-kpi">Aporte total<br><strong>'+derived.fmtCurrency(person.investment)+'</strong></div>'+
-              '<div class="deck-live-person-kpi">Equity efectivo<br><strong>'+eqLabel+'</strong></div>'+
-              '<div class="deck-live-person-kpi">Sueldo meta 2032<br><strong>'+derived.fmtCurrency(person.sue2032)+'/mes</strong></div>'+
-              '<div class="deck-live-person-kpi">Retorno 2032 estimado<br><strong>'+derived.fmtCurrency(person.total2032)+'/mes</strong></div>'+
-              '<div class="deck-live-person-kpi">Retorno anual 2032<br><strong>'+derived.fmtCurrency(annual2032)+'/año</strong></div>'+
-              '<div class="deck-live-person-kpi">ROI 2032 vs aporte<br><strong>'+roi(annual2032,person.investment)+'</strong></div>'+
-              '<div class="deck-live-person-kpi">Horas semanales<br><strong>'+Number(base.hrs||0)+' h · factor '+Number(base.adj||0).toFixed(2)+'</strong></div>'+
-              '<div class="deck-live-person-kpi">Componente equity 2032<br><strong>'+derived.fmtCurrency(person.eq2032)+'/mes</strong></div>'+
+            '<div class="deck-live-person-copy">'+
+              'Su quiebre personal ocurre en <strong>'+personalYear+'</strong>: en ese punto proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong> ('+derived.fmtCurrency(personalAnnual)+'/año). Si sigue la aceleración hasta '+horizon+', puede cerrar en <strong>'+derived.fmtCurrency(person.total2032)+'/mes</strong> y un ROI estimado de <strong>'+roi(annual2032,person.investment)+'</strong> sobre su aporte total.'+
+            '</div>'+
+            '<div class="deck-live-person-points">'+
+              '<div class="deck-live-person-point"><strong>Aporte total:</strong> '+derived.fmtCurrency(person.investment)+' (equity efectivo '+eqLabel+').</div>'+
+              '<div class="deck-live-person-point"><strong>Meta '+horizon+':</strong> sueldo '+derived.fmtCurrency(person.sue2032)+'/mes + equity '+derived.fmtCurrency(person.eq2032)+'/mes.</div>'+
+              '<div class="deck-live-person-point"><strong>Dedicación modelada:</strong> '+Number(base.hrs||0)+' h/día · factor '+Number(base.adj||0).toFixed(2)+'.</div>'+
             '</div>'+
           '</article>'
         );
@@ -2901,7 +3007,7 @@ document.addEventListener('keydown',e=>{
     selectors:[
       '.eyebrow','h2','h3','.deck-live-label','.deck-live-note','.deck-live-value',
       '.deck-live-mini-title','.deck-live-story','.deck-live-person-role','.deck-live-person-copy',
-      '.deck-live-person-kpi','.qbox h4','.mv','.ml','.tly','.bl','.nav-hint','.nc'
+      '.deck-live-person-point','.deck-live-narrative-item','.qbox h4','.mv','.ml','.tly','.bl','.nav-hint','.nc'
     ],
     glossaryTitle:'Glosario rápido · Deck Qochix',
     customMap:{
