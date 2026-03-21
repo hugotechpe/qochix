@@ -56,18 +56,28 @@
     return Object.values(bc).reduce((s, v) => s + Number(v || 0), 0);
   }
 
+  function totalBrandCash(person) {
+    const bc = person.brandCash || {};
+    return Object.values(bc).reduce((s, v) => s + Number(v || 0), 0);
+  }
+
   const DEFAULTS = {
     persons: [
       { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 0,
-        brandCapital: { almaria: 10000, ht: 24000 }, c: '#D4A853' },
+        brandCapital: { almaria: 10000, ht: 24000 },
+        brandCash: { almaria: 10000, ht: 16000 }, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 0,
-        brandCapital: { almaria: 20000 }, c: '#3ECFCF' },
+        brandCapital: { almaria: 20000 },
+        brandCash: { almaria: 20000 }, c: '#3ECFCF' },
       { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 0,
-        brandCapital: { almaria: 4000 }, c: '#52C97A' },
+        brandCapital: { almaria: 4000 },
+        brandCash: { almaria: 4000 }, c: '#52C97A' },
       { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
-        brandCapital: { trazo: 62000 }, c: '#9B7FE8' },
+        brandCapital: { trazo: 62000 },
+        brandCash: { trazo: 12000 }, c: '#9B7FE8' },
       { id: 'nicole', name: 'Nicole', sueldo: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
-        brandCapital: {}, c: '#E86B5F' },
+        brandCapital: {},
+        brandCash: {}, c: '#E86B5F' },
     ],
     hires: [
       { role: 'Diana — Content HugoTech', brand: 'HugoTech', sue: 2000, growth: 1.15 },
@@ -91,11 +101,7 @@
       sue30: { hugo: 14000, rossy: 7500, vera: 7000, carlos: 9000, nicole: 6000 },
       sue32: { hugo: 30000, rossy: 10000, vera: 10000, carlos: 10000, nicole: 6000 },
       lineOverrides: {},
-      brandOps: {
-        trazo: { caja: 0 },
-        almaria: { caja: 34000 },
-        ht: { caja: 0 },
-      },
+      brandOps: {},
       founderBrand: {
         hugo: 'ht',
         rossy: 'almaria',
@@ -107,7 +113,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 6,
+      schemaVersion: 7,
     },
   };
 
@@ -149,6 +155,20 @@
         s.P.founderBrand = { hugo: 'ht', rossy: 'almaria', vera: 'almaria', carlos: 'trazo', nicole: 'trazo' };
       }
     }},
+    { from: 6, to: 7, run(s) {
+      const cashDefaults = {
+        hugo: { almaria: 10000, ht: 16000 },
+        rossy: { almaria: 20000 },
+        vera: { almaria: 4000 },
+        carlos: { trazo: 12000 },
+        nicole: {},
+      };
+      if (s.persons) {
+        s.persons.forEach(p => {
+          if (!p.brandCash) p.brandCash = cashDefaults[p.id] || {};
+        });
+      }
+    }},
   ];
 
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -165,6 +185,7 @@
         const incoming = raw.persons.find((entry) => entry && entry.id === person.id);
         const merged = mergePerson(person, incoming);
         merged.brandCapital = { ...(person.brandCapital || {}), ...((incoming && incoming.brandCapital) || {}) };
+        merged.brandCash = { ...(person.brandCash || {}), ...((incoming && incoming.brandCash) || {}) };
         return merged;
       });
     }
@@ -183,11 +204,7 @@
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
         lineOverrides: raw.P.lineOverrides || next.P.lineOverrides || {},
-        brandOps: {
-          trazo: { ...next.P.brandOps.trazo, ...((raw.P.brandOps || {}).trazo || {}) },
-          almaria: { ...next.P.brandOps.almaria, ...((raw.P.brandOps || {}).almaria || {}) },
-          ht: { ...next.P.brandOps.ht, ...((raw.P.brandOps || {}).ht || {}) },
-        },
+        brandOps: { ...next.P.brandOps, ...(raw.P.brandOps || {}) },
         founderBrand: { ...next.P.founderBrand, ...(raw.P.founderBrand || {}) },
       };
       if (!next.P.equityMode) next.P.equityMode = DEFAULTS.P.equityMode;
@@ -460,26 +477,32 @@
   }
 
   function calcBrandFinancials(state, lr, curves) {
-    const ops = state.P.brandOps || {};
     const fb = state.P.founderBrand || {};
     const brands = {};
     BRAND_IDS.forEach(b => {
       brands[b] = {
         id: b, label: BRAND_LABELS[b],
-        caja: (ops[b] && Number(ops[b].caja || 0)) || 0,
+        caja: 0,
         capitalInvertido: 0,
         inversores: [],
-        revenue: lr[b === 'almaria' ? 'almaria' : b].slice(),
+        cashContributors: [],
+        revenue: lr[b].slice(),
         burn: AÑOS.map(() => 0),
       };
     });
     state.persons.forEach(p => {
       const bc = p.brandCapital || {};
+      const bCash = p.brandCash || {};
       BRAND_IDS.forEach(b => {
-        const v = Number(bc[b] || 0);
-        if (v > 0) {
-          brands[b].capitalInvertido += v;
-          brands[b].inversores.push({ id: p.id, name: p.name, monto: v });
+        const val = Number(bc[b] || 0);
+        const cash = Number(bCash[b] || 0);
+        if (val > 0) {
+          brands[b].capitalInvertido += val;
+          brands[b].inversores.push({ id: p.id, name: p.name, monto: val });
+        }
+        if (cash > 0) {
+          brands[b].caja += cash;
+          brands[b].cashContributors.push({ id: p.id, name: p.name, monto: cash });
         }
       });
     });
@@ -526,8 +549,7 @@
   }
 
   function calcRunway(state, curves, lr) {
-    const ops = state.P.brandOps || {};
-    const totalCaja = BRAND_IDS.reduce((s, b) => s + Number((ops[b] || {}).caja || 0), 0);
+    const totalCaja = state.persons.reduce((s, p) => s + totalBrandCash(p), 0);
     const totalTickets = state.persons.reduce((s, p) => s + getTkt(state, p.id), 0);
     const capital = totalCaja + totalTickets;
     const revenue0 = (lr.trazo[0] || 0) + (lr.almaria[0] || 0) + (lr.ht[0] || 0);
@@ -707,6 +729,7 @@
     clone,
     normalizeBrandId,
     totalBrandCapital,
+    totalBrandCash,
     normalizeState,
     getState,
     saveState,
