@@ -64,14 +64,14 @@
   const DEFAULTS = {
     persons: [
       { id: 'hugo', name: 'Hugo', sueldo: 30000, hrs: 7, adj: 0.6, equity: 63, capital: 0,
-        brandCapital: { almaria: 10000, ht: 24000 },
-        brandCash: { trazo: 12000, almaria: 10000, ht: 16000 }, c: '#D4A853' },
+        brandCapital: { trazo: 12000, almaria: 10000, ht: 24000 },
+        brandCash: { trazo: 12000, almaria: 9400, ht: 16000 }, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, hrs: 6, adj: 0.7, equity: 17, capital: 0,
         brandCapital: { almaria: 20000 },
-        brandCash: { almaria: 20000 }, c: '#3ECFCF' },
+        brandCash: { almaria: 18800 }, c: '#3ECFCF' },
       { id: 'vera', name: 'Vera', sueldo: 6500, hrs: 6, adj: 0.7, equity: 11, capital: 0,
         brandCapital: { almaria: 4000 },
-        brandCash: { almaria: 4000 }, c: '#52C97A' },
+        brandCash: { almaria: 3800 }, c: '#52C97A' },
       { id: 'carlos', name: 'Carlos', sueldo: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
         brandCapital: { trazo: 62000 },
         brandCash: {}, c: '#9B7FE8' },
@@ -113,7 +113,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 7,
+      schemaVersion: 8,
     },
   };
 
@@ -168,6 +168,20 @@
           if (!p.brandCash) p.brandCash = cashDefaults[p.id] || {};
         });
       }
+    }},
+    { from: 7, to: 8, run(s) {
+      if (!s.persons) return;
+      const fix = {
+        hugo:  { bc: { trazo: 12000, almaria: 10000, ht: 24000 }, cash: { trazo: 12000, almaria: 9400, ht: 16000 } },
+        rossy: { bc: { almaria: 20000 }, cash: { almaria: 18800 } },
+        vera:  { bc: { almaria: 4000 }, cash: { almaria: 3800 } },
+      };
+      s.persons.forEach(p => {
+        const f = fix[p.id];
+        if (!f) return;
+        p.brandCapital = { ...(p.brandCapital || {}), ...f.bc };
+        p.brandCash = { ...(p.brandCash || {}), ...f.cash };
+      });
     }},
   ];
 
