@@ -64,19 +64,19 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 7, adj: 0.5, equity: 63, capital: 0,
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 7, adj: 0.4, equity: 63, capital: 0,
         brandCapital: { trazo: 12000, almaria: 10000, ht: 10000 },
         brandCash: { trazo: 12000, almaria: 9400, ht: 16000 }, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.65, equity: 17, capital: 0,
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 17, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 18800 }, c: '#3ECFCF' },
       { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 11, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 7000, sueldoMarca: 5000, hrs: 3, adj: 0.6, equity: 6, capital: 0,
+      { id: 'carlos', name: 'Carlos', sueldo: 7000, sueldoMarca: 5000, hrs: 3, adj: 0.7, equity: 6, capital: 0,
         brandCapital: { trazo: 62000 },
         brandCash: {}, c: '#9B7FE8' },
-      { id: 'nicole', name: 'Nicole', sueldo: 4000, sueldoMarca: 2000, hrs: 3, adj: 0.6, equity: 3, capital: 0,
+      { id: 'nicole', name: 'Nicole', sueldo: 2000, sueldoMarca: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E86B5F' },
     ],
@@ -114,7 +114,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 11,
+      schemaVersion: 12,
     },
   };
 
@@ -218,6 +218,22 @@
         s.P.sue29 = { hugo: 9000, rossy: 7500, vera: 7500, carlos: 10000, nicole: 5000 };
         s.P.sue30 = { hugo: 14000, rossy: 9000, vera: 8500, carlos: 11000, nicole: 6000 };
         s.P.sue32 = { hugo: 30000, rossy: 12000, vera: 10000, carlos: 14000, nicole: 7000 };
+      }
+    }},
+    { from: 11, to: 12, run(s) {
+      const fixes = {
+        hugo:   { adj: 0.4 },
+        rossy:  { adj: 0.7 },
+        carlos: { adj: 0.7 },
+        nicole: { sueldo: 2000, adj: 1.0 },
+      };
+      if (s.persons) {
+        s.persons.forEach(p => {
+          const f = fixes[p.id];
+          if (!f) return;
+          if (f.sueldo != null) p.sueldo = f.sueldo;
+          if (f.adj != null) p.adj = f.adj;
+        });
       }
     }},
   ];
