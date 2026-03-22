@@ -64,8 +64,8 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 7, adj: 0.4, equity: 63, capital: 0,
-        brandCapital: { trazo: 12000, almaria: 10000, ht: 10000 },
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 0.5, equity: 63, capital: 0,
+        brandCapital: { trazo: 12000, almaria: 10000, ht: 30000 },
         brandCash: { trazo: 12000, almaria: 9400, ht: 16000 }, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 17, capital: 0,
         brandCapital: { almaria: 20000 },
@@ -76,7 +76,7 @@
       { id: 'carlos', name: 'Carlos', sueldo: 7000, sueldoMarca: 5000, hrs: 3, adj: 0.7, equity: 6, capital: 0,
         brandCapital: { trazo: 62000 },
         brandCash: {}, c: '#9B7FE8' },
-      { id: 'nicole', name: 'Nicole', sueldo: 2000, sueldoMarca: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
+      { id: 'nicole', name: 'Nicole', sueldo: 3000, sueldoMarca: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E86B5F' },
     ],
@@ -114,7 +114,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 12,
+      schemaVersion: 13,
     },
   };
 
@@ -233,6 +233,22 @@
           if (!f) return;
           if (f.sueldo != null) p.sueldo = f.sueldo;
           if (f.adj != null) p.adj = f.adj;
+        });
+      }
+    }},
+    { from: 12, to: 13, run(s) {
+      const fixes = {
+        hugo:   { hrs: 6, adj: 0.5, brandCapital: { ht: 30000 } },
+        nicole: { sueldo: 3000 },
+      };
+      if (s.persons) {
+        s.persons.forEach(p => {
+          const f = fixes[p.id];
+          if (!f) return;
+          if (f.hrs != null) p.hrs = f.hrs;
+          if (f.adj != null) p.adj = f.adj;
+          if (f.sueldo != null) p.sueldo = f.sueldo;
+          if (f.brandCapital) p.brandCapital = { ...(p.brandCapital || {}), ...f.brandCapital };
         });
       }
     }},
