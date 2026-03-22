@@ -437,6 +437,36 @@
     return { lines, trazo: bt('trazo'), almaria: bt('almaria'), ht: bt('ht') };
   }
 
+  function capSalariesToRevenue(state, targetCurves, neto, hcost) {
+    const capped = {};
+    state.persons.forEach(function(p) { capped[p.id] = []; });
+    AÑOS.forEach(function(_, yi) {
+      var available = neto[yi] - hcost[yi];
+      var protectedTotal = 0;
+      state.persons.forEach(function(p) {
+        var prot = Number(p.sueldoMarca || 0);
+        protectedTotal += prot;
+      });
+      var afterProtected = available - protectedTotal;
+      var targets = {};
+      var totalTarget = 0;
+      state.persons.forEach(function(p) {
+        var curveVal = Number((targetCurves[p.id] || [])[yi] || 0);
+        var prot = Number(p.sueldoMarca || 0);
+        var extra = Math.max(0, curveVal - prot);
+        targets[p.id] = extra;
+        totalTarget += extra;
+      });
+      var ratio = totalTarget > 0 ? Math.min(1, Math.max(0, afterProtected / totalTarget)) : 0;
+      state.persons.forEach(function(p) {
+        var prot = Number(p.sueldoMarca || 0);
+        var actual = prot + Math.round(targets[p.id] * ratio);
+        capped[p.id][yi] = actual;
+      });
+    });
+    return capped;
+  }
+
   function calcFactFromCurves(state, curves) {
     const lr = computeLineRevenue(state);
     const trazo = lr.trazo;
@@ -444,13 +474,14 @@
     const ht = lr.ht;
     const total = AÑOS.map((_, i) => trazo[i] + alm[i] + ht[i]);
     const neto = total.map((value) => Math.round(value * Number(state.P.netoPct || 0)));
-    const sued_f = suedTotalsFromCurves(state, curves);
     const hcost = hiresCostByYear(state);
+    const realCurves = capSalariesToRevenue(state, curves, neto, hcost);
+    const sued_f = suedTotalsFromCurves(state, realCurves);
     const sued_tot = sued_f.map((value, i) => value + hcost[i]);
     const colchon = neto.map((value, i) => value - sued_tot[i]);
     const dist = colchon.map((value) => Math.max(0, value - Number(state.P.reserva || 0)));
     const dist_no_op = neto.map((value, i) => Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0)));
-    return { trazo, alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: curves, lineRevenue: lr };
+    return { trazo, alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
   }
 
   function calcMonthly(state, curves) {
@@ -608,14 +639,15 @@
     const fact = calcFactFromCurves(state, curves);
     const factPact = calcFactFromCurves(state, founderCurvesPact());
     const lr = fact.lineRevenue;
-    const pool = calcPool(state, curves);
-    const brandFin = calcBrandFinancials(state, lr, curves);
-    const runway = calcRunway(state, curves, lr);
+    const realCurves = fact.suedCurves;
+    const pool = calcPool(state, realCurves);
+    const brandFin = calcBrandFinancials(state, lr, realCurves);
+    const runway = calcRunway(state, realCurves, lr);
     const breakEven = calcBreakEven(fact);
     const firstDistYear = AÑOS.find((year, index) => fact.dist[index] > 0) || '2033+';
-    const effectiveEquity = calcEffectiveEquity(state, curves);
+    const effectiveEquity = calcEffectiveEquity(state, realCurves);
     const personCards = state.persons.map((person) => {
-      const pCurve = curves[person.id] || [];
+      const pCurve = realCurves[person.id] || [];
       const swData = sw(person, pCurve);
       const yearlyTotals = AÑOS.map((_, index) => {
         const sue = Number(pCurve[index] || 0);
@@ -665,7 +697,8 @@
       labels: { ...SC_LABELS },
       fact,
       factPact,
-      curves,
+      curves: realCurves,
+      targetCurves: curves,
       pool,
       brandFinancials: brandFin,
       runway,

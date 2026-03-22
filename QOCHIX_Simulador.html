@@ -708,7 +708,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
-        Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo Qochix</strong> año a año (curva del pacto o meta editada), el <strong>ingreso por equity</strong> (su porción del distribuible) y el <strong>total mensual</strong>. Los montos cambian con el escenario activo.
+        Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo real</strong> que cada socio podría cobrar según el revenue (no la meta aspiracional), el <strong>ingreso por equity</strong> y el <strong>total mensual</strong>. <span style="color:var(--coral)">Los montos en rojo</span> indican que el revenue aún no alcanza para pagar la meta completa. Primero se pagan hires y sueldos protegidos (Trazo), luego el resto se reparte entre fundadores.
       </p>
       <div class="partner-grid" id="partner-grid"></div>
 
@@ -2826,7 +2826,8 @@ function paintPartnerCards(derived, fact, eqById){
   const el=sel('partner-grid');
   if(!el)return;
   const fmt=QSYS.fmtCurrency;
-  const curves=fact.suedCurves;
+  const realCurves=fact.suedCurves;
+  const targetCurves=fact.targetCurves||realCurves;
   const roles={hugo:'CEO · HugoTech',rossy:'CEO · Almaria',vera:'CEO · Trazo',carlos:'Fundador · Equipos',nicole:'Operaciones'};
   el.innerHTML=derived.personCards.map(function(pc){
     const p=PERSONS.find(function(x){return x.id===pc.id;});
@@ -2839,8 +2840,16 @@ function paintPartnerCards(derived, fact, eqById){
     html+='<div class="ptnr-year-grid">';
     for(var i=1;i<=6;i++){
       var yr=2026+i;
-      var sue=curves[p.id]?curves[p.id][i]:0;
-      html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr+'</span><span class="ptnr-sue">'+fmt(sue)+'</span></div>';
+      var real=realCurves[p.id]?realCurves[p.id][i]:0;
+      var meta=targetCurves[p.id]?targetCurves[p.id][i]:0;
+      var capped=real<meta;
+      html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr+'</span>';
+      if(capped){
+        html+='<span class="ptnr-sue" style="color:var(--coral)" title="Meta: '+fmt(meta)+' — limitado por revenue">'+fmt(real)+'</span>';
+      } else {
+        html+='<span class="ptnr-sue">'+fmt(real)+'</span>';
+      }
+      html+='</div>';
     }
     html+='</div>';
     html+='<div class="ptnr-divider"></div>';
@@ -2848,7 +2857,7 @@ function paintPartnerCards(derived, fact, eqById){
     html+='<div class="ptnr-year-grid">';
     for(var j=1;j<=6;j++){
       var yr2=2026+j;
-      var sue2=curves[p.id]?curves[p.id][j]:0;
+      var sue2=realCurves[p.id]?realCurves[p.id][j]:0;
       var eqAmt=Math.round(fact.dist[j]*(pc.equity/100));
       var total=sue2+eqAmt;
       html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr2+'</span><span class="ptnr-eqi">+'+fmt(eqAmt)+'</span><span class="ptnr-total">'+fmt(total)+'</span></div>';
@@ -2872,7 +2881,7 @@ function paintEquityExplainer(derived, fact){
   var box=sel('equity-explainer');
   if(!box) return;
   var fmt=QSYS.fmtCurrency;
-  var base=QSYS.SUED_F_BASE;
+  var realCurves=fact.suedCurves;
   var AÑOS=[2026,2027,2028,2029,2030,2031,2032];
 
   var h='';
@@ -2893,7 +2902,8 @@ function paintEquityExplainer(derived, fact){
   h+='&nbsp;&nbsp;valor_mercado/mes = (<span style="color:var(--teal)">sueldo_hoy</span> ÷ 176 hrs) × (<span style="color:var(--teal)">hrs/día</span> × 6 días × 4.3 sem)<br>';
   h+='&nbsp;&nbsp;compensación_extra = max(0, <span style="color:var(--gold)">sueldo_curva_Qochix</span> − <span style="color:var(--coral)">sueldo_marca_actual</span>)';
   h+='</div>';
-  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem">Si alguien ya cobra sueldo de su marca (ej. Carlos S/5,000 de Trazo), ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
+  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.4rem">Si alguien ya cobra sueldo de su marca (ej. Carlos S/5,000 de Trazo), ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
+  h+='<div style="font-size:.72rem;color:var(--coral);margin-bottom:.8rem"><strong>Importante:</strong> Los sueldos usados aquí son los <u>reales</u> (limitados por el revenue), no las metas aspiracionales. Si el revenue no alcanza para pagar la meta completa, el sueldo real es menor → el sweat equity es mayor porque se trabaja más tiempo sin cobrar lo justo.</div>';
   h+='</div>';
 
   h+='<div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.6rem">Desglose por socio</div>';
@@ -2922,7 +2932,7 @@ function paintEquityExplainer(derived, fact){
     var hm=p.hrs*6*4.3;
     var vm=hr*hm;
     var bm=Number(p.sueldoMarca||0);
-    var curve=base[p.id]||[];
+    var curve=realCurves[p.id]||[];
     var swTotal=0;
     for(var i=0;i<7;i++){
       var extra=Math.max(0,Number(curve[i]||0)-bm);
