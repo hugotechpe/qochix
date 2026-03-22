@@ -2180,7 +2180,7 @@ function recalc(){
   });
   const tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
   const bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
-  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(bcAll)}</td><td>${fmt(tsw_calc())}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
+  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(bcAll)}</td><td>${fmt(tswAll)}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
   sel('tb-equity').innerHTML=html;
 
   // ── Facturación table ──
