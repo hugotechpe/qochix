@@ -15,11 +15,12 @@
     ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133],
   };
   const SUED_F_BASE = {
-    hugo: [0, 2000, 5000, 9000, 14000, 20000, 30000],
-    rossy: [0, 1000, 2500, 4000, 7500, 9000, 10000],
-    vera: [0, 1000, 2500, 4000, 7000, 8500, 10000],
-    carlos: [5000, 6000, 7000, 8000, 9000, 10000, 10000],
-    nicole: [2000, 4000, 5000, 6000, 6000, 6000, 6000],
+    //         2026  2027  2028  2029   2030   2031   2032
+    hugo:   [    0,    0, 3000, 9000, 14000, 20000, 30000],
+    rossy:  [    0, 1000, 2500, 7500,  9000, 10500, 12000],
+    vera:   [    0,    0, 2000, 7500,  8500,  9200, 10000],
+    carlos: [ 5000, 7000, 8000,10000, 11000, 12500, 14000],
+    nicole: [ 2000, 4000, 5000, 5000,  6000,  6500,  7000],
   };
   const SERVICE_LINES = [
     // ── Trazo (5) — precios suben 2028 ──
@@ -114,7 +115,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 13,
+      schemaVersion: 14,
     },
   };
 
@@ -251,6 +252,10 @@
           if (f.brandCapital) p.brandCapital = { ...(p.brandCapital || {}), ...f.brandCapital };
         });
       }
+    }},
+    { from: 13, to: 14, run(s) {
+      // SUED_F_BASE changed — curvas se recalculan automáticamente al cargar
+      // No se necesita migrar persons, solo forzar recarga de curvas
     }},
   ];
 
