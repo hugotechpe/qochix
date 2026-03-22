@@ -638,8 +638,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <div class="dash-note" id="dash-note">
-    Todas las métricas del dashboard salen del mismo motor (`deriveState`) para evitar números inconsistentes entre cards, tablas y gráficos.
+    Todas las métricas del dashboard salen del mismo motor (<strong>deriveState</strong>) para evitar números inconsistentes entre cards, tablas y gráficos.
   </div>
+  <div id="explain-dash" style="margin-top:.5rem;margin-bottom:.8rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
 
   <div class="dash-grid">
     <div class="dash-card">
@@ -698,6 +699,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="nota ok" id="lib-nota" style="margin-top:.5rem"></div>
     <div class="lib-team" id="lib-team"></div>
+    <div id="explain-lib" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
   </div>
 
   <!-- Partner overview cards -->
@@ -777,6 +779,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="tw"><table><thead><tr>
         <th>Socio</th><th>Val. mercado</th><th>Sue. marca</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat neto</th><th>% del pool</th>
       </tr></thead><tbody id="tb-sweat"></tbody></table></div>
+      <div id="explain-sweat" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
   </div>
 
@@ -790,6 +793,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="tw"><table><thead><tr>
         <th>Socio</th><th>% equity</th><th>Ticket</th><th>Inv. marca</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Dif.</th>
       </tr></thead><tbody id="tb-equity"></tbody></table></div>
+      <div id="explain-equity" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
   </div>
 
@@ -804,6 +808,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="tw"><table><thead><tr>
         <th>Línea</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th>
       </tr></thead><tbody id="tb-fact"></tbody></table></div>
+      <div id="explain-fact" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
   </div>
 
@@ -817,6 +822,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="tw"><table><thead><tr>
         <th>Socio</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>Acum. 7a</th>
       </tr></thead><tbody id="tb-ea"></tbody></table></div>
+      <div id="explain-ea" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
   </div>
 
@@ -1366,7 +1372,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=16"></script>
+<script src="qochix_system.js?v=17"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -2051,7 +2057,46 @@ function recalc(){
   sv('dash-lib30',`${derived.liberatedBy2030}/${PERSONS.length}`);
   const dashNote=sel('dash-note');
   if(dashNote){
-    dashNote.innerHTML='Todas las métricas del dashboard salen del mismo motor (<strong>deriveState</strong>). Ejemplo: <strong>colchón = neto - planilla</strong> y <strong>distribuible = max(0, colchón - reserva)</strong>; así evitamos que cards, tablas y gráficos se contradigan.';
+    dashNote.innerHTML='Todas las métricas del dashboard salen del mismo motor (<strong>deriveState</strong>). Ejemplo: <strong>colchón = neto – planilla</strong> y <strong>distribuible = max(0, colchón – reserva)</strong>; así evitamos que cards, tablas y gráficos se contradigan.';
+  }
+  // ── Explain dashboard KPIs ──
+  const exDash=sel('explain-dash');
+  if(exDash){
+    let h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.6rem">';
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--gold);font-size:.72rem;margin-bottom:.25rem">Pool total invertido: ${fmt(pool)}</div>
+      <div style="font-size:.7rem">Suma de todos los aportes: tickets (<strong>${fmt(tktTot)}</strong>) + capital en marcas (<strong>${fmt(bcAll)}</strong>) + sweat equity (<strong>${fmt(tswAll)}</strong>). Es la base para calcular el % de cada socio.</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--teal);font-size:.72rem;margin-bottom:.25rem">Distribuible 2032: ${fmt(dist[6])}/mes</div>
+      <div style="font-size:.7rem">Lo que sobra después de pagar a todos (socios + equipo + reserva). En 2032 la facturación es ${fmt(fact.total[6])}/mes → neto ${fmt(fact.neto[6])} → planilla ${fmt(fact.sued_tot[6])} → queda <strong>${fmt(dist[6])}</strong> para repartir.</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--green);font-size:.72rem;margin-bottom:.25rem">Break-even: ${be}</div>
+      <div style="font-size:.7rem">El primer año donde el colchón (neto – planilla) deja de ser negativo. Antes de ${be}, el ecosistema opera con pérdida y los socios cobran menos de sus metas.</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--coral);font-size:.72rem;margin-bottom:.25rem">Runway: ${rw.months}m</div>
+      <div style="font-size:.7rem">Meses que el ecosistema puede operar con la caja real disponible (${fmt(rw.totalCash)}) si no entra ningún ingreso nuevo. ${rw.months>=18?'Margen saludable para iterar.':rw.months>=9?'Zona media — monitorear cada mes.':'<strong style="color:var(--coral)">Ajustado</strong> — prioridad absoluta: ingresos y caja.'}</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--purple);font-size:.72rem;margin-bottom:.25rem">Liberación: ${derived.liberatedBy2032}/${PERSONS.length}</div>
+      <div style="font-size:.7rem">Cuántos socios logran que su ingreso Qochix (sueldo + equity) iguale o supere su valor de mercado antes del 2032. ${derived.liberatedBy2032===PERSONS.length?'<strong style="color:var(--green)">Todos liberados</strong> — modelo sostenible.':'Faltan '+(PERSONS.length-derived.liberatedBy2032)+' socios por liberar.'}</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Facturación 2030: ${fmt(fact.total[idx30])}</div>
+      <div style="font-size:.7rem">Ingreso bruto mensual de las 3 marcas en 2030. De eso, el ${Math.round(P.netoPct*100)}% (${fmt(fact.neto[idx30])}) queda como neto operativo para cubrir planilla y distribuible.</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Equipo operativo 2032: ${fmt(fact.hcost[6])}</div>
+      <div style="font-size:.7rem">Costo mensual de los empleados (no fundadores): content creators, comerciales, facilitadora. Se paga <em>antes</em> que los sueldos de socios. Sin este equipo, el distribuible sería ${fmt(fact.dist_no_op[6])}/mes más.</div>
+    </div>`;
+    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
+      <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Brecha equipo 2030: ${fmt(teamGap2030)}</div>
+      <div style="font-size:.7rem">Cuánto falta mensualmente en 2030 para que todos los socios ganen al menos su valor de mercado. Si es S/0, todos ya están cubiertos en ese año.</div>
+    </div>`;
+    h+='</div>';
+    exDash.innerHTML=h;
   }
   sv('gra-growth-30',growth30.toFixed(0)+'%');
   sv('gra-growth-32',growth32.toFixed(0)+'%');
@@ -2153,6 +2198,46 @@ function recalc(){
     }).join('');
   }
 
+  // ── Explain liberación ──
+  const exLib=sel('explain-lib');
+  if(exLib){
+    let h='';
+    h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem;margin-top:.5rem">';
+    h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Qué significa "liberación financiera"?</div>';
+    h+='<div style="margin-bottom:.35rem">Un socio está <strong>"liberado"</strong> cuando su ingreso total mensual en Qochix (sueldo + retorno por equity) <strong>iguala o supera</strong> su valor de mercado actual. Es decir, ya no necesita otra fuente de ingresos para vivir.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>Año de cruce:</strong> el primer año en que (sueldo_real + equity_mensual) ≥ valor_mercado. Si dice "2033+", no se alcanza dentro del horizonte del modelo.</div>';
+    h+='<div style="margin-bottom:.5rem"><strong>Total 2030:</strong> el ingreso total mensual que tendría esa persona en 2030 (sueldo capeado por revenue + retorno equity).</div>';
+    h+='<div style="font-weight:600;color:var(--text);margin-bottom:.4rem">Detalle por socio:</div>';
+    derived.personCards.forEach(pc=>{
+      const basePerson=PERSONS.find(p=>p.id===pc.id);
+      if(!basePerson) return;
+      const total30=pc.yearlyTotals[libIdx30]||0;
+      const sue30=sc[pc.id]?sc[pc.id][idx30]:0;
+      const eq30=Math.round(dist[idx30]*(eqById[pc.id]||0)/100);
+      const ok=pc.liberationYear!=='2033+';
+      const gap=Math.max(0,basePerson.sueldo-total30);
+      h+=`<div style="margin-bottom:.3rem;padding:.4rem .6rem;background:var(--bg1);border-radius:6px;border-left:3px solid ${basePerson.c}">`;
+      h+=`<strong style="color:${basePerson.c}">${basePerson.name}</strong>: valor mercado <strong>${fmt(basePerson.sueldo)}/mes</strong>. `;
+      h+=`En 2030 ganaría: sueldo <strong>${fmt(sue30)}</strong> + equity <strong>${fmt(eq30)}</strong> = <strong>${fmt(total30)}/mes</strong>. `;
+      if(ok){
+        h+=`<span style="color:var(--green)">Cruza en <strong>${pc.liberationYear}</strong></span> — a partir de ahí, Qochix cubre su valor de mercado completo.`;
+      }else{
+        h+=`<span style="color:var(--coral)">Brecha de <strong>${fmt(gap)}/mes</strong></span> — necesita más revenue o un ajuste para cruzar antes del 2032.`;
+      }
+      h+='</div>';
+    });
+    h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem;margin-top:.5rem">';
+    h+=`<strong>Objetivo:</strong> que los 5 socios estén liberados al 2032. Hoy <strong>${liberated2032}/${PERSONS.length}</strong> lo logran. `;
+    if(liberated2032<PERSONS.length){
+      const notLib=derived.personCards.filter(pc=>pc.liberationYear==='2033+');
+      h+=`Faltan: ${notLib.map(pc=>`<strong style="color:${PERSONS.find(p=>p.id===pc.id)?.c||'var(--text)'}">${pc.name}</strong>`).join(', ')}. Para acercar su cruce: aumentar revenue de sus marcas, o subir su meta sueldo cuando el colchón lo permita.`;
+    }else{
+      h+='Todos los socios logran el cruce — el modelo es sostenible.';
+    }
+    h+='</div></div>';
+    exLib.innerHTML=h;
+  }
+
   paintPartnerCards(derived, fact, eqById);
   paintEffortTable(fact);
 
@@ -2165,6 +2250,27 @@ function recalc(){
   });
   html+=`<tr class="trs"><td>TOTAL</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="ct">${fmt(tvm)}/m</td><td>—</td><td class="cg cb">${fmt(tswAll)}</td><td>—</td></tr>`;
   sel('tb-sweat').innerHTML=html;
+
+  // ── Explain sweat ──
+  const exSweat=sel('explain-sweat');
+  if(exSweat){
+    const topSw=PERSONS.slice().sort((a,b)=>sw(b,sc[b.id]).sw-sw(a,sc[a.id]).sw)[0];
+    const topSwD=sw(topSw,sc[topSw.id]);
+    let h='';
+    h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
+    h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo leer esta tabla?</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">Val. mercado:</strong> lo que cada socio vale en el mercado por su expertise (no lo que cobra hoy). Define el precio/hora.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">Sue. marca:</strong> lo que ya cobra de su marca (ej. Carlos S/5,000 de Trazo). Se resta de la compensación Qochix para no contar doble.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Valor/mes:</strong> = (S/hora) × (hrs/mes). Cuánto vale su dedicación mensual a precio de mercado.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">× Factor:</strong> multiplicador de ajuste (0.1–1.0). Refleja el nivel de riesgo, compromiso y etapa de cada socio. Factor 1.0 = 100% del sweat contabilizado.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Sweat neto:</strong> acumulado de todo el trabajo no-pagado en 7 años × factor. A mayor sweat, mayor peso en el equity.</div>';
+    h+='<div style="margin-bottom:.5rem"><strong>% del pool:</strong> qué porción del sweat total representa cada socio.</div>';
+    h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
+    h+=`<strong style="color:${topSw.c}">${topSw.name}</strong> tiene el mayor sweat (<strong>${fmt(topSwD.sw)}</strong>) porque su valor de mercado es <strong>${fmt(topSwD.vm)}/mes</strong> y dedica <strong>${topSw.hrs}h/día</strong>. `;
+    h+=`El equipo acumula <strong>${fmt(tswAll)}</strong> de sweat total en 7 años — esta es la mayor parte del pool de inversión.`;
+    h+='</div></div>';
+    exSweat.innerHTML=h;
+  }
 
   // ── Equity table ──
   html='';
@@ -2182,6 +2288,29 @@ function recalc(){
   const bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
   html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(bcAll)}</td><td>${fmt(tswAll)}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
   sel('tb-equity').innerHTML=html;
+
+  // ── Explain equity ──
+  const exEq=sel('explain-equity');
+  if(exEq){
+    const topPerson=PERSONS.slice().sort((a,b)=>(eqById[b.id]||0)-(eqById[a.id]||0))[0];
+    const topEq=(eqById[topPerson.id]||0).toFixed(1);
+    const topTkt=getTkt(topPerson.id);
+    const topBc=Object.values(topPerson.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0);
+    const topSweat=sw(topPerson,sc[topPerson.id]).sw;
+    let h='';
+    h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
+    h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo se calcula el % de equity?</div>';
+    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco para Qochix) + <strong style="color:var(--coral)">Inv. marca</strong> (lo invertido históricamente en Trazo/Almaria/HugoTech) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en 7 años).</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>% Mat.</strong> = aporte de esa persona ÷ pool total. <strong>Dif.</strong> = diferencia entre el % equity efectivo y el % material (si hay ajuste base pre-definido).</div>';
+    h+=`<div style="margin-bottom:.35rem">El pool total es <strong style="color:var(--gold)">${fmt(pool)}</strong>. De ese monto, <strong>${fmt(tktTot)}</strong> son tickets, <strong>${fmt(bcAll)}</strong> capital en marcas, y <strong>${fmt(tswAll)}</strong> sweat equity.</div>`;
+    h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
+    h+=`<strong style="color:${topPerson.c}">${topPerson.name}</strong> tiene <strong>${topEq}%</strong> porque su aporte total es <strong>${fmt(topTkt+topBc+topSweat)}</strong> (ticket ${fmt(topTkt)} + marcas ${fmt(topBc)} + sweat ${fmt(topSweat)}). `;
+    const lowPerson=PERSONS.slice().sort((a,b)=>(eqById[a.id]||0)-(eqById[b.id]||0))[0];
+    const lowEq=(eqById[lowPerson.id]||0).toFixed(1);
+    h+=`<strong style="color:${lowPerson.c}">${lowPerson.name}</strong> tiene <strong>${lowEq}%</strong> porque su aporte total es menor — menor valor de mercado y/o menos horas dedicadas.`;
+    h+='</div></div>';
+    exEq.innerHTML=h;
+  }
 
   // ── Facturación table ──
   const rows=[
@@ -2203,6 +2332,28 @@ function recalc(){
   sel('tb-fact').innerHTML=html;
   const scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
   sel('nota-fact').innerHTML=`Escenario <strong>${scn[P.sc]}</strong>. Distribuible 2032: <strong style="color:var(--gold)">${fmt(dist[6])}/mes</strong>. El equipo operativo reduce el distribuible en <strong style="color:var(--coral)">${fmt(fact.hcost[6])}/mes</strong> en 2032.`;
+
+  // ── Explain facturación ──
+  const exFact=sel('explain-fact');
+  if(exFact){
+    const beYear=be;
+    const firstNeg=fact.colchon.findIndex((v,i)=>i>0&&v<0);
+    const firstPos=fact.colchon.findIndex((v,i)=>i>0&&v>=0);
+    let h='';
+    h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
+    h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo leer esta tabla?</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>Trazo, Almaria, HugoTech:</strong> facturación mensual proyectada de cada marca. Basada en las líneas de servicio (precios × volúmenes) del escenario activo.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>TOTAL QOCHIX:</strong> suma de las 3 marcas. Es el ingreso bruto mensual del ecosistema.</div>';
+    h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">NETO ${Math.round(P.netoPct*100)}%:</strong> lo que queda después de costos operativos (impuestos, herramientas, etc.). Solo este monto está disponible para sueldos.</div>`;
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Sueldos fundadores:</strong> lo que se paga a los 5 socios. Está <em>capeado por el revenue</em>: si no hay suficiente neto, los sueldos bajan automáticamente.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Equipo operativo:</strong> content creators, comerciales, facilitadora. Se pagan antes que los sueldos fundadores.</div>';
+    h+=`<div style="margin-bottom:.35rem"><strong>COLCHÓN:</strong> neto − planilla total. Si es <span style="color:var(--coral)">negativo</span> (entre paréntesis), el ecosistema no genera suficiente para pagar a todos. ${firstPos>0?'El colchón se vuelve positivo en <strong>'+AÑOS[firstPos]+'</strong>.':'El colchón nunca se vuelve positivo en este escenario.'}</div>`;
+    h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">💰 DISTRIBUIBLE:</strong> max(0, colchón − reserva S/${fmt(P.reserva||0)}). Es lo que se reparte entre socios según su % de equity, <em>aparte</em> de su sueldo.</div>`;
+    h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
+    h+=`En <strong>2026–${AÑOS[Math.max(0,(firstPos||3)-1)]}</strong> el ecosistema está en etapa de inversión (colchón negativo). A partir de <strong>${beYear}</strong> empiezan a sobrar fondos para distribuir. La clave es que <strong>los sueldos de socios se ajustan al revenue real</strong> — si solo hay para pagar S/7,000 de planilla fundadores, eso es lo que se paga.`;
+    h+='</div></div>';
+    exFact.innerHTML=h;
+  }
 
   sv('ceo-scn',scn[P.sc]);
   sv('ceo-pool',fmt(pool));
@@ -2249,6 +2400,33 @@ function recalc(){
   });
   html+=`<tr class="trs"><td>DISTRIBUIBLE</td><td>—</td>${dist.map(d=>`<td>${d>0?fmt(d):'—'}</td>`).join('')}<td>—</td></tr>`;
   sel('tb-ea').innerHTML=html;
+
+  // ── Explain retorno equity ──
+  const exEa=sel('explain-ea');
+  if(exEa){
+    const topRet=PERSONS.slice().sort((a,b)=>{
+      const aA=dist.reduce((s,d)=>s+Math.round(d*(eqById[a.id]||0)/100)*12,0);
+      const bA=dist.reduce((s,d)=>s+Math.round(d*(eqById[b.id]||0)/100)*12,0);
+      return bA-aA;
+    })[0];
+    const topRetAcum=dist.reduce((s,d)=>s+Math.round(d*(eqById[topRet.id]||0)/100)*12,0);
+    const firstDistIdx=dist.findIndex((d,i)=>i>0&&d>0);
+    let h='';
+    h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
+    h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Qué es el retorno por equity?</div>';
+    h+='<div style="margin-bottom:.35rem">Cada mes que hay <strong>distribuible > 0</strong>, se reparte entre los socios según su % de equity. Este ingreso es <strong>adicional al sueldo</strong> — es el retorno de tu inversión (ticket + capital + sweat).</div>';
+    h+='<div style="margin-bottom:.35rem">Los guiones "—" significan que en ese año <strong>no hay distribuible</strong> (el colchón aún no cubre la reserva). El dinero empieza a fluir cuando el ecosistema genera más de lo que gasta.</div>';
+    h+=`<div style="margin-bottom:.35rem"><strong>Acum. 7a:</strong> suma total de retorno por equity en los 7 años del modelo (mensual × 12 meses × años con distribuible).</div>`;
+    if(firstDistIdx>0){
+      h+=`<div style="border-top:1px solid var(--brd);padding-top:.5rem">`;
+      h+=`El distribuible aparece por primera vez en <strong>${AÑOS[firstDistIdx]}</strong>. `;
+      h+=`<strong style="color:${topRet.c}">${topRet.name}</strong> acumula <strong>${fmt(topRetAcum)}</strong> en 7 años porque tiene el mayor % de equity. `;
+      h+=`En <strong>2032</strong> cada socio recibe mensualmente: su sueldo + su % del distribuible (<strong>${fmt(dist[6])}/mes</strong> total).`;
+      h+='</div>';
+    }
+    h+='</div>';
+    exEa.innerHTML=h;
+  }
 
   // ── Metas sueldo vs impacto (referencia = curva literal pacto) ──
   const dPay30=fact.sued_f[idx30]-factPact.sued_f[idx30];
