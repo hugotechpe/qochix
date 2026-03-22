@@ -2730,8 +2730,14 @@ function paintEffortTable(fact){
   html+='<tr><td style="color:var(--teal)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
   for(var k=1;k<=6;k++) html+='<td class="ct">'+fmt(fact.neto[k])+'</td>';
   html+='<td></td></tr>';
-  html+='<tr><td style="color:var(--coral)">(-) Planilla total</td>';
-  for(var l=1;l<=6;l++) html+='<td class="cc">'+fmt(fact.sued_tot[l])+'</td>';
+  html+='<tr><td style="color:var(--coral);padding-left:1.2rem">(-) Planilla socios</td>';
+  for(var l1=1;l1<=6;l1++) html+='<td class="cc">'+fmt(fact.sued_f[l1])+'</td>';
+  html+='<td></td></tr>';
+  html+='<tr><td style="color:var(--coral);padding-left:1.2rem">(-) Planilla empleados</td>';
+  for(var l2=1;l2<=6;l2++) html+='<td class="cc">'+fmt(fact.hcost[l2])+'</td>';
+  html+='<td></td></tr>';
+  html+='<tr><td style="color:var(--coral);font-weight:600">(-) Planilla total</td>';
+  for(var l=1;l<=6;l++) html+='<td class="cc" style="font-weight:600">'+fmt(fact.sued_tot[l])+'</td>';
   html+='<td></td></tr>';
   html+='<tr class="trh"><td style="color:var(--gold)"><strong>💰 DISTRIBUIBLE</strong></td>';
   for(var n=1;n<=6;n++){var cls=fact.dist[n]>0?'cg cb':'cc';html+='<td class="'+cls+'">'+fmt(fact.dist[n])+'</td>';}
