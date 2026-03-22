@@ -775,7 +775,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>Sueldo hoy</th><th>Sue. marca</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat neto</th><th>% del pool</th>
+        <th>Socio</th><th>Val. mercado</th><th>Sue. marca</th><th>S/hora</th><th>Hrs/día</th><th>Hrs/mes</th><th>Valor/mes</th><th>× Factor</th><th>Sweat neto</th><th>% del pool</th>
       </tr></thead><tbody id="tb-sweat"></tbody></table></div>
     </div>
   </div>
@@ -1366,7 +1366,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=13"></script>
+<script src="qochix_system.js?v=14"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1561,7 +1561,7 @@ function initSidebar() {
       </span>
     </div>
     <div class="g2" style="margin-bottom:.5rem">
-      <div class="fld"><label>Sueldo hoy (S/)</label>
+      <div class="fld"><label>Valor mercado (S/)</label>
         <input type="number" value="${p.sueldo}" step="500" min="500" max="80000"
           id="inp-sue-${p.id}" oninput="onS('${p.id}',this.value)"></div>
       <div class="fld"><label title="Lo que ya cobra de su marca (Trazo, etc). Se resta del sueldo Qochix para calcular sweat equity.">Sueldo marca actual (S/) ℹ️</label>
@@ -2474,9 +2474,9 @@ function recalc(){
     html+=`<div class="ap-card">
       <div><div class="ap-nm" style="color:${p.c}">${p.name}</div>
         <div class="ap-pct">${(eqById[p.id]||0).toFixed(1)}% Qochix</div>
-        <div class="ap-hoy">Hoy: ${fmt(p.sueldo)}/m</div></div>
+        <div class="ap-hoy">Val. mercado: ${fmt(p.sueldo)}/m</div></div>
       <div class="brs">
-        <div class="br"><span class="bl">HOY</span><div class="bt"><div class="bf" style="width:${(p.sueldo/tot32*100).toFixed(0)}%;background:var(--faint)"></div></div><span class="bv" style="color:var(--muted)">${fmt(p.sueldo)}</span></div>
+        <div class="br"><span class="bl">MERCADO</span><div class="bt"><div class="bf" style="width:${(p.sueldo/tot32*100).toFixed(0)}%;background:var(--faint)"></div></div><span class="bv" style="color:var(--muted)">${fmt(p.sueldo)}</span></div>
         <div class="br"><span class="bl">2029</span><div class="bt"><div class="bf" style="width:${(tot29/tot32*100).toFixed(0)}%;background:var(--teal)"></div></div><span class="bv">${fmt(tot29)}</span></div>
         <div class="br"><span class="bl">2032</span><div class="bt"><div class="bf" style="width:100%;background:linear-gradient(90deg,${p.c},${p.c}cc)"></div></div><span class="bv" style="color:${p.c};font-weight:600">${fmt(tot32)}</span></div>
         <div style="font-size:.65rem;color:var(--muted);margin-top:.15rem">Sueldo <strong style="color:var(--text)">${fmt(sue32)}</strong> + Equity <strong style="color:var(--gold)">${fmt(eq32)}</strong>${inv>0?' · ROI '+fmtX(ret7/inv):''}</div>
@@ -2593,7 +2593,7 @@ function renderCharts(fact,dist,rw,monthly){
     charts.hoy32=new Chart(ch32,{type:'bar',data:{
       labels:PERSONS.map(p=>p.name),
       datasets:[
-        {label:'Hoy',data:PERSONS.map(p=>p.sueldo),backgroundColor:'rgba(42,51,80,.8)',borderColor:'#3A4257',borderWidth:1,borderRadius:4},
+        {label:'Valor mercado',data:PERSONS.map(p=>p.sueldo),backgroundColor:'rgba(42,51,80,.8)',borderColor:'#3A4257',borderWidth:1,borderRadius:4},
         {label:'Meta sueldo 2030',data:PERSONS.map(p=>P.sue30[p.id]),backgroundColor:'rgba(155,127,232,.35)',borderColor:'#9B7FE8',borderWidth:1,borderRadius:4},
         {label:'Meta sueldo 2032',data:PERSONS.map(p=>P.sue32[p.id]),backgroundColor:PERSONS.map(p=>p.c+'66'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:4},
         {label:'Equity 2032',data:PERSONS.map(p=>Math.round(fact.dist[6]*(eqById[p.id]||0)/100)),backgroundColor:PERSONS.map(p=>p.c+'33'),borderColor:PERSONS.map(p=>p.c+'99'),borderWidth:1,borderRadius:4,borderDash:[4,4]},
@@ -2654,7 +2654,7 @@ function decorateHelp(){
       'ingreso total vs hoy 2032':'Comparación entre ingreso actual y el total proyectado (sueldo + equity) en 2032.',
       'liberación equipo':'Primer año donde al menos una persona cruza su sueldo actual y conteo total de liberación al 2032.',
       'meta humana — liberación financiera del equipo':'Semáforo de cuántos socios logran cruce de sueldo actual dentro del horizonte 2026-2032.',
-      'sueldo hoy':'Ingreso mensual actual usado como línea base.',
+      'valor mercado':'Lo que vale el trabajo de este socio en el mercado (no necesariamente lo que cobra hoy). Se usa para calcular su precio/hora y sweat equity.',
       's/hora':'Tarifa equivalente por hora según sueldo y dedicación.',
       'hrs/día':'Horas diarias dedicadas al ecosistema.',
       'hrs/mes':'Horas mensuales proyectadas de dedicación.',
@@ -2866,7 +2866,7 @@ function paintPartnerCards(derived, fact, eqById){
     }
     html+='</div>';
     html+='<div class="ptnr-foot">';
-    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Sueldo hoy</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
+    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
     var mult=pc.total2032/Math.max(1,p.sueldo);
     html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">×Mult 2032</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
     html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Inv. marca</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.brandCapitalTotal||0)+'</span></div>';
@@ -2901,10 +2901,10 @@ function paintEquityExplainer(derived, fact){
   h+='<div style="padding:.5rem .8rem;background:var(--bg2);border-radius:8px;font-family:var(--mono);font-size:.70rem;line-height:1.8;color:var(--green);margin-bottom:.5rem">';
   h+='Sweat = Σ cada año [ max(0, <span style="color:var(--teal)">valor_mercado/mes</span> − <span style="color:var(--gold)">compensación_extra_Qochix/mes</span>) × 12 ] × factor_ajuste<br>';
   h+='<span style="color:var(--muted)">donde:</span><br>';
-  h+='&nbsp;&nbsp;valor_mercado/mes = (<span style="color:var(--teal)">sueldo_hoy</span> ÷ 176 hrs) × (<span style="color:var(--teal)">hrs/día</span> × 6 días × 4.3 sem)<br>';
+  h+='&nbsp;&nbsp;valor_mercado/mes = (<span style="color:var(--teal)">valor_mercado</span> ÷ 176 hrs) × (<span style="color:var(--teal)">hrs/día</span> × 6 días × 4.3 sem)<br>';
   h+='&nbsp;&nbsp;compensación_extra = max(0, <span style="color:var(--gold)">sueldo_curva_Qochix</span> − <span style="color:var(--coral)">sueldo_marca_actual</span>)';
   h+='</div>';
-  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.4rem">Si alguien ya cobra sueldo de su marca (ej. Carlos S/5,000 de Trazo), ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
+  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.4rem"><strong>Valor mercado</strong> no es necesariamente lo que la persona cobra hoy, sino lo que su trabajo <em>vale</em> en el mercado por su expertise y años de experiencia. Si alguien ya cobra sueldo de su marca (ej. Carlos S/5,000 de Trazo), ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
   h+='<div style="font-size:.72rem;color:var(--coral);margin-bottom:.8rem"><strong>Importante:</strong> Los sueldos usados aquí son los <u>reales</u> (limitados por el revenue), no las metas aspiracionales. Si el revenue no alcanza para pagar la meta completa, el sueldo real es menor → el sweat equity es mayor porque se trabaja más tiempo sin cobrar lo justo.</div>';
   h+='</div>';
 
@@ -2913,7 +2913,7 @@ function paintEquityExplainer(derived, fact){
   h+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.72rem">';
   h+='<thead><tr style="border-bottom:1px solid var(--brd);color:var(--muted);text-transform:uppercase;font-size:.65rem;letter-spacing:.05em">';
   h+='<th style="text-align:left;padding:.4rem .5rem">Socio</th>';
-  h+='<th style="text-align:right;padding:.4rem .3rem">Sueldo mercado</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Valor mercado</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem">Hrs/día</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem">Valor/mes</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem">Sue. marca</th>';
@@ -2986,7 +2986,7 @@ function paintEquityExplainer(derived, fact){
 
     if(r.sw > 0){
       var swPct = poolTotal>0?(r.sw/poolTotal*100):0;
-      h+='<div>💼 <strong>Sweat equity ('+swPct.toFixed(1)+'% del pool):</strong> En el mercado gana S/'+r.p.sueldo.toLocaleString()+'/mes. ';
+      h+='<div>💼 <strong>Sweat equity ('+swPct.toFixed(1)+'% del pool):</strong> Su valor de mercado es S/'+r.p.sueldo.toLocaleString()+'/mes (por expertise y experiencia). ';
       h+='Dedica <strong>'+r.p.hrs+'h al día</strong> a Qochix = <strong>'+fmt(Math.round(r.vm))+'/mes</strong> de valor. ';
       if(r.bm > 0){
         h+='Ya cobra <strong>'+fmt(r.bm)+'/mes de su marca</strong>, así que solo se cuenta como sweat lo que Qochix NO le paga por encima de eso. ';

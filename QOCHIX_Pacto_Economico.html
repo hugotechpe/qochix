@@ -2932,7 +2932,7 @@ footer {
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=13"></script>
+<script src="qochix_system.js?v=14"></script>
 <script>
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
@@ -3213,7 +3213,7 @@ function showTermTab(panelId, btn) {
             '<div class="live-person-copy"><strong>' + person.name + '</strong> entra al pacto con <strong>' + derived.fmtCurrency(person.cashContribution) + '</strong> de caja real (' + derived.fmtCurrency(person.ticket) + ' de ticket + ' + derived.fmtCurrency(person.capital) + ' de capital adicional) y <strong>' + derived.fmtCurrency(sweat) + '</strong> de esfuerzo valorizado. Esa mezcla explica por qué su inversión modelada total llega a <strong>' + derived.fmtCurrency(person.investment) + '</strong>.</div>' +
             '<div class="live-person-copy">Hoy parte desde <strong>' + derived.fmtCurrency(base.sueldo) + '/mes</strong>; para 2030 el modelo lo lleva a <strong>' + derived.fmtCurrency(total30) + '/mes</strong>' + (gap30 > 0 ? ', todavía con una brecha de <strong>' + derived.fmtCurrency(gap30) + '/mes</strong> frente a su ingreso actual.' : ', ya por encima de su sueldo actual.') + ' Al ' + horizon + ' la foto pactada sube a <strong>' + derived.fmtCurrency(person.total2032) + '/mes</strong> entre sueldo y equity.</div>' +
             '<div class="live-person-metrics">' +
-              '<div class="live-person-metric"><div class="lbl">Sueldo hoy</div><div class="val">' + derived.fmtCurrency(base.sueldo) + '/mes</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">Valor mercado</div><div class="val">' + derived.fmtCurrency(base.sueldo) + '/mes</div></div>' +
               '<div class="live-person-metric"><div class="lbl">Valor/hora hoy</div><div class="val">S/' + hrToday.toLocaleString('es-PE') + '/hr</div></div>' +
               '<div class="live-person-metric"><div class="lbl">Caja real</div><div class="val">' + derived.fmtCurrency(person.cashContribution) + ' vía ' + capMode + '</div></div>' +
               '<div class="live-person-metric"><div class="lbl">Sweat 3 años</div><div class="val">' + derived.fmtCurrency(sweat) + '</div></div>' +

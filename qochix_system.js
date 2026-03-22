@@ -73,7 +73,7 @@
       { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 11, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 5000, sueldoMarca: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
+      { id: 'carlos', name: 'Carlos', sueldo: 8000, sueldoMarca: 5000, hrs: 3, adj: 1.0, equity: 6, capital: 0,
         brandCapital: { trazo: 62000 },
         brandCash: {}, c: '#9B7FE8' },
       { id: 'nicole', name: 'Nicole', sueldo: 2000, sueldoMarca: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
@@ -114,7 +114,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 9,
+      schemaVersion: 10,
     },
   };
 
@@ -190,6 +190,12 @@
         s.persons.forEach(p => {
           if (p.sueldoMarca == null) p.sueldoMarca = smDefaults[p.id] || 0;
         });
+      }
+    }},
+    { from: 9, to: 10, run(s) {
+      if (s.persons) {
+        const p = s.persons.find(x => x.id === 'carlos');
+        if (p && p.sueldo === 5000) p.sueldo = 8000;
       }
     }},
   ];

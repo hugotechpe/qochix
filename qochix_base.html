@@ -2944,7 +2944,7 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=13"></script>
+<script src="qochix_system.js?v=14"></script>
 <script>
 const T=23; let c=1;
 function init(){
@@ -3285,7 +3285,7 @@ document.addEventListener('keydown',e=>{
               '<div class="deck-live-person-point"><strong>Dedicación modelada hoy:</strong> '+Number(base.hrs||0)+' h/día · factor '+Number(base.adj||0).toFixed(2)+'. A más horas productivas o mejor conversión comercial del frente que lidera, antes aparece su quiebre personal.</div>'+
             '</div>'+
             '<div class="deck-live-person-metrics">'+
-              '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Sueldo hoy</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(currentSalary)+'/mes</div></div>'+
+              '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Valor mercado</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(currentSalary)+'/mes</div></div>'+
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Valor hora hoy</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(hrToday).replace('/','')+'/hr</div></div>'+
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Ticket + capital</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(person.cashContribution)+'</div></div>'+
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Esfuerzo valorizado</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(sweat)+'</div></div>'+

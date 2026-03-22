@@ -36,7 +36,7 @@
     's/hora': 'Tarifa equivalente por hora; sirve para comparar carga y aporte entre socios.',
     'hrs/dia': 'Horas promedio por dia dedicadas al ecosistema.',
     'hrs/mes': 'Horas proyectadas por mes dedicadas al ecosistema.',
-    'sueldo hoy': 'Ingreso mensual actual de referencia de cada socio.',
+    'valor mercado': 'Lo que vale el trabajo de cada socio en el mercado, según su expertise y experiencia. Se usa para calcular su precio/hora y sweat equity.',
     'meta humana': 'Indicador de impacto personal para medir sostenibilidad real del acuerdo.',
     'sistema base sincronizado': 'Bloque conectado al estado compartido; se actualiza en vivo.',
     'estado vivo': 'Vista en tiempo real de KPIs clave del sistema.',
