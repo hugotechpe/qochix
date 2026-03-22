@@ -1372,7 +1372,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=17"></script>
+<script src="qochix_system.js?v=18"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -2062,10 +2062,13 @@ function recalc(){
   // ── Explain dashboard KPIs ──
   const exDash=sel('explain-dash');
   if(exDash){
+    const _tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
+    const _bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
+    const _tswAll=PERSONS.reduce((s,p)=>s+sw(p,sc[p.id]).sw,0);
     let h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.6rem">';
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
       <div style="font-weight:700;color:var(--gold);font-size:.72rem;margin-bottom:.25rem">Pool total invertido: ${fmt(pool)}</div>
-      <div style="font-size:.7rem">Suma de todos los aportes: tickets (<strong>${fmt(tktTot)}</strong>) + capital en marcas (<strong>${fmt(bcAll)}</strong>) + sweat equity (<strong>${fmt(tswAll)}</strong>). Es la base para calcular el % de cada socio.</div>
+      <div style="font-size:.7rem">Suma de todos los aportes: tickets (<strong>${fmt(_tktTot)}</strong>) + capital en marcas (<strong>${fmt(_bcAll)}</strong>) + sweat equity (<strong>${fmt(_tswAll)}</strong>). Es la base para calcular el % de cada socio.</div>
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
       <div style="font-weight:700;color:var(--teal);font-size:.72rem;margin-bottom:.25rem">Distribuible 2032: ${fmt(dist[6])}/mes</div>
@@ -2077,7 +2080,7 @@ function recalc(){
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
       <div style="font-weight:700;color:var(--coral);font-size:.72rem;margin-bottom:.25rem">Runway: ${rw.months}m</div>
-      <div style="font-size:.7rem">Meses que el ecosistema puede operar con la caja real disponible (${fmt(rw.totalCash)}) si no entra ningún ingreso nuevo. ${rw.months>=18?'Margen saludable para iterar.':rw.months>=9?'Zona media — monitorear cada mes.':'<strong style="color:var(--coral)">Ajustado</strong> — prioridad absoluta: ingresos y caja.'}</div>
+      <div style="font-size:.7rem">Meses que el ecosistema puede operar con la caja real disponible (${fmt(rw.capital)}) si no entra ningún ingreso nuevo. ${rw.months>=18?'Margen saludable para iterar.':rw.months>=9?'Zona media — monitorear cada mes.':'<strong style="color:var(--coral)">Ajustado</strong> — prioridad absoluta: ingresos y caja.'}</div>
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
       <div style="font-weight:700;color:var(--purple);font-size:.72rem;margin-bottom:.25rem">Liberación: ${derived.liberatedBy2032}/${PERSONS.length}</div>
