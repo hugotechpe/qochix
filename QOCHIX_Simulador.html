@@ -1366,7 +1366,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=12"></script>
+<script src="qochix_system.js?v=13"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1903,6 +1903,7 @@ function toggleSidebar(){
 // ════════════════════════════════════════
 // CÁLCULOS
 // ════════════════════════════════════════
+const MESES_AÑO=[9,12,12,12,12,12,12];
 function sw(p,curve){
   const hr=p.sueldo/(22*8),hm=p.hrs*6*4.3,vm=hr*hm;
   const adj=Number(p.adj||0);
@@ -1911,11 +1912,12 @@ function sw(p,curve){
     let total=0;
     for(let i=0;i<7;i++){
       const extraQ=Math.max(0,Number(curve[i]||0)-baseMarca);
-      total+=Math.max(0,vm-extraQ)*12;
+      total+=Math.max(0,vm-extraQ)*MESES_AÑO[i];
     }
     return{hr,hm,vm,sw:total*adj};
   }
-  return{hr,hm,vm,sw:vm*36*adj};
+  const tm=MESES_AÑO.reduce((s,v)=>s+v,0);
+  return{hr,hm,vm,sw:vm*tm*adj};
 }
 
 function calcFactFromCurves(suedCurves){
@@ -2936,7 +2938,7 @@ function paintEquityExplainer(derived, fact){
     var swTotal=0;
     for(var i=0;i<7;i++){
       var extra=Math.max(0,Number(curve[i]||0)-bm);
-      swTotal+=Math.max(0,vm-extra)*12;
+      swTotal+=Math.max(0,vm-extra)*MESES_AÑO[i];
     }
     swTotal*=Number(p.adj||0);
     var tkt=pc.ticket;

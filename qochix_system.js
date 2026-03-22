@@ -2,6 +2,7 @@
   const STORAGE_KEY = 'qochix_system_state_v1';
   const CHANNEL_NAME = 'qochix_system_channel_v1';
   const AÑOS = [2026, 2027, 2028, 2029, 2030, 2031, 2032];
+  const MESES_POR_AÑO = [9, 12, 12, 12, 12, 12, 12];
   const SC = { p: 0.7, n: 1.0, o: 1.4 };
   const SC_LABELS = {
     p: 'Pesimista ×0.7',
@@ -360,11 +361,12 @@
       for (let i = 0; i < AÑOS.length; i++) {
         const extraQochix = Math.max(0, Number(curve[i] || 0) - baseMarca);
         const gap = Math.max(0, vm - extraQochix);
-        total += gap * 12;
+        total += gap * MESES_POR_AÑO[i];
       }
       return { hr, hm, vm, sw: total * adj };
     }
-    return { hr, hm, vm, sw: vm * 36 * adj };
+    const totalMeses = MESES_POR_AÑO.reduce((s, v) => s + v, 0);
+    return { hr, hm, vm, sw: vm * totalMeses * adj };
   }
 
   function founderCurvesPact() {
@@ -467,7 +469,8 @@
     return capped;
   }
 
-  function calcFactFromCurves(state, curves) {
+  function calcFactFromCurves(state, curves, opts) {
+    var skipCap = opts && opts.skipCap;
     const lr = computeLineRevenue(state);
     const trazo = lr.trazo;
     const alm = lr.almaria;
@@ -475,7 +478,7 @@
     const total = AÑOS.map((_, i) => trazo[i] + alm[i] + ht[i]);
     const neto = total.map((value) => Math.round(value * Number(state.P.netoPct || 0)));
     const hcost = hiresCostByYear(state);
-    const realCurves = capSalariesToRevenue(state, curves, neto, hcost);
+    const realCurves = skipCap ? curves : capSalariesToRevenue(state, curves, neto, hcost);
     const sued_f = suedTotalsFromCurves(state, realCurves);
     const sued_tot = sued_f.map((value, i) => value + hcost[i]);
     const colchon = neto.map((value, i) => value - sued_tot[i]);
@@ -637,7 +640,7 @@
     const state = normalizeState(rawState);
     const curves = activeFounderCurves(state);
     const fact = calcFactFromCurves(state, curves);
-    const factPact = calcFactFromCurves(state, founderCurvesPact());
+    const factPact = calcFactFromCurves(state, founderCurvesPact(), { skipCap: true });
     const lr = fact.lineRevenue;
     const realCurves = fact.suedCurves;
     const pool = calcPool(state, realCurves);
@@ -792,6 +795,7 @@
     SC: { ...SC },
     SC_LABELS: { ...SC_LABELS },
     SUED_F_BASE: clone(SUED_F_BASE),
+    MESES_POR_AÑO: MESES_POR_AÑO.slice(),
     SERVICE_LINES: clone(SERVICE_LINES),
     BRAND_IDS: BRAND_IDS.slice(),
     BRAND_LABELS: { ...BRAND_LABELS },
