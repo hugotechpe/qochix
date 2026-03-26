@@ -601,9 +601,8 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:2.5rem;">
       <span class="pill" style="border-color:var(--hugo);color:var(--hugo-l);">HugoTech</span>
       <span class="pill" style="border-color:var(--almaria);color:var(--almaria-l);">Almaria</span>
-      <span class="pill" style="border-color:var(--trazo);color:var(--trazo-l);">Trazo</span>
     </div>
-    <p style="font-size:.95rem;color:var(--muted);letter-spacing:.08em;font-family:var(--mono);">Hugo · Rossy · Vera · Carlos · Nicole</p>
+    <p style="font-size:.95rem;color:var(--muted);letter-spacing:.08em;font-family:var(--mono);">Hugo · Rossy · Vera</p>
     <div class="deck-live" aria-label="Estado vivo del sistema">
       <div class="deck-live-top">
         <span class="deck-live-tag">Estado vivo</span>
@@ -3427,6 +3426,67 @@ document.addEventListener('keydown',e=>{
   let embedded=false;
   try{embedded=window.top!==window.self;}catch(error){embedded=true;}
   if(embedded) document.body.classList.add('embedded');
+})();
+
+(function(){
+  var TEXT_RE=/\bTrazo\b/g;
+  var REMOVE_RE=/\b(Carlos|Nicole)\b/i;
+  var CLEAN_REPLACERS=[
+    [/las 3 marcas/gi,'las 2 marcas'],
+    [/3 marcas/gi,'2 marcas'],
+    [/HugoTech\s*\+\s*HugoTech/gi,'HugoTech'],
+    [/HugoTech\s*·\s*HugoTech/gi,'HugoTech']
+  ];
+  var lock=false;
+
+  function targetToRemove(node){
+    if (!node || !node.parentElement) return null;
+    return node.parentElement.closest('tr,li,.card,.eq-pill,.hours-mobile-card,p,div,span,td,th,label,h2,h3,h4');
+  }
+
+  function scrub(){
+    if(lock) return;
+    lock=true;
+    try{
+      var walker=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode:function(node){
+          var p=node.parentElement;
+          if(!p) return NodeFilter.FILTER_REJECT;
+          var tag=p.tagName;
+          if(tag==='SCRIPT' || tag==='STYLE' || tag==='NOSCRIPT' || tag==='TEXTAREA') return NodeFilter.FILTER_REJECT;
+          if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var toRemove=[];
+      var n;
+      while((n=walker.nextNode())){
+        var text=n.nodeValue;
+        if(REMOVE_RE.test(text)){
+          var box=targetToRemove(n);
+          if(box) toRemove.push(box);
+          continue;
+        }
+        if(TEXT_RE.test(text)){
+          var next=text.replace(TEXT_RE,'HugoTech');
+          CLEAN_REPLACERS.forEach(function(pair){ next=next.replace(pair[0],pair[1]); });
+          next=next.replace(/\s{2,}/g,' ').replace(/,\s*,/g,', ');
+          n.nodeValue=next;
+        }
+      }
+      toRemove.forEach(function(el){ if(el && el.parentElement) el.remove(); });
+    }finally{
+      lock=false;
+    }
+  }
+
+  scrub();
+  var tid=0;
+  var obs=new MutationObserver(function(){
+    if(tid) window.clearTimeout(tid);
+    tid=window.setTimeout(scrub,80);
+  });
+  obs.observe(document.body,{subtree:true,childList:true,characterData:true});
 })();
 
 init();

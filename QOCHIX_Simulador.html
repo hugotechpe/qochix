@@ -497,9 +497,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
   <button class="hero-btn" onclick="enterApp()">Explorar el modelo →</button>
   <div class="hero-partners">
-    <span>⚡ Trazo</span>
     <span>🌿 Almaria</span>
-    <span>⚡ HugoTech</span>
+    <span>💻 HugoTech</span>
   </div>
 </div>
 
@@ -710,7 +709,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
-        Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo real</strong> que cada socio podría cobrar según el revenue (no la meta aspiracional), el <strong>ingreso por equity</strong> y el <strong>total mensual</strong>. <span style="color:var(--coral)">Los montos en rojo</span> indican que el revenue aún no alcanza para pagar la meta completa. Primero se pagan hires y sueldos protegidos (Trazo), luego el resto se reparte entre fundadores.
+        Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo real</strong> que cada socio podría cobrar según el revenue (no la meta aspiracional), el <strong>ingreso por equity</strong> y el <strong>total mensual</strong>. <span style="color:var(--coral)">Los montos en rojo</span> indican que el revenue aún no alcanza para pagar la meta completa. Primero se pagan hires y sueldos protegidos de marca, luego el resto se reparte entre fundadores.
       </p>
       <div class="partner-grid" id="partner-grid"></div>
 
@@ -1330,19 +1329,18 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <select id="flow-calc-brand" onchange="paintFlowCalc()">
             <option value="almaria">Almaria</option>
             <option value="hugotech">HugoTech</option>
-            <option value="trazo">Trazo</option>
           </select>
         </div>
         <div class="flow-calc-result" id="flow-calc-result"></div>
       </div>
-      <div class="nota" style="margin-top:.75rem">Esta calculadora muestra el destino de un ingreso puntual. En la realidad, el distribuible depende del <strong>total acumulado del mes</strong> menos toda la planilla y reserva. Un sol de Almaria tiene exactamente el mismo destino que un sol de HugoTech o Trazo.</div>
+      <div class="nota" style="margin-top:.75rem">Esta calculadora muestra el destino de un ingreso puntual. En la realidad, el distribuible depende del <strong>total acumulado del mes</strong> menos toda la planilla y reserva. Un sol de Almaria tiene exactamente el mismo destino que un sol de HugoTech.</div>
     </div>
   </div>
 
   <!-- Key takeaways -->
   <div class="flow-callout" style="margin-top:1.25rem;border-color:rgba(212,168,83,.25);background:rgba(212,168,83,.05)">
     <strong style="color:var(--gold)">Resumen para el equipo:</strong><br>
-    <strong>1.</strong> Las 3 marcas son líneas de negocio de QOCHIX, no empresas separadas.<br>
+    <strong>1.</strong> Las 2 marcas son líneas de negocio de QOCHIX, no empresas separadas.<br>
     <strong>2.</strong> Todo lo que facture cualquier marca entra al mismo embudo.<br>
     <strong>3.</strong> Después de costos (neto operativo), planilla y reserva, lo que sobra es el <strong>distribuible</strong>.<br>
     <strong>4.</strong> El distribuible se reparte por <strong>% de equity</strong> (no por marca).<br>
@@ -1539,8 +1537,8 @@ function applySharedState(nextState){
 function initSidebar() {
   // Persons
   const pb = document.getElementById('persons-box');
-  const BL = QSYS.BRAND_LABELS || {trazo:'Trazo',almaria:'Almaria',ht:'HugoTech'};
-  const BIDs = QSYS.BRAND_IDS || ['trazo','almaria','ht'];
+  const BL = QSYS.BRAND_LABELS || {almaria:'Almaria',ht:'HugoTech'};
+  const BIDs = QSYS.BRAND_IDS || ['almaria','ht'];
   pb.innerHTML = PERSONS.map(p=>{
     const hr=Math.round(p.sueldo/(22*8));
     const s=sw(p);
@@ -1570,7 +1568,7 @@ function initSidebar() {
       <div class="fld"><label>Valor mercado (S/)</label>
         <input type="number" value="${p.sueldo}" step="500" min="500" max="80000"
           id="inp-sue-${p.id}" oninput="onS('${p.id}',this.value)"></div>
-      <div class="fld"><label title="Lo que ya cobra de su marca (Trazo, etc). Se resta del sueldo Qochix para calcular sweat equity.">Sueldo marca actual (S/) ℹ️</label>
+      <div class="fld"><label title="Lo que ya cobra de su marca actual. Se resta del sueldo Qochix para calcular sweat equity.">Sueldo marca actual (S/) ℹ️</label>
         <input type="number" value="${p.sueldoMarca||0}" step="500" min="0" max="80000"
           id="inp-smarca-${p.id}" oninput="onSueldoMarca('${p.id}',this.value)"></div>
     </div>
@@ -1990,11 +1988,10 @@ function recalc(){
   const gapBreakGross=targetBreakIdx>=0?Math.max(0,Math.round((Math.max(0,fact.sued_tot[targetBreakIdx]+P.reserva-fact.neto[targetBreakIdx]))/Math.max(0.01,P.netoPct))):0;
   const growth30=fact.total[0]>0?(((fact.total[idx30]/fact.total[0])-1)*100):0;
   const growth32=fact.total[idx30]>0?(((fact.total[idx32]/fact.total[idx30])-1)*100):0;
-  const brands32=[
-    {name:'Trazo',value:fact.trazo[idx32]},
-    {name:'Almaria',value:fact.alm[idx32]},
-    {name:'HugoTech',value:fact.ht[idx32]},
-  ].sort((a,b)=>b.value-a.value);
+  const brands32=(QSYS.BRAND_IDS||['almaria','ht']).map((b)=>({
+    name:(QSYS.BRAND_LABELS||{})[b]||b,
+    value:Number((b==='almaria'?fact.alm:fact.ht)[idx32]||0),
+  })).sort((a,b)=>b.value-a.value);
   const lead32=brands32[0];
   const leadShare32=fact.total[idx32]>0?(lead32.value/fact.total[idx32])*100:0;
   const h1Avg=Math.round(monthly.slice(0,6).reduce((sum,row)=>sum+Number(row.ingresos||0),0)/6);
@@ -2263,7 +2260,7 @@ function recalc(){
     h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo leer esta tabla?</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">Val. mercado:</strong> lo que cada socio vale en el mercado por su expertise (no lo que cobra hoy). Define el precio/hora.</div>';
-    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">Sue. marca:</strong> lo que ya cobra de su marca (ej. Carlos S/5,000 de Trazo). Se resta de la compensación Qochix para no contar doble.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">Sue. marca:</strong> lo que ya cobra de su marca actual. Se resta de la compensación Qochix para no contar doble.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Valor/mes:</strong> = (S/hora) × (hrs/mes). Cuánto vale su dedicación mensual a precio de mercado.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">× Factor:</strong> multiplicador de ajuste (0.1–1.0). Refleja el nivel de riesgo, compromiso y etapa de cada socio. Factor 1.0 = 100% del sweat contabilizado.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Sweat neto:</strong> acumulado de todo el trabajo no-pagado en 7 años × factor. A mayor sweat, mayor peso en el equity.</div>';
@@ -2303,7 +2300,7 @@ function recalc(){
     let h='';
     h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo se calcula el % de equity?</div>';
-    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco para Qochix) + <strong style="color:var(--coral)">Inv. marca</strong> (lo invertido históricamente en Trazo/Almaria/HugoTech) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en 7 años).</div>';
+    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco para Qochix) + <strong style="color:var(--coral)">Inv. marca</strong> (lo invertido históricamente en Almaria/HugoTech) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en 7 años).</div>';
     h+='<div style="margin-bottom:.35rem"><strong>% Mat.</strong> = aporte de esa persona ÷ pool total. <strong>Dif.</strong> = diferencia entre el % equity efectivo y el % material (si hay ajuste base pre-definido).</div>';
     h+=`<div style="margin-bottom:.35rem">El pool total es <strong style="color:var(--gold)">${fmt(pool)}</strong>. De ese monto, <strong>${fmt(tktTot)}</strong> son tickets, <strong>${fmt(bcAll)}</strong> capital en marcas, y <strong>${fmt(tswAll)}</strong> sweat equity.</div>`;
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
@@ -2317,7 +2314,7 @@ function recalc(){
 
   // ── Facturación table ──
   const rows=[
-    ['⚡ Trazo',fact.trazo,'cm'],['🌿 Almaria',fact.alm,'cm'],['⚡ HugoTech',fact.ht,'cm'],
+    ['🌿 Almaria',fact.alm,'cm'],['💻 HugoTech',fact.ht,'cm'],
     ['TOTAL QOCHIX',fact.total,'cg'],
     [`NETO ${(P.netoPct*100).toFixed(0)}%`,fact.neto,'ct'],
     ['(-) Sueldos fundadores',fact.sued_f,'cm'],
@@ -2329,7 +2326,7 @@ function recalc(){
   html='';
   rows.forEach(([lbl,arr,cls],ri)=>{
     const isSep=ri>=3;
-    html+=`<tr${ri===3||ri===9?' class="trs"':ri===8?' class="trh"':''}>
+    html+=`<tr${ri===2||ri===8?' class="trs"':ri===7?' class="trh"':''}>
       <td>${lbl}</td>${arr.map((v,i)=>`<td class="${i===6?(cls+' cb'):''} ${v<0?' cc':''}">${v<0?'('+fmt(Math.abs(v))+')':fmt(v)}</td>`).join('')}</tr>`;
   });
   sel('tb-fact').innerHTML=html;
@@ -2345,10 +2342,10 @@ function recalc(){
     let h='';
     h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo leer esta tabla?</div>';
-    h+='<div style="margin-bottom:.35rem"><strong>Trazo, Almaria, HugoTech:</strong> facturación mensual proyectada de cada marca. Basada en las líneas de servicio (precios × volúmenes) del escenario activo.</div>';
-    h+='<div style="margin-bottom:.35rem"><strong>TOTAL QOCHIX:</strong> suma de las 3 marcas. Es el ingreso bruto mensual del ecosistema.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>Almaria y HugoTech:</strong> facturación mensual proyectada de cada marca. Basada en las líneas de servicio (precios × volúmenes) del escenario activo.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>TOTAL QOCHIX:</strong> suma de ambas marcas. Es el ingreso bruto mensual del ecosistema.</div>';
     h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">NETO ${Math.round(P.netoPct*100)}%:</strong> lo que queda después de costos operativos (impuestos, herramientas, etc.). Solo este monto está disponible para sueldos.</div>`;
-    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Sueldos fundadores:</strong> lo que se paga a los 5 socios. Está <em>capeado por el revenue</em>: si no hay suficiente neto, los sueldos bajan automáticamente.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Sueldos fundadores:</strong> lo que se paga a los 3 socios. Está <em>capeado por el revenue</em>: si no hay suficiente neto, los sueldos bajan automáticamente.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Equipo operativo:</strong> content creators, comerciales, facilitadora. Se pagan antes que los sueldos fundadores.</div>';
     h+=`<div style="margin-bottom:.35rem"><strong>COLCHÓN:</strong> neto − planilla total. Si es <span style="color:var(--coral)">negativo</span> (entre paréntesis), el ecosistema no genera suficiente para pagar a todos. ${firstPos>0?'El colchón se vuelve positivo en <strong>'+AÑOS[firstPos]+'</strong>.':'El colchón nunca se vuelve positivo en este escenario.'}</div>`;
     h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">💰 DISTRIBUIBLE:</strong> max(0, colchón − reserva S/${fmt(P.reserva||0)}). Es lo que se reparte entre socios según su % de equity, <em>aparte</em> de su sueldo.</div>`;
@@ -2717,7 +2714,6 @@ function renderCharts(fact,dist,rw,monthly){
     charts.fact=new Chart(cfact,{type:'line',data:{labels,datasets:[
       {label:'HugoTech',data:fact.ht,backgroundColor:'rgba(62,207,207,.15)',borderColor:'#3ECFCF',borderWidth:2,fill:true,tension:.4},
       {label:'Almaria',data:fact.alm,backgroundColor:'rgba(82,201,122,.15)',borderColor:'#52C97A',borderWidth:2,fill:true,tension:.4},
-      {label:'Trazo',data:fact.trazo,backgroundColor:'rgba(212,168,83,.15)',borderColor:'#D4A853',borderWidth:2,fill:true,tension:.4},
     ]},options:{...CH_DEFAULTS,interaction:{mode:'index',intersect:false}}});
   }
 
@@ -2865,7 +2861,7 @@ function paintBrandOps(derived){
   const BL=QSYS.BRAND_LABELS||{};
   const statusColors={sustentable:'var(--teal)',estable:'var(--gold)',quemando:'var(--coral)',sin_caja:'#f55'};
   const statusLabels={sustentable:'Sustentable',estable:'Estable',quemando:'Quemando caja',sin_caja:'Sin caja'};
-  grid.innerHTML=(QSYS.BRAND_IDS||['trazo','almaria','ht']).map(b=>{
+  grid.innerHTML=(QSYS.BRAND_IDS||['almaria','ht']).map(b=>{
     const br=bf[b];if(!br)return '';
     const rwTxt=br.runway>=999?'∞':br.runway+'m';
     const invList=br.inversores.map(i=>i.name+' '+fmt(i.monto)).join(', ')||'—';
@@ -2896,7 +2892,6 @@ function paintEffortTable(fact){
   if(!lr)return;
   var html='';
   var brandMeta=[
-    {key:'trazo',name:'⚡ Trazo',arr:fact.trazo,color:'var(--gold)'},
     {key:'almaria',name:'🌿 Almaria',arr:fact.alm,color:'var(--green)'},
     {key:'ht',name:'💻 HugoTech',arr:fact.ht,color:'var(--teal)'},
   ];
@@ -2928,7 +2923,6 @@ function paintEffortTable(fact){
   var bdEl=sel('effort-breakdown');
   if(bdEl){
     var brandKeys=[
-      {key:'trazo',label:'⚡ Trazo',color:'var(--gold)'},
       {key:'almaria',label:'🌿 Almaria',color:'var(--green)'},
       {key:'ht',label:'💻 HugoTech',color:'var(--teal)'},
     ];
@@ -3017,7 +3011,7 @@ function paintPartnerCards(derived, fact, eqById){
   const fmt=QSYS.fmtCurrency;
   const realCurves=fact.suedCurves;
   const targetCurves=fact.targetCurves||realCurves;
-  const roles={hugo:'CEO · HugoTech',rossy:'CEO · Almaria',vera:'CEO · Trazo',carlos:'Fundador · Equipos',nicole:'Operaciones'};
+  const roles={hugo:'CEO · HugoTech',rossy:'CEO · Almaria',vera:'COO · Almaria'};
   el.innerHTML=derived.personCards.map(function(pc){
     const p=PERSONS.find(function(x){return x.id===pc.id;});
     if(!p) return '';
@@ -3083,7 +3077,7 @@ function paintEquityExplainer(derived, fact){
   h+='Aporte = <span style="color:var(--gold)">Ticket Qochix</span> + <span style="color:var(--coral)">Capital invertido en marcas</span> + <span style="color:var(--green)">Sweat Equity (valor del trabajo no pagado)</span>';
   h+='</div>';
   h+='<div style="margin-bottom:.4rem"><strong style="color:var(--gold)">Ticket Qochix:</strong> Capital fresco que cada socio aporta directamente al holding.</div>';
-  h+='<div style="margin-bottom:.4rem"><strong style="color:var(--coral)">Capital en marcas:</strong> Lo que cada persona ya invirtió construyendo Trazo, Almaria o HugoTech (dinero histórico, no recuperable).</div>';
+  h+='<div style="margin-bottom:.4rem"><strong style="color:var(--coral)">Capital en marcas:</strong> Lo que cada persona ya invirtió construyendo Almaria o HugoTech (dinero histórico, no recuperable).</div>';
   h+='<div style="margin-bottom:.4rem"><strong style="color:var(--green)">Sweat Equity:</strong> El valor de mercado del tiempo que cada socio dedica a Qochix <u>sin cobrar</u> (o cobrando menos de lo que vale). Se calcula así:</div>';
   h+='<div style="padding:.5rem .8rem;background:var(--bg2);border-radius:8px;font-family:var(--mono);font-size:.70rem;line-height:1.8;color:var(--green);margin-bottom:.5rem">';
   h+='Sweat = Σ cada año [ max(0, <span style="color:var(--teal)">valor_mercado/mes</span> − <span style="color:var(--gold)">compensación_extra_Qochix/mes</span>) × 12 ] × factor_ajuste<br>';
@@ -3091,7 +3085,7 @@ function paintEquityExplainer(derived, fact){
   h+='&nbsp;&nbsp;valor_mercado/mes = (<span style="color:var(--teal)">valor_mercado</span> ÷ 176 hrs) × (<span style="color:var(--teal)">hrs/día</span> × 6 días × 4.3 sem)<br>';
   h+='&nbsp;&nbsp;compensación_extra = max(0, <span style="color:var(--gold)">sueldo_curva_Qochix</span> − <span style="color:var(--coral)">sueldo_marca_actual</span>)';
   h+='</div>';
-  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.4rem"><strong>Valor mercado</strong> no es necesariamente lo que la persona cobra hoy, sino lo que su trabajo <em>vale</em> en el mercado por su expertise y años de experiencia. Si alguien ya cobra sueldo de su marca (ej. Carlos S/5,000 de Trazo), ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
+  h+='<div style="font-size:.72rem;color:var(--muted);margin-bottom:.4rem"><strong>Valor mercado</strong> no es necesariamente lo que la persona cobra hoy, sino lo que su trabajo <em>vale</em> en el mercado por su expertise y años de experiencia. Si alguien ya cobra sueldo de su marca, ese monto se resta de su curva Qochix. Solo se descuenta lo que Qochix paga <em>por encima</em> de ese sueldo base.</div>';
   h+='<div style="font-size:.72rem;color:var(--coral);margin-bottom:.8rem"><strong>Importante:</strong> Los sueldos usados aquí son los <u>reales</u> (limitados por el revenue), no las metas aspiracionales. Si el revenue no alcanza para pagar la meta completa, el sueldo real es menor → el sweat equity es mayor porque se trabaja más tiempo sin cobrar lo justo.</div>';
   h+='</div>';
 
@@ -3231,7 +3225,6 @@ function paintFlowTab(){
   const brandsEl=sel('flow-brands');
   if(brandsEl){
     const brands=[
-      {name:'Trazo',val:fact.trazo[yr],color:'var(--gold)'},
       {name:'Almaria',val:fact.alm[yr],color:'var(--green)'},
       {name:'HugoTech',val:fact.ht[yr],color:'var(--teal)'},
     ];
@@ -3245,7 +3238,7 @@ function paintFlowTab(){
   if(diagramEl){
     const netoPct=Math.round((P.netoPct||0.65)*100);
     diagramEl.innerHTML=[
-      {icon:'brand',emoji:'📥',title:'Facturación total ecosistema',desc:'Trazo + Almaria + HugoTech (2032/mes)',amount:fmt(totalFact),cls:''},
+      {icon:'brand',emoji:'📥',title:'Facturación total ecosistema',desc:'Almaria + HugoTech (2032/mes)',amount:fmt(totalFact),cls:''},
       {icon:'calc',emoji:'📊',title:'Neto operativo ('+netoPct+'%)',desc:'Después de costos directos de producción, herramientas, comisiones',amount:fmt(neto),cls:''},
       {icon:'pay',emoji:'👥',title:'Planilla fundadores',desc:'Sueldos pactados de los 5 socios (crece cada año)',amount:'−'+fmt(suedF),cls:'negative'},
       {icon:'pay',emoji:'🏢',title:'Equipo operativo',desc:'Content creators, comerciales, facilitadores',amount:'−'+fmt(hcost),cls:'negative'},
@@ -3305,7 +3298,7 @@ function paintFlowCalc(){
     html+='</div>';
   });
   html+='</div>';
-  html+='<div style="margin-top:.65rem;font-size:.72rem;color:var(--muted);line-height:1.55"><strong>Nota:</strong> Esto muestra la porción proporcional del neto. En la práctica, primero se paga toda la planilla y reserva del mes; el distribuible es lo que sobra. Un sol de Almaria vale exactamente igual que un sol de HugoTech o Trazo.</div>';
+  html+='<div style="margin-top:.65rem;font-size:.72rem;color:var(--muted);line-height:1.55"><strong>Nota:</strong> Esto muestra la porción proporcional del neto. En la práctica, primero se paga toda la planilla y reserva del mes; el distribuible es lo que sobra. Un sol de Almaria vale exactamente igual que un sol de HugoTech.</div>';
   html+='</div>';
   resultEl.innerHTML=html;
 }

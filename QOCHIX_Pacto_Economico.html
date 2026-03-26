@@ -1545,14 +1545,6 @@ footer {
       <span class="eq-pct" id="hero-eq-vera">11%</span>
       <span class="eq-name">Vera</span>
     </div>
-    <div class="eq-pill">
-      <span class="eq-pct" id="hero-eq-carlos">6%</span>
-      <span class="eq-name">Carlos</span>
-    </div>
-    <div class="eq-pill">
-      <span class="eq-pct" id="hero-eq-nicole">3%</span>
-      <span class="eq-name">Nicole</span>
-    </div>
   </div>
 
   <div class="hero-scenario" id="hero-scenario" aria-labelledby="hs-sc-heading">
@@ -3080,8 +3072,6 @@ function showTermTab(panelId, btn) {
     hugo: { role: 'Arquitectura + negocio', source: 'HugoTech + caja transversal' },
     rossy: { role: 'CEO Almaria', source: 'Almaria + crecimiento comercial' },
     vera: { role: 'Estrategia operativa', source: 'Operación transversal + soporte Almaria' },
-    carlos: { role: 'CEO Trazo', source: 'Trazo + producción/ventas creativas' },
-    nicole: { role: 'Operaciones', source: 'Trazo + ejecución diaria' },
   };
   const pct = (n) => Number(n || 0).toFixed(1) + '%';
   const toYear = (value) => {
@@ -3239,11 +3229,11 @@ function showTermTab(panelId, btn) {
     var btr=document.getElementById('pact-bnum-trazo');
     if(bht)bht.innerHTML=fmt(f.ht[6])+'/mes<span>proyección 2032 · '+scL+'</span>';
     if(balm)balm.innerHTML=fmt(f.alm[6])+'/mes<span>proyección 2032 · '+scL+'</span>';
-    if(btr)btr.innerHTML=fmt(f.trazo[6])+'/mes<span>proyección 2032 · '+scL+'</span>';
+    if(btr && btr.parentElement) btr.parentElement.style.display='none';
     // Facturación table
     var ftb=document.getElementById('pact-fact-tbody');
     if(ftb){
-      var brands=[{n:'⚡ Trazo',a:f.trazo,c:'gold'},{n:'🌿 Almaria',a:f.alm,c:'green'},{n:'💻 HugoTech',a:f.ht,c:'teal'}];
+      var brands=[{n:'🌿 Almaria',a:f.alm,c:'green'},{n:'💻 HugoTech',a:f.ht,c:'teal'}];
       var h='';
       brands.forEach(function(b){h+='<tr><td>'+b.n+'</td>';for(var i=0;i<7;i++){var cls=i===0?'td-muted':(i===6?'td-'+b.c:'');h+='<td class="'+cls+'">'+fmt(b.a[i])+'</td>';}h+='</tr>';});
       h+='<tr class="tr-total"><td>TOTAL QOCHIX</td>';for(var j=0;j<7;j++){h+='<td>'+fmt(f.total[j])+'</td>';}h+='</tr>';
@@ -3372,6 +3362,67 @@ function showTermTab(panelId, btn) {
       'gobierno, documentos y si las ventas no vienen': 'Bloque que define cómo se decide y qué hacer cuando el plan no se cumple.'
     }
   });
+})();
+
+(function(){
+  var TEXT_RE=/\bTrazo\b/g;
+  var REMOVE_RE=/\b(Carlos|Nicole)\b/i;
+  var CLEAN_REPLACERS=[
+    [/las 3 marcas/gi,'las 2 marcas'],
+    [/3 marcas/gi,'2 marcas'],
+    [/cinco cofundadores/gi,'tres cofundadores'],
+    [/HugoTech\s*\+\s*HugoTech/gi,'HugoTech']
+  ];
+  var lock=false;
+
+  function targetToRemove(node){
+    if (!node || !node.parentElement) return null;
+    return node.parentElement.closest('tr,li,.card,.eq-pill,.pl-row,.pl-top,p,div,span,td,th,label,h2,h3,h4');
+  }
+
+  function scrub(){
+    if(lock) return;
+    lock=true;
+    try{
+      var walker=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode:function(node){
+          var p=node.parentElement;
+          if(!p) return NodeFilter.FILTER_REJECT;
+          var tag=p.tagName;
+          if(tag==='SCRIPT' || tag==='STYLE' || tag==='NOSCRIPT' || tag==='TEXTAREA') return NodeFilter.FILTER_REJECT;
+          if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var toRemove=[];
+      var n;
+      while((n=walker.nextNode())){
+        var text=n.nodeValue;
+        if(REMOVE_RE.test(text)){
+          var box=targetToRemove(n);
+          if(box) toRemove.push(box);
+          continue;
+        }
+        if(TEXT_RE.test(text)){
+          var next=text.replace(TEXT_RE,'HugoTech');
+          CLEAN_REPLACERS.forEach(function(pair){ next=next.replace(pair[0],pair[1]); });
+          next=next.replace(/\s{2,}/g,' ').replace(/,\s*,/g,', ');
+          n.nodeValue=next;
+        }
+      }
+      toRemove.forEach(function(el){ if(el && el.parentElement) el.remove(); });
+    }finally{
+      lock=false;
+    }
+  }
+
+  scrub();
+  var tid=0;
+  var obs=new MutationObserver(function(){
+    if(tid) window.clearTimeout(tid);
+    tid=window.setTimeout(scrub,80);
+  });
+  obs.observe(document.body,{subtree:true,childList:true,characterData:true});
 })();
 
 if('serviceWorker' in navigator){

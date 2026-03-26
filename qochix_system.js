@@ -10,7 +10,6 @@
     o: 'Optimista ×1.4',
   };
   const FACT0 = {
-    trazo: [9000, 20000, 28000, 35000, 42000, 50000, 58000],
     almaria: [1200, 8500, 22000, 40000, 98100, 141900, 183400],
     ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133],
   };
@@ -19,16 +18,8 @@
     hugo:   [    0,    0, 3000, 9000, 14000, 20000, 30000],
     rossy:  [    0, 1000, 2500, 7500,  9000, 10500, 12000],
     vera:   [    0,    0, 2000, 7500,  8500,  9200, 10000],
-    carlos: [ 5000, 7000, 8000,10000, 11000, 12500, 14000],
-    nicole: [ 2000, 4000, 5000, 5000,  6000,  6500,  7000],
   };
   const SERVICE_LINES = [
-    // ── Trazo (5) — precios suben 2028 ──
-    {id:'tr_branding',brand:'trazo',name:'Branding e identidad visual',unit:'proyecto/mes',prices:[1000,1000,1500,1500,1500,1500,1500],vols:[2,3,3,4,5,6,7]},
-    {id:'tr_redes',brand:'trazo',name:'Gestión redes sociales',unit:'cliente/mes',prices:[1000,1000,1500,1500,1500,1500,1500],vols:[2,3,4,5,6,7,8]},
-    {id:'tr_campanas',brand:'trazo',name:'Campañas y producciones',unit:'campaña/mes',prices:[4000,4000,10000,10000,10000,10000,10000],vols:[0,1,1,1,1,2,2]},
-    {id:'tr_audiovisual',brand:'trazo',name:'Producción audiovisual (paquete)',unit:'marca/mes',prices:[1500,1500,5000,5000,5000,5000,5000],vols:[2,3,1,2,3,3,4]},
-    {id:'tr_consultoria',brand:'trazo',name:'Consultoría estratégica de marca',unit:'sesión/mes',prices:[300,300,450,450,500,500,500],vols:[5,8,10,12,14,16,18]},
     // ── Almaria (3) — todos los precios suben 2028 ──
     {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,35,35,35,35,35],vols:[16,80,160,280,500,700,900]},
     {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,75,75,75,75,75],vols:[8,60,160,250,700,1000,1200]},
@@ -40,8 +31,8 @@
     {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[0,400,1500,1500,1500,1500,1500],vols:[0,5,3,5,7,10,12]},
     {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6]},
   ];
-  const BRAND_IDS = ['trazo', 'almaria', 'ht'];
-  const BRAND_LABELS = { trazo: 'Trazo', almaria: 'Almaria', ht: 'HugoTech' };
+  const BRAND_IDS = ['almaria', 'ht'];
+  const BRAND_LABELS = { almaria: 'Almaria', ht: 'HugoTech' };
 
   function normalizeBrandId(b) {
     if (!b) return '';
@@ -66,56 +57,46 @@
   const DEFAULTS = {
     persons: [
       { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 0.5, equity: 63, capital: 0,
-        brandCapital: { trazo: 12000, almaria: 10000, ht: 30000 },
-        brandCash: { trazo: 12000, almaria: 9400, ht: 16000 }, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 17, capital: 0,
+        brandCapital: { almaria: 10000, ht: 30000 },
+        brandCash: { almaria: 9400, ht: 16000 }, c: '#D4A853' },
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 22, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 18800 }, c: '#3ECFCF' },
-      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 11, capital: 0,
+      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 15, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'carlos', name: 'Carlos', sueldo: 7000, sueldoMarca: 5000, hrs: 3, adj: 0.7, equity: 6, capital: 0,
-        brandCapital: { trazo: 62000 },
-        brandCash: {}, c: '#9B7FE8' },
-      { id: 'nicole', name: 'Nicole', sueldo: 3000, sueldoMarca: 2000, hrs: 3, adj: 1.0, equity: 3, capital: 0,
-        brandCapital: {},
-        brandCash: {}, c: '#E86B5F' },
     ],
     hires: [
       { role: 'Diana — Content HugoTech', brand: 'HugoTech', sue: 2000, growth: 1.15 },
       { role: 'María — Content Almaria', brand: 'Almaria', sue: 2000, growth: 1.15 },
-      { role: 'Content creator Trazo', brand: 'Trazo', sue: 2000, growth: 1.10 },
       { role: 'Comercial HugoTech+Almaria', brand: 'Mixto', sue: 3000, growth: 1.20, startYear: 2027 },
-      { role: 'Comercial Trazo', brand: 'Trazo', sue: 3000, growth: 1.15, startYear: 2027 },
       { role: 'Facilitadora Almaria', brand: 'Almaria', sue: 2500, growth: 1.25 },
     ],
     P: {
       ticket: 5000,
       tktMode: 'equal',
-      tickets: { hugo: 5000, rossy: 5000, vera: 5000, carlos: 5000, nicole: 5000 },
+      tickets: { hugo: 5000, rossy: 5000, vera: 5000 },
       netoPct: 0.65,
       reserva: 3000,
       sc: 'p',
       capitalMode: 'loan',
       equityMode: 'auto_pool',
       preMoney: 5000000,
-      sue29: { hugo: 9000, rossy: 7500, vera: 7500, carlos: 10000, nicole: 5000 },
-      sue30: { hugo: 14000, rossy: 9000, vera: 8500, carlos: 11000, nicole: 6000 },
-      sue32: { hugo: 30000, rossy: 12000, vera: 10000, carlos: 14000, nicole: 7000 },
+      sue29: { hugo: 9000, rossy: 7500, vera: 7500 },
+      sue30: { hugo: 14000, rossy: 9000, vera: 8500 },
+      sue32: { hugo: 30000, rossy: 12000, vera: 10000 },
       lineOverrides: {},
       brandOps: {},
       founderBrand: {
         hugo: 'ht',
         rossy: 'almaria',
         vera: 'almaria',
-        carlos: 'trazo',
-        nicole: 'trazo',
       },
     },
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 14,
+      schemaVersion: 15,
     },
   };
 
@@ -278,9 +259,9 @@
       });
     }
     if (Array.isArray(raw.hires)) {
-      next.hires = raw.hires.map((hire, index) => ({
-        ...(DEFAULTS.hires[index] || {}),
-        ...(hire || {}),
+      next.hires = DEFAULTS.hires.map((baseHire, index) => ({
+        ...baseHire,
+        ...((raw.hires[index]) || {}),
       }));
     }
     if (raw.P && typeof raw.P === 'object') {
