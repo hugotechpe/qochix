@@ -278,26 +278,9 @@
 
     var hubErr=document.getElementById('hub-error');
     function showHubError(msg){if(hubErr){hubErr.style.display='block';hubErr.innerHTML=msg+' <button onclick="localStorage.clear();sessionStorage.clear();location.reload()" style="margin-left:8px;padding:4px 10px;background:#f55;color:#fff;border:none;border-radius:4px;cursor:pointer">Reset todo y recargar</button>';}}
-    const Q = window.QochixSystem;
-    if(!Q){showHubError('QochixSystem no cargó. Posible cache viejo.');throw new Error('QochixSystem missing');}
     const byId = (id)=>document.getElementById(id);
     const layout = document.querySelector('.layout');
     const sideToggle = byId('side-toggle');
-    const ctlNeto = byId('ctl-neto');
-    const ctlNetoLbl = byId('ctl-neto-lbl');
-    const ctlRsv = byId('ctl-rsv');
-    const ctlPm = byId('ctl-pm');
-    const ctlPmLbl = byId('ctl-pm-lbl');
-    const ctlTkt = byId('ctl-tkt');
-    const ctlTktNum = byId('ctl-tkt-num');
-    const ctlTktLbl = byId('ctl-tkt-lbl');
-    const resetBaseBtn = byId('ctl-reset-base');
-    const preHint = byId('pre-hint');
-    let syncingControls = false;
-    let netoTimer = 0;
-    let rsvTimer = 0;
-    let pmTimer = 0;
-    let tktTimer = 0;
     const SIDE_KEY='qochix_hub_side_collapsed_v1';
     function paintSideToggle(){
       const collapsed = layout.classList.contains('side-collapsed');
@@ -316,6 +299,35 @@
     }catch(e){}
     paintSideToggle();
 
+    const Q = window.QochixSystem;
+    if(!Q){
+      showHubError('QochixSystem no cargó. Intentando recuperación automática…');
+      try{
+        const recovery = document.createElement('script');
+        recovery.src = 'qochix_system.js?v=21.0&t=1776297600&r=' + Date.now();
+        recovery.onload = function(){ location.reload(); };
+        recovery.onerror = function(){ showHubError('No se pudo recuperar QochixSystem. Usa "Reset todo y recargar".'); };
+        document.head.appendChild(recovery);
+      }catch(e){
+        showHubError('No se pudo iniciar recuperación automática.');
+      }
+      return;
+    }
+    const ctlNeto = byId('ctl-neto');
+    const ctlNetoLbl = byId('ctl-neto-lbl');
+    const ctlRsv = byId('ctl-rsv');
+    const ctlPm = byId('ctl-pm');
+    const ctlPmLbl = byId('ctl-pm-lbl');
+    const ctlTkt = byId('ctl-tkt');
+    const ctlTktNum = byId('ctl-tkt-num');
+    const ctlTktLbl = byId('ctl-tkt-lbl');
+    const resetBaseBtn = byId('ctl-reset-base');
+    const preHint = byId('pre-hint');
+    let syncingControls = false;
+    let netoTimer = 0;
+    let rsvTimer = 0;
+    let pmTimer = 0;
+    let tktTimer = 0;
     const PRESETS = {
       conservador: { sc: 'p', netoPct: 0.58, reserva: 4500, label: 'Conservador: ×0.7, neto 58%, reserva S/4,500' },
       base: { sc: 'n', netoPct: 0.65, reserva: 3000, label: 'Base: ×1.0, neto 65%, reserva S/3,000' },
