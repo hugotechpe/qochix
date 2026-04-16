@@ -551,7 +551,7 @@
 
   function calcPool(state, curves) {
     return state.persons.reduce((sum, person) =>
-      sum + getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person, curves[person.id]).sw, 0);
+      sum + getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + totalBrandCash(person) + sw(person, curves[person.id]).sw, 0);
   }
 
   function calcEffectiveEquity(state, curves) {
@@ -563,7 +563,7 @@
       const poolById = {};
       let totalPool = 0;
       state.persons.forEach((person) => {
-        const pool = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + sw(person, curves[person.id]).sw;
+        const pool = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + totalBrandCash(person) + sw(person, curves[person.id]).sw;
         poolById[person.id] = pool;
         totalPool += pool;
       });
@@ -580,7 +580,7 @@
     const cashById = {};
     let totalCash = 0;
     state.persons.forEach((person) => {
-      const cash = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person);
+      const cash = getTkt(state, person.id) + Number(person.capital || 0) + totalBrandCapital(person) + totalBrandCash(person);
       cashById[person.id] = cash;
       totalCash += cash;
     });
@@ -713,7 +713,8 @@
       const sue2032 = Number(state.P.sue32[person.id] || 0);
       const total2032 = sue2032 + eq2032;
       const brandCap = totalBrandCapital(person);
-      const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + swData.sw;
+      const brandCash = totalBrandCash(person);
+      const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash + swData.sw;
       return {
         id: person.id,
         name: person.name,
@@ -724,7 +725,7 @@
         capital: Number(person.capital || 0),
         brandCapital: person.brandCapital || {},
         brandCapitalTotal: brandCap,
-        cashContribution: getTkt(state, person.id) + Number(person.capital || 0) + brandCap,
+        cashContribution: getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash,
         sue2030: Number(state.P.sue30[person.id] || 0),
         sue2032,
         eq2032,
