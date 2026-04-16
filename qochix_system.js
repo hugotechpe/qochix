@@ -18,6 +18,7 @@
     hugo:   [    0,    0, 3000, 9000, 14000, 20000, 30000],
     rossy:  [    0, 1000, 2500, 7500,  9000, 10500, 12000],
     vera:   [    0,    0, 2000, 7500,  8500,  9200, 10000],
+    mechita:[    0,    0, 1800, 6500,  8000,  9000, 10000],
   };
   const SERVICE_LINES = [
     // ── Almaria (3) — todos los precios suben 2028 ──
@@ -56,7 +57,7 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 0.5, equity: 63, capital: 0,
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 0.5, equity: 58, capital: 0,
         brandCapital: { almaria: 10000, ht: 30000 },
         brandCash: { almaria: 9400, ht: 16000 }, c: '#D4A853' },
       { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 22, capital: 0,
@@ -65,6 +66,9 @@
       { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 15, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
+      { id: 'mechita', name: 'Mechita', sueldo: 6000, sueldoMarca: 0, hrs: 5, adj: 0.7, equity: 5, capital: 0,
+        brandCapital: {},
+        brandCash: {}, c: '#E98EB6' },
     ],
     hires: [
       { role: 'Diana — Content HugoTech', brand: 'HugoTech', sue: 2000, growth: 1.15 },
@@ -75,22 +79,23 @@
     P: {
       ticket: 5000,
       tktMode: 'equal',
-      tickets: { hugo: 5000, rossy: 5000, vera: 5000 },
+      tickets: { hugo: 5000, rossy: 5000, vera: 5000, mechita: 5000 },
       netoPct: 0.65,
       reserva: 3000,
       sc: 'p',
       capitalMode: 'loan',
       equityMode: 'auto_pool',
       preMoney: 5000000,
-      sue29: { hugo: 9000, rossy: 7500, vera: 7500 },
-      sue30: { hugo: 14000, rossy: 9000, vera: 8500 },
-      sue32: { hugo: 30000, rossy: 12000, vera: 10000 },
+      sue29: { hugo: 9000, rossy: 7500, vera: 7500, mechita: 6500 },
+      sue30: { hugo: 14000, rossy: 9000, vera: 8500, mechita: 8000 },
+      sue32: { hugo: 30000, rossy: 12000, vera: 10000, mechita: 10000 },
       lineOverrides: {},
       brandOps: {},
       founderBrand: {
         hugo: 'ht',
         rossy: 'almaria',
         vera: 'almaria',
+        mechita: 'almaria',
       },
     },
     meta: {

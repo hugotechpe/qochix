@@ -476,7 +476,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div class="hero-logo">QOCHIX</div>
   <div class="hero-sub">Ecosistema de marcas · Simulador financiero v3.1</div>
   <div class="hero-line"></div>
-  <div class="hero-tagline">Un modelo donde <em>todos ganan</em>.<br>5 socios, 3 marcas, 7 años de proyección.</div>
+  <div class="hero-tagline">Un modelo donde <em>todos ganan</em>.<br>Equipo socio + 3 marcas + 7 años de proyección.</div>
   <p class="hero-why">
     ¿Por qué sumarte como socio? Porque aquí no estás vendiendo horas para el sueño de otro: estás <strong>construyendo un activo compartido</strong> —tres marcas, un solo ecosistema— con upside que un empleo corporativo no te va a dar.
     Eso exige <strong>tiempo</strong> (constancia en años), <strong>esfuerzo</strong> (lo que no le das a otra cosa), <strong>dinero</strong> (ticket, capital, dejar de facturar en paralelo) y <strong>pasión</strong> para aguantar los meses feos.
@@ -692,9 +692,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="lib-track"><div class="lib-fill" id="lib-fill" style="width:0%"></div></div>
     <div class="lib-marks">
-      <span>0/5 personas liberadas</span>
+      <span>0 personas liberadas</span>
       <span id="lib-curr">—</span>
-      <span id="lib-target">Objetivo: 5/5 al 2032</span>
+      <span id="lib-target">Objetivo: equipo completo al 2032</span>
     </div>
     <div class="nota ok" id="lib-nota" style="margin-top:.5rem"></div>
     <div class="lib-team" id="lib-team"></div>
@@ -987,7 +987,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <div id="tab-equipo" class="tab-content">
 
   <div class="nota warn" style="margin-bottom:1rem">
-    <strong>⚠️ Esto es lo que el modelo original NO incluía.</strong> El equipo operativo (fuera de los 5 co-fundadores) reduce directamente el distribuible. Sin esto, los números de 2027 están sobreestimados.
+    <strong>⚠️ Esto es lo que el modelo original NO incluía.</strong> El equipo operativo (fuera del equipo co-fundador) reduce directamente el distribuible. Sin esto, los números de 2027 están sobreestimados.
   </div>
 
   <div class="be-grid">
@@ -1061,7 +1061,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
   <div class="panel open">
     <div class="phdr" onclick="toggleP(this)">
-      <span class="ptitle">👥 Equipo operativo (fuera de los 5 co-fundadores)</span>
+      <span class="ptitle">👥 Equipo operativo (fuera del equipo co-fundador)</span>
       <span class="ptgl">▼</span>
     </div>
     <div class="pbody">
@@ -1370,7 +1370,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=20.1qochix_system.js?v=20t=1711065600"></script>
+<script src="qochix_system.js?v=21.0&t=1776297600"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -2227,7 +2227,7 @@ function recalc(){
       h+='</div>';
     });
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem;margin-top:.5rem">';
-    h+=`<strong>Objetivo:</strong> que los 5 socios estén liberados al 2032. Hoy <strong>${liberated2032}/${PERSONS.length}</strong> lo logran. `;
+    h+=`<strong>Objetivo:</strong> que las ${PERSONS.length} personas socias estén liberadas al 2032. Hoy <strong>${liberated2032}/${PERSONS.length}</strong> lo logran. `;
     if(liberated2032<PERSONS.length){
       const notLib=derived.personCards.filter(pc=>pc.liberationYear==='2033+');
       h+=`Faltan: ${notLib.map(pc=>`<strong style="color:${PERSONS.find(p=>p.id===pc.id)?.c||'var(--text)'}">${pc.name}</strong>`).join(', ')}. Para acercar su cruce: aumentar revenue de sus marcas, o subir su meta sueldo cuando el colchón lo permita.`;
@@ -2484,7 +2484,7 @@ function recalc(){
   // ── EQUIPO tab ──
   sv('be-op26',fmt(fact.hcost[0]));
   sv('be-op32',fmt(fact.hcost[6]));
-  sv('be-headcount',(HIRES.length+5)+' personas');
+  sv('be-headcount',(HIRES.length+PERSONS.length)+' personas');
   const teamShare26 = fact.neto[0] > 0 ? (fact.hcost[0] / fact.neto[0]) * 100 : 0;
   const teamShare32 = fact.neto[6] > 0 ? (fact.hcost[6] / fact.neto[6]) * 100 : 0;
   const teamAccum = fact.hcost.reduce((sum,v)=>sum + (v * 12), 0);
@@ -2619,13 +2619,13 @@ function recalc(){
   sv('ap-team-gap10',fmt(teamGap10));
   const apNote=sel('ap-note');
   if(apNote){
-    apNote.innerHTML=`La apuesta agregada del equipo suma <strong>${fmt(teamInv)}</strong> de inversión modelada y puede devolver <strong>${fmt(teamRet7)}</strong> en 7 años si el escenario activo se sostiene. La brecha para que las 5 personas estén cerca de S/10k/mes al 2032 es <strong>${fmt(teamGap10)}</strong> mensuales.`;
+    apNote.innerHTML=`La apuesta agregada del equipo suma <strong>${fmt(teamInv)}</strong> de inversión modelada y puede devolver <strong>${fmt(teamRet7)}</strong> en 7 años si el escenario activo se sostiene. La brecha para que las ${PERSONS.length} personas estén cerca de S/10k/mes al 2032 es <strong>${fmt(teamGap10)}</strong> mensuales.`;
   }
   const apAlert=sel('ap-alert');
   if(apAlert){
     if(teamGap10>15000){
       apAlert.className='nota warn';
-      apAlert.innerHTML=`⚠️ <strong>La apuesta todavía no compra tranquilidad total:</strong> aun al 2032 falta una brecha agregada de ${fmt(teamGap10)}/mes para llevar a las 5 personas a una referencia de S/10k/mes.`;
+      apAlert.innerHTML=`⚠️ <strong>La apuesta todavía no compra tranquilidad total:</strong> aun al 2032 falta una brecha agregada de ${fmt(teamGap10)}/mes para llevar a las ${PERSONS.length} personas a una referencia de S/10k/mes.`;
     }else if(teamRoiAvg<1.5){
       apAlert.className='nota';
       apAlert.innerHTML=`ℹ️ <strong>Retorno positivo pero contenido:</strong> el ROI medio del equipo ronda ${fmtX(teamRoiAvg)}. La historia funciona, pero todavía depende de sostener disciplina comercial y margen.`;
@@ -3240,7 +3240,7 @@ function paintFlowTab(){
     diagramEl.innerHTML=[
       {icon:'brand',emoji:'📥',title:'Facturación total ecosistema',desc:'Almaria + HugoTech (2032/mes)',amount:fmt(totalFact),cls:''},
       {icon:'calc',emoji:'📊',title:'Neto operativo ('+netoPct+'%)',desc:'Después de costos directos de producción, herramientas, comisiones',amount:fmt(neto),cls:''},
-      {icon:'pay',emoji:'👥',title:'Planilla fundadores',desc:'Sueldos pactados de los 5 socios (crece cada año)',amount:'−'+fmt(suedF),cls:'negative'},
+      {icon:'pay',emoji:'👥',title:'Planilla fundadores',desc:'Sueldos pactados del equipo socio (crece cada año)',amount:'−'+fmt(suedF),cls:'negative'},
       {icon:'pay',emoji:'🏢',title:'Equipo operativo',desc:'Content creators, comerciales, facilitadores',amount:'−'+fmt(hcost),cls:'negative'},
       {icon:'rsv',emoji:'🛡️',title:'Reserva mensual',desc:'Colchón mínimo antes de distribuir',amount:'−'+fmt(reserva),cls:'negative'},
       {icon:'dist',emoji:'💰',title:'DISTRIBUIBLE',desc:'Lo que se reparte entre socios por equity',amount:fmt(dist),cls:'green'},
