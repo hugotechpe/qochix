@@ -1546,7 +1546,8 @@ function initSidebar() {
     const bc=p.brandCapital||{};
     const bCash=p.brandCash||{};
     const bcTotal=Object.values(bc).reduce((a,v)=>a+Number(v||0),0);
-    const tot=tkt+bcTotal+s.sw;
+    const bCashTotal=Object.values(bCash).reduce((a,v)=>a+Number(v||0),0);
+    const tot=tkt+bcTotal+bCashTotal+s.sw;
     const valInputs=BIDs.map(b=>`
       <div class="fld"><label>${BL[b]}</label>
         <input type="number" value="${bc[b]||0}" step="1000" min="0" max="500000"
@@ -1604,7 +1605,7 @@ function initSidebar() {
           title="Ancla 2032: tope final. 2031=punto medio" oninput="onS32('${p.id}',this.value)"></div>
     </div>
     <div class="pcard-footer">
-      <span>Aporte total:</span>
+      <span>Aporte total (incl. caja hoy):</span>
       <strong id="ptot-${p.id}">${fmt(tot)}</strong>
     </div>
   </div>`}).join('');
@@ -2153,7 +2154,8 @@ function recalc(){
     const tkt=getTkt(p.id);
     const s=sw(p,sc[p.id]);
     const bcTot=Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0);
-    sv('ptot-'+p.id,fmt(tkt+bcTot+s.sw));
+    const cashTot=Object.values(p.brandCash||{}).reduce((a,v)=>a+Number(v||0),0);
+    sv('ptot-'+p.id,fmt(tkt+bcTot+cashTot+s.sw));
   });
 
   sv('kpi-rossy',String(derived.firstLiberationYear));
