@@ -43,15 +43,15 @@
 
   group('Defaults y estructura');
   assert('DEFAULTS tiene 5 personas', Q.DEFAULTS.persons.length === 5);
-  assert('DEFAULTS tiene 6 hires', Q.DEFAULTS.hires.length === 6);
+  assert('DEFAULTS tiene 7 hires', Q.DEFAULTS.hires.length === 7);
   assert('DEFAULTS.P.sc es "p"', Q.DEFAULTS.P.sc === 'p');
   assert('AÑOS tiene 7 elementos (2026-2032)', Q.AÑOS.length === 7);
   assert('SC tiene 3 escenarios', Object.keys(Q.SC).length === 3);
-  assert('FACT0 tiene trazo, almaria, ht', Q.FACT0.trazo && Q.FACT0.almaria && Q.FACT0.ht);
+  assert('FACT0 tiene almaria, ht', Q.FACT0.almaria && Q.FACT0.ht);
 
   group('normalizeState');
   const s1 = Q.normalizeState(null);
-  assert('normalizeState(null) retorna 5 personas', s1.persons.length === 5);
+  assert('normalizeState(null) retorna 4 personas', s1.persons.length === 4);
   assert('normalizeState(null).P.netoPct es 0.65', s1.P.netoPct === 0.65);
   assert('normalizeState(null).P.reserva es 3000', s1.P.reserva === 3000);
   const s2 = Q.normalizeState({ P: { sc: 'o' } });
@@ -73,7 +73,7 @@
   assert('scenarioLabel existe', typeof d.scenarioLabel === 'string' && d.scenarioLabel.length > 0);
   assert('runway.months > 0', d.runway.months > 0, 'months=' + d.runway.months);
   assert('breakEven es número o 2033+', typeof d.breakEven === 'number' || d.breakEven === '2033+', 'be=' + d.breakEven);
-  assert('fact tiene 7 arrays', d.fact.trazo.length === 7 && d.fact.neto.length === 7);
+  assert('fact tiene 7 arrays', d.fact.alm.length === 7 && d.fact.neto.length === 7);
 
   group('Escenarios impactan facturación');
   const dp = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'p' }) }));

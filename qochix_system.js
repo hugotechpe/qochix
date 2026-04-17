@@ -559,7 +559,7 @@
       return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, prices: p.slice(), vols: v.slice(), rev };
     });
     const bt = (b) => AÑOS.map((_, i) => lines.filter((l) => l.brand === b).reduce((s, l) => s + l.rev[i], 0));
-    return { lines, trazo: AÑOS.map(() => 0), almaria: bt('almaria'), ht: bt('ht') };
+    return { lines, almaria: bt('almaria'), ht: bt('ht') };
   }
 
   function capSalariesToRevenue(state, targetCurves, neto, hcost) {
@@ -595,10 +595,9 @@
   function calcFactFromCurves(state, curves, opts) {
     var skipCap = opts && opts.skipCap;
     const lr = computeLineRevenue(state);
-    const trazo = lr.trazo;
     const alm = lr.almaria;
     const ht = lr.ht;
-    const total = AÑOS.map((_, i) => trazo[i] + alm[i] + ht[i]);
+    const total = AÑOS.map((_, i) => alm[i] + ht[i]);
     const neto = total.map((value) => Math.round(value * Number(state.P.netoPct || 0)));
     const hcost = hiresCostByYear(state);
     const realCurves = skipCap ? curves : capSalariesToRevenue(state, curves, neto, hcost);
@@ -607,7 +606,7 @@
     const colchon = neto.map((value, i) => value - sued_tot[i]);
     const dist = colchon.map((value) => Math.max(0, value - Number(state.P.reserva || 0)));
     const dist_no_op = neto.map((value, i) => Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0)));
-    return { trazo, alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
+    return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
   }
 
   function calcMonthly(state, curves) {
@@ -751,7 +750,7 @@
     const totalCaja = state.persons.reduce((s, p) => s + totalBrandCash(p), 0);
     const totalTickets = state.persons.reduce((s, p) => s + getTkt(state, p.id), 0);
     const capital = totalCaja + totalTickets;
-    const revenue0 = (lr.trazo[0] || 0) + (lr.almaria[0] || 0) + (lr.ht[0] || 0);
+    const revenue0 = (lr.almaria[0] || 0) + (lr.ht[0] || 0);
     const founderBurn0 = state.persons.reduce((sum, p) => sum + Number((curves[p.id] || [])[0] || 0), 0);
     const hireBurn0 = hiresCostByYear(state)[0];
     const totalBurn0 = founderBurn0 + hireBurn0;

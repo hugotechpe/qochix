@@ -14,7 +14,7 @@
   --qochix:#4A3F8F; --qochix-l:#8B7FD4;
   --hugo:#1E5FA5; --hugo-l:#4A8DD4;
   --almaria:#1A7A56; --almaria-l:#3DAA7A;
-  --trazo:#B06A10; --trazo-l:#E08A30;
+  
   --bg:#0A0D13; --bg2:#111520; --bg3:#171D2E;
   --surface:#1C2438;
   --text:#E8ECF0; --text2:#c4cad8; --muted:#8b95a8;
@@ -395,12 +395,11 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
 .bt{background:rgba(176,106,16,.16);border:1px solid rgba(224,138,48,.32);}
 .bq{background:rgba(74,63,143,.16);border:1px solid rgba(123,111,191,.35);}
 .bl{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
-.hl{color:var(--hugo-l);} .al{color:var(--almaria-l);} .tl{color:var(--trazo-l);} .ql{color:var(--qochix-l);}
+.hl{color:var(--hugo-l);} .al{color:var(--almaria-l);} .ql{color:var(--qochix-l);}
 .bc h3{font-family:var(--serif);font-size:clamp(1.15rem,2.1vw,1.45rem);font-weight:700;text-transform:none;letter-spacing:0;color:var(--text);margin-bottom:10px;}
 .tag{display:inline-block;font-size:.76rem;padding:6px 12px;border-radius:999px;margin:4px 6px 0 0;font-weight:600;}
 .th{background:rgba(30,95,165,.25);color:var(--hugo-l);}
 .ta{background:rgba(26,122,86,.25);color:var(--almaria-l);}
-.tt{background:rgba(176,106,16,.25);color:var(--trazo-l);}
 .mv{font-family:var(--serif);font-size:clamp(1.65rem,3.2vw,2.25rem);font-weight:900;color:var(--gold);line-height:1;}
 .ml{font-size:.88rem;color:var(--text2);margin-top:8px;line-height:1.45;}
 .content{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;min-height:0;}
@@ -460,7 +459,6 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
 .htable .sub{font-size:.78rem;color:var(--muted);display:block;margin-top:4px;}
 .cell-a{background:rgba(26,122,86,.18);color:var(--almaria-l);border-radius:12px;padding:10px 14px;display:inline-block;font-weight:600;font-size:.92rem;line-height:1.45;min-width:100px;text-align:center;}
 .cell-h{background:rgba(30,95,165,.18);color:var(--hugo-l);border-radius:12px;padding:10px 14px;display:inline-block;font-weight:600;font-size:.92rem;line-height:1.45;min-width:100px;text-align:center;}
-.cell-t{background:rgba(176,106,16,.18);color:var(--trazo-l);border-radius:12px;padding:10px 14px;display:inline-block;font-weight:600;font-size:.92rem;line-height:1.45;min-width:100px;text-align:center;}
 .cell-total-ok{background:rgba(82,201,122,.16);color:#7FE0A8;border-radius:12px;padding:10px 16px;display:inline-block;font-weight:700;font-size:.95rem;line-height:1.45;min-width:110px;text-align:center;}
 .cell-total-warn{background:rgba(230,126,34,.18);color:var(--amber);border-radius:12px;padding:10px 16px;display:inline-block;font-weight:700;font-size:.95rem;line-height:1.45;min-width:110px;text-align:center;}
 .cell-total-red{background:rgba(232,107,95,.16);color:#ff9a8f;border-radius:12px;padding:10px 16px;display:inline-block;font-weight:700;font-size:.95rem;line-height:1.45;min-width:110px;text-align:center;}
@@ -2684,7 +2682,6 @@ document.addEventListener('keydown',e=>{
           const dist=Number(derived.fact.dist[idx]||0);
           const neto=Number(derived.fact.neto[idx]||0);
           const payroll=Number(derived.fact.sued_tot[idx]||0);
-          const trazo=Number(derived.fact.trazo[idx]||0);
           const alm=Number(derived.fact.alm[idx]||0);
           const ht=Number(derived.fact.ht[idx]||0);
           const gapYear=Math.max(0, payroll+Number(p.reserva||0)-neto);
@@ -2701,7 +2698,6 @@ document.addEventListener('keydown',e=>{
           const payroll=Number(derived.fact.sued_tot[idx]||0);
           const reserveGap=Math.max(0,payroll+Number(p.reserva||0)-neto);
           const dist=Number(derived.fact.dist[idx]||0);
-          const trazo=Number(derived.fact.trazo[idx]||0);
           const alm=Number(derived.fact.alm[idx]||0);
           const ht=Number(derived.fact.ht[idx]||0);
           const stage=year<breakYear?'Antes del quiebre':(year===breakYear?'Año de quiebre':'Después del quiebre');
@@ -2853,7 +2849,6 @@ document.addEventListener('keydown',e=>{
       });
       years.forEach(function(yr,idx){
         var total=Number(fact.total[idx]||0);
-        var trazo=Number(fact.trazo[idx]||0);
         var alm=Number(fact.alm[idx]||0);
         var ht=Number(fact.ht[idx]||0);
         var dist=Number(fact.dist[idx]||0);
