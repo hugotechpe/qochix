@@ -1908,29 +1908,34 @@ footer {
     </p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Persona</th><th>% equity</th><th>Ticket</th><th>Inv. marca</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Diferencia</th></tr></thead>
+        <thead><tr><th>Persona</th><th>% equity</th><th>Ticket</th><th>Inv. marca</th><th>Sweat 10a</th><th>TOTAL</th><th>% mat.</th><th>Diferencia</th></tr></thead>
         <tbody id="pact-pool-tbody">
           <tr class="tr-hugo">
-            <td>Hugo</td><td class="td-gold">63%</td>
-            <td>S/5,000</td><td>S/40,243</td><td>S/664,936</td>
-            <td class="td-big">S/710,179</td><td>61.0%</td><td class="td-green">+2.0pts</td>
+            <td>Hugo</td><td class="td-gold">—</td>
+            <td>S/5,000</td><td>S/75,400</td><td>—</td>
+            <td class="td-big">—</td><td>—</td><td>—</td>
           </tr>
           <tr>
-            <td>Rossy</td><td class="td-gold">17%</td>
-            <td>S/5,000</td><td>S/20,000</td><td>S/155,152</td>
-            <td class="td-gold">S/180,152</td><td>15.5%</td><td class="td-green">+1.5pts</td>
+            <td>Rossy</td><td class="td-gold">—</td>
+            <td>S/5,000</td><td>S/38,800</td><td>—</td>
+            <td class="td-gold">—</td><td>—</td><td>—</td>
           </tr>
           <tr>
-            <td>Vera</td><td class="td-gold">11%</td>
-            <td>S/5,000</td><td>S/4,000</td><td>S/144,070</td>
-            <td class="td-gold">S/153,070</td><td>13.1%</td><td style="color:var(--coral)">-2.1pts</td>
+            <td>Vera</td><td class="td-gold">—</td>
+            <td>S/5,000</td><td>S/7,800</td><td>—</td>
+            <td class="td-gold">—</td><td>—</td><td>—</td>
           </tr>
-          <tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>S/25,000</td><td>S/64,243</td><td>S/1,074,981</td><td>S/1,164,224</td><td>—</td><td>—</td></tr>
+          <tr>
+            <td>Mechita</td><td class="td-gold">—</td>
+            <td>S/15,000</td><td>S/0</td><td>—</td>
+            <td class="td-gold">—</td><td>—</td><td>—</td>
+          </tr>
+          <tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>S/30,000</td><td>S/122,000</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
         </tbody>
       </table>
     </div>
     <div class="nota-importante">
-      <strong>¿Por qué Hugo tiene +2pts sobre la matemática?</strong> Porque HugoTech no existe sin Hugo — él ES la marca. Ese valor intangible no lo captura una fórmula. La diferencia es mínima, pero el reconocimiento es real. Y aun así, El voluntariamente cede puntos para que el equipo tenga un % más motivador.
+      <strong>¿Cómo se calcula el % de equity?</strong> El modelo usa <em>auto pool</em>: el % de cada socio se calcula proporcionalmente a su aporte total (ticket + capital invertido en marcas + caja aportada + sweat equity en 10 años). No hay ajustes manuales — la matemática define el reparto. Quien más puso, más tiene.
     </div>
   </div>
 </section>
@@ -3118,8 +3123,6 @@ function showTermTab(panelId, btn) {
     // Pool table
     var ptb=document.getElementById('pact-pool-tbody');
     if(ptb){
-      var _totalMeses=QSYS.MESES_POR_AÑO.reduce(function(a,b){return a+b},0);
-      var sw=function(pr){var hr=Number(pr.sueldo||0)/(22*8);var hm=Number(pr.hrs||0)*6*4.3;var vm=hr*hm;return{sw:vm*_totalMeses*Number(pr.adj||0)};};
       var totalTk=0,totalCap=0,totalCash=0,totalSw=0,totalAll=0;
       var ph='';
       d.state.persons.forEach(function(pr){
@@ -3127,7 +3130,9 @@ function showTermTab(panelId, btn) {
         var tk=pcard?pcard.ticket:5000;
         var bcTot=Object.values(pr.brandCapital||{}).reduce(function(a,v){return a+Number(v||0)},0);
         var cashTot=Object.values(pr.brandCash||{}).reduce(function(a,v){return a+Number(v||0)},0);
-        var swv=sw(pr).sw;var tot=tk+bcTot+cashTot+swv;
+        var swv=pcard?pcard.investment-(tk+bcTot+cashTot):0;
+        if(swv<0) swv=0;
+        var tot=tk+bcTot+cashTot+swv;
         var eq=pcard?pcard.equity:0;var matPct=d.pool>0?(tot/d.pool*100):0;var diff=eq-matPct;
         var diffCls=diff>=0?'td-green':'';if(diff<-0.5)diffCls='style="color:var(--coral)"';
         var diffStr=diff>=0?'+'+diff.toFixed(1)+'pts':diff.toFixed(1)+'pts';
