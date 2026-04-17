@@ -238,6 +238,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .k-gold .kval{color:var(--gold);text-shadow:0 0 25px rgba(212,168,83,.2)}.k-teal .kval{color:var(--teal)}
 .k-green .kval{color:var(--green)}.k-coral .kval{color:var(--coral)}.k-purple .kval{color:var(--purple)}.k-blue .kval{color:var(--blue)}
 .ksub{font-size:.65rem;color:var(--muted);line-height:1.35}
+.kdetail{margin-top:.45rem;padding-top:.4rem;border-top:1px solid rgba(255,255,255,.04);font-size:.58rem;color:var(--text2);line-height:1.55}
+.kdetail .kd-row{display:flex;justify-content:space-between;align-items:center;padding:.12rem 0}
+.kdetail .kd-row+.kd-row{border-top:1px dotted rgba(255,255,255,.04)}
+.kdetail .kd-lbl{color:var(--muted)}
+.kdetail .kd-val{font-weight:700;font-family:var(--serif)}
+.kdetail .kd-eq{margin-top:.3rem;padding:.25rem .4rem;background:rgba(255,255,255,.02);border-radius:6px;font-size:.54rem;color:var(--muted);line-height:1.5}
+.kdetail .kd-eq strong{color:var(--text2)}
 .kcard.alert{border-color:rgba(232,107,95,.3);animation:pulse .8s 3}
 @keyframes pulse{0%,100%{border-color:rgba(232,107,95,.3)}50%{border-color:var(--coral)}}
 .dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:1.4rem}
@@ -680,29 +687,34 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
   <div class="kpi-grid">
     <div class="kcard k-blue">
-      <div class="klbl">Meta de venta <span class="hint-badge" data-tip="Facturación bruta mínima mensual para que el neto operativo cubra toda la planilla (socios + equipo). Si vendes más, hay distribuible. Si vendes menos, los sueldos se ajustan."></span></div>
+      <div class="klbl">Meta de venta</div>
       <div class="kval" id="kpi-fact-need">—</div>
-      <div class="ksub" id="kpi-fact-need-sub">facturación bruta mínima para cubrir todo</div>
+      <div class="ksub" id="kpi-fact-need-sub">facturación bruta mínima</div>
+      <div class="kdetail" id="kpi-fact-detail"></div>
     </div>
     <div class="kcard k-gold">
-      <div class="klbl">Distribuible /mes <span class="hint-badge" data-tip="Lo que sobra después de pagar toda la planilla y la reserva. Se reparte entre socios según su % de equity. Fórmula: neto − planilla − reserva = distribuible."></span></div>
+      <div class="klbl">Distribuible /mes</div>
       <div class="kval" id="kpi-dist">—</div>
-      <div class="ksub" id="kpi-dist-range">lo que se reparte entre socios por equity</div>
+      <div class="ksub" id="kpi-dist-range">reparto por equity</div>
+      <div class="kdetail" id="kpi-dist-detail"></div>
     </div>
     <div class="kcard k-green">
-      <div class="klbl">Break-even <span class="hint-badge" data-tip="Primer año donde el neto operativo (facturación × 65%) supera a la planilla total. Antes de este año, el ecosistema opera con pérdida y los sueldos se ajustan proporcionalmente."></span></div>
+      <div class="klbl">Break-even</div>
       <div class="kval" id="kpi-be">—</div>
-      <div class="ksub" id="kpi-be-range">año en que neto cubre planilla</div>
+      <div class="ksub" id="kpi-be-range">neto cubre planilla</div>
+      <div class="kdetail" id="kpi-be-detail"></div>
     </div>
     <div class="kcard k-coral">
-      <div class="klbl">Runway <span class="hint-badge" data-tip="Meses que el ecosistema sobrevive solo con la caja actual (tickets + capital en marcas) si no entra ningún ingreso nuevo. Menos de 6 meses = zona roja. 12+ meses = saludable."></span></div>
+      <div class="klbl">Runway</div>
       <div class="kval" id="kpi-runway">—</div>
-      <div class="ksub">meses sin vender nada</div>
+      <div class="ksub" id="kpi-runway-sub">meses sin vender</div>
+      <div class="kdetail" id="kpi-runway-detail"></div>
     </div>
     <div class="kcard k-purple">
-      <div class="klbl">Liberación <span class="hint-badge" data-tip="Año en que al menos un socio logra que su ingreso Qochix (sueldo + equity) iguale o supere su sueldo tope. Cuando todos se liberan, el modelo es sostenible."></span></div>
+      <div class="klbl">Liberación</div>
       <div class="kval" id="kpi-rossy">—</div>
       <div class="ksub" id="kpi-lib-range">cruce del equipo</div>
+      <div class="kdetail" id="kpi-lib-detail"></div>
     </div>
   </div>
 
@@ -2119,15 +2131,99 @@ function recalc(){
 
   // ── KPIs dashboard ──
   const factMinBE=Math.round(fact.sued_tot[_li]/Math.max(0.01,P.netoPct));
+  const netoPctInt=Math.round(P.netoPct*100);
   animateValue(sel('kpi-fact-need'),fmt(factMinBE)+'/mes');
   const kpiFactSub=sel('kpi-fact-need-sub');
-  if(kpiFactSub) kpiFactSub.textContent='facturación bruta para cubrir planilla '+_lastYear+' (S/'+fmt(fact.sued_tot[_li])+')';
+  if(kpiFactSub) kpiFactSub.textContent='factura bruta mínima '+_lastYear;
   animateValue(sel('kpi-dist'),fmt(dist[_li]));
   animateValue(sel('kpi-be'),be);
   animateValue(sel('kpi-runway'),rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
   sv('hero-kpi-pool',fmt(pool));
   sv('hero-kpi-fact',fmt(fact.total[_li]));
   sv('hero-kpi-dist',fmt(dist[_li]));
+
+  // -- KPI 1: Meta de venta (detalle) --
+  const kdFact=sel('kpi-fact-detail');
+  if(kdFact){
+    const almBEPct=fact.total[_li]>0?Math.round(fact.alm[_li]/fact.total[_li]*100):50;
+    const almBE=Math.round(factMinBE*almBEPct/100);
+    const htBE=factMinBE-almBE;
+    let d='';
+    d+='<div class="kd-row"><span class="kd-lbl">Planilla total '+_lastYear+'</span><span class="kd-val">'+fmt(fact.sued_tot[_li])+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">→ Socios fundadores</span><span class="kd-val">'+fmt(fact.sued_f[_li])+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">→ Equipo operativo</span><span class="kd-val">'+fmt(fact.hcost[_li])+'</span></div>';
+    d+='<div class="kd-eq">Planilla <strong>'+fmt(fact.sued_tot[_li])+'</strong> ÷ '+netoPctInt+'% neto = <strong>'+fmt(factMinBE)+'</strong> brutos/mes.<br>Desglose: 🌿 Almaria <strong>'+fmt(almBE)+'</strong> ('+almBEPct+'%) · 💻 HugoTech <strong>'+fmt(htBE)+'</strong> ('+(100-almBEPct)+'%)</div>';
+    kdFact.innerHTML=d;
+  }
+
+  // -- KPI 2: Distribuible (detalle) --
+  const kdDist=sel('kpi-dist-detail');
+  if(kdDist){
+    const netoLast=fact.neto[_li];
+    const planLast=fact.sued_tot[_li];
+    const colchLast=fact.colchon[_li];
+    const rsvNum=Number(P.reserva||0);
+    let d='';
+    d+='<div class="kd-row"><span class="kd-lbl">Facturación '+_lastYear+'</span><span class="kd-val">'+fmt(fact.total[_li])+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">Neto ('+netoPctInt+'%)</span><span class="kd-val" style="color:var(--mint)">'+fmt(netoLast)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">− Planilla</span><span class="kd-val" style="color:var(--coral)">−'+fmt(planLast)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">= Colchón</span><span class="kd-val" style="color:'+(colchLast>=0?'var(--green)':'var(--coral)')+'">'+fmt(colchLast)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">− Reserva</span><span class="kd-val">−'+fmt(rsvNum)+'</span></div>';
+    d+='<div class="kd-eq">'+fmt(netoLast)+' − '+fmt(planLast)+' − '+fmt(rsvNum)+' = <strong style="color:var(--gold)">'+fmt(dist[_li])+'</strong> distribuible.<br>Se reparte entre '+PERSONS.length+' socios según su % de equity.</div>';
+    kdDist.innerHTML=d;
+  }
+
+  // -- KPI 3: Break-even (detalle) --
+  const kdBE=sel('kpi-be-detail');
+  if(kdBE){
+    const beIdx=AÑOS.indexOf(typeof be==='number'?be:9999);
+    let d='';
+    for(let yi=1;yi<AÑOS.length;yi++){
+      const yr=AÑOS[yi];
+      const nY=fact.neto[yi];
+      const pY=fact.sued_tot[yi];
+      const gapY=nY-pY;
+      const isOk=gapY>=0;
+      const isBEyr=yr===be;
+      d+='<div class="kd-row" style="'+(isBEyr?'background:rgba(82,201,122,.08);border-radius:4px;padding:.15rem .25rem;margin:0 -.25rem':'')+'"><span class="kd-lbl">'+(isBEyr?'→ ':'')+yr+'</span><span class="kd-val" style="color:'+(isOk?'var(--green)':'var(--coral)')+'">'+fmt(gapY)+'</span></div>';
+    }
+    d+='<div class="kd-eq">Cada año: neto (factura×'+netoPctInt+'%) − planilla = gap.<br>Cuando gap ≥ 0 → <strong>break-even</strong>. '+(typeof be==='number'?'En <strong>'+be+'</strong> el neto '+fmt(fact.neto[beIdx])+' supera la planilla '+fmt(fact.sued_tot[beIdx])+'.':'Aún no se alcanza.')+'</div>';
+    kdBE.innerHTML=d;
+  }
+
+  // -- KPI 4: Runway (detalle) --
+  const kdRw=sel('kpi-runway-detail');
+  if(kdRw){
+    const rwCap=rw.capital;
+    const rwBurn=rw.burn;
+    const rwRev=rw.revenue;
+    const rwNet=rw.netBurn;
+    let d='';
+    d+='<div class="kd-row"><span class="kd-lbl">Caja total (tickets+capital)</span><span class="kd-val" style="color:var(--blue)">'+fmt(rwCap)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">Gasto mensual 2026</span><span class="kd-val" style="color:var(--coral)">−'+fmt(rwBurn)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">Ingreso mensual 2026</span><span class="kd-val" style="color:var(--mint)">+'+fmt(rwRev)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">Quema neta/mes</span><span class="kd-val" style="color:'+(rwNet>0?'var(--coral)':'var(--green)')+'">'+fmt(rwNet)+'</span></div>';
+    d+='<div class="kd-eq">'+(rwNet>0?'Caja <strong>'+fmt(rwCap)+'</strong> ÷ quema neta <strong>'+fmt(rwNet)+'</strong>/mes = <strong>'+rw.months+' meses</strong> sin vender nada.':'La caja no se quema porque los ingresos ya cubren los gastos. Runway infinito.')+'<br>'+(rw.months<6?'⚠️ Menos de 6 meses — zona de riesgo.':rw.months<12?'🔶 Entre 6-12 meses — hay que acelerar ventas.':'✅ Más de 12 meses — colchón saludable.')+'</div>';
+    kdRw.innerHTML=d;
+  }
+
+  // -- KPI 5: Liberación (detalle) --
+  const kdLib=sel('kpi-lib-detail');
+  if(kdLib){
+    let d='';
+    derived.personCards.forEach(function(pc){
+      const p=PERSONS.find(function(pp){return pp.id===pc.id;});
+      if(!p) return;
+      const tope=Number(p.sueldoTope||0);
+      const ingLast=Number(pc.totalLast||pc.total2032||0);
+      const pct=tope>0?Math.min(100,Math.round(ingLast/tope*100)):0;
+      const ok=ingLast>=tope&&tope>0;
+      d+='<div class="kd-row"><span class="kd-lbl">'+pc.name+' (tope: '+fmt(tope)+')</span><span class="kd-val" style="color:'+(ok?'var(--green)':'var(--coral)')+'">'+pct+'%</span></div>';
+    });
+    const libCount=derived.liberatedBy2032||0;
+    d+='<div class="kd-eq"><strong>'+libCount+'/'+PERSONS.length+'</strong> socios alcanzan su sueldo tope al '+_lastYear+'.<br>'+(libCount===PERSONS.length?'✅ Todo el equipo está liberado.':'Faltan '+(PERSONS.length-libCount)+' socios — necesitan más facturación o ajustar metas.')+'</div>';
+    kdLib.innerHTML=d;
+  }
 
   try{
     const cmpAll=QSYS.compareScenarios();
@@ -2137,6 +2233,8 @@ function recalc(){
     if(beRangeEl) beRangeEl.textContent='Rango: '+cmpAll.p.breakEven+' (×0.7) → '+cmpAll.o.breakEven+' (×1.4)';
     const libRangeEl=sel('kpi-lib-range');
     if(libRangeEl) libRangeEl.textContent='1er cruce: '+cmpAll.p.firstLiberationYear+' (×0.7) → '+cmpAll.o.firstLiberationYear+' (×1.4)';
+    const rwSub=sel('kpi-runway-sub');
+    if(rwSub) rwSub.textContent=rw.months>=12?'colchón saludable':'acelerar ventas';
   }catch(e){}
   const heroMults=derived.personCards.map((person)=>(person.totalLast||person.total2032)/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
   const minMult=Math.min(...heroMults);
