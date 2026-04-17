@@ -4115,22 +4115,18 @@ syncControlsFromState();
 decorateHelp();
 loadSimNotes();
 document.querySelectorAll('.panel .pbody').forEach(b=>b.style.display='block');
-try{
-  if(window.top!==window.self){
-    document.getElementById('hero').style.display='none';
-    const app=document.getElementById('app-root');
-    if(app) app.classList.add('sidebar-hidden');
-    const btn=document.getElementById('sb-toggle');
-    if(btn) btn.style.display='none';
-    showTab('dashboard');
-  }
-}catch(error){
-  document.getElementById('hero').style.display='none';
-  const app=document.getElementById('app-root');
-  if(app) app.classList.add('sidebar-hidden');
-  const btn=document.getElementById('sb-toggle');
-  if(btn) btn.style.display='none';
-  showTab('dashboard');
+var _isEmbedded=false;
+try{ _isEmbedded = window.top!==window.self; }catch(e){ _isEmbedded=true; }
+if(_isEmbedded){
+  try{ document.getElementById('hero').style.display='none'; }catch(e){}
+  var _app=document.getElementById('app-root');
+  if(_app) _app.classList.add('sidebar-hidden');
+  var _sbBtn=document.getElementById('sb-toggle');
+  if(_sbBtn) _sbBtn.style.display='none';
+  try{ showTab('dashboard'); }catch(e){}
+}else{
+  var _sbBtnStd=document.getElementById('sb-toggle');
+  if(_sbBtnStd) _sbBtnStd.style.display='';
 }
 QSYS.subscribe((nextState,meta={})=>{
   if(meta.via==='local') return;

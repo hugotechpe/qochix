@@ -16,11 +16,18 @@
     .app{display:grid;grid-template-rows:auto 1fr;height:100vh}
     .top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(10,13,19,.96);position:relative;z-index:100}
     .brand{font-weight:700;letter-spacing:.08em;color:var(--gold)}
-    .side-toggle{
-      border:1px solid var(--line);background:var(--bg2);color:var(--muted);
-      padding:7px 10px;border-radius:10px;font-size:12px;cursor:pointer
+    .side-toggle-float{
+      position:sticky;top:60px;align-self:start;z-index:95;
+      width:28px;min-width:28px;height:48px;margin-left:-1px;
+      border-radius:0 8px 8px 0;
+      border:1px solid var(--line);border-left:none;
+      background:var(--bg2);color:var(--muted);
+      font-size:13px;font-weight:700;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:all .2s;padding:0;
+      writing-mode:vertical-lr;letter-spacing:.05em
     }
-    .side-toggle:hover{border-color:rgba(62,207,207,.45);color:var(--text)}
+    .side-toggle-float:hover{background:rgba(62,207,207,.12);color:var(--text);border-color:rgba(62,207,207,.45)}
     .btns{display:flex;gap:8px;flex-wrap:wrap}
     .btn{
       border:1px solid var(--line);background:var(--bg2);color:var(--muted);
@@ -28,13 +35,11 @@
     }
     .btn.active{color:var(--text);border-color:rgba(62,207,207,.45);background:rgba(62,207,207,.08)}
     .meta{margin-left:auto;font-size:12px;color:var(--muted)}
-    .layout{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:0}
-    .layout.side-collapsed{grid-template-columns:0 minmax(0,1fr) !important}
+    .layout{display:grid;grid-template-columns:290px auto minmax(0,1fr);min-height:0}
+    .layout.side-collapsed{grid-template-columns:0px auto minmax(0,1fr) !important}
     .layout.side-collapsed .side{
       display:none !important;
-      opacity:0;visibility:hidden;pointer-events:none;
-      width:0;min-width:0;max-width:0;
-      padding:0;border-right:none;overflow:hidden;
+      width:0;padding:0;border:none;overflow:hidden;
     }
     .side{border-right:1px solid var(--line);padding:12px;background:var(--bg2);overflow:auto;min-width:0}
     .k{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
@@ -150,14 +155,13 @@
     .sc-btn,.capm-btn,.pre-btn{transition:all .2s cubic-bezier(.4,0,.2,1)}
     .sc-btn:hover,.capm-btn:hover{transform:translateY(-1px)}
     .sc-btn.active,.capm-btn.active,.pre-btn.active{transform:scale(1.03)}
-    @media (max-width:1000px){.layout{grid-template-columns:1fr!important}.layout .side{display:none!important}.cmp-grid{grid-template-columns:1fr}}
+    @media (max-width:1000px){.layout{grid-template-columns:0px auto 1fr!important}.layout .side{display:none!important}.cmp-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="app">
     <header class="top">
       <div class="brand">QOCHIX HUB</div>
-      <button class="side-toggle" id="side-toggle" onclick="window._toggleSide()" title="Ocultar/mostrar panel izquierdo">☰ Panel</button>
       <div class="btns" id="tabs">
         <button class="btn active" data-src="QOCHIX_Simulador.html">Simulador</button>
         <button class="btn" data-src="QOCHIX_Pacto_Economico.html">Pacto</button>
@@ -247,6 +251,7 @@
           <details><summary>¿Qué pasa si un socio se va?</summary><p class="faq-a">Se rige por las reglas del Pacto Económico → Gobierno. El equity tiene vesting implícito por permanencia y los aportes quedan documentados.</p></details>
         </div>
       </aside>
+      <button class="side-toggle-float" id="side-toggle" onclick="window._toggleSide()" title="Ocultar/mostrar panel">✕</button>
       <main class="frame-wrap">
         <iframe id="frame" src="QOCHIX_Simulador.html" title="Qochix integrador"></iframe>
       </main>
@@ -309,13 +314,12 @@
     const SIDE_KEY='qochix_hub_side_collapsed_v1';
     var _sideIsCollapsed = false;
     function paintSideToggle(){
-      if(sideToggle) sideToggle.textContent = _sideIsCollapsed ? '☰ Panel' : '✕ Panel';
+      if(sideToggle) sideToggle.textContent = _sideIsCollapsed ? '☰' : '✕';
     }
     function setSideCollapsed(next){
       _sideIsCollapsed = !!next;
       if(layout) layout.classList.toggle('side-collapsed', _sideIsCollapsed);
       if(sideEl) sideEl.style.display = _sideIsCollapsed ? 'none' : '';
-      if(layout) layout.style.gridTemplateColumns = _sideIsCollapsed ? '0 minmax(0,1fr)' : '';
       paintSideToggle();
       try{localStorage.setItem(SIDE_KEY, _sideIsCollapsed ? '1' : '0')}catch(e){}
     }
