@@ -1497,6 +1497,8 @@ const AÑOS = QSYS.AÑOS.slice();
 // Facturación base neutro
 const FACT0 = QSYS.clone(QSYS.FACT0);
 const SC = {...QSYS.SC};
+const _LI = AÑOS.length - 1;
+const _LAST_YEAR = AÑOS[_LI];
 
 // Equipo operativo inicial (contrataciones confirmadas / planeadas)
 let HIRES = BOOT.hires;
@@ -2069,6 +2071,8 @@ function recalc(){
   const factPact=derived.factPact;
   const pool=derived.pool;
   const dist=fact.dist;
+  const _li=AÑOS.length-1;
+  const _lastYear=AÑOS[_li];
   const rw=derived.runway;
   const be=derived.breakEven;
   const sc=derived.curves;
@@ -2124,12 +2128,12 @@ function recalc(){
 
   // ── KPIs dashboard ──
   animateValue(sel('kpi-pool'),fmt(pool));
-  animateValue(sel('kpi-dist'),fmt(dist[6]));
+  animateValue(sel('kpi-dist'),fmt(dist[_li]));
   animateValue(sel('kpi-be'),be);
   animateValue(sel('kpi-runway'),rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
   sv('hero-kpi-pool',fmt(pool));
-  sv('hero-kpi-fact',fmt(fact.total[6]));
-  sv('hero-kpi-dist',fmt(dist[6]));
+  sv('hero-kpi-fact',fmt(fact.total[_li]));
+  sv('hero-kpi-dist',fmt(dist[_li]));
 
   // Rangos de confianza cross-escenario
   try{
@@ -2150,7 +2154,7 @@ function recalc(){
   sv('dash-pay30',fmt(fact.sued_tot[idx30]));
   sv('dash-col30',fmt(fact.colchon[idx30]));
   sv('dash-dist30-noop',fmt(fact.dist_no_op[idx30]));
-  sv('dash-op32',fmt(fact.hcost[6]));
+  sv('dash-op32',fmt(fact.hcost[_li]));
   sv('dash-gap30',fmt(teamGap2030));
   sv('dash-lib30',`${derived.liberatedBy2030}/${PERSONS.length}`);
   const dashNote=sel('dash-note');
@@ -2169,8 +2173,8 @@ function recalc(){
       <div style="font-size:.7rem">Suma de todos los aportes: tickets (<strong>${fmt(_tktTot)}</strong>) + capital en marcas (<strong>${fmt(_bcAll)}</strong>) + sweat equity (<strong>${fmt(_tswAll)}</strong>). Es la base para calcular el % de cada socio.</div>
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--teal);font-size:.72rem;margin-bottom:.25rem">Distribuible 2032: ${fmt(dist[6])}/mes</div>
-      <div style="font-size:.7rem">Lo que sobra después de pagar a todos (socios + equipo + reserva). En 2032 la facturación es ${fmt(fact.total[6])}/mes → neto ${fmt(fact.neto[6])} → planilla ${fmt(fact.sued_tot[6])} → queda <strong>${fmt(dist[6])}</strong> para repartir.</div>
+      <div style="font-weight:700;color:var(--teal);font-size:.72rem;margin-bottom:.25rem">Distribuible ${_lastYear}: ${fmt(dist[_li])}/mes</div>
+      <div style="font-size:.7rem">Lo que sobra después de pagar a todos (socios + equipo + reserva). En ${_lastYear} la facturación es ${fmt(fact.total[_li])}/mes → neto ${fmt(fact.neto[_li])} → planilla ${fmt(fact.sued_tot[_li])} → queda <strong>${fmt(dist[_li])}</strong> para repartir.</div>
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
       <div style="font-weight:700;color:var(--green);font-size:.72rem;margin-bottom:.25rem">Break-even: ${be}</div>
@@ -2189,8 +2193,8 @@ function recalc(){
       <div style="font-size:.7rem">Ingreso bruto mensual de las 3 marcas en 2030. De eso, el ${Math.round(P.netoPct*100)}% (${fmt(fact.neto[idx30])}) queda como neto operativo para cubrir planilla y distribuible.</div>
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Equipo operativo 2032: ${fmt(fact.hcost[6])}</div>
-      <div style="font-size:.7rem">Costo mensual de los empleados (no fundadores): content creators, comerciales, facilitadora. Se paga <em>antes</em> que los sueldos de socios. Sin este equipo, el distribuible sería ${fmt(fact.dist_no_op[6])}/mes más.</div>
+      <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Equipo operativo ${_lastYear}: ${fmt(fact.hcost[_li])}</div>
+      <div style="font-size:.7rem">Costo mensual de los empleados (no fundadores): content creators, comerciales, facilitadora. Se paga <em>antes</em> que los sueldos de socios. Sin este equipo, el distribuible sería ${fmt(fact.dist_no_op[_li])}/mes más.</div>
     </div>`;
     h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
       <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Brecha equipo 2030: ${fmt(teamGap2030)}</div>
@@ -2435,7 +2439,7 @@ function recalc(){
   });
   sel('tb-fact').innerHTML=html;
   const scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
-  sel('nota-fact').innerHTML=`Escenario <strong>${scn[P.sc]}</strong>. Distribuible 2032: <strong style="color:var(--gold)">${fmt(dist[6])}/mes</strong>. El equipo operativo reduce el distribuible en <strong style="color:var(--coral)">${fmt(fact.hcost[6])}/mes</strong> en 2032.`;
+  sel('nota-fact').innerHTML=`Escenario <strong>${scn[P.sc]}</strong>. Distribuible ${_lastYear}: <strong style="color:var(--gold)">${fmt(dist[_li])}/mes</strong>. El equipo operativo reduce el distribuible en <strong style="color:var(--coral)">${fmt(fact.hcost[_li])}/mes</strong> en ${_lastYear}.`;
 
   // ── Explain facturación ──
   const exFact=sel('explain-fact');
@@ -2461,7 +2465,7 @@ function recalc(){
 
   sv('ceo-scn',scn[P.sc]);
   sv('ceo-pool',fmt(pool));
-  sv('ceo-dist32',fmt(dist[6]));
+  sv('ceo-dist32',fmt(dist[_li]));
   sv('ceo-dist30',fmt(dist[4]));
   sv('ceo-be',String(be));
   sv('ceo-runway',rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
@@ -2525,7 +2529,7 @@ function recalc(){
       h+=`<div style="border-top:1px solid var(--brd);padding-top:.5rem">`;
       h+=`El distribuible aparece por primera vez en <strong>${AÑOS[firstDistIdx]}</strong>. `;
       h+=`<strong style="color:${topRet.c}">${topRet.name}</strong> acumula <strong>${fmt(topRetAcum)}</strong> en ${AÑOS.length} años porque tiene el mayor % de equity. `;
-      h+=`En <strong>2032</strong> cada socio recibe mensualmente: su sueldo + su % del distribuible (<strong>${fmt(dist[6])}/mes</strong> total).`;
+      h+=`En <strong>${_lastYear}</strong> cada socio recibe mensualmente: su sueldo + su % del distribuible (<strong>${fmt(dist[_li])}/mes</strong> total).`;
       h+='</div>';
     }
     h+='</div>';
@@ -2587,16 +2591,16 @@ function recalc(){
 
   // ── EQUIPO tab ──
   sv('be-op26',fmt(fact.hcost[0]));
-  sv('be-op32',fmt(fact.hcost[6]));
+  sv('be-op32',fmt(fact.hcost[_li]));
   sv('be-headcount',(HIRES.length+PERSONS.length)+' personas');
   const teamShare26 = fact.neto[0] > 0 ? (fact.hcost[0] / fact.neto[0]) * 100 : 0;
-  const teamShare32 = fact.neto[6] > 0 ? (fact.hcost[6] / fact.neto[6]) * 100 : 0;
+  const teamShare32 = fact.neto[_li] > 0 ? (fact.hcost[_li] / fact.neto[_li]) * 100 : 0;
   const teamAccum = fact.hcost.reduce((sum,v)=>sum + (v * 12), 0);
   const teamBlockYear = AÑOS.find((year,idx)=>fact.dist_no_op[idx] > 0 && fact.dist[idx] === 0) || '—';
   const teamDrag30 = Math.max(0, fact.dist_no_op[4] - fact.dist[4]);
-  const teamDrag32 = Math.max(0, fact.dist_no_op[6] - fact.dist[6]);
-  const founderShare32 = fact.sued_tot[6] > 0 ? (fact.sued_f[6] / fact.sued_tot[6]) * 100 : 0;
-  const opShareMix32 = fact.sued_tot[6] > 0 ? (fact.hcost[6] / fact.sued_tot[6]) * 100 : 0;
+  const teamDrag32 = Math.max(0, fact.dist_no_op[_li] - fact.dist[_li]);
+  const founderShare32 = fact.sued_tot[_li] > 0 ? (fact.sued_f[_li] / fact.sued_tot[_li]) * 100 : 0;
+  const opShareMix32 = fact.sued_tot[_li] > 0 ? (fact.hcost[_li] / fact.sued_tot[_li]) * 100 : 0;
   sv('team-share26', teamShare26.toFixed(0)+'%');
   sv('team-share32', teamShare32.toFixed(0)+'%');
   sv('team-accum', fmt(teamAccum));
@@ -2607,7 +2611,7 @@ function recalc(){
   sv('team-postpay30', fmt(fact.colchon[4]));
   const totH26=fact.hcost[0];
   const nh=sel('nota-hires');
-  nh.innerHTML=`Planilla operativa: <strong style="color:var(--coral)">${fmt(totH26)}/mes en 2026</strong>, <strong style="color:var(--gold)">${fmt(fact.hcost[6])}/mes en 2032</strong>. Sin este equipo las marcas no escalan — es un costo necesario, no opcional.`;
+  nh.innerHTML=`Planilla operativa: <strong style="color:var(--coral)">${fmt(totH26)}/mes en 2026</strong>, <strong style="color:var(--gold)">${fmt(fact.hcost[_li])}/mes en ${_lastYear}</strong>. Sin este equipo las marcas no escalan — es un costo necesario, no opcional.`;
   const teamNote=sel('team-note');
   if(teamNote){
     teamNote.innerHTML=`El equipo operativo consume <strong>${teamShare26.toFixed(0)}%</strong> del neto en 2026 y <strong>${teamShare32.toFixed(0)}%</strong> en 2032. En términos de distribuible, arrastra <strong>${fmt(teamDrag30)}/mes</strong> en 2030 y <strong>${fmt(teamDrag32)}/mes</strong> en 2032. La lectura correcta no es “esto sobra”: es “esto compra capacidad de ejecución a costa de distribuir más tarde”.`;
@@ -3055,9 +3059,9 @@ function paintEffortTable(fact){
         for(var yi=0;yi<AÑOS.length;yi++){
           bhtml+='<td><input type="number" class="line-input line-vol" value="'+line.vols[yi]+'" data-line="'+line.id+'" data-field="vol" data-yi="'+yi+'" min="0"'+(line.vols[yi]===0?' style="opacity:.4"':'')+'></td>';
         }
-        bhtml+='<td style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap">'+fmt(line.rev[6])+'</td></tr>';
+        bhtml+='<td style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap">'+fmt(line.rev[AÑOS.length-1])+'</td></tr>';
       });
-      var brandTotal=blines.reduce(function(s,l){return s+l.rev[6]},0);
+      var brandTotal=blines.reduce(function(s,l){return s+l.rev[AÑOS.length-1]},0);
       bhtml+='<tr style="border-top:2px solid var(--brd)"><td style="font-weight:700;font-size:.78rem">Total/mes</td><td></td>';
       for(var yt=0;yt<AÑOS.length;yt++){
         var yrTotal=blines.reduce(function(s,l){return s+l.rev[yt]},0);
@@ -3078,8 +3082,8 @@ function paintEffortTable(fact){
   if(noteEl){
     var scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
     var firstDistYr=null;
-    for(var y=1;y<=6;y++){if(fact.dist[y]>0){firstDistYr=2026+y;break;}}
-    var umbralEquity=fmt(Math.round(fact.sued_tot[6]/P.netoPct));
+    for(var y=1;y<AÑOS.length;y++){if(fact.dist[y]>0){firstDistYr=AÑOS[y];break;}}
+    var umbralEquity=fmt(Math.round(fact.sued_tot[_li]/P.netoPct));
     var nt='Escenario <strong>'+scn[P.sc]+'</strong>. ';
     nt+=(firstDistYr?'El primer año con distribuible es <strong style="color:var(--gold)">'+firstDistYr+'</strong>. ':'<span style="color:var(--coral)">No hay distribuible en el horizonte (2027–2033).</span> ');
     nt+='Para que el equipo reciba equity, la facturación bruta total debe superar <strong style="color:var(--teal)">'+umbralEquity+'</strong>/mes (planilla ÷ neto%).';
@@ -3106,15 +3110,15 @@ function paintEffortTable(fact){
     nt+='</div>';
 
     nt+='<div style="margin-top:.5rem;padding:.6rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
-    nt+='<strong style="color:var(--teal)">Facturación necesaria por marca en 2032:</strong><br>';
-    nt+='Almaria debe facturar <strong style="color:var(--green)">'+fmt(fact.alm[6])+'</strong>/mes ('+fmt(Math.round(fact.alm[6]/22))+'/día laboral).<br>';
-    nt+='HugoTech debe facturar <strong style="color:var(--green)">'+fmt(fact.ht[6])+'</strong>/mes ('+fmt(Math.round(fact.ht[6]/22))+'/día laboral).<br>';
-    nt+='Total ecosistema: <strong>'+fmt(fact.total[6])+'</strong>/mes bruto → <strong style="color:var(--gold)">'+fmt(fact.neto[6])+'</strong>/mes neto.';
+    nt+='<strong style="color:var(--teal)">Facturación necesaria por marca en '+_lastYear+':</strong><br>';
+    nt+='Almaria debe facturar <strong style="color:var(--green)">'+fmt(fact.alm[_li])+'</strong>/mes ('+fmt(Math.round(fact.alm[_li]/22))+'/día laboral).<br>';
+    nt+='HugoTech debe facturar <strong style="color:var(--green)">'+fmt(fact.ht[_li])+'</strong>/mes ('+fmt(Math.round(fact.ht[_li]/22))+'/día laboral).<br>';
+    nt+='Total ecosistema: <strong>'+fmt(fact.total[_li])+'</strong>/mes bruto → <strong style="color:var(--gold)">'+fmt(fact.neto[_li])+'</strong>/mes neto.';
     nt+='</div>';
 
     nt+='<div style="margin-top:.5rem;padding:.6rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
     nt+='<strong style="color:var(--coral)">Equipo operativo actual y proyectado:</strong><br>';
-    nt+='Hoy (2026): <strong>'+fmt(fact.hcost[0])+'</strong>/mes → 2032: <strong>'+fmt(fact.hcost[6])+'</strong>/mes.<br>';
+    nt+='Hoy (2026): <strong>'+fmt(fact.hcost[0])+'</strong>/mes → '+_lastYear+': <strong>'+fmt(fact.hcost[_li])+'</strong>/mes.<br>';
     nt+='Incluye content creators, editor, comercial (base + 10% revenue), contadora, y posiciones futuras (community manager 2028, asistente ops 2029).';
     nt+='</div>';
 
