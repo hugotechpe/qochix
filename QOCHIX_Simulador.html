@@ -3220,65 +3220,70 @@ function paintPartnerCards(derived, fact, eqById){
     }
     h+='</table>';
 
-    // --- Sueldo + Equity vs Tope (mensual) ---
+    // --- Ingreso real vs Tope (mensual) ---
     h+='<div class="ptnr-divider"></div>';
     var tope=Number(p.sueldoTope||p.sueldo||0);
-    h+='<div class="ptnr-section-lbl"><span>Sueldo + Equity <span style="color:var(--gold)">/mes</span></span>';
-    h+='<span style="font-size:.55rem;color:var(--muted);margin-left:.3rem">tope: <strong style="color:var(--gold)">'+fmt(tope)+'</strong></span></div>';
+    h+='<div class="ptnr-section-lbl"><span>Ingreso real <span style="color:var(--gold)">/mes</span></span>';
+    h+='<span style="font-size:.55rem;color:var(--muted);margin-left:.3rem">tope sueldo: <strong style="color:var(--gold)">'+fmt(tope)+'</strong></span></div>';
     h+='<table class="ptnr-tbl-eq">';
-    h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>brecha</td><td>equity</td><td>total</td></tr>';
-    var sumSueAn=0, sumEqAn=0, sumTotAn=0, sumBrechaAn=0;
+    h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>reinv.</td><td>equity</td><td>neto</td></tr>';
+    var sumCapAn=0, sumReinvAn=0, sumEqAn=0, sumNetoAn=0;
     var nYrs=AÑOS.length-1;
     for(var j=1;j<AÑOS.length;j++){
       var yr2=AÑOS[j];
-      var sue2=realCurves[p.id]?realCurves[p.id][j]:0;
+      var sueCurva=realCurves[p.id]?realCurves[p.id][j]:0;
+      var sueCapped=Math.min(sueCurva,tope);
+      var reinv=Math.max(0,sueCurva-tope);
       var eqAmt=Math.round(fact.dist[j]*(pc.equity/100));
-      var brecha=Math.max(0,tope-sue2);
-      var total=sue2+eqAmt;
-      var cubreBrecha=Math.min(eqAmt,brecha);
-      var excedeBrecha=eqAmt>brecha;
-      sumSueAn+=sue2*12; sumEqAn+=eqAmt*12; sumTotAn+=total*12; sumBrechaAn+=brecha*12;
+      var neto=sueCapped+eqAmt;
+      sumCapAn+=sueCapped*12; sumReinvAn+=reinv*12; sumEqAn+=eqAmt*12; sumNetoAn+=neto*12;
       h+='<tr><td>'+yr2+'</td>';
-      h+='<td style="color:var(--teal)">'+fmt(sue2)+'</td>';
-      if(brecha>0){
-        h+='<td style="color:var(--coral);font-size:.6rem" title="Falta '+fmt(brecha)+' para llegar al tope">'+fmt(brecha)+'</td>';
+      if(sueCurva>tope){
+        h+='<td style="color:var(--teal)" title="Curva: '+fmt(sueCurva)+' → topeado a '+fmt(tope)+'">'+fmt(sueCapped)+'</td>';
       } else {
-        h+='<td style="color:var(--green);font-size:.6rem" title="Sueldo ya cubre el tope">✓</td>';
+        h+='<td style="color:var(--teal)">'+fmt(sueCapped)+'</td>';
       }
-      if(excedeBrecha){
-        h+='<td style="color:var(--gold)" title="Cubre brecha + excedente '+fmt(eqAmt-brecha)+'">'+fmt(eqAmt)+'</td>';
-      } else if(eqAmt>0 && brecha>0){
-        h+='<td style="color:var(--gold);opacity:.75" title="Cubre '+fmt(cubreBrecha)+' de '+fmt(brecha)+' de brecha">'+fmt(eqAmt)+'</td>';
+      if(reinv>0){
+        h+='<td style="color:var(--green);font-size:.58rem" title="Excedente sobre el tope → caja interna">'+fmt(reinv)+'</td>';
       } else {
-        h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
+        h+='<td style="color:var(--muted);font-size:.58rem;opacity:.3">—</td>';
       }
-      var totColor=total>=tope?'var(--green)':'var(--text)';
-      h+='<td style="color:'+totColor+'">'+fmt(total)+'</td></tr>';
+      h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
+      var netoColor=neto>=tope?'var(--green)':'var(--text)';
+      h+='<td style="color:'+netoColor+';font-weight:700">'+fmt(neto)+'</td></tr>';
     }
-    h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Σ '+nYrs+' años</td>';
-    h+='<td style="color:var(--teal)">'+fmt(sumSueAn)+'</td>';
-    h+='<td style="color:var(--coral);font-size:.55rem">'+fmt(sumBrechaAn)+'</td>';
+    h+='<tr class="ptnr-sum"><td style="font-size:.5rem">Σ '+nYrs+'a</td>';
+    h+='<td style="color:var(--teal)">'+fmt(sumCapAn)+'</td>';
+    h+='<td style="color:var(--green);font-size:.55rem">'+fmt(sumReinvAn)+'</td>';
     h+='<td style="color:var(--gold)">'+fmt(sumEqAn)+'</td>';
-    h+='<td style="color:var(--green)">'+fmt(sumTotAn)+'</td></tr>';
+    h+='<td style="color:var(--green)">'+fmt(sumNetoAn)+'</td></tr>';
     h+='</table>';
-    h+='<div style="font-size:.5rem;color:var(--muted);opacity:.55;margin-top:.2rem;text-align:right">Σ = sumatoria mensual × 12 meses × '+nYrs+' años</div>';
-    // Progress bar: ¿Cuánto del tope se alcanza en el último año?
-    var lastSue=realCurves[p.id]?realCurves[p.id][AÑOS.length-1]:0;
+    h+='<div style="font-size:.48rem;color:var(--muted);opacity:.55;margin-top:.15rem;text-align:right">Sueldo topeado a '+fmt(tope)+' · Excedente va a caja interna</div>';
+
+    // Barra: ingreso neto vs tope en último año
+    var lastCapped=Math.min(realCurves[p.id]?realCurves[p.id][AÑOS.length-1]:0,tope);
     var lastEq=Math.round(fact.dist[AÑOS.length-1]*(pc.equity/100));
-    var lastTotal=lastSue+lastEq;
-    var pctTope=tope>0?Math.min(100,Math.round(lastTotal/tope*100)):0;
+    var lastNeto=lastCapped+lastEq;
+    var lastReinv=Math.max(0,(realCurves[p.id]?realCurves[p.id][AÑOS.length-1]:0)-tope);
+    var pctTope=tope>0?Math.min(999,Math.round(lastNeto/tope*100)):0;
+    var barPct=Math.min(100,pctTope);
     var barColor=pctTope>=100?'var(--green)':pctTope>=70?'var(--gold)':'var(--coral)';
-    h+='<div style="margin-top:.35rem;background:rgba(255,255,255,.06);border-radius:6px;height:14px;overflow:hidden;position:relative">';
-    h+='<div style="height:100%;width:'+pctTope+'%;background:'+barColor+';border-radius:6px;transition:width .3s"></div>';
-    h+='<span style="position:absolute;top:0;left:0;right:0;text-align:center;font-size:.55rem;line-height:14px;color:var(--text);font-weight:600">'+pctTope+'% del tope en '+AÑOS[AÑOS.length-1]+'</span>';
-    h+='</div>';
+    h+='<div style="margin-top:.35rem;background:rgba(255,255,255,.06);border-radius:6px;height:16px;overflow:hidden;position:relative">';
+    h+='<div style="height:100%;width:'+barPct+'%;background:'+barColor+';border-radius:6px;transition:width .3s"></div>';
+    h+='<span style="position:absolute;top:0;left:0;right:0;text-align:center;font-size:.55rem;line-height:16px;color:var(--text);font-weight:600">';
+    h+=pctTope+'% del tope en '+AÑOS[AÑOS.length-1];
+    if(lastReinv>0) h+=' · '+fmt(lastReinv)+' reinvertido';
+    h+='</span></div>';
 
     // --- Footer con métricas clave ---
     h+='<div class="ptnr-foot">';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado/mes</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
-    var mult=(pc.totalLast||pc.total2032||0)/Math.max(1,tope);
-    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador '+AÑOS[AÑOS.length-1]+'</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
+    var multNeto=lastNeto/Math.max(1,tope);
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador '+AÑOS[AÑOS.length-1]+'</span><span class="ptnr-foot-val" style="color:'+(multNeto>=1?'var(--green)':'var(--coral)')+'">×'+multNeto.toFixed(1)+'</span></div>';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.cashContribution||0)+'</span></div>';
+    if(sumReinvAn>0){
+      h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Reinversión acum.</span><span class="ptnr-foot-val" style="color:var(--green)">'+fmt(sumReinvAn)+'</span></div>';
+    }
     var libYr=pc.liberationYear;
     var libOk=typeof libYr==='number'&&libYr<=AÑOS[AÑOS.length-1];
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Año liberación</span><span class="ptnr-lib-tag '+(libOk?'ptnr-lib-ok':'ptnr-lib-warn')+'">'+libYr+'</span></div>';

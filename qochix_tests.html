@@ -75,11 +75,13 @@
   assert('breakEven es número o 2034+', typeof d.breakEven === 'number' || d.breakEven === '2034+', 'be=' + d.breakEven);
   assert('fact tiene 8 arrays', d.fact.alm.length === 8 && d.fact.neto.length === 8);
 
-  group('sueldoTope y brecha');
+  group('sueldoTope e ingreso neto');
   var hugo = d.personCards.find(function(p){return p.id==='hugo'});
   assert('sueldoTope existe en personCard', hugo.sueldoTope > 0, 'tope=' + hugo.sueldoTope);
-  assert('brechaLast >= 0', hugo.brechaLast >= 0, 'brecha=' + hugo.brechaLast);
-  assert('eqCubreBrechaLast <= eqLast', hugo.eqCubreBrechaLast <= hugo.eqLast);
+  assert('sueCappedLast <= sueldoTope', hugo.sueCappedLast <= hugo.sueldoTope, 'capped=' + hugo.sueCappedLast);
+  assert('netoLast = capped + equity', hugo.netoLast === hugo.sueCappedLast + hugo.eqLast);
+  assert('reinvLast >= 0', hugo.reinvLast >= 0, 'reinv=' + hugo.reinvLast);
+  assert('yearlyNetos tiene 8 elementos', hugo.yearlyNetos.length === 8);
   assert('liberationYear compara vs sueldoTope', typeof hugo.liberationYear !== 'undefined');
 
   group('Escenarios impactan facturación');

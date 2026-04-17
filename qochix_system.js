@@ -804,19 +804,25 @@
     const personCards = state.persons.map((person) => {
       const pCurve = realCurves[person.id] || [];
       const swData = sw(person, pCurve);
+      const sueldoTope = Number(person.sueldoTope || person.sueldo || 0);
       const yearlyTotals = AÑOS.map((_, index) => {
         const sue = Number(pCurve[index] || 0);
         const eq = Math.round(Number(fact.dist[index] || 0) * Number(effectiveEquity[person.id] || 0) / 100);
         return sue + eq;
       });
-      const sueldoTope = Number(person.sueldoTope || person.sueldo || 0);
-      const crossIndex = yearlyTotals.findIndex((value) => value >= sueldoTope);
+      const yearlyNetos = AÑOS.map((_, index) => {
+        const sue = Number(pCurve[index] || 0);
+        const sueCapped = Math.min(sue, sueldoTope);
+        const eq = Math.round(Number(fact.dist[index] || 0) * Number(effectiveEquity[person.id] || 0) / 100);
+        return sueCapped + eq;
+      });
+      const crossIndex = yearlyNetos.findIndex((value) => value >= sueldoTope);
       const eqLast = Math.round(fact.dist[lastYi] * Number(effectiveEquity[person.id] || 0) / 100);
       const sueLast = Number(pCurve[lastYi] || 0);
+      const sueCappedLast = Math.min(sueLast, sueldoTope);
+      const reinvLast = Math.max(0, sueLast - sueldoTope);
+      const netoLast = sueCappedLast + eqLast;
       const totalLast = sueLast + eqLast;
-      const brechaLast = Math.max(0, sueldoTope - sueLast);
-      const eqCubreBrechaLast = Math.min(eqLast, brechaLast);
-      const eqExcedenteLast = Math.max(0, eqLast - brechaLast);
       const brandCap = totalBrandCapital(person);
       const brandCash = totalBrandCash(person);
       const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash + swData.sw;
@@ -834,13 +840,14 @@
         sue2030: Number(state.P.sue30[person.id] || 0),
         sueldoTope,
         sueLast,
+        sueCappedLast,
+        reinvLast,
         eqLast,
+        netoLast,
         totalLast,
-        brechaLast,
-        eqCubreBrechaLast,
-        eqExcedenteLast,
         investment,
         yearlyTotals,
+        yearlyNetos,
         liberationYear: crossIndex >= 0 ? AÑOS[crossIndex] : beyondLabel,
       };
     });
