@@ -1062,77 +1062,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ══ TAB: EQUIPO ══ -->
 <div id="tab-equipo" class="tab-content active">
 
-  <div class="nota warn" style="margin-bottom:1rem">
-    <strong>⚠️ Esto es lo que el modelo original NO incluía.</strong> El equipo operativo (fuera del equipo co-fundador) reduce directamente el distribuible. Sin esto, los números de 2027 están sobreestimados.
-  </div>
-
-  <div class="be-grid">
-    <div class="be-card">
-      <div class="be-lbl">Planilla operativa 2026</div>
-      <div class="be-val cg" id="be-op26">—</div>
-      <div class="be-sub">S/mes (equipo no-fundador)</div>
-    </div>
-    <div class="be-card">
-      <div class="be-lbl">Planilla operativa 2032</div>
-      <div class="be-val cg" id="be-op32">—</div>
-      <div class="be-sub">S/mes proyectado</div>
-    </div>
-    <div class="be-card">
-      <div class="be-lbl">Personas en equipo 2032</div>
-      <div class="be-val cv" id="be-headcount">—</div>
-      <div class="be-sub">incluyendo co-fundadores</div>
-    </div>
-  </div>
-
-  <div class="dash-note" id="team-note">
-    Esta capa usa el mismo motor de cálculo del simulador para medir cuánto pesa el equipo operativo sobre el neto, el distribuible y el break-even.
-  </div>
-
-  <div class="dash-grid" style="margin-bottom:1.1rem">
-    <div class="dash-card">
-      <div class="dash-lbl">Peso sobre neto 2026</div>
-      <div class="dash-val" id="team-share26">—</div>
-      <div class="dash-sub">qué % del neto se consume solo en equipo operativo</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Peso sobre neto 2032</div>
-      <div class="dash-val" id="team-share32">—</div>
-      <div class="dash-sub">presión del equipo no fundador en madurez</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Costo acumulado 8 años</div>
-      <div class="dash-val" id="team-accum">—</div>
-      <div class="dash-sub">suma anualizada 2026–2032 del equipo operativo</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Año bloqueado por equipo</div>
-      <div class="dash-val" id="team-block-year">—</div>
-      <div class="dash-sub">primer año donde sin equipo sí habría reparto, pero con equipo no</div>
-    </div>
-  </div>
-
-  <div class="dash-grid" style="margin-bottom:1.3rem">
-    <div class="dash-card">
-      <div class="dash-lbl">Impacto en distrib. 2030</div>
-      <div class="dash-val" id="team-drag30">—</div>
-      <div class="dash-sub">cuánto distribuye menos por incluir equipo operativo</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Impacto en distrib. 2032</div>
-      <div class="dash-val" id="team-drag32">—</div>
-      <div class="dash-sub">arrastre mensual del equipo operativo en el horizonte</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Fundadores vs op 2032</div>
-      <div class="dash-val" id="team-mix32">—</div>
-      <div class="dash-sub">peso relativo entre planilla fundadora y operativa</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Margen tras planilla 2030</div>
-      <div class="dash-val" id="team-postpay30">—</div>
-      <div class="dash-sub">colchón antes de reserva después de pagar toda la estructura</div>
-    </div>
-  </div>
+  <div id="team-section-dynamic"></div>
   <div class="nota" id="team-alert" style="margin-bottom:1rem"></div>
 
   <div class="panel open">
@@ -3040,44 +2970,33 @@ function recalc(){
     }
   }
 
-  // ── EQUIPO tab ──
-  sv('be-op26',fmt(fact.hcost[0]));
-  sv('be-op32',fmt(fact.hcost[_li]));
-  sv('be-headcount',(HIRES.length+PERSONS.length)+' personas');
+  // ── EQUIPO tab (dinámico) ──
   const teamShare26 = fact.neto[0] > 0 ? (fact.hcost[0] / fact.neto[0]) * 100 : 0;
   const teamShare32 = fact.neto[_li] > 0 ? (fact.hcost[_li] / fact.neto[_li]) * 100 : 0;
-  const teamAccum = fact.hcost.reduce((sum,v)=>sum + (v * 12), 0);
-  const teamBlockYear = AÑOS.find((year,idx)=>fact.dist_no_op[idx] > 0 && fact.dist[idx] === 0) || '—';
+  const teamAccum = fact.hcost.reduce(function(sum,v,i){return sum + (v * ([9,12,12,12,12,12,12,12][i]||12));}, 0);
+  const teamBlockYear = AÑOS.find(function(year,idx){return fact.dist_no_op[idx] > 0 && fact.dist[idx] === 0;}) || '—';
   const teamDrag30 = Math.max(0, fact.dist_no_op[4] - fact.dist[4]);
   const teamDrag32 = Math.max(0, fact.dist_no_op[_li] - fact.dist[_li]);
   const founderShare32 = fact.sued_tot[_li] > 0 ? (fact.sued_f[_li] / fact.sued_tot[_li]) * 100 : 0;
   const opShareMix32 = fact.sued_tot[_li] > 0 ? (fact.hcost[_li] / fact.sued_tot[_li]) * 100 : 0;
-  sv('team-share26', teamShare26.toFixed(0)+'%');
-  sv('team-share32', teamShare32.toFixed(0)+'%');
-  sv('team-accum', fmt(teamAccum));
-  sv('team-block-year', String(teamBlockYear));
-  sv('team-drag30', fmt(teamDrag30));
-  sv('team-drag32', fmt(teamDrag32));
-  sv('team-mix32', founderShare32.toFixed(0)+'% / '+opShareMix32.toFixed(0)+'%');
-  sv('team-postpay30', fmt(fact.colchon[4]));
-  const totH26=fact.hcost[0];
-  const nh=sel('nota-hires');
-  nh.innerHTML=`Planilla operativa: <strong style="color:var(--coral)">${fmt(totH26)}/mes en 2026</strong>, <strong style="color:var(--gold)">${fmt(fact.hcost[_li])}/mes en ${_lastYear}</strong>. Sin este equipo las marcas no escalan — es un costo necesario, no opcional.`;
-  const teamNote=sel('team-note');
-  if(teamNote){
-    teamNote.innerHTML=`El equipo operativo consume <strong>${teamShare26.toFixed(0)}%</strong> del neto en 2026 y <strong>${teamShare32.toFixed(0)}%</strong> en 2032. En términos de distribuible, arrastra <strong>${fmt(teamDrag30)}/mes</strong> en 2030 y <strong>${fmt(teamDrag32)}/mes</strong> en 2032. La lectura correcta no es “esto sobra”: es “esto compra capacidad de ejecución a costa de distribuir más tarde”.`;
-  }
-  const teamAlert=sel('team-alert');
+  const teamGrowthPct = fact.hcost[0]>0?Math.round(((fact.hcost[_li]/fact.hcost[0])-1)*100):0;
+  const activeHires26 = HIRES.filter(function(h){return !h.startYear||h.startYear<=2026;});
+  const activeHiresLast = HIRES.filter(function(h){return !h.startYear||h.startYear<=AÑOS[_li];});
+  const costPerBrand = Math.round(fact.hcost[_li]/2);
+  paintTeamSection(fact,AÑOS,_li,_lastYear,PERSONS,HIRES,fmt,teamShare26,teamShare32,teamAccum,teamBlockYear,teamDrag30,teamDrag32,founderShare32,opShareMix32,teamGrowthPct,activeHires26,activeHiresLast,costPerBrand);
+  var nh=sel('nota-hires');
+  if(nh) nh.innerHTML='Planilla operativa: <strong style="color:var(--coral)">'+fmt(fact.hcost[0])+'/mes en '+AÑOS[0]+'</strong> → <strong style="color:var(--gold)">'+fmt(fact.hcost[_li])+'/mes en '+_lastYear+'</strong> (+'+teamGrowthPct+'%). Sin este equipo las marcas no escalan.';
+  var teamAlert=sel('team-alert');
   if(teamAlert){
     if(teamBlockYear!=='—'){
       teamAlert.className='nota warn';
-      teamAlert.innerHTML=`⚠️ <strong>El equipo operativo bloquea reparto en ${teamBlockYear}:</strong> sin esa capa ya habría distribuible, pero con ella el sistema lo consume para ejecutar. Solo vale la pena si esa estructura realmente acelera ventas y entrega.`;
+      teamAlert.innerHTML='⚠️ <strong>El equipo operativo bloquea reparto en '+teamBlockYear+':</strong> sin esa capa ya habría distribuible.';
     }else if(teamShare32>=35){
       teamAlert.className='nota';
-      teamAlert.innerHTML=`ℹ️ <strong>Peso operativo relevante:</strong> incluso en 2032 el equipo no fundador consume ${teamShare32.toFixed(0)}% del neto. No es una alarma, pero sí una capa que exige productividad visible.`;
+      teamAlert.innerHTML='ℹ️ <strong>Peso operativo relevante:</strong> en '+_lastYear+' el equipo no fundador consume '+teamShare32.toFixed(0)+'% del neto.';
     }else{
       teamAlert.className='nota ok';
-      teamAlert.innerHTML=`✅ <strong>Peso operativo saludable:</strong> la estructura no fundadora acompaña la escala sin tragarse una porción excesiva del neto al horizonte.`;
+      teamAlert.innerHTML='✅ <strong>Peso operativo saludable:</strong> la estructura no fundadora acompaña la escala sin consumir una porción excesiva del neto.';
     }
   }
 
@@ -4137,6 +4056,80 @@ function paintFlowTab(){
 
   paintFlowCalc();
   }catch(e){console.error('paintFlowTab error:',e);}
+}
+
+function paintTeamSection(fact,AÑOS,_li,_lastYear,PERSONS,HIRES,fmt,teamShare26,teamShare32,teamAccum,teamBlockYear,teamDrag30,teamDrag32,founderShare32,opShareMix32,teamGrowthPct,activeHires26,activeHiresLast,costPerBrand){
+  var el=document.getElementById('team-section-dynamic');
+  if(!el) return;
+  var cs='background:var(--bg2);border:1px solid var(--brd);border-radius:14px;padding:1rem 1.1rem;margin-bottom:.85rem;';
+  var hS='font-weight:800;font-size:.85rem;margin-bottom:.4rem;letter-spacing:.01em;';
+  var t='';
+
+  t+='<div style="padding:.8rem 1rem;background:rgba(232,107,95,.06);border:1px solid rgba(232,107,95,.15);border-radius:12px;margin-bottom:1rem">';
+  t+='<div style="font-size:.78rem;color:var(--coral);font-weight:700;margin-bottom:.3rem">⚠️ ¿Por qué importa el equipo operativo?</div>';
+  t+='<div style="font-size:.75rem;color:var(--text2);line-height:1.6">El equipo no-fundador (content, comercial, contadora, etc.) <strong>reduce directamente el distribuible</strong>. Su costo sale del neto antes de que los socios vean un sol de equity. Es inversión necesaria para escalar, pero hay que dimensionarla bien.</div>';
+  t+='</div>';
+
+  t+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1rem">';
+  t+='<div style="'+cs+'text-align:center"><div style="font-size:.65rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Planilla operativa '+AÑOS[0]+'</div><div style="font-family:var(--serif);font-size:1.6rem;font-weight:800;color:var(--green);line-height:1.15">'+fmt(fact.hcost[0])+'</div><div style="font-size:.7rem;color:var(--muted)">S/mes · '+activeHires26.length+' personas activas</div></div>';
+  t+='<div style="'+cs+'text-align:center"><div style="font-size:.65rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Planilla operativa '+_lastYear+'</div><div style="font-family:var(--serif);font-size:1.6rem;font-weight:800;color:var(--gold);line-height:1.15">'+fmt(fact.hcost[_li])+'</div><div style="font-size:.7rem;color:var(--muted)">S/mes proyectado · +'+teamGrowthPct+'% crecimiento</div></div>';
+  t+='<div style="'+cs+'text-align:center"><div style="font-size:.65rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Personas en equipo '+_lastYear+'</div><div style="font-family:var(--serif);font-size:1.6rem;font-weight:800;color:var(--teal);line-height:1.15">'+(PERSONS.length+activeHiresLast.length)+'</div><div style="font-size:.7rem;color:var(--muted)">'+PERSONS.length+' fundadores + '+activeHiresLast.length+' operativos</div></div>';
+  t+='</div>';
+
+  t+='<div style="'+cs+'">';
+  t+='<div style="'+hS+'color:var(--orange)">👥 Desglose del equipo operativo</div>';
+  t+='<div style="font-size:.7rem;color:var(--muted);margin-bottom:.6rem">Cada persona, su sueldo actual y proyectado. Los sueldos crecen anualmente según su factor de crecimiento.</div>';
+  t+='<table style="width:100%;border-collapse:collapse;font-size:.72rem"><thead><tr style="border-bottom:1px solid var(--brd)"><th style="text-align:left;padding:.35rem .3rem;color:var(--muted);font-weight:600">Rol</th><th style="text-align:center;padding:.35rem .2rem;color:var(--muted);font-weight:600">Marca</th><th style="text-align:center;padding:.35rem .2rem;color:var(--muted);font-weight:600">Inicio</th><th style="text-align:right;padding:.35rem .2rem;color:var(--muted);font-weight:600">Sueldo hoy</th><th style="text-align:right;padding:.35rem .2rem;color:var(--muted);font-weight:600">Crec./año</th><th style="text-align:right;padding:.35rem .2rem;color:var(--muted);font-weight:600">Sueldo '+_lastYear+'</th></tr></thead><tbody>';
+  HIRES.forEach(function(h){
+    var startYi=h.startYear?Math.max(0,AÑOS.indexOf(h.startYear)):0;
+    var lastSue=Math.round(Number(h.sue||0)*Math.pow(Number(h.growth||1),_li-startYi));
+    var gPct=Math.round((Number(h.growth||1)-1)*100);
+    var isAct=!h.startYear||h.startYear<=AÑOS[0];
+    t+='<tr style="border-bottom:1px solid rgba(255,255,255,.04)'+(isAct?'':';opacity:.6')+'"><td style="padding:.4rem .3rem;font-weight:600;color:var(--text)">'+h.role+'</td><td style="text-align:center;padding:.4rem .2rem;color:var(--muted)">'+(h.brand||'Mixto')+'</td><td style="text-align:center;padding:.4rem .2rem;color:'+(isAct?'var(--green)':'var(--sky)')+'">'+(h.startYear||AÑOS[0])+'</td><td style="text-align:right;padding:.4rem .2rem;color:var(--text);font-weight:600">'+fmt(h.sue)+'</td><td style="text-align:right;padding:.4rem .2rem;color:var(--muted)">+'+gPct+'%</td><td style="text-align:right;padding:.4rem .2rem;color:var(--gold);font-weight:700">'+fmt(lastSue)+'</td></tr>';
+  });
+  t+='<tr style="border-top:2px solid var(--brd)"><td colspan="3" style="padding:.5rem .3rem;font-weight:800;color:var(--text)">TOTAL</td><td style="text-align:right;padding:.5rem .2rem;font-weight:800;color:var(--green)">'+fmt(fact.hcost[0])+'</td><td></td><td style="text-align:right;padding:.5rem .2rem;font-weight:800;color:var(--gold)">'+fmt(fact.hcost[_li])+'</td></tr>';
+  t+='</tbody></table></div>';
+
+  t+='<div style="'+cs+'">';
+  t+='<div style="'+hS+'color:var(--sky)">📊 Evolución año por año</div>';
+  t+='<div style="font-size:.7rem;color:var(--muted);margin-bottom:.5rem">Cómo crece la planilla operativa y qué % del neto consume cada año.</div>';
+  t+='<div style="display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.3rem">';
+  AÑOS.forEach(function(y,yi){
+    if(yi===0) return;
+    var hc=fact.hcost[yi];
+    var netoY=fact.neto[yi];
+    var sPct=netoY>0?Math.round(hc/netoY*100):0;
+    var bH=Math.min(100,Math.max(8,Math.round(hc/Math.max(1,fact.hcost[_li])*100)));
+    var ok=sPct<25;
+    t+='<div style="flex:1;min-width:80px;text-align:center"><div style="font-size:.68rem;font-weight:700;color:var(--text)">'+y+'</div><div style="height:60px;display:flex;align-items:flex-end;justify-content:center;margin:.3rem 0"><div style="width:70%;height:'+bH+'%;background:'+(ok?'var(--sky)':'var(--orange)')+';opacity:.5;border-radius:4px 4px 0 0;transition:height .5s"></div></div><div style="font-size:.78rem;font-weight:700;color:var(--text)">'+fmt(hc)+'</div><div style="font-size:.62rem;color:'+(ok?'var(--green)':'var(--orange)')+'">'+sPct+'% del neto</div></div>';
+  });
+  t+='</div></div>';
+
+  t+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem;margin-bottom:1rem">';
+  var mc=[
+    {lbl:'Costo acumulado total',val:fmt(teamAccum),sub:'suma de toda la planilla operativa en el horizonte',c:'var(--coral)'},
+    {lbl:'Costo por marca/mes ('+_lastYear+')',val:fmt(costPerBrand),sub:'cada marca asume la mitad (roles mixtos)',c:'var(--orange)'},
+    {lbl:'Impacto distribuible '+_lastYear,val:teamDrag32>0?'-'+fmt(teamDrag32)+'/mes':'Sin impacto',sub:teamDrag32>0?'lo que se deja de repartir por tener equipo':'el equipo se paga sin afectar reparto',c:teamDrag32>0?'var(--coral)':'var(--green)'},
+    {lbl:'Año que bloquea reparto',val:String(teamBlockYear),sub:teamBlockYear!=='—'?'sin equipo habría distribuible ese año':'el equipo no bloquea ningún año',c:teamBlockYear!=='—'?'var(--coral)':'var(--green)'},
+    {lbl:'Fundadores vs operativos',val:founderShare32.toFixed(0)+'% / '+opShareMix32.toFixed(0)+'%',sub:'distribución de planilla total en '+_lastYear,c:'var(--sky)'},
+    {lbl:'Margen tras planilla (2030)',val:fmt(fact.colchon[4]),sub:'colchón mensual tras pagar socios + equipo',c:fact.colchon[4]>=0?'var(--green)':'var(--coral)'},
+  ];
+  mc.forEach(function(m){
+    t+='<div style="'+cs+'"><div style="font-size:.62rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">'+m.lbl+'</div><div style="font-family:var(--serif);font-size:1.15rem;font-weight:800;color:'+m.c+';line-height:1.2;margin:.2rem 0">'+m.val+'</div><div style="font-size:.65rem;color:var(--muted);line-height:1.4">'+m.sub+'</div></div>';
+  });
+  t+='</div>';
+
+  t+='<div style="padding:.75rem 1rem;background:rgba(100,149,237,.05);border:1px solid rgba(100,149,237,.12);border-radius:12px;margin-bottom:.8rem">';
+  t+='<div style="font-size:.75rem;color:var(--text2);line-height:1.65">';
+  t+='<strong style="color:var(--sky)">¿Cómo leer estos números?</strong><br>';
+  t+='El equipo operativo ('+activeHiresLast.length+' personas al '+_lastYear+') consume <strong>'+teamShare26.toFixed(0)+'%</strong> del neto en '+AÑOS[0]+' y <strong>'+teamShare32.toFixed(0)+'%</strong> en '+_lastYear+'. ';
+  t+=(teamShare32<teamShare26?'<strong style="color:var(--green)">Buena señal:</strong> el peso baja — las ventas escalan más rápido que la planilla.':'<strong style="color:var(--orange)">Atención:</strong> el peso sube o se mantiene — la planilla crece al ritmo de las ventas.');
+  t+='<br><br><strong>Impacto en el bolsillo:</strong> en '+_lastYear+' el equipo arrastra <strong>'+fmt(teamDrag32)+'/mes</strong> del distribuible. ';
+  t+=(teamDrag32>0?'Eso son <strong>'+fmt(teamDrag32*12)+'/año</strong> que se invierten en ejecución en vez de repartirse.':'No hay arrastre — el equipo se financia sin afectar la distribución.');
+  if(teamBlockYear!=='—') t+='<br><br>⚠️ <strong style="color:var(--coral)">En '+teamBlockYear+'</strong> el equipo operativo bloquea reparto: sin esa capa habría distribuible, pero con ella el neto se consume en estructura.';
+  t+='</div></div>';
+
+  el.innerHTML=t;
 }
 
 function paintFlowCalc(){
