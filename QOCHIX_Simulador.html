@@ -4119,14 +4119,10 @@ var _isEmbedded=false;
 try{ _isEmbedded = window.top!==window.self; }catch(e){ _isEmbedded=true; }
 if(_isEmbedded){
   try{ document.getElementById('hero').style.display='none'; }catch(e){}
-  var _app=document.getElementById('app-root');
-  if(_app) _app.classList.add('sidebar-hidden');
-  var _sbBtn=document.getElementById('sb-toggle');
-  if(_sbBtn) _sbBtn.style.display='none';
-  try{ showTab('dashboard'); }catch(e){}
-}else{
-  var _sbBtnStd=document.getElementById('sb-toggle');
-  if(_sbBtnStd) _sbBtnStd.style.display='';
+  var _appE=document.getElementById('app-root');
+  if(_appE) _appE.classList.add('sidebar-hidden');
+  var _sbBtnE=document.getElementById('sb-toggle');
+  if(_sbBtnE) _sbBtnE.style.display='none';
 }
 QSYS.subscribe((nextState,meta={})=>{
   if(meta.via==='local') return;
