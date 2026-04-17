@@ -3050,13 +3050,12 @@ function paintEffortTable(fact, derived){
     for(var yi=1;yi<AÑOS.length;yi++) ph+='<th style="text-align:right;padding:.4rem .3rem">'+AÑOS[yi]+'</th>';
     ph+='</tr></thead><tbody>';
 
-    // ═══ INGRESOS ═══
-    ph+='<tr style="background:rgba(91,168,245,.05)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--blue);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📈 Ingresos brutos</td></tr>';
-
     var almLines=lr.lines.filter(function(l){return l.brand==='almaria'});
     var htLines=lr.lines.filter(function(l){return l.brand==='ht'});
 
-    // Almaria header
+    // ═══ INGRESOS ═══
+    ph+='<tr style="background:rgba(91,168,245,.05)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--blue);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📈 Ingresos brutos</td></tr>';
+
     ph+='<tr style="border-top:2px solid rgba(82,201,122,.2)"><td style="padding:.35rem .5rem;font-weight:700;color:var(--green)">🌿 Almaria</td>';
     for(var ai=1;ai<AÑOS.length;ai++) ph+='<td style="text-align:right;padding:.35rem .3rem;font-weight:700;color:var(--green)">'+fmt(fact.alm[ai])+'</td>';
     ph+='</tr>';
@@ -3066,7 +3065,6 @@ function paintEffortTable(fact, derived){
       ph+='</tr>';
     });
 
-    // HugoTech header
     ph+='<tr style="border-top:2px solid rgba(62,207,207,.2)"><td style="padding:.35rem .5rem;font-weight:700;color:var(--teal)">💻 HugoTech</td>';
     for(var hi=1;hi<AÑOS.length;hi++) ph+='<td style="text-align:right;padding:.35rem .3rem;font-weight:700;color:var(--teal)">'+fmt(fact.ht[hi])+'</td>';
     ph+='</tr>';
@@ -3076,24 +3074,56 @@ function paintEffortTable(fact, derived){
       ph+='</tr>';
     });
 
-    // Total Ingresos
     ph+='<tr style="border-top:2px solid var(--brd);background:rgba(91,168,245,.06)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--blue)">TOTAL INGRESOS BRUTOS</td>';
     for(var ti=1;ti<AÑOS.length;ti++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--blue)">'+fmt(fact.total[ti])+'</td>';
     ph+='</tr>';
 
-    // Neto operativo
-    ph+='<tr><td style="padding:.35rem .5rem;color:var(--mint)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
-    for(var ni=1;ni<AÑOS.length;ni++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--mint)">'+fmt(fact.neto[ni])+'</td>';
+    // ═══ COSTOS DE VENTA (35%) ═══
+    var costVentaPct=1-P.netoPct;
+    ph+='<tr style="background:rgba(255,255,255,.02)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--orange);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">⚙️ Costos de venta y operación ('+Math.round(costVentaPct*100)+'% del bruto)</td></tr>';
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--orange);font-weight:600">Total costos de venta</td>';
+    for(var cvi=1;cvi<AÑOS.length;cvi++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--orange)">'+fmt(Math.round(fact.total[cvi]*costVentaPct))+'</td>';
     ph+='</tr>';
 
-    // ═══ EGRESOS ═══
-    ph+='<tr style="background:rgba(232,107,95,.04)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--coral);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📉 Egresos</td></tr>';
+    // Desglose estimado de costos operativos (referencial)
+    var opsCostByYear=[];
+    for(var oi=1;oi<AÑOS.length;oi++){
+      var yearOps=0;
+      OPS_COSTS.forEach(function(c){
+        if(c.dynamic) yearOps+=Math.round(fact.total[oi]*c.pct);
+        else yearOps+=Math.round(c.base*Math.pow(c.growth,oi));
+      });
+      opsCostByYear.push(yearOps);
+    }
+    OPS_COSTS.forEach(function(c){
+      ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+c.name+'</td>';
+      for(var ci=1;ci<AÑOS.length;ci++){
+        var val=c.dynamic?Math.round(fact.total[ci]*c.pct):Math.round(c.base*Math.pow(c.growth,ci));
+        ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--muted)">'+fmt(val)+'</td>';
+      }
+      ph+='</tr>';
+    });
 
-    // Planilla socios
-    ph+='<tr style="border-top:2px solid rgba(232,107,95,.15)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">👥 Planilla socios fundadores</td>';
+    // Margen restante del 35%
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.3rem .5rem;font-size:.68rem;color:var(--mint)">Margen libre (impuestos, otros)</td>';
+    for(var mi=1;mi<AÑOS.length;mi++){
+      var costoVenta=Math.round(fact.total[mi]*costVentaPct);
+      var margenLibre=costoVenta-opsCostByYear[mi-1];
+      ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:'+(margenLibre>=0?'var(--mint)':'var(--coral)')+'">'+fmt(margenLibre)+'</td>';
+    }
+    ph+='</tr>';
+
+    // NETO OPERATIVO
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(68,217,168,.05)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--mint)">NETO OPERATIVO ('+Math.round(P.netoPct*100)+'%)</td>';
+    for(var ni=1;ni<AÑOS.length;ni++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--mint)">'+fmt(fact.neto[ni])+'</td>';
+    ph+='</tr>';
+
+    // ═══ PLANILLA ═══
+    ph+='<tr style="background:rgba(232,107,95,.04)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--coral);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">👥 Planilla (se paga del neto)</td></tr>';
+
+    ph+='<tr style="border-top:2px solid rgba(232,107,95,.15)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">Socios fundadores</td>';
     for(var si=1;si<AÑOS.length;si++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(fact.sued_f[si])+'</td>';
     ph+='</tr>';
-
     PERSONS.forEach(function(p){
       var curve=fact.suedCurves[p.id]||[];
       ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:'+p.c+';font-size:.68rem">'+p.name+'</td>';
@@ -3101,11 +3131,9 @@ function paintEffortTable(fact, derived){
       ph+='</tr>';
     });
 
-    // Planilla empleados
-    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">🏢 Equipo operativo</td>';
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">Equipo operativo</td>';
     for(var ei=1;ei<AÑOS.length;ei++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(fact.hcost[ei])+'</td>';
     ph+='</tr>';
-
     HIRES.forEach(function(hire){
       var startYi=hire.startYear?Math.max(0,AÑOS.indexOf(hire.startYear)):0;
       ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+hire.role+'</td>';
@@ -3116,54 +3144,44 @@ function paintEffortTable(fact, derived){
       ph+='</tr>';
     });
 
-    // Costos operativos
-    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">⚙️ Costos operativos</td>';
-    var opsCostByYear=[];
-    for(var oi=1;oi<AÑOS.length;oi++){
-      var yearOps=0;
-      OPS_COSTS.forEach(function(c){
-        if(c.dynamic){
-          yearOps+=Math.round(fact.total[oi]*c.pct);
-        } else {
-          yearOps+=Math.round(c.base*Math.pow(c.growth,oi));
-        }
-      });
-      opsCostByYear.push(yearOps);
-    }
-    for(var oci=0;oci<opsCostByYear.length;oci++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(opsCostByYear[oci])+'</td>';
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--coral)">TOTAL PLANILLA</td>';
+    for(var tei=1;tei<AÑOS.length;tei++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--coral)">'+fmt(fact.sued_tot[tei])+'</td>';
     ph+='</tr>';
 
-    OPS_COSTS.forEach(function(c){
-      ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+c.name+'</td>';
-      for(var ci=1;ci<AÑOS.length;ci++){
-        var val=c.dynamic?Math.round(fact.total[ci]*c.pct):Math.round(c.base*Math.pow(c.growth,ci));
-        ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(val)+'</td>';
-      }
-      ph+='</tr>';
-    });
-
-    // TOTAL EGRESOS
-    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--coral)">TOTAL EGRESOS</td>';
-    for(var tei=1;tei<AÑOS.length;tei++){
-      var totalEgr=fact.sued_f[tei]+fact.hcost[tei]+opsCostByYear[tei-1];
-      ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--coral)">'+fmt(totalEgr)+'</td>';
+    // ═══ COLCHÓN ═══
+    ph+='<tr style="background:rgba(91,168,245,.04);border-top:2px solid var(--brd)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--text)">COLCHÓN (neto − planilla)</td>';
+    for(var ci2=1;ci2<AÑOS.length;ci2++){
+      var colchon=fact.colchon[ci2];
+      ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:'+(colchon>=0?'var(--blue)':'var(--coral)')+'">'+(colchon<0?'('+fmt(Math.abs(colchon))+')':fmt(colchon))+'</td>';
     }
     ph+='</tr>';
 
-    // ═══ RESULTADO ═══
-    ph+='<tr style="background:rgba(91,168,245,.06);border-top:3px solid var(--blue)"><td style="padding:.5rem .5rem;font-weight:700;color:var(--gold);font-size:.78rem">💰 RESULTADO NETO</td>';
-    for(var ri=1;ri<AÑOS.length;ri++){
-      var resultado=fact.neto[ri]-fact.sued_f[ri]-fact.hcost[ri]-opsCostByYear[ri-1];
-      var rColor=resultado>=0?'var(--blue)':'var(--coral)';
-      ph+='<td style="text-align:right;padding:.5rem .3rem;font-weight:700;color:'+rColor+';font-size:.78rem">'+(resultado<0?'('+fmt(Math.abs(resultado))+')':fmt(resultado))+'</td>';
+    // DISTRIBUIBLE
+    ph+='<tr style="background:rgba(212,168,83,.08);border-top:3px solid var(--gold)"><td style="padding:.5rem .5rem;font-weight:700;color:var(--gold);font-size:.78rem">💰 DISTRIBUIBLE</td>';
+    for(var di=1;di<AÑOS.length;di++){
+      var distVal=fact.dist[di];
+      ph+='<td style="text-align:right;padding:.5rem .3rem;font-weight:700;color:'+(distVal>0?'var(--blue)':'var(--muted)')+';font-size:.78rem">'+(distVal>0?fmt(distVal):'—')+'</td>';
     }
+    ph+='</tr>';
+
+    // Caja disponible (runway)
+    var totalCaja=PERSONS.reduce(function(s,p){return s+Object.values(p.brandCash||{}).reduce(function(a,v){return a+Number(v||0)},0)},0);
+    var totalTkts=PERSONS.reduce(function(s,p){return s+getTkt(p.id)},0);
+    var cajaTotal=totalCaja+totalTkts;
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;color:var(--mint);font-weight:600">🏦 Caja disponible (hoy)</td>';
+    ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--mint);font-weight:700" colspan="'+(AÑOS.length-1)+'">'+fmt(cajaTotal)+' (tickets '+fmt(totalTkts)+' + caja marcas '+fmt(totalCaja)+')</td>';
     ph+='</tr>';
 
     ph+='</tbody></table></div>';
 
-    // Nota sobre costos operativos
-    ph+='<div style="margin-top:.6rem;padding:.6rem .8rem;background:rgba(212,168,83,.04);border:1px solid rgba(212,168,83,.12);border-radius:10px;font-size:.68rem;color:var(--muted);line-height:1.6">';
-    ph+='<strong style="color:var(--gold)">Nota:</strong> Los costos operativos son estimaciones basadas en el mercado peruano. La pauta publicitaria crece ~25% anual con la escala de las marcas. "Imprevistos" es un buffer del 5% sobre la facturación bruta. Ajusta los montos en el modelo si tu realidad difiere.';
+    // Nota explicativa
+    ph+='<div style="margin-top:.6rem;padding:.6rem .8rem;background:rgba(91,168,245,.04);border:1px solid rgba(91,168,245,.12);border-radius:10px;font-size:.7rem;color:var(--muted);line-height:1.65">';
+    ph+='<strong style="color:var(--blue)">¿Cómo leer este P&L?</strong><br>';
+    ph+='<strong>Ingresos brutos</strong> = facturación total de ambas marcas (precio × volumen × escenario).<br>';
+    ph+='<strong style="color:var(--orange)">Costos de venta ('+Math.round(costVentaPct*100)+'%)</strong> = impuestos, herramientas, pauta, servicios, logística. El desglose es referencial — estos costos ya están cubiertos dentro del '+Math.round(costVentaPct*100)+'% que se descuenta del bruto.<br>';
+    ph+='<strong style="color:var(--mint)">Neto operativo</strong> = lo que queda después de costos. <strong>De aquí se paga la planilla.</strong><br>';
+    ph+='<strong style="color:var(--coral)">Planilla</strong> = sueldos de socios (capeados por revenue) + equipo operativo.<br>';
+    ph+='<strong style="color:var(--gold)">Distribuible</strong> = colchón − reserva (S/'+fmt(P.reserva)+'/mes). Es el <strong>ingreso real por equity</strong> que se reparte entre socios, adicional al sueldo.';
     ph+='</div>';
     ph+='</div>';
     pnlEl.innerHTML=ph;
