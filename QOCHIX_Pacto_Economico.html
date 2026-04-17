@@ -1848,7 +1848,7 @@ footer {
       </p>
       <div class="formula-box">
         <span class="comment">// Fórmula del sweat equity:</span><br>
-        Valor/hora × horas/mes × 36 meses × factor ajuste<br><br>
+        Valor/hora × horas/mes × 93 meses (horizonte 2026–2033) × factor ajuste<br><br>
         <span class="comment">// Factor ajuste:</span><br>
         × 0.6 si tienes trabajo corporativo (40% de tu tiempo)<br>
         × 0.7 si tienes otro trabajo (30% de tu tiempo)<br>
@@ -1869,7 +1869,7 @@ footer {
         </div>
       </div>
       <p style="color:var(--muted); font-size:0.8rem; margin-top:1rem;">
-        Total sweat equity ecosistema: <strong style="color:var(--gold)">S/1,074,980</strong> en 3 años
+        Total sweat equity ecosistema: <strong style="color:var(--gold)" id="pacto-sweat-total">S/1,074,980</strong> en horizonte completo
       </p>
     </div>
   </div>
@@ -1898,7 +1898,7 @@ footer {
   <div style="margin-top:4rem" class="reveal">
     <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">El pool total: lo que realmente estamos apostando</h3>
     <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem;">
-      Sumando todo — ticket, capital cash y sweat equity — los 3 fundadores estamos poniendo más de <strong style="color:var(--gold)" id="pact-pool-label">S/1.16 millones en valor</strong> sobre la mesa. Eso no es un hobby. Eso es una declaración de guerra.
+      Sumando todo — ticket, capital cash y sweat equity — los 4 fundadores estamos poniendo más de <strong style="color:var(--gold)" id="pact-pool-label">S/1.16 millones en valor</strong> sobre la mesa. Eso no es un hobby. Eso es una declaración de guerra.
     </p>
     <div class="table-wrap">
       <table>
@@ -2323,7 +2323,7 @@ footer {
       <p>
         <strong>Paso 1 — Facturación bruta:</strong> Cada marca factura por separado, pero todo ingreso —sea de Almaria o HugoTech— entra al pool del ecosistema QOCHIX.<br><br>
         <strong>Paso 2 — Neto operativo:</strong> Se descuentan costos directos de producción, herramientas y comisiones. Lo que queda es el neto operativo (actualmente pactado en 65%).<br><br>
-        <strong>Paso 3 — Planilla:</strong> Del neto se pagan los sueldos de los 3 fundadores (que crecen año a año según la curva pactada) y del equipo operativo contratado.<br><br>
+        <strong>Paso 3 — Planilla:</strong> Del neto se pagan los sueldos de los 4 fundadores (que crecen año a año según la curva pactada) y del equipo operativo contratado.<br><br>
         <strong>Paso 4 — Reserva:</strong> Se aparta un colchón mínimo mensual (actualmente S/3,000) para imprevistos.<br><br>
         <strong>Paso 5 — Distribuible:</strong> Lo que sobra después de planilla y reserva es el <strong>distribuible</strong>. Este monto se reparte entre los socios según su <strong>porcentaje de equity</strong>.
       </p>
@@ -2543,7 +2543,7 @@ footer {
       <div class="term-block">
         <h4>Sweat equity</h4>
         <p class="term-meta">Tiempo valorado en soles</p>
-        <p><strong>Qué es:</strong> el valor económico del tiempo que cada uno dedica a Qochix, calculado como valor/hora de mercado × horas/mes × <strong>36 meses</strong> × <strong>factor de ajuste</strong> (0,6 corporativo, 0,7 otro trabajo, 1,0 dedicación plena a Qochix en esas horas).</p>
+        <p><strong>Qué es:</strong> el valor económico del tiempo que cada uno dedica a Qochix, calculado como valor/hora de mercado × horas/mes × <strong>93 meses (horizonte completo)</strong> × <strong>factor de ajuste</strong> (0,6 corporativo, 0,7 otro trabajo, 1,0 dedicación plena a Qochix en esas horas).</p>
         <p><strong>Para qué sirve:</strong> que las madrugadas y fines de semana cuenten en el pool de inversión total, no solo el cash.</p>
       </div>
       <div class="term-block">
@@ -2562,7 +2562,7 @@ footer {
         <h4>Cliff y vesting</h4>
         <p class="term-meta">Las acciones se ganan</p>
         <p><strong>Cliff:</strong> los primeros <strong>12 meses</strong> sin derecho a acciones; si te vas antes, no consolidás equity (sí recuperás el ticket según reglas).</p>
-        <p><strong>Vesting:</strong> en <strong>36 meses</strong> total vas ganando el porcentaje acordado (ej. un tramo fuerte al cumplir el cliff y el resto en el tiempo).</p>
+        <p><strong>Vesting:</strong> a lo largo del horizonte vas ganando el porcentaje acordado (ej. un tramo fuerte al cumplir el cliff y el resto en el tiempo).</p>
         <p><strong>Para qué sirve:</strong> proteger a quienes se quedan construyendo y evitar “socios de un mes”.</p>
       </div>
       <div class="term-block">
@@ -2623,7 +2623,7 @@ footer {
         <h4>Planilla total</h4>
         <p class="term-meta">Fundadores + equipo</p>
         <p><strong>Fundadores:</strong> sueldos Qochix año a año (algunos adicionales al corporativo, otros su sueldo principal).</p>
-        <p><strong>Equipo operativo:</strong> personas que no son de los tres fundadores pero hacen posible escalar marcas; su costo mensual reduce lo disponible para socios.</p>
+        <p><strong>Equipo operativo:</strong> personas que no son de los cuatro fundadores pero hacen posible escalar marcas; su costo mensual reduce lo disponible para socios.</p>
       </div>
       <div class="term-block">
         <h4>Reserva mínima</h4>
@@ -2870,7 +2870,7 @@ function showTermTab(panelId, btn) {
     const shared = QSYS.getState();
     shared.P.sc = key;
     const derived = QSYS.deriveState(shared);
-    const planilla2032 = derived.personCards.reduce((sum, person) => sum + person.sue2032, 0);
+    const planilla2032 = derived.personCards.reduce((sum, person) => sum + (person.sueLast||0), 0);
     const label = key === 'p' ? 'Pesimista ×0,7' : key === 'n' ? 'Neutro ×1,0' : 'Optimista ×1,4';
     const intro = key === 'p'
       ? 'Si la facturación del ecosistema va al <strong>70%</strong> del plan base, este sería el <strong>distribuible equity</strong> 2032 y su cruce con los sueldos Qochix activos.'
@@ -2882,17 +2882,17 @@ function showTermTab(panelId, btn) {
     if (comboEl) {
       comboEl.innerHTML =
         'Planilla fundadores 2032: ' + fmt(planilla2032) + '/mes &nbsp;·&nbsp; ' +
-        'Efectivo total Qochix/mes (sueldos + equity): <strong>' + fmt(derived.total2032) + '</strong>';
+        'Efectivo total Qochix/mes (sueldos + equity): <strong>' + fmt(derived.totalLast||0) + '</strong>';
     }
     grid.innerHTML = derived.personCards.map((person) => (
       '<div class="hs-sc-cell" role="listitem">' +
       '<div class="hs-sc-name">' + person.name + '</div>' +
       '<div class="hs-sc-breakdown">' +
-      '<div class="hs-sc-line eq"><span>Equity</span><span>' + fmt(person.eq2032) + '</span></div>' +
-      '<div class="hs-sc-line"><span>Sueldo Qochix</span><span>' + fmt(person.sue2032) + '</span></div>' +
+      '<div class="hs-sc-line eq"><span>Equity</span><span>' + fmt(person.eqLast||0) + '</span></div>' +
+      '<div class="hs-sc-line"><span>Sueldo Qochix</span><span>' + fmt(person.sueLast||0) + '</span></div>' +
       '</div>' +
       '<div class="hs-sc-total-lbl">Total / mes</div>' +
-      '<div class="hs-sc-total-person">' + fmt(person.total2032) + '</div>' +
+      '<div class="hs-sc-total-person">' + fmt(person.totalLast||0) + '</div>' +
       '<div class="hs-sc-pct">' + person.equity + '% equity</div>' +
       '</div>'
     )).join('');
@@ -2962,7 +2962,7 @@ function showTermTab(panelId, btn) {
     const idx30 = idxYear(years, 2030);
     const breakIdx = idxYear(years, breakYear);
     const firstLibPeople = derived.personCards.filter((person) => person.liberationYear === firstLib).map((person) => person.name);
-    const multiples = derived.personCards.map((person) => person.total2032 / derived.state.persons.find((p) => p.id === person.id).sueldo);
+    const multiples = derived.personCards.map((person) => (person.totalLast||0) / Math.max(1, derived.state.persons.find((p) => p.id === person.id).sueldo));
     const minX = Math.min(...multiples);
     const maxX = Math.max(...multiples);
     byId('live-updated-pacto').textContent = derived.updatedAtLabel;
@@ -2971,7 +2971,7 @@ function showTermTab(panelId, btn) {
     byId('live-pacto-dist').textContent = derived.fmtCurrency(derived.dist2032);
     byId('live-pacto-first').textContent = String(derived.firstDistYear);
     byId('live-pacto-rossy').textContent = `${derived.liberatedBy2032}/${derived.personCards.length} · ${derived.firstLiberationYear}`;
-    byId('live-pacto-hugo').textContent = hugo ? derived.fmtCurrency(hugo.total2032) : '—';
+    byId('live-pacto-hugo').textContent = hugo ? derived.fmtCurrency(hugo.totalLast||0) : '—';
     byId('hero-live-pool').textContent = derived.fmtCurrency(derived.pool);
     byId('hero-live-fact').textContent = derived.fmtCurrency(derived.totalFact2032);
     byId('hero-live-dist').textContent = derived.fmtCurrency(derived.dist2032);
@@ -3016,7 +3016,7 @@ function showTermTab(panelId, btn) {
       if (math) {
         math.innerHTML =
           '<div class="live-pan-card"><div class="lbl">Caja real inicial</div><div class="val">' + derived.fmtCurrency(cashTotal) + '</div><div class="sub">ticket + capital que sí entra como caja inmediata.</div></div>' +
-          '<div class="live-pan-card"><div class="lbl">Esfuerzo valorizado</div><div class="val">' + derived.fmtCurrency(sweatTotal) + '</div><div class="sub">tiempo convertido a valor económico a 36 meses.</div></div>' +
+          '<div class="live-pan-card"><div class="lbl">Esfuerzo valorizado</div><div class="val">' + derived.fmtCurrency(sweatTotal) + '</div><div class="sub">tiempo convertido a valor económico (horizonte completo).</div></div>' +
           '<div class="live-pan-card"><div class="lbl">Neto 2030</div><div class="val">' + derived.fmtCurrency(neto2030) + '/mes</div><div class="sub">con neto operativo ' + pct((p.netoPct || 0) * 100).replace('.0','') + ' del escenario activo.</div></div>' +
           '<div class="live-pan-card"><div class="lbl">Planilla 2030</div><div class="val">' + derived.fmtCurrency(pay2030) + '/mes</div><div class="sub">fundadores + equipo operativo; colchón previo: ' + derived.fmtCurrency(col2030) + '/mes.</div></div>';
       }
@@ -3051,17 +3051,17 @@ function showTermTab(panelId, btn) {
           '<article class="live-person">' +
             '<div class="live-person-head">' +
               '<div><div class="live-person-name" style="color:' + person.color + '">' + person.name + '</div><div class="live-person-role">' + ctx.role + ' · ' + ctx.source + '</div></div>' +
-              '<div class="live-step-tag ' + paceTag(years, person.liberationYear === '2033+' ? horizon : person.liberationYear).cls + '">' + person.liberationYear + '</div>' +
+              '<div class="live-step-tag ' + paceTag(years, typeof person.liberationYear==='string'&&person.liberationYear.includes('+') ? horizon : person.liberationYear).cls + '">' + person.liberationYear + '</div>' +
             '</div>' +
             '<div class="live-person-copy"><strong>' + person.name + '</strong> entra al pacto con <strong>' + derived.fmtCurrency(person.cashContribution) + '</strong> de caja real (' + derived.fmtCurrency(person.ticket) + ' de ticket + ' + derived.fmtCurrency(person.capital) + ' de capital adicional) y <strong>' + derived.fmtCurrency(sweat) + '</strong> de esfuerzo valorizado. Esa mezcla explica por qué su inversión modelada total llega a <strong>' + derived.fmtCurrency(person.investment) + '</strong>.</div>' +
-            '<div class="live-person-copy">Hoy parte desde <strong>' + derived.fmtCurrency(base.sueldo) + '/mes</strong>; para 2030 el modelo lo lleva a <strong>' + derived.fmtCurrency(total30) + '/mes</strong>' + (gap30 > 0 ? ', todavía con una brecha de <strong>' + derived.fmtCurrency(gap30) + '/mes</strong> frente a su ingreso actual.' : ', ya por encima de su sueldo actual.') + ' Al ' + horizon + ' la foto pactada sube a <strong>' + derived.fmtCurrency(person.total2032) + '/mes</strong> entre sueldo y equity.</div>' +
+            '<div class="live-person-copy">Hoy parte desde <strong>' + derived.fmtCurrency(base.sueldo) + '/mes</strong>; para 2030 el modelo lo lleva a <strong>' + derived.fmtCurrency(total30) + '/mes</strong>' + (gap30 > 0 ? ', todavía con una brecha de <strong>' + derived.fmtCurrency(gap30) + '/mes</strong> frente a su ingreso actual.' : ', ya por encima de su sueldo actual.') + ' Al ' + horizon + ' la foto pactada sube a <strong>' + derived.fmtCurrency((person.totalLast||0)) + '/mes</strong> entre sueldo y equity.</div>' +
             '<div class="live-person-metrics">' +
               '<div class="live-person-metric"><div class="lbl">Valor mercado</div><div class="val">' + derived.fmtCurrency(base.sueldo) + '/mes</div></div>' +
               '<div class="live-person-metric"><div class="lbl">Valor/hora hoy</div><div class="val">S/' + hrToday.toLocaleString('es-PE') + '/hr</div></div>' +
               '<div class="live-person-metric"><div class="lbl">Caja real</div><div class="val">' + derived.fmtCurrency(person.cashContribution) + ' vía ' + capMode + '</div></div>' +
-              '<div class="live-person-metric"><div class="lbl">Sweat 3 años</div><div class="val">' + derived.fmtCurrency(sweat) + '</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">Sweat total</div><div class="val">' + derived.fmtCurrency(sweat) + '</div></div>' +
               '<div class="live-person-metric"><div class="lbl">2030 proyectado</div><div class="val">' + derived.fmtCurrency(total30) + '/mes</div></div>' +
-              '<div class="live-person-metric"><div class="lbl">2032 total</div><div class="val">' + derived.fmtCurrency(person.total2032) + '/mes</div></div>' +
+              '<div class="live-person-metric"><div class="lbl">' + QSYS.AÑOS[QSYS.AÑOS.length-1] + ' total</div><div class="val">' + derived.fmtCurrency(person.totalLast||0) + '/mes</div></div>' +
             '</div>' +
           '</article>'
         );
@@ -3153,11 +3153,11 @@ function showTermTab(panelId, btn) {
     // Hugo equity note
     var hn=document.getElementById('pact-hugo-eq-note');
     var hugoCard=pc.find(function(c){return c.id==='hugo'});
-    if(hn&&hugoCard)hn.textContent='de '+fmt(hugoCard.eqLast||hugoCard.eq2032||0)+'/mes de equity ('+scL+')';
+    if(hn&&hugoCard)hn.textContent='de '+fmt(hugoCard.eqLast||0)+'/mes de equity ('+scL+')';
     var eqEx=document.getElementById('pact-eq-example');
     if(eqEx&&hugoCard){
-      var _eqL=hugoCard.eqLast||hugoCard.eq2032||0;
-      var _sueL=hugoCard.sueLast||hugoCard.sue2032||0;
+      var _eqL=hugoCard.eqLast||0;
+      var _sueL=hugoCard.sueLast||0;
       var ann=_eqL*12;
       eqEx.innerHTML='Ejemplo Hugo '+_yrs[_pli]+' ('+scL+'): '+fmt(_eqL)+'/mes equity × 12 = <strong style="color:var(--gold)">'+fmt(ann)+'/año</strong> solo de equity — aparte de su sueldo de '+fmt(_sueL)+'/mes.';
     }
@@ -3169,13 +3169,13 @@ function showTermTab(panelId, btn) {
         var pr=d.state.persons.find(function(x){return x.id===p.id});
         var hoy=Number(pr.sueldo||0);
         var sue29=Number((d.state.P.sue29||{})[p.id]||0);
-        var totL=p.totalLast||p.total2032||0;
+        var totL=p.totalLast||0;
         var mult=hoy>0?(totL/hoy).toFixed(1):'—';
         ah+='<div class="apuesta-card"><div class="apuesta-persona"><div class="name">'+p.name+'</div><div class="pct">'+p.equity.toFixed(1)+'% Qochix</div><div class="hoy">Gana hoy: '+fmt(hoy)+'/mes</div></div>';
         ah+='<div class="apuesta-bars"><div class="bar-row"><span class="bar-label">HOY</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(hoy/totL*100)+'%;background:var(--faint)"></div></div><span class="bar-val">'+fmt(hoy)+'</span></div>';
         ah+='<div class="bar-row"><span class="bar-label">2029</span><div class="bar-track"><div class="bar-fill" style="width:'+Math.round(sue29/totL*100)+'%;background:var(--teal)"></div></div><span class="bar-val">'+fmt(sue29)+'</span></div>';
         ah+='<div class="bar-row"><span class="bar-label">'+_yrs[_pli]+'</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))"></div></div><span class="bar-val">'+fmt(totL)+'</span></div>';
-        ah+='<div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">Sueldo <strong style="color:var(--text)">'+fmt(p.sueLast||p.sue2032||0)+'</strong> + Equity <strong style="color:var(--gold)">'+fmt(p.eqLast||p.eq2032||0)+'</strong> · '+scL+'</div>';
+        ah+='<div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">Sueldo <strong style="color:var(--text)">'+fmt(p.sueLast||0)+'</strong> + Equity <strong style="color:var(--gold)">'+fmt(p.eqLast||0)+'</strong> · '+scL+'</div>';
         ah+='</div><div class="apuesta-mult"><div class="x">×'+mult+'</div><div class="label">vs hoy</div></div></div>';
       });
       ag.innerHTML=ah;

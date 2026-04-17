@@ -617,7 +617,7 @@
           '<div class="cmp-row"><span class="cmp-label">1er cruce</span><span class="cmp-value">'+d.firstLiberationYear+'</span></div>'+
           d.personCards.map(function(p){
             return '<div class="cmp-person"><div class="cmp-pname" style="color:'+p.color+'">'+p.name+'</div>'+
-              '<div class="cmp-row"><span class="cmp-label">Sueldo+Equity '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(p.totalLast||p.total2032)+'</span></div>'+
+              '<div class="cmp-row"><span class="cmp-label">Sueldo+Equity '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(p.totalLast||0)+'</span></div>'+
               '<div class="cmp-row"><span class="cmp-label">Cruce</span><span class="cmp-value">'+p.liberationYear+'</span></div>'+
             '</div>';
           }).join('')+

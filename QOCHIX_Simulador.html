@@ -555,15 +555,15 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div class="hero-line"></div>
   <div class="hero-tagline">Un modelo donde <em>todos ganan</em>.<br>Equipo socio + 2 marcas + 8 años de proyección.</div>
   <p class="hero-why">
-    ¿Por qué sumarte como socio? Porque aquí no estás vendiendo horas para el sueño de otro: estás <strong>construyendo un activo compartido</strong> —tres marcas, un solo ecosistema— con upside que un empleo corporativo no te va a dar.
+    ¿Por qué sumarte como socio? Porque aquí no estás vendiendo horas para el sueño de otro: estás <strong>construyendo un activo compartido</strong> —dos marcas, un solo ecosistema— con upside que un empleo corporativo no te va a dar.
     Eso exige <strong>tiempo</strong> (constancia en años), <strong>esfuerzo</strong> (lo que no le das a otra cosa), <strong>dinero</strong> (ticket, capital, dejar de facturar en paralelo) y <strong>pasión</strong> para aguantar los meses feos.
     Abajo tienes <span class="hw-gold">referencias en escenario pesimista ×0,7</span> (mismo piso que el pacto); entra al simulador y cambia a neutro u optimista para ver el techo.
   </p>
   <div class="hero-stats-mini" aria-label="Referencia rápida pesimista ×0,7">
     <div class="hsm"><div class="hsm-v" id="hero-kpi-pool">&gt; S/1,1M</div><div class="hsm-l">Pool equipo · ticket+capital+sweat</div></div>
-    <div class="hsm"><div class="hsm-v" id="hero-kpi-fact">~S/231k</div><div class="hsm-l">Facturación / mes · 2032</div></div>
-    <div class="hsm"><div class="hsm-v" id="hero-kpi-dist">~S/43k</div><div class="hsm-l">Distribuible socios / mes · 2032</div></div>
-    <div class="hsm"><div class="hsm-v" id="hero-kpi-mult">×1,9 – ×3,6</div><div class="hsm-l">Ingreso total vs hoy · 2032</div></div>
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-fact">~S/231k</div><div class="hsm-l" id="hero-lbl-fact">Facturación / mes · último año</div></div>
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-dist">~S/43k</div><div class="hsm-l" id="hero-lbl-dist">Distribuible socios / mes · último año</div></div>
+    <div class="hsm"><div class="hsm-v" id="hero-kpi-mult">×1,9 – ×3,6</div><div class="hsm-l" id="hero-lbl-mult">Ingreso total vs hoy · último año</div></div>
   </div>
   <p class="hero-foot">Neutro y optimista están un clic adentro. Los números no son promesa: son hipótesis para decidir juntos.</p>
   <div class="doc-link-row" aria-label="Documentos relacionados">
@@ -769,7 +769,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="lib-marks">
       <span>0 personas liberadas</span>
       <span id="lib-curr">—</span>
-      <span id="lib-target">Objetivo: equipo completo al 2032</span>
+      <span id="lib-target">Objetivo: equipo completo al último año</span>
     </div>
     <div class="nota ok" id="lib-nota" style="margin-top:.5rem"></div>
     <div class="lib-team" id="lib-team"></div>
@@ -1300,7 +1300,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="dash-card">
       <div class="dash-lbl">Brecha equipo a S/10k</div>
       <div class="dash-val" id="ap-team-gap10">—</div>
-      <div class="dash-sub">faltante agregado para 5 x S/10k/mes</div>
+      <div class="dash-sub">faltante agregado para 4 x S/10k/mes</div>
     </div>
   </div>
   <div class="nota" id="ap-alert" style="margin-bottom:1rem"></div>
@@ -1382,7 +1382,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">Cada socio recibe <strong>dos fuentes de ingreso</strong>: (1) un <span style="color:var(--teal)">sueldo Qochix</span> que crece cada año según la curva del pacto, y (2) un <span style="color:var(--gold)">pago por equity</span> que es su porcentaje del distribuible. Ambos se suman.</p>
       <div class="flow-split" id="flow-split"></div>
       <div class="flow-callout">
-        <strong>¿Rossy recibe "lo de Almaria"?</strong> No. Rossy es CEO de Almaria pero su ingreso no viene de lo que Almaria facture, sino de: (1) su <span class="gold">sueldo pactado</span> que crece con los años, y (2) su <span class="gold">17% del distribuible total</span> de las 3 marcas juntas. Lo mismo aplica para todos. El equity ya refleja quién puso más capital, más horas y más riesgo.
+        <strong>¿Rossy recibe "lo de Almaria"?</strong> No. Rossy es CEO de Almaria pero su ingreso no viene de lo que Almaria facture, sino de: (1) su <span class="gold">sueldo pactado</span> que crece con los años, y (2) su <span class="gold">17% del distribuible total</span> de las 2 marcas juntas. Lo mismo aplica para todos. El equity ya refleja quién puso más capital, más horas y más riesgo.
       </div>
     </div>
   </div>
@@ -1517,6 +1517,7 @@ function suedTotalsFromCurves(curves){
   return AÑOS.map((_,i)=>PERSONS.reduce((s,p)=>s+(curves[p.id][i]||0),0));
 }
 const AÑOS = QSYS.AÑOS.slice();
+const _BEYOND = (AÑOS[AÑOS.length-1]+1)+'+';
 
 // Facturación base neutro
 const FACT0 = QSYS.clone(QSYS.FACT0);
@@ -2192,7 +2193,7 @@ function recalc(){
     const ret=AÑOS.reduce((acc,_,i)=>acc+((sc[person.id][i]||0)+Math.round(dist[i]*(eqById[person.id]||0)/100))*12,0);
     return sum+(ret/Math.max(1,Number(person.investment||1)));
   },0)/Math.max(1,derived.personCards.length);
-  const team2032=derived.personCards.reduce((sum,person)=>sum+Number(person.totalLast||person.total2032||0),0);
+  const team2032=derived.personCards.reduce((sum,person)=>sum+Number(person.totalLast||0),0);
   const teamGap10=Math.max(0,(10000*PERSONS.length)-team2032);
 
   // ── KPIs dashboard ──
@@ -2211,6 +2212,9 @@ function recalc(){
   sv('hero-kpi-pool',fmt(pool));
   sv('hero-kpi-fact',fmt(fact.total[_li]));
   sv('hero-kpi-dist',fmt(dist[_li]));
+  sv('hero-lbl-fact','Facturación / mes · '+_lastYear);
+  sv('hero-lbl-dist','Distribuible socios / mes · '+_lastYear);
+  sv('hero-lbl-mult','Ingreso total vs hoy · '+_lastYear);
 
   // -- KPI 1: Meta de venta (detalle) --
   const kdFact=sel('kpi-fact-detail');
@@ -2239,7 +2243,9 @@ function recalc(){
     d+='<div class="kd-row"><span class="kd-lbl">− Planilla</span><span class="kd-val" style="color:var(--coral)">−'+fmt(planLast)+'</span></div>';
     d+='<div class="kd-row"><span class="kd-lbl">= Colchón</span><span class="kd-val" style="color:'+(colchLast>=0?'var(--green)':'var(--coral)')+'">'+fmt(colchLast)+'</span></div>';
     d+='<div class="kd-row"><span class="kd-lbl">− Reserva</span><span class="kd-val">−'+fmt(rsvNum)+'</span></div>';
-    d+='<div class="kd-eq">'+fmt(netoLast)+' − '+fmt(planLast)+' − '+fmt(rsvNum)+' = <strong style="color:var(--gold)">'+fmt(dist[_li])+'</strong> distribuible.<br>Se reparte entre '+PERSONS.length+' socios según su % de equity.</div>';
+    var _cajaMinMesLast=fact.cajaMinMes?fact.cajaMinMes[_li]:0;
+    if(_cajaMinMesLast>0) d+='<div class="kd-row"><span class="kd-lbl">− Caja flujo (×2 marcas)</span><span class="kd-val" style="color:dodgerblue">−'+fmt(_cajaMinMesLast)+'</span></div>';
+    d+='<div class="kd-eq">'+fmt(netoLast)+' − '+fmt(planLast)+' − '+fmt(rsvNum)+(_cajaMinMesLast>0?' − '+fmt(_cajaMinMesLast)+' (caja)':'')+' = <strong style="color:var(--gold)">'+fmt(dist[_li])+'</strong> distribuible.<br>Se reparte entre '+PERSONS.length+' socios según su % de equity.</div>';
     kdDist.innerHTML=d;
   }
 
@@ -2303,7 +2309,7 @@ function recalc(){
       const p=PERSONS.find(function(pp){return pp.id===pc.id;});
       if(!p) return;
       const tope=Number(p.sueldoTope||0);
-      const ingLast=Number(pc.totalLast||pc.total2032||0);
+      const ingLast=Number(pc.totalLast||0);
       const pct=tope>0?Math.min(100,Math.round(ingLast/tope*100)):0;
       const ok=ingLast>=tope&&tope>0;
       d+='<div class="kd-row"><span class="kd-lbl">'+pc.name+' (tope: '+fmt(tope)+')</span><span class="kd-val" style="color:'+(ok?'var(--green)':'var(--coral)')+'">'+pct+'%</span></div>';
@@ -2324,7 +2330,7 @@ function recalc(){
     const rwSub=sel('kpi-runway-sub');
     if(rwSub) rwSub.textContent=rw.months>=12?'colchón saludable':'acelerar ventas';
   }catch(e){}
-  const heroMults=derived.personCards.map((person)=>(person.totalLast||person.total2032)/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
+  const heroMults=derived.personCards.map((person)=>(person.totalLast||0)/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
   const minMult=Math.min(...heroMults);
   const maxMult=Math.max(...heroMults);
   sv('hero-kpi-mult','×'+minMult.toFixed(1)+' – ×'+maxMult.toFixed(1));
@@ -2735,14 +2741,14 @@ function recalc(){
       const total30=person.yearlyTotals[libIdx30]||0;
       const basePerson=PERSONS.find((p)=>p.id===person.id);
       const gap=Math.round(Number(basePerson?.sueldo||0)-total30);
-      const ok=person.liberationYear!=='2033+';
+      const ok=person.liberationYear!==_BEYOND;
       const sub=ok
         ? `Cruce en ${person.liberationYear} · total 2030: ${fmt(total30)}/mes`
         : `Sin cruce al 2032 · brecha 2030: ${fmt(Math.max(0,gap))}/mes`;
       return `<div class="lib-item">
         <div class="lib-item-top">
           <span class="lib-item-name" style="color:${person.color}">${person.name}</span>
-          <span class="lib-item-year">${ok?person.liberationYear:'2033+'}</span>
+          <span class="lib-item-year">${ok?person.liberationYear:_BEYOND}</span>
         </div>
         <div class="lib-item-sub">${sub}</div>
       </div>`;
@@ -2756,7 +2762,7 @@ function recalc(){
     h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem;margin-top:.5rem">';
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Qué significa "liberación financiera"?</div>';
     h+='<div style="margin-bottom:.35rem">Un socio está <strong>"liberado"</strong> cuando su ingreso total mensual en Qochix (sueldo + retorno por equity) <strong>iguala o supera</strong> su valor de mercado actual. Es decir, ya no necesita otra fuente de ingresos para vivir.</div>';
-    h+='<div style="margin-bottom:.35rem"><strong>Año de cruce:</strong> el primer año en que (sueldo_real + equity_mensual) ≥ valor_mercado. Si dice "2033+", no se alcanza dentro del horizonte del modelo.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong>Año de cruce:</strong> el primer año en que (sueldo_real + equity_mensual) ≥ valor_mercado. Si dice "'+_BEYOND+'", no se alcanza dentro del horizonte del modelo.</div>';
     h+='<div style="margin-bottom:.5rem"><strong>Total 2030:</strong> el ingreso total mensual que tendría esa persona en 2030 (sueldo capeado por revenue + retorno equity).</div>';
     h+='<div style="font-weight:600;color:var(--text);margin-bottom:.4rem">Detalle por socio:</div>';
     derived.personCards.forEach(pc=>{
@@ -2765,7 +2771,7 @@ function recalc(){
       const total30=pc.yearlyTotals[libIdx30]||0;
       const sue30=sc[pc.id]?sc[pc.id][idx30]:0;
       const eq30=Math.round(dist[idx30]*(eqById[pc.id]||0)/100);
-      const ok=pc.liberationYear!=='2033+';
+      const ok=pc.liberationYear!==_BEYOND;
       const gap=Math.max(0,basePerson.sueldo-total30);
       h+=`<div style="margin-bottom:.3rem;padding:.4rem .6rem;background:var(--bg1);border-radius:6px;border-left:3px solid ${basePerson.c}">`;
       h+=`<strong style="color:${basePerson.c}">${basePerson.name}</strong>: valor mercado <strong>${fmt(basePerson.sueldo)}/mes</strong>. `;
@@ -2780,7 +2786,7 @@ function recalc(){
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem;margin-top:.5rem">';
     h+=`<strong>Objetivo:</strong> que las ${PERSONS.length} personas socias estén liberadas al 2032. Hoy <strong>${liberated2032}/${PERSONS.length}</strong> lo logran. `;
     if(liberated2032<PERSONS.length){
-      const notLib=derived.personCards.filter(pc=>pc.liberationYear==='2033+');
+      const notLib=derived.personCards.filter(pc=>pc.liberationYear===_BEYOND);
       h+=`Faltan: ${notLib.map(pc=>`<strong style="color:${PERSONS.find(p=>p.id===pc.id)?.c||'var(--text)'}">${pc.name}</strong>`).join(', ')}. Para acercar su cruce: aumentar revenue de sus marcas, o subir su meta sueldo cuando el colchón lo permita.`;
     }else{
       h+='Todos los socios logran el cruce — el modelo es sostenible.';
@@ -2898,7 +2904,7 @@ function recalc(){
     h+='<div style="margin-bottom:.35rem"><strong>Almaria y HugoTech:</strong> facturación mensual proyectada de cada marca. Basada en las líneas de servicio (precios × volúmenes) del escenario activo.</div>';
     h+='<div style="margin-bottom:.35rem"><strong>TOTAL QOCHIX:</strong> suma de ambas marcas. Es el ingreso bruto mensual del ecosistema.</div>';
     h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">NETO ${Math.round(P.netoPct*100)}%:</strong> lo que queda después de costos operativos (impuestos, herramientas, etc.). Solo este monto está disponible para sueldos.</div>`;
-    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Sueldos fundadores:</strong> lo que se paga a los 3 socios. Está <em>capeado por el revenue</em>: si no hay suficiente neto, los sueldos bajan automáticamente.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Sueldos fundadores:</strong> lo que se paga a los '+PERSONS.length+' socios. Está <em>capeado por el revenue</em>: si no hay suficiente neto, los sueldos bajan automáticamente.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Equipo operativo:</strong> content creators, comerciales, facilitadora. Se pagan antes que los sueldos fundadores.</div>';
     h+=`<div style="margin-bottom:.35rem"><strong>COLCHÓN:</strong> neto − planilla total. Si es <span style="color:var(--coral)">negativo</span> (entre paréntesis), el ecosistema no genera suficiente para pagar a todos. ${firstPos>0?'El colchón se vuelve positivo en <strong>'+AÑOS[firstPos]+'</strong>.':'El colchón nunca se vuelve positivo en este escenario.'}</div>`;
     h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">💰 DISTRIBUIBLE:</strong> max(0, colchón − reserva S/${fmt(P.reserva||0)}). Es lo que se reparte entre socios según su % de equity, <em>aparte</em> de su sueldo.</div>`;
@@ -3706,7 +3712,7 @@ function paintEffortTable(fact, derived){
         var eq=Math.round(fact.dist[yi]*(eqById[p.id]||0)/100);
         if(sue+eq>=target){crossYear=''+(2026+yi);break;}
       }
-      var total32=pc.totalLast||pc.total2032;
+      var total32=pc.totalLast||0;
       var pct32=target>0?Math.round(total32/target*100):0;
       var color=crossYear.indexOf('más allá')>=0?'var(--coral)':'var(--green)';
       nt+='<span style="color:'+p.c+'">'+p.name+'</span>: meta <strong>'+fmt(target)+'/mes</strong> → cruza en <strong style="color:'+color+'">'+crossYear+'</strong>';
@@ -4121,10 +4127,10 @@ function paintFlowTab(){
   if(splitEl){
     splitEl.innerHTML=derived.personCards.map(function(p){
       const base=PERSONS.find(function(x){return x.id===p.id;});
-      const sueLabel=fmt(p.sueLast||p.sue2032);
-      const eqLabel=fmt(p.eqLast||p.eq2032);
-      const totalLabel=fmt(p.totalLast||p.total2032);
-      const vsHoy=base?(p.totalLast||p.total2032)/Math.max(1,base.sueldo):0;
+      const sueLabel=fmt(p.sueLast||0);
+      const eqLabel=fmt(p.eqLast||0);
+      const totalLabel=fmt(p.totalLast||0);
+      const vsHoy=base?(p.totalLast||0)/Math.max(1,base.sueldo):0;
       return '<div class="flow-person-card"><div class="flow-person-name" style="color:'+p.color+'">'+p.name+'</div><div class="flow-person-eq">'+p.equity.toFixed(1)+'% equity</div><div class="flow-person-sue">Sueldo: '+sueLabel+'</div><div class="flow-person-eqi">Equity: '+eqLabel+'</div><div class="flow-person-total">'+totalLabel+'</div><div class="flow-person-vs">×'+vsHoy.toFixed(1)+' vs sueldo actual</div></div>';
     }).join('');
   }

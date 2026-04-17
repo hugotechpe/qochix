@@ -2104,7 +2104,7 @@ p{color:var(--text2);line-height:1.75;font-size:clamp(1.02rem,1.55vw,1.12rem);}
           </div>
           <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
             <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
-            <p style="font-size:10px;">Los 3 socios activaron su red personal para primeras ventas B2C</p>
+            <p style="font-size:10px;">Los 4 socios activaron su red personal para primeras ventas B2C</p>
           </div>
           <div style="display:flex;gap:8px;align-items:center;padding:7px 10px;background:rgba(26,122,86,.1);border-radius:7px;">
             <span style="color:var(--almaria-l);font-size:12px;flex-shrink:0;">□</span>
@@ -2556,7 +2556,7 @@ document.addEventListener('keydown',e=>{
     byId('deck-live-scn').textContent=derived.scenarioLabel;
     byId('deck-live-dist').textContent=derived.fmtCurrency(derived.distLast||derived.dist2032);
     byId('deck-live-first').textContent=String(derived.firstDistYear);
-    byId('deck-live-hugo').textContent=hugo?derived.fmtCurrency(hugo.totalLast||hugo.total2032):'—';
+    byId('deck-live-hugo').textContent=hugo?derived.fmtCurrency(hugo.totalLast||0):'—';
     const note=byId('deck-live-note');
     const story=byId('deck-live-story');
     if(!note)return;
@@ -2592,7 +2592,7 @@ document.addEventListener('keydown',e=>{
       const sHt=(Number(derived.fact.ht[targetBreakIdx]||0)/totAtTarget);
       const extraAlm=Math.round(grossExtra*sAlm);
       const extraHt=Math.max(0,grossExtra-extraAlm);
-      const neededFor10k=Math.max(0,Math.round((10000*derived.personCards.length)-Number(derived.totalLast||derived.total2032||0)));
+      const neededFor10k=Math.max(0,Math.round((10000*derived.personCards.length)-Number(derived.totalLast||0)));
       const capModeLabel=(p.capitalMode==='equity_round'?'compra de acciones':'préstamo entre socios');
       const s1Avg=Math.round(derived.runway.monthly.slice(0,6).reduce((sum,row)=>sum+Number(row.ingresos||0),0)/6);
       const s2Avg=Math.round(derived.runway.monthly.slice(6,12).reduce((sum,row)=>sum+Number(row.ingresos||0),0)/6);
@@ -2636,7 +2636,7 @@ document.addEventListener('keydown',e=>{
           return '<div class="deck-live-cap-card">'+
             '<div class="deck-live-cap-title" style="color:'+person.color+'">'+person.name+' · origen del aporte</div>'+
             '<div class="deck-live-cap-copy">'+ctx.source+' Entra al pool con <strong>'+derived.fmtCurrency(person.cashContribution)+'</strong>: <strong>'+derived.fmtCurrency(person.ticket)+'</strong> de ticket QOCHIX y <strong>'+derived.fmtCurrency(person.brandCapitalTotal||0)+'</strong> de inversión en marcas. Esto refleja su aporte real: lo que ya puso en las marcas que lidera.</div>'+
-            '<div class="deck-live-cap-copy" style="margin-top:.28rem">El <strong>esfuerzo valorizado</strong> de <strong>'+derived.fmtCurrency(sweat)+'</strong> sale de esta lógica: sueldo actual <strong>'+derived.fmtCurrency(base.sueldo)+'/mes</strong> = aprox. <strong>'+derived.fmtCurrency(hrToday).replace('/','')+'/hr</strong>; dedicación modelada <strong>'+Number(base.hrs||0)+' h/día</strong> x 6 días x 4.3 semanas = <strong>'+monthHours.toFixed(0)+' h/mes</strong>; eso da un valor mensual de <strong>'+derived.fmtCurrency(monthValue)+'</strong>, que luego se ajusta por factor <strong>'+Number(base.adj||0).toFixed(2)+'</strong> a unos <strong>'+derived.fmtCurrency(adjustedMonthValue)+'/mes</strong>. Proyectado por 36 meses, produce el esfuerzo valorizado mostrado.</div>'+
+            '<div class="deck-live-cap-copy" style="margin-top:.28rem">El <strong>esfuerzo valorizado</strong> de <strong>'+derived.fmtCurrency(sweat)+'</strong> sale de esta lógica: sueldo actual <strong>'+derived.fmtCurrency(base.sueldo)+'/mes</strong> = aprox. <strong>'+derived.fmtCurrency(hrToday).replace('/','')+'/hr</strong>; dedicación modelada <strong>'+Number(base.hrs||0)+' h/día</strong> x 6 días x 4.3 semanas = <strong>'+monthHours.toFixed(0)+' h/mes</strong>; eso da un valor mensual de <strong>'+derived.fmtCurrency(monthValue)+'</strong>, que luego se ajusta por factor <strong>'+Number(base.adj||0).toFixed(2)+'</strong> a unos <strong>'+derived.fmtCurrency(adjustedMonthValue)+'/mes</strong>. Proyectado por el horizonte completo (93 meses, 2026–2033), produce el esfuerzo valorizado mostrado.</div>'+
             '<div class="deck-live-cap-copy" style="margin-top:.28rem">Sumando caja real + esfuerzo valorizado, su apuesta modelada asciende a <strong>'+derived.fmtCurrency(person.investment)+'</strong>.</div>'+
           '</div>';
         }).join('');
@@ -2669,7 +2669,7 @@ document.addEventListener('keydown',e=>{
         deepGrid.innerHTML=
           '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Cómo se forman los sueldos</div><div class="deck-live-deep-copy">Los ingresos personales no salen de una sola bolsa. Primero entra la facturación de las 2 marcas. Luego se aplica el neto operativo (<strong>'+(netoPct*100).toFixed(0)+'%</strong>), se paga la planilla total, se protege la reserva de <strong>'+derived.fmtCurrency(p.reserva)+'/mes</strong> y recién el excedente se reparte. En otras palabras: un socio no cobra más porque “el negocio facturó más”, sino porque después de costos, sueldos y colchón todavía sobra aire. Por eso el salto grande no ocurre al inicio: primero hay que sostener estructura.</div></div>'+
           '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Cómo se forma cada aporte</div><div class="deck-live-deep-copy">Cada apuesta tiene tres capas: <strong>ticket</strong> (entrada mínima), <strong>capital adicional</strong> (si ese socio pone más caja) y <strong>esfuerzo valorizado</strong> (tiempo convertido a valor económico). El ticket y el capital sí entran como caja inmediata; el esfuerzo no entra como efectivo, pero el modelo lo reconoce como costo de oportunidad real de esa persona dentro del ecosistema.</div></div>'+
-          '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Cómo se calcula el esfuerzo valorizado</div><div class="deck-live-deep-copy">La fórmula es: sueldo actual ÷ 176 horas mensuales para estimar <strong>valor/hora</strong>; luego se multiplica por horas/día modeladas, por 6 días, por 4.3 semanas; después se ajusta por el <strong>factor</strong> personal; y finalmente se proyecta a 36 meses. Por eso el monto puede verse alto: no es “dinero en caja”, sino valor económico del tiempo que esa persona deja de vender o dedicar a otra cosa.</div></div>'+
+          '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Cómo se calcula el esfuerzo valorizado</div><div class="deck-live-deep-copy">La fórmula es: sueldo actual ÷ 176 horas mensuales para estimar <strong>valor/hora</strong>; luego se multiplica por horas/día modeladas, por 6 días, por 4.3 semanas; después se ajusta por el <strong>factor</strong> personal; y finalmente se proyecta al horizonte completo (93 meses). Por eso el monto puede verse alto: no es “dinero en caja”, sino valor económico del tiempo que esa persona deja de vender o dedicar a otra cosa.</div></div>'+
           '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Qué explica que '+breakYear+' todavía se sienta corto</div><div class="deck-live-deep-copy">En '+breakYear+' el sistema por fin deja de asfixiarse, pero todavía no está holgado. El equipo aún arrastra una brecha agregada de aproximadamente <strong>'+derived.fmtCurrency(personGap2030)+'/mes</strong> para igualar su sueldo actual. Además, el distribuible de ese año es <strong>'+derived.fmtCurrency(derived.dist2030)+'/mes</strong>, bastante por debajo del '+horizon+'. O sea: el quiebre significa “dejar de pelear por respirar”, no “llegar a abundancia”.</div></div>'+
           '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Qué palancas adelantan el sistema</div><div class="deck-live-deep-copy">Si Almaria y HugoTech convierten antes, el modelo responde rápido. Cada <strong>'+derived.fmtCurrency(1000)+'/mes</strong> extra de facturación bruta se transforma en unos <strong>'+derived.fmtCurrency(1000*netoPct)+'/mes</strong> de neto antes de reserva y planilla. Eso significa que adelantar el sistema no depende solo de vender más, sino de vender mejor, con más margen, más repetición y menos fuga operativa. Sumado a mejor margen o menor costo fijo, el quiebre puede adelantarse y el salto entre <strong>'+derived.fmtCurrency(derived.dist2030)+'</strong> y <strong>'+derived.fmtCurrency(derived.distLast||derived.dist2032)+'</strong> se comprime.</div></div>'+
           '<div class="deck-live-deep-card"><div class="deck-live-deep-title">Qué hito operativo debe ocurrir</div><div class="deck-live-deep-copy">El modelo no pide solo “más ventas”. Pide que cada marca llegue a su tramo con consistencia: Almaria tiene que convertir emoción en recurrencia o ticket, y HugoTech debe traducir expertise en programas/talleres repetibles. Si una sola marca se estanca, el quiebre se mueve hacia la derecha; si una sola acelera pero con margen malo, la historia mejora menos de lo que parece. La pregunta no es solo cuánto facturar, sino <strong>desde qué empresa viene ese crecimiento y con qué calidad económica</strong>.</div></div>'+
@@ -2731,12 +2731,13 @@ document.addEventListener('keydown',e=>{
         const base=derived.state.persons.find((p)=>p.id===person.id)||{};
         const total30=Number(person.yearlyTotals[idx30]||0);
         const eq30=Math.max(0,total30-Number(person.sue2030||0));
-        const personalYear=clampYear(years,person.liberationYear==='2033+'?firstDist:person.liberationYear);
+        var _bey=(QSYS.AÑOS[QSYS.AÑOS.length-1]+1)+'+';
+        const personalYear=clampYear(years,person.liberationYear===_bey?firstDist:person.liberationYear);
         const personalIdx=idxYear(years,personalYear);
         const personalTotal=Number(person.yearlyTotals[personalIdx]||0);
         const current=Number(base.sueldo||0);
         const gap=Math.max(0,current-total30);
-        const status=person.liberationYear==='2033+'
+        const status=person.liberationYear===_bey
           ? 'aún no cruza al '+horizon
           : 'cruza en '+person.liberationYear;
         return '<div class="deck-live-narrative-item"><strong style="color:'+person.color+'">'+person.name+'</strong>: '+status+'. En su año clave ('+personalYear+') proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong>. Para 2030 llega a <strong>'+derived.fmtCurrency(total30)+'/mes</strong>, compuesto por un sueldo meta de <strong>'+derived.fmtCurrency(person.sue2030)+'/mes</strong> y un equity estimado de <strong>'+derived.fmtCurrency(eq30)+'/mes</strong>.'+(gap>0?' Aun así, le faltarían <strong>'+derived.fmtCurrency(gap)+'/mes</strong> para igualar su sueldo actual. Eso quiere decir que en 2030 su narrativa ya mejora, pero todavía no compensa del todo el presente.': ' Con eso ya alcanza o supera su sueldo actual. Eso quiere decir que el sistema ya le devuelve un ingreso comparable o mejor al presente, no solo una promesa futura.')+'</div>';
@@ -2754,12 +2755,13 @@ document.addEventListener('keydown',e=>{
         const currentSalary=Number(base.sueldo||0);
         const total30=Number(person.yearlyTotals[idx30]||0);
         const gap30=Math.max(0,currentSalary-total30);
-        const personalYear=clampYear(years,person.liberationYear==='2033+'?firstDist:person.liberationYear);
+        var _bey2=(QSYS.AÑOS[QSYS.AÑOS.length-1]+1)+'+';
+        const personalYear=clampYear(years,person.liberationYear===_bey2?firstDist:person.liberationYear);
         const personalTag=tempoTag(years,personalYear);
         const personalIdx=idxYear(years,personalYear);
         const personalTotal=Number(person.yearlyTotals[personalIdx]||0);
         const personalAnnual=personalTotal*12;
-        const annual2032=Number(person.totalLast||person.total2032||0)*12;
+        const annual2032=Number(person.totalLast||0)*12;
         const eq30=Math.max(0,total30-Number(person.sue2030||0));
         return (
           '<article class="deck-live-person">'+
@@ -2774,14 +2776,14 @@ document.addEventListener('keydown',e=>{
               '<strong>'+person.name+'</strong> hoy aporta <strong>'+derived.fmtCurrency(person.cashContribution)+'</strong> en caja ('+capMode+'), más <strong>'+derived.fmtCurrency(sweat)+'</strong> en esfuerzo valorizado. Su foco principal: '+ctx.focus+
             '</div>'+
             '<div class="deck-live-person-copy">'+
-              'Su quiebre personal aparece en <strong>'+personalYear+'</strong>: en ese momento proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong> ('+derived.fmtCurrency(personalAnnual)+'/año). Si la tendencia se mantiene hasta '+horizon+', cerraría cerca de <strong>'+derived.fmtCurrency(person.totalLast||person.total2032)+'/mes</strong> con un ROI estimado de <strong>'+roi(annual2032,person.investment)+'</strong> sobre su aporte total.'+
+              'Su quiebre personal aparece en <strong>'+personalYear+'</strong>: en ese momento proyecta <strong>'+derived.fmtCurrency(personalTotal)+'/mes</strong> ('+derived.fmtCurrency(personalAnnual)+'/año). Si la tendencia se mantiene hasta '+horizon+', cerraría cerca de <strong>'+derived.fmtCurrency(person.totalLast||0)+'/mes</strong> con un ROI estimado de <strong>'+roi(annual2032,person.investment)+'</strong> sobre su aporte total.'+
             '</div>'+
             '<div class="deck-live-person-copy">'+
-              'La transición real se entiende mejor así: hoy parte desde <strong>'+derived.fmtCurrency(currentSalary)+'/mes</strong>; en 2030 el modelo le reconoce <strong>'+derived.fmtCurrency(person.sue2030)+'/mes</strong> como sueldo meta y alrededor de <strong>'+derived.fmtCurrency(eq30)+'/mes</strong> vía equity; al '+horizon+' la mezcla sube a <strong>'+derived.fmtCurrency(person.sueLast||person.sue2032)+'/mes</strong> de sueldo + <strong>'+derived.fmtCurrency(person.eqLast||person.eq2032)+'/mes</strong> de equity. Esa secuencia explica por qué algunos cruzan antes y otros recién más adelante.'+
+              'La transición real se entiende mejor así: hoy parte desde <strong>'+derived.fmtCurrency(currentSalary)+'/mes</strong>; en 2030 el modelo le reconoce <strong>'+derived.fmtCurrency(person.sue2030)+'/mes</strong> como sueldo meta y alrededor de <strong>'+derived.fmtCurrency(eq30)+'/mes</strong> vía equity; al '+horizon+' la mezcla sube a <strong>'+derived.fmtCurrency(person.sueLast||0)+'/mes</strong> de sueldo + <strong>'+derived.fmtCurrency(person.eqLast||0)+'/mes</strong> de equity. Esa secuencia explica por qué algunos cruzan antes y otros recién más adelante.'+
             '</div>'+
             '<div class="deck-live-person-points">'+
               '<div class="deck-live-person-point"><strong>Aporte total acumulado:</strong> '+derived.fmtCurrency(person.investment)+' (equity efectivo '+eqLabel+').</div>'+
-              '<div class="deck-live-person-point"><strong>Foto objetivo '+horizon+':</strong> sueldo '+derived.fmtCurrency(person.sueLast||person.sue2032)+'/mes + equity '+derived.fmtCurrency(person.eqLast||person.eq2032)+'/mes.</div>'+
+              '<div class="deck-live-person-point"><strong>Foto objetivo '+horizon+':</strong> sueldo '+derived.fmtCurrency(person.sueLast||0)+'/mes + equity '+derived.fmtCurrency(person.eqLast||0)+'/mes.</div>'+
               '<div class="deck-live-person-point"><strong>Dedicación modelada hoy:</strong> '+Number(base.hrs||0)+' h/día · factor '+Number(base.adj||0).toFixed(2)+'. A más horas productivas o mejor conversión comercial del frente que lidera, antes aparece su quiebre personal.</div>'+
             '</div>'+
             '<div class="deck-live-person-metrics">'+
@@ -2791,8 +2793,8 @@ document.addEventListener('keydown',e=>{
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Esfuerzo valorizado</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(sweat)+'</div></div>'+
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">2030 proyectado</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(total30)+'/mes'+(gap30>0?'<br><span style="color:var(--muted)">brecha '+derived.fmtCurrency(gap30)+'</span>':'<br><span style="color:var(--muted)">ya cruza</span>')+'</div></div>'+
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Sueldo meta 2030</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(person.sue2030)+'/mes</div></div>'+
-              '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Sueldo meta '+horizon+'</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(person.sueLast||person.sue2032)+'/mes</div></div>'+
-              '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Equity '+horizon+'</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(person.eqLast||person.eq2032)+'/mes</div></div>'+
+              '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Sueldo meta '+horizon+'</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(person.sueLast||0)+'/mes</div></div>'+
+              '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">Equity '+horizon+'</div><div class="deck-live-person-metric-value">'+derived.fmtCurrency(person.eqLast||0)+'/mes</div></div>'+
               '<div class="deck-live-person-metric"><div class="deck-live-person-metric-label">ROI al '+horizon+'</div><div class="deck-live-person-metric-value">'+roi(annual2032,person.investment)+'</div></div>'+
             '</div>'+
           '</article>'
@@ -2842,7 +2844,8 @@ document.addEventListener('keydown',e=>{
       var libPersons={};
       derived.personCards.forEach(function(p){
         var ly=p.liberationYear;
-        if(ly&&ly!=='2033+'){
+        var _bey3=(QSYS.AÑOS[QSYS.AÑOS.length-1]+1)+'+';
+        if(ly&&ly!==_bey3){
           if(!libPersons[ly]) libPersons[ly]=[];
           libPersons[ly].push(p.name);
         }
@@ -2876,7 +2879,8 @@ document.addEventListener('keydown',e=>{
       var totalFirst=Number(fact.total[0]||0);
       var totalMid=Number(fact.total[Math.min(1,years.length-1)]||0);
       var totalEnd=Number(fact.total[years.length-1]||0);
-      var libCount=derived.personCards.filter(function(p){return p.liberationYear&&p.liberationYear!=='2033+'}).length;
+      var _bey4=(QSYS.AÑOS[QSYS.AÑOS.length-1]+1)+'+';
+      var libCount=derived.personCards.filter(function(p){return p.liberationYear&&p.liberationYear!==_bey4}).length;
       roadKpis.innerHTML=
         '<div style="text-align:center;"><div class="mv" style="font-size:20px;">'+fmt(totalFirst)+'</div><div class="ml">'+years[0]+'/mes · '+scShort+'</div></div>'+sep
         +'<div style="text-align:center;"><div class="mv" style="font-size:20px;">'+fmt(totalMid)+'</div><div class="ml">'+years[Math.min(1,years.length-1)]+'/mes · '+scShort+'</div></div>'+sep

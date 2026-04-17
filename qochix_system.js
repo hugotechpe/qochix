@@ -657,7 +657,7 @@
       var sum=0; for(var j=0;j<=yi;j++) sum+=cajaReserva[j]; return sum;
     });
     const dist = colchon.map(function(value,i){ return Math.max(0, value - Number(state.P.reserva || 0) - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
-    const dist_no_op = neto.map(function(value, i){ return Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0)); });
+    const dist_no_op = neto.map(function(value, i){ return Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0) - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
     return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, cajaReserva, cajaAcum, cajaMinMes: AÑOS.map(function(_,yi){ if(yi===0) return 0; var qE=Math.floor((mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0)-1)/3); return Math.round(cajaMin*Math.pow(cajaGQ,Math.max(0,qE)))*2; }), suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
   }
 
@@ -816,7 +816,7 @@
     for (let i = 0; i < AÑOS.length; i += 1) {
       if (fact.colchon[i] >= 0) return AÑOS[i];
     }
-    return '2033+';
+    return (AÑOS[AÑOS.length - 1] + 1) + '+';
   }
 
   function deriveState(rawState) {
@@ -984,7 +984,7 @@
       runwayMonths: d.runway.months,
       liberatedBy2032: d.liberatedBy2032,
       persons: d.personCards.map((p) => ({
-        name: p.name, equity: +p.equity.toFixed(2), totalLast: p.totalLast, total2032: p.totalLast,
+        name: p.name, equity: +p.equity.toFixed(2), totalLast: p.totalLast,
         liberationYear: p.liberationYear, investment: p.investment,
       })),
       raw: state,
