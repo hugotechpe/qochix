@@ -57,16 +57,16 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoTope: 42000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 58, capital: 0,
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoTope: 33000, sueldoMarca: 0, hrs: 6, adj: 0.70, equity: 58, capital: 0,
         brandCapital: { almaria: 10000, ht: 40000 },
         brandCash: { almaria: 9400, ht: 16000 }, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoTope: 17000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 22, capital: 0,
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoTope: 10000, sueldoMarca: 0, hrs: 6, adj: 0.80, equity: 22, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 18800 }, c: '#3ECFCF' },
-      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoTope: 15000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 15, capital: 0,
+      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoTope: 10000, sueldoMarca: 0, hrs: 6, adj: 0.80, equity: 15, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'mechita', name: 'Mechita', sueldo: 12000, sueldoTope: 29000, sueldoMarca: 0, hrs: 6, adj: 0.55, equity: 5, capital: 0,
+      { id: 'mechita', name: 'Mechita', sueldo: 12000, sueldoTope: 15000, sueldoMarca: 0, hrs: 6, adj: 0.60, equity: 5, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E98EB6' },
     ],
@@ -92,8 +92,8 @@
       sue28: { hugo: 4000, rossy: 2500, vera: 2000, mechita: 7000 },
       sue29: { hugo: 10000, rossy: 7500, vera: 7500, mechita: 10000 },
       sue30: { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 },
-      sue32: { hugo: 35000, rossy: 14000, vera: 12500, mechita: 24000 },
-      sue33: { hugo: 42000, rossy: 17000, vera: 15000, mechita: 29000 },
+      sue32: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
+      sue33: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
       lineOverrides: {},
       brandOps: {},
       founderBrand: {
@@ -106,7 +106,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 20,
+      schemaVersion: 21,
     },
   };
 
@@ -317,6 +317,20 @@
         s.persons.forEach(function(p) {
           if (p.sueldoTope == null) p.sueldoTope = topes[p.id] || p.sueldo || 0;
         });
+      }
+    }},
+    { from: 20, to: 21, run(s) {
+      var fixes = { hugo: { sueldoTope: 33000, adj: 0.70 }, rossy: { sueldoTope: 10000, adj: 0.80 }, vera: { sueldoTope: 10000, adj: 0.80 }, mechita: { sueldoTope: 15000, adj: 0.60 } };
+      if (s.persons) {
+        s.persons.forEach(function(p) {
+          var f = fixes[p.id]; if (!f) return;
+          if (f.sueldoTope != null) p.sueldoTope = f.sueldoTope;
+          if (f.adj != null) p.adj = f.adj;
+        });
+      }
+      if (s.P) {
+        s.P.sue32 = { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 };
+        s.P.sue33 = { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 };
       }
     }},
   ];
