@@ -95,6 +95,8 @@
       sue32: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
       sue33: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
       lineOverrides: {},
+      cajaMinMarca: 1000,
+      cajaMinGrowthQ: 1.10,
       brandOps: {},
       founderBrand: {
         hugo: 'ambas',
@@ -637,9 +639,26 @@
     const sued_f = suedTotalsFromCurves(state, realCurves);
     const sued_tot = sued_f.map((value, i) => value + hcost[i]);
     const colchon = neto.map((value, i) => value - sued_tot[i]);
-    const dist = colchon.map((value) => Math.max(0, value - Number(state.P.reserva || 0)));
-    const dist_no_op = neto.map((value, i) => Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0)));
-    return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
+    const cajaMin = Number(state.P.cajaMinMarca || 0);
+    const cajaGQ = Number(state.P.cajaMinGrowthQ || 1);
+    const mesesAnio = [9,12,12,12,12,12,12,12];
+    const cajaReserva = AÑOS.map(function(_,yi){
+      if(yi===0 || cajaMin<=0) return 0;
+      var monthsSoFar=mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0);
+      var total=0;
+      for(var m=0;m<mesesAnio[yi];m++){
+        var qElapsed=Math.floor((monthsSoFar - mesesAnio[yi] + m)/3);
+        var rate=cajaMin*Math.pow(cajaGQ, Math.max(0,qElapsed));
+        total+=Math.round(rate)*2;
+      }
+      return Math.round(total);
+    });
+    const cajaAcum = AÑOS.map(function(_,yi){
+      var sum=0; for(var j=0;j<=yi;j++) sum+=cajaReserva[j]; return sum;
+    });
+    const dist = colchon.map(function(value,i){ return Math.max(0, value - Number(state.P.reserva || 0) - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
+    const dist_no_op = neto.map(function(value, i){ return Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0)); });
+    return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, cajaReserva, cajaAcum, cajaMinMes: AÑOS.map(function(_,yi){ if(yi===0) return 0; var qE=Math.floor((mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0)-1)/3); return Math.round(cajaMin*Math.pow(cajaGQ,Math.max(0,qE)))*2; }), suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
   }
 
   function calcMonthly(state, curves) {

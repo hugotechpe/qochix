@@ -663,8 +663,16 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <label>Reserva mínima <span id="lbl-rsv">S/3,000</span></label>
         <input type="range" id="rsv-range" min="500" max="10000" step="500" value="3000" oninput="onRsv(this.value)">
       </div>
+      <div class="slw" style="margin-top:.5rem">
+        <label>Caja mínima /marca /mes <span id="lbl-caja-min">S/1,000</span></label>
+        <input type="range" id="caja-min-range" min="0" max="5000" step="250" value="1000" oninput="onCajaMin(this.value)">
+      </div>
+      <div class="slw" style="margin-top:.3rem">
+        <label>Crec. trimestral caja <span id="lbl-caja-gq">10%</span></label>
+        <input type="range" id="caja-gq-range" min="100" max="130" step="1" value="110" oninput="onCajaGQ(this.value)">
+      </div>
     </div>
-    <div class="nota">El <strong>neto operativo</strong> es el % que queda tras costos directos. La <strong>reserva</strong> es el colchón antes de distribuir. Si activas <strong>aporte compra acciones</strong>, debes definir <strong>pre-money</strong>: valor de Qochix antes de la ronda.</div>
+    <div class="nota">El <strong>neto operativo</strong> es el % que queda tras costos directos. La <strong>reserva</strong> es el colchón antes de distribuir. <strong>Caja mínima</strong> = dinero que se aparta cada mes por marca para flujo de caja (crece cada trimestre). Si activas <strong>aporte compra acciones</strong>, debes definir <strong>pre-money</strong>: valor de Qochix antes de la ronda.</div>
   </div>
 
   <!-- E. Operación -->
@@ -714,6 +722,12 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <div class="kval" id="kpi-runway">—</div>
         <div class="ksub" id="kpi-runway-sub">meses sin vender</div>
         <div class="kdetail" id="kpi-runway-detail"></div>
+      </div>
+      <div class="kcard" style="border-color:rgba(100,149,237,.35)">
+        <div class="klbl" style="color:var(--sky)">🏦 Caja Acumulada</div>
+        <div class="kval" id="kpi-caja" style="color:var(--sky)">—</div>
+        <div class="ksub" id="kpi-caja-sub">flujo de caja total</div>
+        <div class="kdetail" id="kpi-caja-detail"></div>
       </div>
       <div class="kcard k-purple">
         <div class="klbl">Liberación</div>
@@ -1582,6 +1596,10 @@ function syncControlsFromState(){
   sel('tkt-indiv-box').style.display=P.tktMode==='individual'?'flex':'none';
   sv('lbl-neto',Math.round(P.netoPct*100)+'%');
   sv('lbl-rsv',fmt(P.reserva));
+  const cmr=sel('caja-min-range'); if(cmr) cmr.value=P.cajaMinMarca||1000;
+  const cgr=sel('caja-gq-range'); if(cgr) cgr.value=Math.round((P.cajaMinGrowthQ||1.1)*100);
+  sv('lbl-caja-min',fmt(P.cajaMinMarca||1000));
+  sv('lbl-caja-gq',Math.round(((P.cajaMinGrowthQ||1.1)-1)*100)+'%');
   document.querySelectorAll('.sc-btn').forEach(b=>{b.classList.toggle('active',b.classList.contains(P.sc));b.style.transform=''});
   syncEquityModeUI();
   updateTktTot();
@@ -1809,6 +1827,18 @@ function onRsv(v){
   const n=toNumLoose(v); if(n===null) return;
   P.reserva=n;
   document.getElementById('lbl-rsv').textContent=fmt(n);
+  recalc();
+}
+function onCajaMin(v){
+  const n=toNumLoose(v); if(n===null) return;
+  P.cajaMinMarca=n;
+  document.getElementById('lbl-caja-min').textContent=fmt(n);
+  recalc();
+}
+function onCajaGQ(v){
+  const n=Number(v); if(isNaN(n)) return;
+  P.cajaMinGrowthQ=n/100;
+  document.getElementById('lbl-caja-gq').textContent=Math.round((n-100))+'%';
   recalc();
 }
 function setCapitalMode(mode){
@@ -2174,6 +2204,10 @@ function recalc(){
   animateValue(sel('kpi-dist'),fmt(dist[_li]));
   animateValue(sel('kpi-be'),be);
   animateValue(sel('kpi-runway'),rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
+  var _cajaAcumLast=fact.cajaAcum?fact.cajaAcum[_li]:0;
+  animateValue(sel('kpi-caja'),fmt(_cajaAcumLast));
+  var _cajaSub=sel('kpi-caja-sub');
+  if(_cajaSub) _cajaSub.textContent='acumulada al '+_lastYear+' (2 marcas)';
   sv('hero-kpi-pool',fmt(pool));
   sv('hero-kpi-fact',fmt(fact.total[_li]));
   sv('hero-kpi-dist',fmt(dist[_li]));
@@ -2243,7 +2277,25 @@ function recalc(){
     kdRw.innerHTML=d;
   }
 
-  // -- KPI 5: Liberación (detalle) --
+  // -- KPI 5b: Caja Acumulada (detalle) --
+  const kdCaja=sel('kpi-caja-detail');
+  if(kdCaja){
+    let d='';
+    d+='<div class="kd-row"><span class="kd-lbl">Caja mín. actual /marca /mes</span><span class="kd-val" style="color:var(--sky)">'+fmt(P.cajaMinMarca||0)+'</span></div>';
+    d+='<div class="kd-row"><span class="kd-lbl">Crec. trimestral</span><span class="kd-val" style="color:var(--sky)">'+Math.round(((P.cajaMinGrowthQ||1)-1)*100)+'%</span></div>';
+    if(fact.cajaReserva){
+      AÑOS.forEach(function(_,yi){
+        if(yi===0) return;
+        d+='<div class="kd-row"><span class="kd-lbl">'+AÑOS[yi]+' (apartado año)</span><span class="kd-val" style="color:var(--sky)">'+fmt(fact.cajaReserva[yi])+'</span></div>';
+      });
+      d+='<div style="border-top:1px solid rgba(100,149,237,.2);margin:.3rem 0;padding-top:.3rem"></div>';
+      d+='<div class="kd-row"><span class="kd-lbl"><strong>Total acumulado '+_lastYear+'</strong></span><span class="kd-val" style="color:var(--sky);font-weight:800">'+fmt(fact.cajaAcum[_li])+'</span></div>';
+    }
+    d+='<div class="kd-eq">Cada mes se aparta un monto fijo por marca (Almaria + HugoTech) que crece cada trimestre. Esta caja NO se toca — es el fondo de emergencia y flujo operativo.</div>';
+    kdCaja.innerHTML=d;
+  }
+
+  // -- KPI 6: Liberación (detalle) --
   const kdLib=sel('kpi-lib-detail');
   if(kdLib){
     let d='';
@@ -2396,6 +2448,27 @@ function recalc(){
         r+=`</div>`;
       }
 
+      var cajaResY=fact.cajaReserva?fact.cajaReserva[yi]:0;
+      var cajaAcumY=fact.cajaAcum?fact.cajaAcum[yi]:0;
+      var cajaMinMesY=fact.cajaMinMes?fact.cajaMinMes[yi]:0;
+      if(yi>0 && cajaResY>0){
+        r+=`<div style="margin-top:.5rem;padding:.45rem .55rem;background:rgba(100,149,237,.06);border:1px solid rgba(100,149,237,.18);border-radius:10px">`;
+        r+=`<div style="font-size:.65rem;font-weight:600;color:var(--sky);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">🏦 Flujo de Caja</div>`;
+        r+=`<div style="display:flex;justify-content:space-between;align-items:baseline">`;
+        r+=`<div style="font-size:.65rem;color:var(--muted)">Reserva mes (×2 marcas)</div>`;
+        r+=`<div style="font-size:.85rem;font-weight:700;color:var(--sky)">${fmt(cajaMinMesY)}</div>`;
+        r+=`</div>`;
+        r+=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:.15rem">`;
+        r+=`<div style="font-size:.65rem;color:var(--muted)">Apartado en ${AÑOS[yi]}</div>`;
+        r+=`<div style="font-size:.85rem;font-weight:700;color:var(--sky)">${fmt(cajaResY)}</div>`;
+        r+=`</div>`;
+        r+=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:.15rem;padding-top:.25rem;border-top:1px solid rgba(100,149,237,.12)">`;
+        r+=`<div style="font-size:.68rem;font-weight:600;color:var(--sky)">Caja acumulada</div>`;
+        r+=`<div style="font-family:var(--serif);font-size:1.05rem;font-weight:800;color:var(--sky)">${fmt(cajaAcumY)}</div>`;
+        r+=`</div>`;
+        r+=`</div>`;
+      }
+
       r+=`</div>`;
     }
     r+='</div>';
@@ -2498,10 +2571,13 @@ function recalc(){
         {label:'Planilla total',arr:fact.sued_tot,color:'var(--coral)'},
         {label:'Colchón',arr:fact.colchon,color:'var(--sky)'},
         {label:'💰 Distribuible',arr:fact.dist,color:'var(--gold)'},
+        {label:'🏦 Caja reserv.',arr:fact.cajaReserva||AÑOS.map(()=>0),color:'cornflowerblue'},
+        {label:'🏦 Caja acum.',arr:fact.cajaAcum||AÑOS.map(()=>0),color:'dodgerblue'},
       ])}
       <div style="${insightS}background:rgba(68,217,168,.04);border:1px solid rgba(68,217,168,.12)">
         <strong style="color:var(--mint)">¿Qué significa?</strong> ${lastNegCol>=0?'Hasta <strong>'+AÑOS[lastNegCol]+'</strong> la planilla supera al neto — el ecosistema opera en rojo y los sueldos se ajustan proporcionalmente.':''} El colchón (neto − planilla) se vuelve <strong style="color:var(--green)">positivo en ${be}</strong> — ese es el <strong>break-even</strong>.
         ${dist[_li]>0?'<br><br>💰 A partir de <strong style="color:var(--gold)">'+derived.firstDistYear+'</strong> empieza a sobrar dinero para repartir entre socios. En '+_lastYear+': neto <strong>'+fmt(fact.neto[_li])+'</strong> − planilla <strong>'+fmt(fact.sued_tot[_li])+'</strong> − reserva <strong>'+reservaLabel+'</strong> = <strong style="color:var(--gold)">'+fmt(dist[_li])+'/mes distribuible</strong>. Ese monto se divide según el % de equity de cada socio.':'<br><br>⚠️ <strong style="color:var(--coral)">En este escenario no hay distribuible</strong> — todo se va a sueldos. Para generar distribuible necesitan facturar <strong>'+fmt(factMinDistLast)+'/mes</strong>.'}
+        ${fact.cajaAcum&&fact.cajaAcum[_li]>0?'<br><br>🏦 <strong style="color:dodgerblue">Fondo de caja:</strong> Se aparta <strong>'+fmt(P.cajaMinMarca||0)+'/marca/mes</strong> (×2 marcas) con un crecimiento del <strong>'+Math.round(((P.cajaMinGrowthQ||1)-1)*100)+'% trimestral</strong>. Al <strong>'+_lastYear+'</strong> la caja acumulada proyectada es <strong style="color:dodgerblue">'+fmt(fact.cajaAcum[_li])+'</strong>. Este fondo es intocable: cubre emergencias, desfases de cobranza y capital de trabajo.':''}
       </div>
     </div>`;
 
@@ -4034,6 +4110,7 @@ function paintFlowTab(){
       {icon:'pay',emoji:'👥',title:'Planilla fundadores',desc:'Sueldos pactados del equipo socio (crece cada año)',amount:'−'+fmt(suedF),cls:'negative'},
       {icon:'pay',emoji:'🏢',title:'Equipo operativo',desc:'Content creators, comerciales, facilitadores',amount:'−'+fmt(hcost),cls:'negative'},
       {icon:'rsv',emoji:'🛡️',title:'Reserva mensual',desc:'Colchón mínimo antes de distribuir',amount:'−'+fmt(reserva),cls:'negative'},
+      {icon:'rsv',emoji:'🏦',title:'Caja flujo (×2 marcas)',desc:'Fondo intocable: S/'+Math.round(P.cajaMinMarca||0)+'/marca/mes, crece '+ Math.round(((P.cajaMinGrowthQ||1)-1)*100)+'% trim.',amount:'−'+fmt(Math.round((fact.cajaReserva?fact.cajaReserva[yr]:0)/(yr===0?9:12))),cls:'negative'},
       {icon:'dist',emoji:'💰',title:'DISTRIBUIBLE',desc:'Lo que se reparte entre socios por equity',amount:fmt(dist),cls:'green'},
     ].map(function(s){
       return '<div class="flow-step"><div class="flow-icon '+s.icon+'">'+s.emoji+'</div><div class="flow-text"><div class="flow-title">'+s.title+'</div><div class="flow-desc">'+s.desc+'</div></div><div class="flow-amount '+s.cls+'">'+s.amount+'</div></div>';
