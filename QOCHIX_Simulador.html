@@ -2139,13 +2139,13 @@ function recalc(){
   try{
     const cmpAll=QSYS.compareScenarios();
     const distRangeEl=sel('kpi-dist-range');
-    if(distRangeEl) distRangeEl.textContent='Rango: '+fmt(cmpAll.p.dist2032)+' (×0.7) → '+fmt(cmpAll.o.dist2032)+' (×1.4)';
+    if(distRangeEl) distRangeEl.textContent='Rango: '+fmt(cmpAll.p.distLast||cmpAll.p.dist2032)+' (×0.7) → '+fmt(cmpAll.o.distLast||cmpAll.o.dist2032)+' (×1.4)';
     const beRangeEl=sel('kpi-be-range');
     if(beRangeEl) beRangeEl.textContent='Rango: '+cmpAll.p.breakEven+' (×0.7) → '+cmpAll.o.breakEven+' (×1.4)';
     const libRangeEl=sel('kpi-lib-range');
     if(libRangeEl) libRangeEl.textContent='1er cruce: '+cmpAll.p.firstLiberationYear+' (×0.7) → '+cmpAll.o.firstLiberationYear+' (×1.4)';
   }catch(e){}
-  const heroMults=derived.personCards.map((person)=>person.total2032/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
+  const heroMults=derived.personCards.map((person)=>(person.totalLast||person.total2032)/Math.max(1,Number(PERSONS.find((p)=>p.id===person.id)?.sueldo||1)));
   const minMult=Math.min(...heroMults);
   const maxMult=Math.max(...heroMults);
   sv('hero-kpi-mult','×'+minMult.toFixed(1)+' – ×'+maxMult.toFixed(1));
@@ -2693,8 +2693,6 @@ function recalc(){
   sel('tb-runway').innerHTML=html;
 
   // ── APUESTA tab ──
-  const _li=AÑOS.length-1;
-  const _lastYear=AÑOS[_li];
   const hugoEqL=Math.round(dist[_li]*(eqById[PERSONS[0].id]||0)/100);
   const hugoTotL=(sc.hugo[_li]||0)+hugoEqL;
   const hugoInv=getTkt('hugo')+PERSONS[0].capital+sw(PERSONS[0]).sw;
@@ -3083,7 +3081,7 @@ function paintEffortTable(fact){
     var scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
     var firstDistYr=null;
     for(var y=1;y<AÑOS.length;y++){if(fact.dist[y]>0){firstDistYr=AÑOS[y];break;}}
-    var umbralEquity=fmt(Math.round(fact.sued_tot[_li]/P.netoPct));
+    var umbralEquity=fmt(Math.round(fact.sued_tot[_LI]/P.netoPct));
     var nt='Escenario <strong>'+scn[P.sc]+'</strong>. ';
     nt+=(firstDistYr?'El primer año con distribuible es <strong style="color:var(--gold)">'+firstDistYr+'</strong>. ':'<span style="color:var(--coral)">No hay distribuible en el horizonte (2027–2033).</span> ');
     nt+='Para que el equipo reciba equity, la facturación bruta total debe superar <strong style="color:var(--teal)">'+umbralEquity+'</strong>/mes (planilla ÷ neto%).';
@@ -3101,24 +3099,24 @@ function paintEffortTable(fact){
         var eq=Math.round(fact.dist[yi]*(eqById[p.id]||0)/100);
         if(sue+eq>=target){crossYear=''+(2026+yi);break;}
       }
-      var total32=pc.total2032;
+      var total32=pc.totalLast||pc.total2032;
       var pct32=target>0?Math.round(total32/target*100):0;
-      var color=crossYear==='más allá de 2032'?'var(--coral)':'var(--green)';
+      var color=crossYear.indexOf('más allá')>=0?'var(--coral)':'var(--green)';
       nt+='<span style="color:'+p.c+'">'+p.name+'</span>: meta <strong>'+fmt(target)+'/mes</strong> → cruza en <strong style="color:'+color+'">'+crossYear+'</strong>';
-      nt+=' (en 2032 llega a '+fmt(total32)+' = '+pct32+'% de su meta).<br>';
+      nt+=' (en '+_LAST_YEAR+' llega a '+fmt(total32)+' = '+pct32+'% de su meta).<br>';
     });
     nt+='</div>';
 
     nt+='<div style="margin-top:.5rem;padding:.6rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
-    nt+='<strong style="color:var(--teal)">Facturación necesaria por marca en '+_lastYear+':</strong><br>';
-    nt+='Almaria debe facturar <strong style="color:var(--green)">'+fmt(fact.alm[_li])+'</strong>/mes ('+fmt(Math.round(fact.alm[_li]/22))+'/día laboral).<br>';
-    nt+='HugoTech debe facturar <strong style="color:var(--green)">'+fmt(fact.ht[_li])+'</strong>/mes ('+fmt(Math.round(fact.ht[_li]/22))+'/día laboral).<br>';
-    nt+='Total ecosistema: <strong>'+fmt(fact.total[_li])+'</strong>/mes bruto → <strong style="color:var(--gold)">'+fmt(fact.neto[_li])+'</strong>/mes neto.';
+    nt+='<strong style="color:var(--teal)">Facturación necesaria por marca en '+_LAST_YEAR+':</strong><br>';
+    nt+='Almaria debe facturar <strong style="color:var(--green)">'+fmt(fact.alm[_LI])+'</strong>/mes ('+fmt(Math.round(fact.alm[_LI]/22))+'/día laboral).<br>';
+    nt+='HugoTech debe facturar <strong style="color:var(--green)">'+fmt(fact.ht[_LI])+'</strong>/mes ('+fmt(Math.round(fact.ht[_LI]/22))+'/día laboral).<br>';
+    nt+='Total ecosistema: <strong>'+fmt(fact.total[_LI])+'</strong>/mes bruto → <strong style="color:var(--gold)">'+fmt(fact.neto[_LI])+'</strong>/mes neto.';
     nt+='</div>';
 
     nt+='<div style="margin-top:.5rem;padding:.6rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
     nt+='<strong style="color:var(--coral)">Equipo operativo actual y proyectado:</strong><br>';
-    nt+='Hoy (2026): <strong>'+fmt(fact.hcost[0])+'</strong>/mes → '+_lastYear+': <strong>'+fmt(fact.hcost[_li])+'</strong>/mes.<br>';
+    nt+='Hoy (2026): <strong>'+fmt(fact.hcost[0])+'</strong>/mes → '+_LAST_YEAR+': <strong>'+fmt(fact.hcost[_LI])+'</strong>/mes.<br>';
     nt+='Incluye content creators, editor, comercial (base + 10% revenue), contadora, y posiciones futuras (community manager 2028, asistente ops 2029).';
     nt+='</div>';
 
@@ -3442,10 +3440,10 @@ function paintFlowTab(){
   if(splitEl){
     splitEl.innerHTML=derived.personCards.map(function(p){
       const base=PERSONS.find(function(x){return x.id===p.id;});
-      const sueLabel=fmt(p.sue2032);
-      const eqLabel=fmt(p.eq2032);
-      const totalLabel=fmt(p.total2032);
-      const vsHoy=base?p.total2032/Math.max(1,base.sueldo):0;
+      const sueLabel=fmt(p.sueLast||p.sue2032);
+      const eqLabel=fmt(p.eqLast||p.eq2032);
+      const totalLabel=fmt(p.totalLast||p.total2032);
+      const vsHoy=base?(p.totalLast||p.total2032)/Math.max(1,base.sueldo):0;
       return '<div class="flow-person-card"><div class="flow-person-name" style="color:'+p.color+'">'+p.name+'</div><div class="flow-person-eq">'+p.equity.toFixed(1)+'% equity</div><div class="flow-person-sue">Sueldo: '+sueLabel+'</div><div class="flow-person-eqi">Equity: '+eqLabel+'</div><div class="flow-person-total">'+totalLabel+'</div><div class="flow-person-vs">×'+vsHoy.toFixed(1)+' vs sueldo actual</div></div>';
     }).join('');
   }
