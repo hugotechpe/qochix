@@ -386,21 +386,21 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .ptnr-lib-warn{background:rgba(232,107,95,.1);color:var(--coral);border:1px solid rgba(232,107,95,.2)}
 
 /* Line editable tables */
-.line-tbl{width:100%;min-width:880px;border-collapse:separate;border-spacing:0;font-size:.75rem}
-.line-tbl th{padding:6px 4px;text-align:center;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--brd);background:rgba(0,0,0,.12)}
-.line-tbl td{padding:5px 3px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.line-tbl{width:100%;min-width:900px;border-collapse:separate;border-spacing:0;font-size:.85rem}
+.line-tbl th{padding:10px 6px;text-align:center;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--brd);background:rgba(0,0,0,.12)}
+.line-tbl td{padding:6px 4px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 .line-tbl tr:hover td{background:rgba(255,255,255,.02)}
-.line-input{width:52px;padding:3px 2px;background:var(--bg);border:1px solid var(--brd);border-radius:6px;color:var(--text);font-size:.7rem;text-align:center;font-family:var(--mono);transition:border-color .2s}
+.line-input{width:62px;padding:5px 3px;background:var(--bg);border:1px solid var(--brd);border-radius:6px;color:var(--text);font-size:.82rem;text-align:center;font-family:var(--mono);transition:border-color .2s}
 .line-input:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 2px rgba(212,168,83,.15)}
 .line-input::-webkit-inner-spin-button{-webkit-appearance:none}
 .line-input[type=number]{-moz-appearance:textfield}
-.line-price{color:var(--gold)!important;font-size:.62rem!important;width:48px!important}
-.line-row-price td{padding-bottom:1px!important}
-.line-row-vol td{padding-top:1px!important}
-.line-freq-sel{background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:3px 4px;font-size:.58rem;cursor:pointer;transition:border-color .2s}
+.line-price{color:var(--gold)!important;font-size:.75rem!important;width:58px!important}
+.line-row-price td{padding-bottom:2px!important}
+.line-row-vol td{padding-top:2px!important}
+.line-freq-sel{background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:4px 6px;font-size:.7rem;cursor:pointer;transition:border-color .2s}
 .line-freq-sel:focus{border-color:var(--gold);outline:none}
 .line-freq-sel option{background:var(--bg);color:var(--text)}
-@media(max-width:600px){.line-input{width:40px;font-size:.62rem}.line-price{width:38px!important}.line-freq-sel{font-size:.52rem;padding:2px}}
+@media(max-width:600px){.line-input{width:48px;font-size:.72rem}.line-price{width:44px!important}.line-freq-sel{font-size:.6rem;padding:3px}}
 
 /* Monthly table (runway) */
 .runway-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.25rem}
@@ -1381,7 +1381,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=27.0&t=1776729600"></script>
+<script src="qochix_system.js?v=28.0&t=1776816000"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -3578,10 +3578,10 @@ function paintEffortTable(fact, derived){
     brandKeys.forEach(function(bk){
       var blines=lr.lines.filter(function(l){return l.brand===bk.key});
       bhtml+='<div class="line-brand-section" style="border-top:3px solid '+bk.color+';margin-top:1rem;padding-top:.75rem">';
-      bhtml+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem"><span style="font-size:.85rem;font-weight:700;color:'+bk.color+'">'+bk.label+' — líneas de ingreso</span><span style="font-size:.65rem;color:var(--muted)">Edita precio y volumen por año</span></div>';
-      bhtml+='<div class="tw"><table class="line-tbl"><thead><tr><th style="text-align:left;min-width:110px">LÍNEA</th><th style="font-size:.55rem;min-width:52px">Cada…</th><th style="font-size:.5rem"></th>';
+      bhtml+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem"><span style="font-size:1rem;font-weight:700;color:'+bk.color+'">'+bk.label+' — líneas de ingreso</span><span style="font-size:.75rem;color:var(--muted)">Edita precio y volumen por año</span></div>';
+      bhtml+='<div class="tw"><table class="line-tbl"><thead><tr><th style="text-align:left;min-width:130px">LÍNEA</th><th style="min-width:70px">Cada…</th><th style="width:30px"></th>';
       for(var y=0;y<AÑOS.length;y++) bhtml+='<th>'+AÑOS[y]+'</th>';
-      bhtml+='<th style="font-size:.62rem">REV '+AÑOS[AÑOS.length-1]+'</th></tr></thead><tbody>';
+      bhtml+='<th>REV '+AÑOS[AÑOS.length-1]+'</th></tr></thead><tbody>';
       blines.forEach(function(line){
         var f=line.freq||1;
         var g=line.ppA||0;
@@ -3593,35 +3593,35 @@ function paintEffortTable(fact, derived){
         if(g>0) unitLabel='activ/mes';
         // Row 1: Name + frequency + prices per year
         bhtml+='<tr class="line-row-price" style="border-top:2px solid rgba(255,255,255,.06)">';
-        bhtml+='<td rowspan="'+nRows+'" style="font-size:.72rem;color:var(--text2);white-space:nowrap;vertical-align:middle" title="'+line.unit+'">';
+        bhtml+='<td rowspan="'+nRows+'" style="font-size:.85rem;color:var(--text2);white-space:nowrap;vertical-align:middle;padding:8px 6px" title="'+line.unit+'">';
         bhtml+='<strong>'+line.name+'</strong><br>';
         if(g>0){
-          bhtml+='<span style="font-size:.55rem;color:var(--muted)">×</span> ';
-          bhtml+='<input type="number" class="line-ppa-input" value="'+g+'" data-line="'+line.id+'" min="1" style="width:28px;background:var(--bg2);border:1px solid var(--brd);border-radius:4px;color:var(--green);font-size:.6rem;text-align:center;padding:1px;font-family:var(--mono)">';
-          bhtml+='<span style="font-size:.55rem;color:var(--muted)"> pers/activ</span>';
+          bhtml+='<span style="font-size:.7rem;color:var(--muted)">×</span> ';
+          bhtml+='<input type="number" class="line-ppa-input" value="'+g+'" data-line="'+line.id+'" min="1" style="width:34px;background:var(--bg2);border:1px solid var(--brd);border-radius:5px;color:var(--green);font-size:.75rem;text-align:center;padding:2px;font-family:var(--mono)">';
+          bhtml+='<span style="font-size:.7rem;color:var(--muted)"> pers/activ</span>';
         }else{
-          bhtml+='<span style="font-size:.55rem;color:var(--muted)">'+unitLabel+'</span>';
+          bhtml+='<span style="font-size:.7rem;color:var(--muted)">'+unitLabel+'</span>';
         }
         bhtml+='</td>';
-        bhtml+='<td rowspan="'+nRows+'" style="vertical-align:middle"><select class="line-freq-sel" data-line="'+line.id+'" style="background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:2px 3px;font-size:.58rem;width:100%">';
+        bhtml+='<td rowspan="'+nRows+'" style="vertical-align:middle;padding:4px"><select class="line-freq-sel" data-line="'+line.id+'">';
         [1,2,3,4,6,12].forEach(function(fv){
           bhtml+='<option value="'+fv+'"'+(f===fv?' selected':'')+'>'+freqLabels[fv]+'</option>';
         });
         bhtml+='</select></td>';
-        bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:var(--gold);letter-spacing:.03em;padding:1px 2px;border:none">S/</td>';
+        bhtml+='<td class="line-sublabel" style="font-size:.65rem;color:var(--gold);letter-spacing:.03em;padding:2px 4px;border:none;font-weight:600">S/</td>';
         for(var yi=0;yi<AÑOS.length;yi++){
           var pr=line.prices[yi]||0;
           bhtml+='<td><input type="number" class="line-input line-price" value="'+pr+'" data-line="'+line.id+'" data-field="price" data-yi="'+yi+'" min="0"'+(pr===0?' style="opacity:.4"':'')+'></td>';
         }
-        var revCell='<td rowspan="'+nRows+'" style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap;vertical-align:middle">'+fmt(line.rev[AÑOS.length-1]);
-        if(f>1||g>0) revCell+='<br><span style="font-size:.5rem;color:var(--muted)">'+avgLast+' '+line.unit+'/mes</span>';
+        var revCell='<td rowspan="'+nRows+'" style="font-size:.88rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap;vertical-align:middle;padding:6px 8px">'+fmt(line.rev[AÑOS.length-1]);
+        if(f>1||g>0) revCell+='<br><span style="font-size:.65rem;color:var(--muted)">'+avgLast+' '+line.unit+'/mes</span>';
         revCell+='</td>';
         bhtml+=revCell+'</tr>';
         // Row 2: volumes (activaciones if ppA, else direct qty)
         bhtml+='<tr class="line-row-vol">';
         var qtyLabel=g>0?'ACTIV':'QTY';
         var qtyColor=g>0?'var(--green)':'var(--teal)';
-        bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:'+qtyColor+';letter-spacing:.03em;padding:1px 2px;border:none">'+qtyLabel+'</td>';
+        bhtml+='<td class="line-sublabel" style="font-size:.65rem;color:'+qtyColor+';letter-spacing:.03em;padding:2px 4px;border:none;font-weight:600">'+qtyLabel+'</td>';
         for(var yi2=0;yi2<AÑOS.length;yi2++){
           var vRaw=line.vols[yi2]||0;
           var totalPers=vRaw*mult;
@@ -3632,23 +3632,23 @@ function paintEffortTable(fact, derived){
         // Row 3: total personas (only when ppA > 0)
         if(g>0){
           bhtml+='<tr class="line-row-total">';
-          bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:var(--muted);letter-spacing:.03em;padding:0 2px;border:none">PERS</td>';
+          bhtml+='<td class="line-sublabel" style="font-size:.62rem;color:var(--muted);letter-spacing:.03em;padding:2px 4px;border:none;font-weight:600">PERS</td>';
           for(var yi3=0;yi3<AÑOS.length;yi3++){
             var tp=Math.round((line.vols[yi3]||0)*g);
-            bhtml+='<td style="font-size:.55rem;text-align:center;color:var(--muted);padding:0 2px">'+tp+'</td>';
+            bhtml+='<td style="font-size:.72rem;text-align:center;color:var(--muted);padding:2px 4px">'+tp+'</td>';
           }
           bhtml+='</tr>';
         }
       });
       var brandTotal=blines.reduce(function(s,l){return s+l.rev[AÑOS.length-1]},0);
-      bhtml+='<tr style="border-top:2px solid var(--brd)"><td style="font-weight:700;font-size:.78rem">Total/mes</td><td></td><td></td>';
+      bhtml+='<tr style="border-top:3px solid var(--brd)"><td style="font-weight:700;font-size:.9rem;padding:8px 6px">Total/mes</td><td></td><td></td>';
       for(var yt=0;yt<AÑOS.length;yt++){
         var yrTotal=blines.reduce(function(s,l){return s+l.rev[yt]},0);
-        bhtml+='<td style="font-size:.68rem;font-weight:600;text-align:center;color:'+bk.color+'">'+fmt(yrTotal)+'</td>';
+        bhtml+='<td style="font-size:.82rem;font-weight:700;text-align:center;color:'+bk.color+'">'+fmt(yrTotal)+'</td>';
       }
-      bhtml+='<td style="font-size:.78rem;font-weight:700;color:'+bk.color+';text-align:right">'+fmt(brandTotal)+'</td></tr>';
+      bhtml+='<td style="font-size:.9rem;font-weight:700;color:'+bk.color+';text-align:right;padding:8px">'+fmt(brandTotal)+'</td></tr>';
       bhtml+='</tbody></table></div>';
-      bhtml+='<div style="font-size:.62rem;color:var(--muted);text-align:right;margin-top:.2rem">≈ '+fmt(Math.round(brandTotal/22))+' por día laboral en '+AÑOS[AÑOS.length-1]+'</div>';
+      bhtml+='<div style="font-size:.75rem;color:var(--muted);text-align:right;margin-top:.3rem">≈ '+fmt(Math.round(brandTotal/22))+' por día laboral en '+AÑOS[AÑOS.length-1]+'</div>';
       bhtml+='</div>';
     });
     bdEl.innerHTML=bhtml;
