@@ -14,7 +14,7 @@
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
     .app{display:grid;grid-template-rows:auto 1fr;height:100vh}
-    .top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(10,13,19,.96)}
+    .top{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(10,13,19,.96);position:relative;z-index:100}
     .brand{font-weight:700;letter-spacing:.08em;color:var(--gold)}
     .side-toggle{
       border:1px solid var(--line);background:var(--bg2);color:var(--muted);
@@ -368,8 +368,8 @@
       }catch(e){
         showHubError('No se pudo iniciar recuperación automática.');
       }
-      return;
     }
+    if(!Q){ console.warn('Hub: QochixSystem no disponible, funcionalidad limitada'); }
     const ctlNeto = byId('ctl-neto');
     const ctlNetoLbl = byId('ctl-neto-lbl');
     const ctlRsv = byId('ctl-rsv');
@@ -392,6 +392,7 @@
     };
 
     function savePatch(patch){
+      if(!Q) return;
       const state = Q.getState();
       state.P = {...state.P, ...patch};
       Q.saveState(state, { source:'hub' });
@@ -404,6 +405,7 @@
       ctlPm.disabled = mode !== 'equity_round';
     }
     function restoreBase(){
+      if(!Q) return;
       const state = Q.getState();
       const baseTicket = 5000;
       const tickets = {};
@@ -430,6 +432,7 @@
       return Math.max(1000, Math.min(30000, Math.round(n / 100) * 100));
     }
     function saveTicketEqual(value){
+      if(!Q) return;
       const state = Q.getState();
       const ticket = clampTicket(value);
       const tickets = {};
@@ -452,11 +455,9 @@
       });
     }
 
-    document.querySelectorAll('.sc-btn').forEach((btn)=>{
-      btn.addEventListener('click', ()=>{
-        savePatch({ sc: btn.dataset.sc });
-      });
-    });
+    try{ document.querySelectorAll('.sc-btn').forEach((btn)=>{
+      btn.addEventListener('click', ()=>{ savePatch({ sc: btn.dataset.sc }); });
+    }); }catch(e){ console.error('sc-btn init:',e); }
     function detectPreset(state){
       const p = state.P || {};
       const keys = Object.keys(PRESETS);
@@ -483,63 +484,69 @@
     document.querySelectorAll('.pre-btn').forEach((btn)=>{
       btn.addEventListener('click', ()=>applyPreset(btn.dataset.preset));
     });
-    resetBaseBtn.addEventListener('click', restoreBase);
-    ctlNeto.addEventListener('input', ()=>{
-      ctlNetoLbl.textContent = ctlNeto.value + '%';
-      if(syncingControls) return;
-      clearTimeout(netoTimer);
-      netoTimer = window.setTimeout(()=>{
-        savePatch({ netoPct: Number(ctlNeto.value)/100 });
-      }, 120);
-    });
-    ctlNeto.addEventListener('change', ()=>{
-      if(syncingControls) return;
-      savePatch({ netoPct: Number(ctlNeto.value)/100 });
-    });
-    ctlRsv.addEventListener('change', ()=>{
-      if(syncingControls) return;
-      const val = Number(ctlRsv.value || 0);
-      savePatch({ reserva: Number.isFinite(val) ? Math.max(0, val) : 0 });
-    });
-    ctlRsv.addEventListener('input', ()=>{
-      if(syncingControls) return;
-      const val = Number(ctlRsv.value || 0);
-      clearTimeout(rsvTimer);
-      rsvTimer = window.setTimeout(()=>{
-        savePatch({ reserva: Number.isFinite(val) ? Math.max(0, val) : 0 });
-      }, 140);
-    });
-    document.querySelectorAll('.capm-btn').forEach((btn)=>{
-      btn.addEventListener('click', ()=>savePatch({ capitalMode: btn.dataset.capmode }));
-    });
-    ctlPm.addEventListener('input', ()=>{
-      const v = Math.max(100000, Math.round(Number(ctlPm.value || 0) / 50000) * 50000);
-      ctlPmLbl.textContent = 'S/' + v.toLocaleString('es-PE');
-      if(syncingControls) return;
-      clearTimeout(pmTimer);
-      pmTimer = window.setTimeout(()=>savePatch({ preMoney: v }), 180);
-    });
-    ctlTkt.addEventListener('input', ()=>{
-      const v = clampTicket(ctlTkt.value);
-      ctlTktNum.value = v;
-      ctlTktLbl.textContent = 'S/' + v.toLocaleString('es-PE');
-      if(syncingControls) return;
-      clearTimeout(tktTimer);
-      tktTimer = window.setTimeout(()=>{
-        saveTicketEqual(v);
-      }, 140);
-    });
-    ctlTkt.addEventListener('change', ()=>{
-      if(syncingControls) return;
-      saveTicketEqual(ctlTkt.value);
-    });
-    ctlTktNum.addEventListener('change', ()=>{
-      if(syncingControls) return;
-      const v = clampTicket(ctlTktNum.value);
-      ctlTkt.value = v;
-      ctlTktLbl.textContent = 'S/' + v.toLocaleString('es-PE');
-      saveTicketEqual(v);
-    });
+    try{
+      if(resetBaseBtn) resetBaseBtn.addEventListener('click', restoreBase);
+      if(ctlNeto){
+        ctlNeto.addEventListener('input', ()=>{
+          ctlNetoLbl.textContent = ctlNeto.value + '%';
+          if(syncingControls) return;
+          clearTimeout(netoTimer);
+          netoTimer = window.setTimeout(()=>{ savePatch({ netoPct: Number(ctlNeto.value)/100 }); }, 120);
+        });
+        ctlNeto.addEventListener('change', ()=>{
+          if(syncingControls) return;
+          savePatch({ netoPct: Number(ctlNeto.value)/100 });
+        });
+      }
+      if(ctlRsv){
+        ctlRsv.addEventListener('change', ()=>{
+          if(syncingControls) return;
+          const val = Number(ctlRsv.value || 0);
+          savePatch({ reserva: Number.isFinite(val) ? Math.max(0, val) : 0 });
+        });
+        ctlRsv.addEventListener('input', ()=>{
+          if(syncingControls) return;
+          const val = Number(ctlRsv.value || 0);
+          clearTimeout(rsvTimer);
+          rsvTimer = window.setTimeout(()=>{ savePatch({ reserva: Number.isFinite(val) ? Math.max(0, val) : 0 }); }, 140);
+        });
+      }
+      document.querySelectorAll('.capm-btn').forEach((btn)=>{
+        btn.addEventListener('click', ()=>savePatch({ capitalMode: btn.dataset.capmode }));
+      });
+      if(ctlPm){
+        ctlPm.addEventListener('input', ()=>{
+          const v = Math.max(100000, Math.round(Number(ctlPm.value || 0) / 50000) * 50000);
+          if(ctlPmLbl) ctlPmLbl.textContent = 'S/' + v.toLocaleString('es-PE');
+          if(syncingControls) return;
+          clearTimeout(pmTimer);
+          pmTimer = window.setTimeout(()=>savePatch({ preMoney: v }), 180);
+        });
+      }
+      if(ctlTkt){
+        ctlTkt.addEventListener('input', ()=>{
+          const v = clampTicket(ctlTkt.value);
+          if(ctlTktNum) ctlTktNum.value = v;
+          if(ctlTktLbl) ctlTktLbl.textContent = 'S/' + v.toLocaleString('es-PE');
+          if(syncingControls) return;
+          clearTimeout(tktTimer);
+          tktTimer = window.setTimeout(()=>{ saveTicketEqual(v); }, 140);
+        });
+        ctlTkt.addEventListener('change', ()=>{
+          if(syncingControls) return;
+          saveTicketEqual(ctlTkt.value);
+        });
+      }
+      if(ctlTktNum){
+        ctlTktNum.addEventListener('change', ()=>{
+          if(syncingControls) return;
+          const v = clampTicket(ctlTktNum.value);
+          if(ctlTkt) ctlTkt.value = v;
+          if(ctlTktLbl) ctlTktLbl.textContent = 'S/' + v.toLocaleString('es-PE');
+          saveTicketEqual(v);
+        });
+      }
+    }catch(e){ console.error('Controls init error:', e); }
 
     function animVal(el, txt){
       if(!el || el.textContent===txt) return;
@@ -558,6 +565,7 @@
     }
 
     function paint(){
+      if(!Q) return;
       try{
         showRecalcBar();
         const d = Q.deriveState(Q.getState());
@@ -609,6 +617,7 @@
     }
 
     function openComparator(){
+      if(!Q){showToast('Motor no disponible');return;}
       const cmp=Q.compareScenarios();
       const grid=document.getElementById('cmp-grid');
       const labels={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
@@ -635,6 +644,7 @@
     }
 
     function doExport(){
+      if(!Q){showToast('Motor no disponible');return;}
       const data=Q.exportSnapshot();
       const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
@@ -645,6 +655,7 @@
     }
 
     function openHistory(){
+      if(!Q){showToast('Motor no disponible');return;}
       const list=document.getElementById('hist-list');
       const history=Q.getHistory();
       if(!history.length){
@@ -689,6 +700,7 @@
     }
 
     function paintExec(){
+      if(!Q) return;
       try{
         const cmp=Q.compareScenarios();
         const dp=cmp.p, dn=cmp.n, doOpt=cmp.o;
@@ -699,9 +711,11 @@
       }catch(e){}
     }
 
-    Q.subscribe(paint);
-    paint();
-    paintExec();
+    if(Q){
+      try{ Q.subscribe(paint); }catch(e){ console.error('subscribe error:',e); }
+      try{ paint(); }catch(e){ console.error('initial paint error:',e); }
+      try{ paintExec(); }catch(e){ console.error('initial paintExec error:',e); }
+    }
 
     if(window.QochixHelp){
       window.QochixHelp.init({
