@@ -730,6 +730,8 @@ tbody td:first-child {
   border: 2px solid var(--gold);
   box-shadow: 0 0 0 3px rgba(212,168,83,0.1);
 }
+.tl-dot[style*="background:var(--coral)"] { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(232,107,95,0.15); }
+.tl-dot[style*="background:var(--green)"] { border-color: var(--green); box-shadow: 0 0 0 3px rgba(82,201,122,0.15); }
 .tl-date {
   font-family: var(--mono);
   font-size: 0.7rem;
@@ -2279,22 +2281,22 @@ footer {
       <h3 style="font-family:var(--serif); font-size:1.3rem; margin-bottom:1.25rem;">¿Qué pasa si alguien se va?</h3>
       <div class="timeline">
         <div class="tl-item">
-          <div class="tl-dot"></div>
+          <div class="tl-dot" style="background:var(--coral)"></div>
           <div class="tl-date">Antes del cliff (antes de abr 2027)</div>
           <div class="tl-title" style="color:var(--coral)">No hay acciones. Solo tu ticket.</div>
-          <div class="tl-body">Recuperas tu ticket de entrada (según el monto que pusiste) y nada más. Duro, pero justo. Protege a los que se quedan dando todo.</div>
+          <div class="tl-body">Recuperas tu ticket de entrada y nada más. Sin equity, sin sueldo acumulado. Es la zona de mayor riesgo — por eso existe: protege a los que se quedan.</div>
         </div>
         <div class="tl-item">
-          <div class="tl-dot"></div>
-          <div class="tl-date">Durante el vesting (may 2027 - mar 2029)</div>
-          <div class="tl-title">Te llevas lo que ganaste</div>
-          <div class="tl-body">Las acciones ya consolidadas son tuyas. Las que faltan vuelven al ecosistema. Es justo para todos.</div>
+          <div class="tl-dot" style="background:var(--gold)"></div>
+          <div class="tl-date">Durante el vesting (may 2027 – mar 2029)</div>
+          <div class="tl-title" style="color:var(--gold)">Te llevas lo que ganaste</div>
+          <div class="tl-body">Las acciones ya consolidadas son tuyas — proporcional al tiempo que estuviste. Las que faltan vuelven al ecosistema. Ambas partes quedan protegidas.</div>
         </div>
         <div class="tl-item">
-          <div class="tl-dot"></div>
+          <div class="tl-dot" style="background:var(--green)"></div>
           <div class="tl-date">Después del vesting (abr 2029+)</div>
           <div class="tl-title" style="color:var(--green)">Dueño para siempre</div>
-          <div class="tl-body">100% de acciones consolidadas. Aunque dejes las operaciones, tu % del ecosistema sigue siendo tuyo. Eso es lo que construiste.</div>
+          <div class="tl-body">100% de tus acciones consolidadas. Aunque dejes las operaciones, tu % del ecosistema sigue siendo tuyo. Puedes cobrar equity como dueño pasivo. Eso es lo que construiste.</div>
         </div>
       </div>
     </div>
@@ -2302,10 +2304,10 @@ footer {
     <div>
       <h3 style="font-family:var(--serif); font-size:1.3rem; margin-bottom:1.25rem;">Próximos pasos tras la firma</h3>
       <div style="display:flex; flex-direction:column; gap:0.75rem">
-        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:linear-gradient(135deg,rgba(82,201,122,0.06),rgba(82,201,122,0.02)); border-radius:12px; border:1px solid rgba(82,201,122,0.2)">
           <span style="color:var(--green); font-size:1.1rem; flex-shrink:0">✓</span>
           <div>
-            <div style="font-weight:600; font-size:0.88rem">Tickets de entrada confirmados</div>
+            <div style="font-weight:600; font-size:0.88rem; color:var(--green)">Tickets de entrada confirmados</div>
             <div style="font-size:0.8rem; color:var(--muted)">Hugo S/5k · Rossy S/5k · Vera S/5k · Mechita S/15k</div>
           </div>
         </div>
@@ -2321,6 +2323,20 @@ footer {
           <div>
             <div style="font-weight:600; font-size:0.88rem">Primer lanzamiento HugoTech</div>
             <div style="font-size:0.8rem; color:var(--muted)">Primera cohorte B2B y sesiones abiertas — julio 2026</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">③</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Primer Full Day RECOprogramando</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Evento abierto con 24+ personas — primer ingreso real</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">④</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Revisión trimestral Q3 2026</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Primer checkpoint con números reales vs modelo</div>
           </div>
         </div>
       </div>
@@ -2801,7 +2817,7 @@ footer {
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=25.0&t=1776556800"></script>
+<script src="qochix_system.js?v=31.0&t=1776556900"></script>
 <script>
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
