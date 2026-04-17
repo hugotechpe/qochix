@@ -105,7 +105,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 17,
+      schemaVersion: 18,
     },
   };
 
@@ -267,6 +267,8 @@
           if (f.adj != null) p.adj = f.adj;
           if (f.hrs != null) p.hrs = f.hrs;
           if (f.brandCapital) p.brandCapital = { ...(p.brandCapital || {}), ...f.brandCapital };
+          if (p.brandCapital) delete p.brandCapital.trazo;
+          if (p.brandCash) delete p.brandCash.trazo;
         });
       }
       if (s.P) {
@@ -287,6 +289,23 @@
         { role: 'Asistente operaciones', brand: 'Mixto', sue: 2500, growth: 1.12, startYear: 2029 },
       ];
     }},
+    { from: 17, to: 18, run(s) {
+      if (s.persons) {
+        var fixes18 = {
+          hugo: { brandCapital: { almaria: 10000, ht: 40000 }, brandCash: { almaria: 9400, ht: 16000 }, adj: 1.0 },
+          mechita: { adj: 0.55 },
+        };
+        s.persons.forEach(function(p) {
+          if (p.brandCapital) delete p.brandCapital.trazo;
+          if (p.brandCash) delete p.brandCash.trazo;
+          var f18 = fixes18[p.id];
+          if (!f18) return;
+          if (f18.brandCapital) p.brandCapital = f18.brandCapital;
+          if (f18.brandCash) p.brandCash = f18.brandCash;
+          if (f18.adj != null) p.adj = f18.adj;
+        });
+      }
+    }},
   ];
 
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -299,11 +318,16 @@
     const next = clone(DEFAULTS);
     if (!raw || typeof raw !== 'object') return next;
     if (Array.isArray(raw.persons)) {
+      const validBrands = new Set(BRAND_IDS);
       next.persons = next.persons.map((person) => {
         const incoming = raw.persons.find((entry) => entry && entry.id === person.id);
         const merged = mergePerson(person, incoming);
-        merged.brandCapital = { ...(person.brandCapital || {}), ...((incoming && incoming.brandCapital) || {}) };
-        merged.brandCash = { ...(person.brandCash || {}), ...((incoming && incoming.brandCash) || {}) };
+        const rawBc = { ...(person.brandCapital || {}), ...((incoming && incoming.brandCapital) || {}) };
+        const rawCash = { ...(person.brandCash || {}), ...((incoming && incoming.brandCash) || {}) };
+        merged.brandCapital = {};
+        merged.brandCash = {};
+        Object.keys(rawBc).forEach(k => { if (validBrands.has(k)) merged.brandCapital[k] = rawBc[k]; });
+        Object.keys(rawCash).forEach(k => { if (validBrands.has(k)) merged.brandCash[k] = rawCash[k]; });
         return merged;
       });
     }

@@ -2776,7 +2776,7 @@ footer {
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=23.0&t=1776470400"></script>
+<script src="qochix_system.js?v=24.0&t=1776470400"></script>
 <script>
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
@@ -3109,18 +3109,19 @@ function showTermTab(panelId, btn) {
     var ptb=document.getElementById('pact-pool-tbody');
     if(ptb){
       var sw=function(pr){var hr=Number(pr.sueldo||0)/(22*8);var hm=Number(pr.hrs||0)*6*4.3;var vm=hr*hm;return{sw:vm*36*Number(pr.adj||0)};};
-      var totalTk=0,totalCap=0,totalSw=0,totalAll=0;
+      var totalTk=0,totalCap=0,totalCash=0,totalSw=0,totalAll=0;
       var ph='';
       d.state.persons.forEach(function(pr){
         var pcard=pc.find(function(c){return c.id===pr.id});
         var tk=pcard?pcard.ticket:5000;
-        var bc=pr.brandCapital||{};var bcTot=Object.values(bc).reduce(function(a,v){return a+Number(v||0)},0);
-        var swv=sw(pr).sw;var tot=tk+bcTot+swv;
+        var bcTot=Object.values(pr.brandCapital||{}).reduce(function(a,v){return a+Number(v||0)},0);
+        var cashTot=Object.values(pr.brandCash||{}).reduce(function(a,v){return a+Number(v||0)},0);
+        var swv=sw(pr).sw;var tot=tk+bcTot+cashTot+swv;
         var eq=pcard?pcard.equity:0;var matPct=d.pool>0?(tot/d.pool*100):0;var diff=eq-matPct;
         var diffCls=diff>=0?'td-green':'';if(diff<-0.5)diffCls='style="color:var(--coral)"';
         var diffStr=diff>=0?'+'+diff.toFixed(1)+'pts':diff.toFixed(1)+'pts';
-        ph+='<tr'+(pr.id==='hugo'?' class="tr-hugo"':'')+'><td>'+pr.name+'</td><td class="td-gold">'+eq.toFixed(1)+'%</td><td>'+fmt(tk)+'</td><td>'+fmt(bcTot)+'</td><td>'+fmt(Math.round(swv))+'</td><td class="'+(pr.id==='hugo'?'td-big':'td-gold')+'">'+fmt(Math.round(tot))+'</td><td>'+matPct.toFixed(1)+'%</td><td '+(diff>=0?'class="td-green"':'style="color:var(--coral)"')+'>'+diffStr+'</td></tr>';
-        totalTk+=tk;totalCap+=bcTot;totalSw+=swv;totalAll+=tot;
+        ph+='<tr'+(pr.id==='hugo'?' class="tr-hugo"':'')+'><td>'+pr.name+'</td><td class="td-gold">'+eq.toFixed(1)+'%</td><td>'+fmt(tk)+'</td><td>'+fmt(bcTot+cashTot)+'</td><td>'+fmt(Math.round(swv))+'</td><td class="'+(pr.id==='hugo'?'td-big':'td-gold')+'">'+fmt(Math.round(tot))+'</td><td>'+matPct.toFixed(1)+'%</td><td '+(diff>=0?'class="td-green"':'style="color:var(--coral)"')+'>'+diffStr+'</td></tr>';
+        totalTk+=tk;totalCap+=bcTot+cashTot;totalSw+=swv;totalAll+=tot;
       });
       ph+='<tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>'+fmt(totalTk)+'</td><td>'+fmt(totalCap)+'</td><td>'+fmt(Math.round(totalSw))+'</td><td>'+fmt(Math.round(totalAll))+'</td><td>—</td><td>—</td></tr>';
       ptb.innerHTML=ph;

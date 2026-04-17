@@ -842,7 +842,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>% equity</th><th>Ticket</th><th>Inv. marca</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Dif.</th>
+        <th>Socio</th><th>% equity</th><th>Ticket</th><th>Cap. marcas</th><th>Caja marcas</th><th>Sweat 3a</th><th>TOTAL</th><th>% mat.</th><th>Dif.</th>
       </tr></thead><tbody id="tb-equity"></tbody></table></div>
       <div id="explain-equity" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
@@ -1422,7 +1422,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=23.0&t=1776470400"></script>
+<script src="qochix_system.js?v=24.0&t=1776470400"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -2369,17 +2369,18 @@ function recalc(){
   html='';
   PERSONS.forEach((p,i)=>{
     const tkt=getTkt(p.id);
-    const bc=p.brandCapital||{};
-    const bcTot=Object.values(bc).reduce((a,v)=>a+Number(v||0),0);
-    const s=sw(p,sc[p.id]),inv=tkt+bcTot+s.sw,mat=pool>0?inv/pool:0;
+    const bcTot=Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0);
+    const cashTot=Object.values(p.brandCash||{}).reduce((a,v)=>a+Number(v||0),0);
+    const s=sw(p,sc[p.id]),inv=tkt+bcTot+cashTot+s.sw,mat=pool>0?inv/pool:0;
     const effEq=eqById[p.id]||0;
     const baseEq=baseEqById[p.id]||0;
     const diff=effEq/100-mat,ds=(diff>0?'+':'')+(diff*100).toFixed(1)+'pts';
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${effEq.toFixed(1)}% <span style="color:var(--muted);font-size:.64rem">(base ${baseEq.toFixed(1)}%)</span></td><td>${fmt(tkt)}</td><td>${fmt(bcTot)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${effEq.toFixed(1)}% <span style="color:var(--muted);font-size:.64rem">(base ${baseEq.toFixed(1)}%)</span></td><td>${fmt(tkt)}</td><td>${fmt(bcTot)}</td><td>${fmt(cashTot)}</td><td>${fmt(s.sw)}</td><td class="cg">${fmt(inv)}</td><td class="cm">${(mat*100).toFixed(1)}%</td><td class="${diff>=0?'cv':'cc'}">${ds}</td></tr>`;
   });
   const tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
   const bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
-  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(bcAll)}</td><td>${fmt(tswAll)}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
+  const cashAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCash||{}).reduce((a,v)=>a+Number(v||0),0),0);
+  html+=`<tr class="trs"><td>TOTAL POOL</td><td>100%</td><td>${fmt(tktTot)}</td><td>${fmt(bcAll)}</td><td>${fmt(cashAll)}</td><td>${fmt(tswAll)}</td><td class="cg cb">${fmt(pool)}</td><td>—</td><td>—</td></tr>`;
   sel('tb-equity').innerHTML=html;
 
   // ── Explain equity ──
@@ -2393,11 +2394,12 @@ function recalc(){
     let h='';
     h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo se calcula el % de equity?</div>';
-    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco para Qochix) + <strong style="color:var(--coral)">Inv. marca</strong> (lo invertido históricamente en Almaria/HugoTech) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en 7 años).</div>';
+    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco) + <strong style="color:var(--coral)">Cap. marcas</strong> (inversión histórica) + <strong style="color:var(--teal)">Caja marcas</strong> (dinero real disponible) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en 7 años).</div>';
     h+='<div style="margin-bottom:.35rem"><strong>% Mat.</strong> = aporte de esa persona ÷ pool total. <strong>Dif.</strong> = diferencia entre el % equity efectivo y el % material (si hay ajuste base pre-definido).</div>';
-    h+=`<div style="margin-bottom:.35rem">El pool total es <strong style="color:var(--gold)">${fmt(pool)}</strong>. De ese monto, <strong>${fmt(tktTot)}</strong> son tickets, <strong>${fmt(bcAll)}</strong> capital en marcas, y <strong>${fmt(tswAll)}</strong> sweat equity.</div>`;
+    h+=`<div style="margin-bottom:.35rem">El pool total es <strong style="color:var(--gold)">${fmt(pool)}</strong>. De ese monto, <strong>${fmt(tktTot)}</strong> son tickets, <strong>${fmt(bcAll)}</strong> cap. marcas, <strong>${fmt(cashAll)}</strong> caja marcas, y <strong>${fmt(tswAll)}</strong> sweat equity.</div>`;
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
-    h+=`<strong style="color:${topPerson.c}">${topPerson.name}</strong> tiene <strong>${topEq}%</strong> porque su aporte total es <strong>${fmt(topTkt+topBc+topSweat)}</strong> (ticket ${fmt(topTkt)} + marcas ${fmt(topBc)} + sweat ${fmt(topSweat)}). `;
+    const topCash=Object.values(topPerson.brandCash||{}).reduce((a,v)=>a+Number(v||0),0);
+    h+=`<strong style="color:${topPerson.c}">${topPerson.name}</strong> tiene <strong>${topEq}%</strong> porque su aporte total es <strong>${fmt(topTkt+topBc+topCash+topSweat)}</strong> (ticket ${fmt(topTkt)} + cap. ${fmt(topBc)} + caja ${fmt(topCash)} + sweat ${fmt(topSweat)}). `;
     const lowPerson=PERSONS.slice().sort((a,b)=>(eqById[a.id]||0)-(eqById[b.id]||0))[0];
     const lowEq=(eqById[lowPerson.id]||0).toFixed(1);
     h+=`<strong style="color:${lowPerson.c}">${lowPerson.name}</strong> tiene <strong>${lowEq}%</strong> porque su aporte total es menor — menor valor de mercado y/o menos horas dedicadas.`;
@@ -3210,7 +3212,7 @@ function paintPartnerCards(derived, fact, eqById){
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado/mes</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
     var mult=pc.total2032/Math.max(1,p.sueldo);
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador 2032</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
-    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.brandCapitalTotal||0)+'</span></div>';
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.cashContribution||0)+'</span></div>';
     var libYr=pc.liberationYear;
     var libOk=libYr<=2031;
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Año liberación</span><span class="ptnr-lib-tag '+(libOk?'ptnr-lib-ok':'ptnr-lib-warn')+'">'+libYr+'</span></div>';
@@ -3235,12 +3237,13 @@ function paintEquityExplainer(derived, fact){
 
   h+='<div style="font-size:.76rem;color:var(--muted);line-height:1.65;margin-bottom:1rem">';
   h+='El equity efectivo de cada socio se calcula automáticamente según su <strong style="color:var(--text)">aporte total al pool</strong>. ';
-  h+='El aporte de cada persona tiene 3 componentes:';
+  h+='El aporte de cada persona tiene 4 componentes:';
   h+='<div style="margin:.6rem 0 .4rem;padding:.6rem .8rem;background:var(--bg2);border-radius:8px;font-family:var(--mono);font-size:.72rem;line-height:1.8;color:var(--teal)">';
-  h+='Aporte = <span style="color:var(--gold)">Ticket Qochix</span> + <span style="color:var(--coral)">Capital invertido en marcas</span> + <span style="color:var(--green)">Sweat Equity (valor del trabajo no pagado)</span>';
+  h+='Aporte = <span style="color:var(--gold)">Ticket Qochix</span> + <span style="color:var(--coral)">Capital invertido en marcas</span> + <span style="color:var(--teal)">Caja real en marcas</span> + <span style="color:var(--green)">Sweat Equity (valor del trabajo no pagado)</span>';
   h+='</div>';
   h+='<div style="margin-bottom:.4rem"><strong style="color:var(--gold)">Ticket Qochix:</strong> Capital fresco que cada socio aporta directamente al holding.</div>';
   h+='<div style="margin-bottom:.4rem"><strong style="color:var(--coral)">Capital en marcas:</strong> Lo que cada persona ya invirtió construyendo Almaria o HugoTech (dinero histórico, no recuperable).</div>';
+  h+='<div style="margin-bottom:.4rem"><strong style="color:var(--teal)">Caja real en marcas:</strong> Dinero real disponible que cada socio ha puesto en las marcas del ecosistema.</div>';
   h+='<div style="margin-bottom:.4rem"><strong style="color:var(--green)">Sweat Equity:</strong> El valor de mercado del tiempo que cada socio dedica a Qochix <u>sin cobrar</u> (o cobrando menos de lo que vale). Se calcula así:</div>';
   h+='<div style="padding:.5rem .8rem;background:var(--bg2);border-radius:8px;font-family:var(--mono);font-size:.70rem;line-height:1.8;color:var(--green);margin-bottom:.5rem">';
   h+='Sweat = Σ cada año [ max(0, <span style="color:var(--teal)">valor_mercado/mes</span> − <span style="color:var(--gold)">compensación_extra_Qochix/mes</span>) × 12 ] × factor_ajuste<br>';
@@ -3264,6 +3267,7 @@ function paintEquityExplainer(derived, fact){
   h+='<th style="text-align:right;padding:.4rem .3rem">Factor</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem">Ticket</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem">Cap. marcas</th>';
+  h+='<th style="text-align:right;padding:.4rem .3rem">Caja marcas</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem;color:var(--green)">Sweat</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem;color:var(--gold);font-weight:700">Aporte total</th>';
   h+='<th style="text-align:right;padding:.4rem .3rem;color:var(--teal);font-weight:700">% Equity</th>';
@@ -3287,9 +3291,10 @@ function paintEquityExplainer(derived, fact){
     swTotal*=Number(p.adj||0);
     var tkt=pc.ticket;
     var bcap=pc.brandCapitalTotal;
-    var aporte=tkt+bcap+swTotal;
+    var bcash=Object.values(p.brandCash||{}).reduce(function(a,v){return a+Number(v||0);},0);
+    var aporte=tkt+bcap+bcash+swTotal;
     poolTotal+=aporte;
-    rows.push({p:p,pc:pc,hr:hr,hm:hm,vm:vm,bm:bm,sw:swTotal,tkt:tkt,bcap:bcap,aporte:aporte});
+    rows.push({p:p,pc:pc,hr:hr,hm:hm,vm:vm,bm:bm,sw:swTotal,tkt:tkt,bcap:bcap,bcash:bcash,aporte:aporte});
   });
 
   rows.forEach(function(r){
@@ -3303,6 +3308,7 @@ function paintEquityExplainer(derived, fact){
     h+='<td style="text-align:right;padding:.45rem .3rem">×'+r.p.adj+'</td>';
     h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold)">'+fmt(r.tkt)+'</td>';
     h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--coral)">'+fmt(r.bcap)+'</td>';
+    h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--teal)">'+fmt(r.bcash)+'</td>';
     h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--green)">'+fmt(Math.round(r.sw))+'</td>';
     h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold);font-weight:700">'+fmt(Math.round(r.aporte))+'</td>';
     h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--teal);font-weight:700;font-size:.8rem">'+pct.toFixed(1)+'%</td>';
@@ -3313,6 +3319,7 @@ function paintEquityExplainer(derived, fact){
   h+='<td style="padding:.45rem .5rem" colspan="6">TOTAL</td>';
   h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold)">'+fmt(rows.reduce(function(s,r){return s+r.tkt;},0))+'</td>';
   h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--coral)">'+fmt(rows.reduce(function(s,r){return s+r.bcap;},0))+'</td>';
+  h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--teal)">'+fmt(rows.reduce(function(s,r){return s+r.bcash;},0))+'</td>';
   h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--green)">'+fmt(rows.reduce(function(s,r){return s+Math.round(r.sw);},0))+'</td>';
   h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--gold)">'+fmt(Math.round(poolTotal))+'</td>';
   h+='<td style="text-align:right;padding:.45rem .3rem;color:var(--teal)">100%</td>';
@@ -3343,6 +3350,9 @@ function paintEquityExplainer(derived, fact){
     }
     if(r.bcap > 0){
       h+='<div style="margin-top:.25rem">🏭 <strong>Inversión en marcas:</strong> '+fmt(r.bcap)+' invertidos en construir marcas del ecosistema.</div>';
+    }
+    if(r.bcash > 0){
+      h+='<div style="margin-top:.25rem">💰 <strong>Caja real en marcas:</strong> '+fmt(r.bcash)+' de caja disponible aportada a las marcas.</div>';
     }
     if(r.tkt > 0){
       h+='<div style="margin-top:.25rem">🎟️ <strong>Ticket Qochix:</strong> '+fmt(r.tkt)+' de capital fresco.</div>';
