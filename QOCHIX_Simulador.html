@@ -3310,6 +3310,24 @@ function paintPartnerCards(derived, fact, eqById){
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Año liberación</span><span class="ptnr-lib-tag '+(libOk?'ptnr-lib-ok':'ptnr-lib-warn')+'">'+libYr+'</span></div>';
     h+='</div>';
 
+    // --- Explicación de reinversión ---
+    if(sumReinvAn>0){
+      var primerReinvYr=null;
+      for(var ri=1;ri<AÑOS.length;ri++){
+        var sueRi=realCurves[p.id]?realCurves[p.id][ri]:0;
+        if(sueRi>tope){primerReinvYr=AÑOS[ri];break;}
+      }
+      h+='<div style="margin-top:.6rem;padding:.65rem .8rem;background:rgba(82,201,122,.06);border:1px solid rgba(82,201,122,.15);border-radius:10px;font-size:.75rem;line-height:1.6;color:var(--muted)">';
+      h+='<div style="font-weight:700;color:var(--green);margin-bottom:.3rem;font-size:.78rem">💰 Reinversión: '+fmt(sumReinvAn)+' acumulados</div>';
+      h+='A partir de <strong style="color:var(--text)">'+primerReinvYr+'</strong>, el sueldo de la curva supera el tope de <strong style="color:var(--gold)">'+fmt(tope)+'/mes</strong>. ';
+      h+='La diferencia no se pierde — se redirige automáticamente a la <strong style="color:var(--green)">caja interna del ecosistema</strong> para reinvertir en crecimiento.';
+      h+='<div style="margin-top:.45rem;padding:.45rem .6rem;background:rgba(255,255,255,.04);border-radius:8px;font-family:var(--mono);font-size:.72rem;color:var(--teal)">';
+      h+='Ej. en '+AÑOS[AÑOS.length-1]+': curva = '+fmt(realCurves[p.id]?realCurves[p.id][AÑOS.length-1]:0)+' → cobra '+fmt(lastCapped)+' + reinvierte <strong style="color:var(--green)">'+fmt(lastReinv)+'</strong>/mes';
+      h+='</div>';
+      h+='<div style="margin-top:.35rem;font-size:.72rem">Esto beneficia a todos: más capital para escalar las marcas → más revenue futuro → más distribuible para el equipo.</div>';
+      h+='</div>';
+    }
+
     h+='</div>';
     return h;
   }).join('');
