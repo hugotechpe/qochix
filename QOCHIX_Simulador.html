@@ -14,7 +14,8 @@
   --brd:rgba(255,255,255,0.07);
   --gold:#D4A853;--gold2:#F0C878;
   --teal:#3ECFCF;--coral:#E86B5F;--green:#52C97A;
-  --purple:#9B7FE8;--blue:#4A9EE8;--orange:#F0A050;
+  --purple:#9B7FE8;--blue:#5BA8F5;--orange:#F0A050;
+  --sky:#4ABAFF;--mint:#44D9A8;
   --text:#E8ECF0;--muted:#6B7A96;--faint:#2A3350;
   --serif:'Playfair Display',serif;--sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
   --radius:16px;--glow-gold:0 0 30px rgba(212,168,83,.15);
@@ -281,7 +282,7 @@ tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(255,255,255,.02)}
 .trs td{background:var(--bg3);font-weight:700;border-top:1px solid var(--brd);border-bottom:none}
 .trh td{background:rgba(212,168,83,.03)}
-.cg{color:var(--gold)!important}.ct{color:var(--teal)!important}
+.cg{color:var(--gold)!important}.ct{color:var(--blue)!important}
 .cv{color:var(--green)!important}.cc{color:var(--coral)!important}
 .cm{color:var(--muted)!important}.cb{font-size:.95rem!important;font-family:var(--serif)!important;font-weight:700!important}
 
@@ -2370,7 +2371,7 @@ function recalc(){
   }
 
   paintPartnerCards(derived, fact, eqById);
-  paintEffortTable(fact);
+  paintEffortTable(fact, derived);
 
   // ── Sweat table ──
   let html='';let tvm=0,tsw=0;
@@ -2447,12 +2448,12 @@ function recalc(){
 
   // ── Facturación table ──
   const rows=[
-    ['🌿 Almaria',fact.alm,'cm'],['💻 HugoTech',fact.ht,'cm'],
+    ['🌿 Almaria',fact.alm,'cv'],['💻 HugoTech',fact.ht,'ct'],
     ['TOTAL QOCHIX',fact.total,'cg'],
     [`NETO ${(P.netoPct*100).toFixed(0)}%`,fact.neto,'ct'],
-    ['(-) Sueldos fundadores',fact.sued_f,'cm'],
+    ['(-) Sueldos fundadores',fact.sued_f,'cc'],
     ['(-) Equipo operativo',fact.hcost,'cc'],
-    ['(-) Total planilla',fact.sued_tot,'cm'],
+    ['(-) Total planilla',fact.sued_tot,'cc'],
     ['COLCHÓN',fact.colchon,'cg'],
     ['💰 DISTRIBUIBLE',fact.dist,'cg'],
   ];
@@ -3019,7 +3020,7 @@ function paintBrandOps(derived){
   }).join('');
 }
 
-function paintEffortTable(fact){
+function paintEffortTable(fact, derived){
   var el=sel('tb-effort');
   if(!el)return;
   var fmt=QSYS.fmtCurrency;
@@ -3050,7 +3051,7 @@ function paintEffortTable(fact){
     ph+='</tr></thead><tbody>';
 
     // ═══ INGRESOS ═══
-    ph+='<tr style="background:rgba(82,201,122,.04)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--green);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📈 Ingresos brutos</td></tr>';
+    ph+='<tr style="background:rgba(91,168,245,.05)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--blue);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📈 Ingresos brutos</td></tr>';
 
     var almLines=lr.lines.filter(function(l){return l.brand==='almaria'});
     var htLines=lr.lines.filter(function(l){return l.brand==='ht'});
@@ -3061,7 +3062,7 @@ function paintEffortTable(fact){
     ph+='</tr>';
     almLines.forEach(function(line){
       ph+='<tr style="border-bottom:1px solid rgba(255,255,255,.02)"><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+line.name+'</td>';
-      for(var li=1;li<AÑOS.length;li++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(line.rev[li])+'</td>';
+      for(var li=1;li<AÑOS.length;li++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--sky)">'+fmt(line.rev[li])+'</td>';
       ph+='</tr>';
     });
 
@@ -3071,18 +3072,18 @@ function paintEffortTable(fact){
     ph+='</tr>';
     htLines.forEach(function(line){
       ph+='<tr style="border-bottom:1px solid rgba(255,255,255,.02)"><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+line.name+'</td>';
-      for(var li=1;li<AÑOS.length;li++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(line.rev[li])+'</td>';
+      for(var li=1;li<AÑOS.length;li++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--sky)">'+fmt(line.rev[li])+'</td>';
       ph+='</tr>';
     });
 
     // Total Ingresos
-    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--text)">TOTAL INGRESOS BRUTOS</td>';
-    for(var ti=1;ti<AÑOS.length;ti++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--text)">'+fmt(fact.total[ti])+'</td>';
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(91,168,245,.06)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--blue)">TOTAL INGRESOS BRUTOS</td>';
+    for(var ti=1;ti<AÑOS.length;ti++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--blue)">'+fmt(fact.total[ti])+'</td>';
     ph+='</tr>';
 
     // Neto operativo
-    ph+='<tr><td style="padding:.35rem .5rem;color:var(--teal)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
-    for(var ni=1;ni<AÑOS.length;ni++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--teal)">'+fmt(fact.neto[ni])+'</td>';
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--mint)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
+    for(var ni=1;ni<AÑOS.length;ni++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--mint)">'+fmt(fact.neto[ni])+'</td>';
     ph+='</tr>';
 
     // ═══ EGRESOS ═══
@@ -3150,11 +3151,11 @@ function paintEffortTable(fact){
     ph+='</tr>';
 
     // ═══ RESULTADO ═══
-    ph+='<tr style="background:rgba(212,168,83,.06);border-top:3px solid var(--gold)"><td style="padding:.5rem .5rem;font-weight:700;color:var(--gold);font-size:.78rem">💰 RESULTADO NETO</td>';
+    ph+='<tr style="background:rgba(91,168,245,.06);border-top:3px solid var(--blue)"><td style="padding:.5rem .5rem;font-weight:700;color:var(--gold);font-size:.78rem">💰 RESULTADO NETO</td>';
     for(var ri=1;ri<AÑOS.length;ri++){
       var resultado=fact.neto[ri]-fact.sued_f[ri]-fact.hcost[ri]-opsCostByYear[ri-1];
-      var rColor=resultado>=0?'var(--green)':'var(--coral)';
-      ph+='<td style="text-align:right;padding:.5rem .3rem;font-weight:700;color:'+rColor+';font-size:.78rem">'+fmt(resultado)+'</td>';
+      var rColor=resultado>=0?'var(--blue)':'var(--coral)';
+      ph+='<td style="text-align:right;padding:.5rem .3rem;font-weight:700;color:'+rColor+';font-size:.78rem">'+(resultado<0?'('+fmt(Math.abs(resultado))+')':fmt(resultado))+'</td>';
     }
     ph+='</tr>';
 
@@ -3171,8 +3172,8 @@ function paintEffortTable(fact){
   // ── Tabla resumen (original) ──
   var html='';
   var brandMeta=[
-    {key:'almaria',name:'🌿 Almaria',arr:fact.alm,color:'var(--green)'},
-    {key:'ht',name:'💻 HugoTech',arr:fact.ht,color:'var(--teal)'},
+    {key:'almaria',name:'🌿 Almaria',arr:fact.alm,color:'var(--green)',sub:'var(--sky)'},
+    {key:'ht',name:'💻 HugoTech',arr:fact.ht,color:'var(--teal)',sub:'var(--sky)'},
   ];
   brandMeta.forEach(function(b){
     html+='<tr><td style="color:'+b.color+';font-weight:600">'+b.name+'</td>';
