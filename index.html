@@ -96,19 +96,26 @@
     .act-btn:hover{border-color:rgba(62,207,207,.45);color:var(--text)}
     .modal{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(5,8,12,.75)}
     .modal.open{display:flex}
-    .modal-card{width:min(980px,96vw);max-height:85vh;overflow:auto;background:#111520;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:1.2rem}
+    .modal-card{width:min(1100px,96vw);max-height:88vh;overflow:auto;background:#111520;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:1.2rem}
     .modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
     .modal-hdr h3{color:var(--gold);font-size:1rem;margin:0}
     .modal-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
     .modal-close:hover{color:var(--text)}
-    .cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .cmp-col{background:rgba(10,13,19,.6);border:1px solid var(--line);border-radius:12px;padding:12px}
-    .cmp-title{font-size:13px;font-weight:700;text-align:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+    .cmp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .cmp-col{background:rgba(10,13,19,.6);border:1px solid var(--line);border-radius:14px;padding:14px}
+    .cmp-title{font-size:14px;font-weight:700;text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+    .cmp-section{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin:10px 0 4px;padding-top:6px;border-top:1px solid var(--line)}
+    .cmp-section:first-of-type{margin-top:0;border-top:none;padding-top:0}
     .cmp-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
     .cmp-row:last-child{border-bottom:none}
+    .cmp-row.highlight{background:rgba(212,168,83,.06);margin:0 -6px;padding:5px 6px;border-radius:6px}
+    .cmp-row.positive .cmp-value{color:#52C97A}
+    .cmp-row.negative .cmp-value{color:#E86B5F}
     .cmp-label{color:var(--muted)}.cmp-value{color:var(--text);font-weight:600}
-    .cmp-person{margin-top:6px;padding-top:4px;border-top:1px solid var(--line)}
-    .cmp-pname{font-size:11px;color:var(--gold);font-weight:600;margin-bottom:3px}
+    .cmp-person{margin-top:8px;padding-top:6px;border-top:1px solid var(--line)}
+    .cmp-pname{font-size:11px;font-weight:700;margin-bottom:4px}
+    .cmp-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.06);margin:4px 0 2px;overflow:hidden}
+    .cmp-bar-fill{height:100%;border-radius:2px;transition:width .3s}
     .hist-list{display:grid;gap:8px;max-height:50vh;overflow:auto}
     .hist-item{display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(10,13,19,.6);border:1px solid var(--line);border-radius:10px}
     .hist-info{font-size:12px}.hist-ts{color:var(--muted)}.hist-label{color:var(--text);font-weight:600;margin-left:8px}
@@ -605,23 +612,56 @@
       const grid=document.getElementById('cmp-grid');
       const labels={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
       const colors={p:'#E86B5F',n:'#3ECFCF',o:'#52C97A'};
+      const fmt=Q.fmtCurrency;
+      const lastYi=cmp.p.years.length-1;
+      const lastYr=cmp.p.years[lastYi];
       grid.innerHTML=['p','n','o'].map(function(sc){
         const d=cmp[sc];
-        return '<div class="cmp-col" style="border-top:3px solid '+colors[sc]+'">'+
-          '<div class="cmp-title" style="color:'+colors[sc]+'">'+labels[sc]+'</div>'+
-          '<div class="cmp-row"><span class="cmp-label">Fact. '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(d.totalFactLast||d.totalFact2032)+'</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Distribuible '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(d.distLast||d.dist2032)+'</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Break-even</span><span class="cmp-value">'+d.breakEven+'</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Runway</span><span class="cmp-value">'+(d.runway.months>=99?'∞':d.runway.months)+' meses</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Liberados '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.liberatedBy2032+'/'+d.personCards.length+'</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">1er cruce</span><span class="cmp-value">'+d.firstLiberationYear+'</span></div>'+
-          d.personCards.map(function(p){
-            return '<div class="cmp-person"><div class="cmp-pname" style="color:'+p.color+'">'+p.name+'</div>'+
-              '<div class="cmp-row"><span class="cmp-label">Sueldo+Equity '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(p.totalLast||0)+'</span></div>'+
-              '<div class="cmp-row"><span class="cmp-label">Cruce</span><span class="cmp-value">'+p.liberationYear+'</span></div>'+
-            '</div>';
-          }).join('')+
-        '</div>';
+        const f=d.fact;
+        const neto=f.neto[lastYi]||0;
+        const planilla=f.sued_tot[lastYi]||0;
+        const liberados=d.personCards.filter(function(pp){return typeof pp.liberationYear==='number'&&pp.liberationYear<=lastYr}).length;
+        var h='<div class="cmp-col" style="border-top:3px solid '+colors[sc]+'">';
+        h+='<div class="cmp-title" style="color:'+colors[sc]+'">'+labels[sc]+'</div>';
+        h+='<div class="cmp-section">Ecosistema '+lastYr+'</div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Facturación/mes</span><span class="cmp-value">'+fmt(d.totalFactLast||0)+'</span></div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Neto operativo/mes</span><span class="cmp-value">'+fmt(neto)+'</span></div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Planilla total/mes</span><span class="cmp-value">'+fmt(planilla)+'</span></div>';
+        var dl=d.distLast||0;
+        h+='<div class="cmp-row highlight"><span class="cmp-label">Distribuible/mes</span><span class="cmp-value" style="color:'+(dl>0?'#D4A853':'#E86B5F')+'">'+fmt(dl)+'</span></div>';
+        h+='<div class="cmp-section">Salud del sistema</div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Break-even</span><span class="cmp-value">'+d.breakEven+'</span></div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Runway</span><span class="cmp-value">'+(d.runway.months>=99?'∞':d.runway.months)+' meses</span></div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Liberados al '+lastYr+'</span><span class="cmp-value">'+liberados+'/'+d.personCards.length+'</span></div>';
+        h+='<div class="cmp-row"><span class="cmp-label">1er cruce</span><span class="cmp-value">'+d.firstLiberationYear+'</span></div>';
+        h+='<div class="cmp-section">Esfuerzo para llegar al sueldo deseado</div>';
+        d.personCards.forEach(function(p){
+          var pr=d.state.persons.find(function(x){return x.id===p.id})||{};
+          var sueldo=Number(pr.sueldo||0);
+          var totalL=p.totalLast||0;
+          var gap=sueldo-totalL;
+          var pct=sueldo>0?Math.min(Math.round(totalL/sueldo*100),150):0;
+          var crv=d.curves[p.id]||[];
+          var sueL=Number(crv[lastYi]||0);
+          var eqL=p.eqLast||0;
+          var barCol=pct>=100?'#52C97A':(pct>=70?'#D4A853':'#E86B5F');
+          h+='<div class="cmp-person"><div class="cmp-pname" style="color:'+p.color+'">'+p.name+' <span style="color:var(--muted);font-weight:400">(hoy S/'+(sueldo/1000).toFixed(0)+'k)</span></div>';
+          h+='<div class="cmp-row"><span class="cmp-label">Sueldo Qochix</span><span class="cmp-value">'+fmt(sueL)+'</span></div>';
+          h+='<div class="cmp-row"><span class="cmp-label">Equity/mes</span><span class="cmp-value" style="color:#D4A853">'+fmt(eqL)+'</span></div>';
+          h+='<div class="cmp-row highlight"><span class="cmp-label">Total '+lastYr+'</span><span class="cmp-value">'+fmt(totalL)+'</span></div>';
+          h+='<div class="cmp-bar"><div class="cmp-bar-fill" style="width:'+Math.min(pct,100)+'%;background:'+barCol+'"></div></div>';
+          h+='<div class="cmp-row '+(gap<=0?'positive':'negative')+'"><span class="cmp-label">'+(gap<=0?'Supera sueldo actual en':'Brecha vs sueldo actual')+'</span><span class="cmp-value">'+(gap<=0?'+'+fmt(Math.abs(gap)):'-'+fmt(gap))+'</span></div>';
+          h+='<div class="cmp-row"><span class="cmp-label">Cruce</span><span class="cmp-value" style="color:'+(typeof p.liberationYear==="number"&&p.liberationYear<=lastYr?'#52C97A':'#E86B5F')+'">'+p.liberationYear+'</span></div>';
+          h+='</div>';
+        });
+        var factNeeded=planilla+Number(d.state.P.reserva||3000);
+        var factBrutaNeeded=Math.round(factNeeded/(Number(d.state.P.netoPct)||0.65));
+        h+='<div class="cmp-section">¿Qué se necesita?</div>';
+        h+='<div class="cmp-row"><span class="cmp-label">Fact. mín. para cubrir planilla</span><span class="cmp-value">'+fmt(factBrutaNeeded)+'</span></div>';
+        var surplus=(d.totalFactLast||0)-factBrutaNeeded;
+        h+='<div class="cmp-row '+(surplus>=0?'positive':'negative')+'"><span class="cmp-label">'+(surplus>=0?'Superávit':'Déficit')+' vs fact. proyectada</span><span class="cmp-value">'+(surplus>=0?'+':'')+fmt(surplus)+'</span></div>';
+        h+='</div>';
+        return h;
       }).join('');
       openModal('modal-comparator');
     }
