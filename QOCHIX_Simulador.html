@@ -794,6 +794,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
         Para pagar todos los sueldos y generar distribuible, el ecosistema necesita esta facturación <strong>por marca y por año</strong>. Los números cambian con el escenario activo. La columna "Por día" indica cuánto debería facturar cada marca en promedio por día laboral (22 días/mes).
       </p>
+      <div id="effort-pnl"></div>
       <div class="tw" style="margin-bottom:.85rem"><table><thead><tr>
         <th style="text-align:left">Marca / Línea</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th style="font-size:.65rem">/ día 2033</th>
       </tr></thead><tbody id="tb-effort"></tbody></table></div>
@@ -3024,6 +3025,150 @@ function paintEffortTable(fact){
   var fmt=QSYS.fmtCurrency;
   var lr=fact.lineRevenue;
   if(!lr)return;
+
+  // ── P&L completo ──
+  var pnlEl=sel('effort-pnl');
+  if(pnlEl){
+    var OPS_COSTS=[
+      {name:'Alquiler oficina/cowork',base:800,growth:1.05},
+      {name:'Servicios (luz, agua, internet)',base:350,growth:1.04},
+      {name:'Herramientas digitales (Canva, hosting, CRM, etc.)',base:600,growth:1.10},
+      {name:'Pauta publicitaria — Almaria',base:500,growth:1.25},
+      {name:'Pauta publicitaria — HugoTech',base:400,growth:1.25},
+      {name:'Contabilidad y legal',base:500,growth:1.08},
+      {name:'Transporte y logística',base:300,growth:1.06},
+      {name:'Capacitación y eventos',base:200,growth:1.15},
+      {name:'Imprevistos (buffer 5%)',dynamic:true,pct:0.05},
+    ];
+
+    var ph='<div style="margin-bottom:1.2rem">';
+    ph+='<div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:.6rem">📊 Estado de Resultados Proyectado (P&L mensual)</div>';
+    ph+='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.72rem">';
+    ph+='<thead><tr style="border-bottom:2px solid var(--brd);color:var(--muted);text-transform:uppercase;font-size:.62rem;letter-spacing:.05em">';
+    ph+='<th style="text-align:left;padding:.4rem .5rem;min-width:200px">Concepto</th>';
+    for(var yi=1;yi<AÑOS.length;yi++) ph+='<th style="text-align:right;padding:.4rem .3rem">'+AÑOS[yi]+'</th>';
+    ph+='</tr></thead><tbody>';
+
+    // ═══ INGRESOS ═══
+    ph+='<tr style="background:rgba(82,201,122,.04)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--green);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📈 Ingresos brutos</td></tr>';
+
+    var almLines=lr.lines.filter(function(l){return l.brand==='almaria'});
+    var htLines=lr.lines.filter(function(l){return l.brand==='ht'});
+
+    // Almaria header
+    ph+='<tr style="border-top:2px solid rgba(82,201,122,.2)"><td style="padding:.35rem .5rem;font-weight:700;color:var(--green)">🌿 Almaria</td>';
+    for(var ai=1;ai<AÑOS.length;ai++) ph+='<td style="text-align:right;padding:.35rem .3rem;font-weight:700;color:var(--green)">'+fmt(fact.alm[ai])+'</td>';
+    ph+='</tr>';
+    almLines.forEach(function(line){
+      ph+='<tr style="border-bottom:1px solid rgba(255,255,255,.02)"><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+line.name+'</td>';
+      for(var li=1;li<AÑOS.length;li++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(line.rev[li])+'</td>';
+      ph+='</tr>';
+    });
+
+    // HugoTech header
+    ph+='<tr style="border-top:2px solid rgba(62,207,207,.2)"><td style="padding:.35rem .5rem;font-weight:700;color:var(--teal)">💻 HugoTech</td>';
+    for(var hi=1;hi<AÑOS.length;hi++) ph+='<td style="text-align:right;padding:.35rem .3rem;font-weight:700;color:var(--teal)">'+fmt(fact.ht[hi])+'</td>';
+    ph+='</tr>';
+    htLines.forEach(function(line){
+      ph+='<tr style="border-bottom:1px solid rgba(255,255,255,.02)"><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+line.name+'</td>';
+      for(var li=1;li<AÑOS.length;li++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(line.rev[li])+'</td>';
+      ph+='</tr>';
+    });
+
+    // Total Ingresos
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--text)">TOTAL INGRESOS BRUTOS</td>';
+    for(var ti=1;ti<AÑOS.length;ti++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--text)">'+fmt(fact.total[ti])+'</td>';
+    ph+='</tr>';
+
+    // Neto operativo
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--teal)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
+    for(var ni=1;ni<AÑOS.length;ni++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--teal)">'+fmt(fact.neto[ni])+'</td>';
+    ph+='</tr>';
+
+    // ═══ EGRESOS ═══
+    ph+='<tr style="background:rgba(232,107,95,.04)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--coral);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em">📉 Egresos</td></tr>';
+
+    // Planilla socios
+    ph+='<tr style="border-top:2px solid rgba(232,107,95,.15)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">👥 Planilla socios fundadores</td>';
+    for(var si=1;si<AÑOS.length;si++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(fact.sued_f[si])+'</td>';
+    ph+='</tr>';
+
+    PERSONS.forEach(function(p){
+      var curve=fact.suedCurves[p.id]||[];
+      ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:'+p.c+';font-size:.68rem">'+p.name+'</td>';
+      for(var pi=1;pi<AÑOS.length;pi++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(curve[pi]||0)+'</td>';
+      ph+='</tr>';
+    });
+
+    // Planilla empleados
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">🏢 Equipo operativo</td>';
+    for(var ei=1;ei<AÑOS.length;ei++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(fact.hcost[ei])+'</td>';
+    ph+='</tr>';
+
+    HIRES.forEach(function(hire){
+      var startYi=hire.startYear?Math.max(0,AÑOS.indexOf(hire.startYear)):0;
+      ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+hire.role+'</td>';
+      for(var hhi=1;hhi<AÑOS.length;hhi++){
+        var cost=(hhi>=startYi)?Math.round(Number(hire.sue||0)*Math.pow(Number(hire.growth||1),hhi-startYi)):0;
+        ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:'+(cost>0?'var(--text2)':'var(--faint)')+'">'+fmt(cost)+'</td>';
+      }
+      ph+='</tr>';
+    });
+
+    // Costos operativos
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">⚙️ Costos operativos</td>';
+    var opsCostByYear=[];
+    for(var oi=1;oi<AÑOS.length;oi++){
+      var yearOps=0;
+      OPS_COSTS.forEach(function(c){
+        if(c.dynamic){
+          yearOps+=Math.round(fact.total[oi]*c.pct);
+        } else {
+          yearOps+=Math.round(c.base*Math.pow(c.growth,oi));
+        }
+      });
+      opsCostByYear.push(yearOps);
+    }
+    for(var oci=0;oci<opsCostByYear.length;oci++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(opsCostByYear[oci])+'</td>';
+    ph+='</tr>';
+
+    OPS_COSTS.forEach(function(c){
+      ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+c.name+'</td>';
+      for(var ci=1;ci<AÑOS.length;ci++){
+        var val=c.dynamic?Math.round(fact.total[ci]*c.pct):Math.round(c.base*Math.pow(c.growth,ci));
+        ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--text2)">'+fmt(val)+'</td>';
+      }
+      ph+='</tr>';
+    });
+
+    // TOTAL EGRESOS
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--coral)">TOTAL EGRESOS</td>';
+    for(var tei=1;tei<AÑOS.length;tei++){
+      var totalEgr=fact.sued_f[tei]+fact.hcost[tei]+opsCostByYear[tei-1];
+      ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--coral)">'+fmt(totalEgr)+'</td>';
+    }
+    ph+='</tr>';
+
+    // ═══ RESULTADO ═══
+    ph+='<tr style="background:rgba(212,168,83,.06);border-top:3px solid var(--gold)"><td style="padding:.5rem .5rem;font-weight:700;color:var(--gold);font-size:.78rem">💰 RESULTADO NETO</td>';
+    for(var ri=1;ri<AÑOS.length;ri++){
+      var resultado=fact.neto[ri]-fact.sued_f[ri]-fact.hcost[ri]-opsCostByYear[ri-1];
+      var rColor=resultado>=0?'var(--green)':'var(--coral)';
+      ph+='<td style="text-align:right;padding:.5rem .3rem;font-weight:700;color:'+rColor+';font-size:.78rem">'+fmt(resultado)+'</td>';
+    }
+    ph+='</tr>';
+
+    ph+='</tbody></table></div>';
+
+    // Nota sobre costos operativos
+    ph+='<div style="margin-top:.6rem;padding:.6rem .8rem;background:rgba(212,168,83,.04);border:1px solid rgba(212,168,83,.12);border-radius:10px;font-size:.68rem;color:var(--muted);line-height:1.6">';
+    ph+='<strong style="color:var(--gold)">Nota:</strong> Los costos operativos son estimaciones basadas en el mercado peruano. La pauta publicitaria crece ~25% anual con la escala de las marcas. "Imprevistos" es un buffer del 5% sobre la facturación bruta. Ajusta los montos en el modelo si tu realidad difiere.';
+    ph+='</div>';
+    ph+='</div>';
+    pnlEl.innerHTML=ph;
+  }
+
+  // ── Tabla resumen (original) ──
   var html='';
   var brandMeta=[
     {key:'almaria',name:'🌿 Almaria',arr:fact.alm,color:'var(--green)'},
@@ -3041,16 +3186,16 @@ function paintEffortTable(fact){
   for(var k=1;k<AÑOS.length;k++) html+='<td class="ct">'+fmt(fact.neto[k])+'</td>';
   html+='<td></td></tr>';
   html+='<tr><td style="color:var(--coral);padding-left:1.2rem">(-) Planilla socios</td>';
-  for(var l1=1;l1<=6;l1++) html+='<td class="cc">'+fmt(fact.sued_f[l1])+'</td>';
+  for(var l1=1;l1<AÑOS.length;l1++) html+='<td class="cc">'+fmt(fact.sued_f[l1])+'</td>';
   html+='<td></td></tr>';
   html+='<tr><td style="color:var(--coral);padding-left:1.2rem">(-) Planilla empleados</td>';
-  for(var l2=1;l2<=6;l2++) html+='<td class="cc">'+fmt(fact.hcost[l2])+'</td>';
+  for(var l2=1;l2<AÑOS.length;l2++) html+='<td class="cc">'+fmt(fact.hcost[l2])+'</td>';
   html+='<td></td></tr>';
   html+='<tr><td style="color:var(--coral);font-weight:600">(-) Planilla total</td>';
-  for(var l=1;l<=6;l++) html+='<td class="cc" style="font-weight:600">'+fmt(fact.sued_tot[l])+'</td>';
+  for(var l=1;l<AÑOS.length;l++) html+='<td class="cc" style="font-weight:600">'+fmt(fact.sued_tot[l])+'</td>';
   html+='<td></td></tr>';
   html+='<tr class="trh"><td style="color:var(--gold)"><strong>💰 DISTRIBUIBLE</strong></td>';
-  for(var n=1;n<=6;n++){var cls=fact.dist[n]>0?'cg cb':'cc';html+='<td class="'+cls+'">'+fmt(fact.dist[n])+'</td>';}
+  for(var n=1;n<AÑOS.length;n++){var cls=fact.dist[n]>0?'cg cb':'cc';html+='<td class="'+cls+'">'+fmt(fact.dist[n])+'</td>';}
   html+='<td></td></tr>';
   el.innerHTML=html;
 
