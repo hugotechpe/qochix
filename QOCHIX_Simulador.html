@@ -84,6 +84,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
   transition:all .2s;flex-shrink:0;line-height:1
 }
 .sidebar-toggle:hover{border-color:var(--gold);color:var(--gold)}
+#kpi-wrapper button:hover,#roadmap-wrapper button:hover,#blocks-wrapper button:hover{border-color:rgba(255,255,255,.15);color:var(--text2)}
 .topbar-center{display:flex;gap:.3rem;flex:1;justify-content:center}
 .sc-btn{
   padding:.35rem .75rem;border-radius:10px;font-size:.72rem;font-weight:600;
@@ -584,7 +585,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- TOPBAR -->
 <div class="topbar">
   <span class="logo">QOCHIX</span>
-  <button class="sidebar-toggle" id="sb-toggle" onclick="toggleSidebar()" title="Mostrar/ocultar controles">☰</button>
+  <button class="sidebar-toggle" id="sb-toggle" onclick="toggleSidebar()" title="Mostrar/ocultar panel lateral">☰ Panel</button>
   <div class="topbar-center">
     <button class="sc-btn p active" onclick="setScenario('p')">📉 Pesimista ×0.7</button>
     <button class="sc-btn n" onclick="setScenario('n')">📊 Neutro ×1.0</button>
@@ -685,36 +686,42 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ══ TAB: DASHBOARD ══ -->
 <div id="tab-dashboard" class="tab-content active">
 
-  <div class="kpi-grid">
-    <div class="kcard k-blue">
-      <div class="klbl">Meta de venta</div>
-      <div class="kval" id="kpi-fact-need">—</div>
-      <div class="ksub" id="kpi-fact-need-sub">facturación bruta mínima</div>
-      <div class="kdetail" id="kpi-fact-detail"></div>
+  <div id="kpi-wrapper">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)">📊 KPIs principales</div>
+      <button id="kpi-collapse-btn" onclick="toggleKpiBlock()" style="background:transparent;border:1px solid var(--brd);border-radius:8px;padding:.25rem .65rem;font-size:.68rem;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.3rem"><span id="kpi-collapse-icon">▲</span> Ocultar</button>
     </div>
-    <div class="kcard k-gold">
-      <div class="klbl">Distribuible /mes</div>
-      <div class="kval" id="kpi-dist">—</div>
-      <div class="ksub" id="kpi-dist-range">reparto por equity</div>
-      <div class="kdetail" id="kpi-dist-detail"></div>
-    </div>
-    <div class="kcard k-green">
-      <div class="klbl">Break-even</div>
-      <div class="kval" id="kpi-be">—</div>
-      <div class="ksub" id="kpi-be-range">neto cubre planilla</div>
-      <div class="kdetail" id="kpi-be-detail"></div>
-    </div>
-    <div class="kcard k-coral">
-      <div class="klbl">Runway</div>
-      <div class="kval" id="kpi-runway">—</div>
-      <div class="ksub" id="kpi-runway-sub">meses sin vender</div>
-      <div class="kdetail" id="kpi-runway-detail"></div>
-    </div>
-    <div class="kcard k-purple">
-      <div class="klbl">Liberación</div>
-      <div class="kval" id="kpi-rossy">—</div>
-      <div class="ksub" id="kpi-lib-range">cruce del equipo</div>
-      <div class="kdetail" id="kpi-lib-detail"></div>
+    <div class="kpi-grid" id="kpi-grid-inner">
+      <div class="kcard k-blue">
+        <div class="klbl">Meta de venta</div>
+        <div class="kval" id="kpi-fact-need">—</div>
+        <div class="ksub" id="kpi-fact-need-sub">facturación bruta mínima</div>
+        <div class="kdetail" id="kpi-fact-detail"></div>
+      </div>
+      <div class="kcard k-gold">
+        <div class="klbl">Distribuible /mes</div>
+        <div class="kval" id="kpi-dist">—</div>
+        <div class="ksub" id="kpi-dist-range">reparto por equity</div>
+        <div class="kdetail" id="kpi-dist-detail"></div>
+      </div>
+      <div class="kcard k-green">
+        <div class="klbl">Break-even</div>
+        <div class="kval" id="kpi-be">—</div>
+        <div class="ksub" id="kpi-be-range">neto cubre planilla</div>
+        <div class="kdetail" id="kpi-be-detail"></div>
+      </div>
+      <div class="kcard k-coral">
+        <div class="klbl">Runway</div>
+        <div class="kval" id="kpi-runway">—</div>
+        <div class="ksub" id="kpi-runway-sub">meses sin vender</div>
+        <div class="kdetail" id="kpi-runway-detail"></div>
+      </div>
+      <div class="kcard k-purple">
+        <div class="klbl">Liberación</div>
+        <div class="kval" id="kpi-rossy">—</div>
+        <div class="ksub" id="kpi-lib-range">cruce del equipo</div>
+        <div class="kdetail" id="kpi-lib-detail"></div>
+      </div>
     </div>
   </div>
 
@@ -722,10 +729,22 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div id="dash-story" style="margin-bottom:1.2rem;padding:1rem 1.2rem;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);font-size:.78rem;color:var(--text2);line-height:1.7"></div>
 
   <!-- Roadmap por año -->
-  <div id="dash-roadmap" style="margin-bottom:1.2rem"></div>
+  <div id="roadmap-wrapper" style="margin-bottom:1.2rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue)">🗺️ Hoja de ruta año a año</div>
+      <button onclick="toggleSection('dash-roadmap','roadmap-tog')" style="background:transparent;border:1px solid var(--brd);border-radius:8px;padding:.25rem .65rem;font-size:.68rem;color:var(--muted);cursor:pointer;transition:all .2s" id="roadmap-tog">▲ Ocultar</button>
+    </div>
+    <div id="dash-roadmap"></div>
+  </div>
 
   <!-- Bloques narrativos dinámicos -->
-  <div id="dash-blocks" style="margin-bottom:1rem"></div>
+  <div id="blocks-wrapper" style="margin-bottom:1rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--teal)">📈 Timelines de evolución</div>
+      <button onclick="toggleSection('dash-blocks','blocks-tog')" style="background:transparent;border:1px solid var(--brd);border-radius:8px;padding:.25rem .65rem;font-size:.68rem;color:var(--muted);cursor:pointer;transition:all .2s" id="blocks-tog">▲ Ocultar</button>
+    </div>
+    <div id="dash-blocks"></div>
+  </div>
 
   <!-- Liberation meter -->
   <div class="lib-bar">
@@ -1984,8 +2003,26 @@ function toggleSidebar(){
   const app=document.getElementById('app-root');
   app.classList.toggle('sidebar-hidden');
   const btn=document.getElementById('sb-toggle');
-  btn.textContent=app.classList.contains('sidebar-hidden')?'☰':'✕';
+  btn.textContent=app.classList.contains('sidebar-hidden')?'☰ Panel':'✕ Panel';
   setTimeout(renderCharts, 400);
+}
+function toggleKpiBlock(){
+  const grid=document.getElementById('kpi-grid-inner');
+  const icon=document.getElementById('kpi-collapse-icon');
+  const btn=document.getElementById('kpi-collapse-btn');
+  if(!grid||!btn) return;
+  const hidden=grid.style.display==='none';
+  grid.style.display=hidden?'':'none';
+  if(icon) icon.textContent=hidden?'▲':'▼';
+  btn.lastChild.textContent=hidden?' Ocultar':' Mostrar';
+}
+function toggleSection(contentId,btnId){
+  const el=document.getElementById(contentId);
+  const btn=document.getElementById(btnId);
+  if(!el||!btn) return;
+  const hidden=el.style.display==='none';
+  el.style.display=hidden?'':'none';
+  btn.textContent=hidden?'▲ Ocultar':'▼ Mostrar';
 }
 
 // ════════════════════════════════════════
