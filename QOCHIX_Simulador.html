@@ -71,11 +71,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 
 /* ── TOPBAR ── */
 .topbar{
-  grid-column:1/-1;display:flex;align-items:center;gap:.75rem;
-  padding:0 1.2rem;height:58px;
+  grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .75rem;
+  padding:.45rem 1.2rem;
   background:rgba(8,11,17,0.95);border-bottom:1px solid var(--brd);
   position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);
-  overflow-x:auto;
 }
 .logo{font-family:var(--serif);font-size:1.3rem;font-weight:900;color:var(--gold);letter-spacing:.1em;flex-shrink:0;text-shadow:0 0 20px rgba(212,168,83,.3)}
 .sidebar-toggle{
@@ -85,7 +84,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 }
 .sidebar-toggle:hover{border-color:var(--gold);color:var(--gold)}
 #kpi-wrapper button:hover,#roadmap-wrapper button:hover,#blocks-wrapper button:hover{border-color:rgba(255,255,255,.15);color:var(--text2)}
-.topbar-center{display:flex;gap:.3rem;flex:1;justify-content:center}
+.topbar-center{display:flex;gap:.3rem}
 .sc-btn{
   padding:.35rem .75rem;border-radius:10px;font-size:.72rem;font-weight:600;
   border:1px solid var(--brd);background:transparent;color:var(--muted);
@@ -95,7 +94,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .sc-btn.active{background:var(--gold);border-color:var(--gold);color:var(--bg)}
 .sc-btn.p.active{background:var(--coral);border-color:var(--coral);color:#fff}
 .sc-btn.o.active{background:var(--green);border-color:var(--green);color:var(--bg)}
-.tab-bar{display:flex;gap:.25rem;flex-shrink:0;white-space:nowrap}
+.tab-bar{display:flex;gap:.25rem;flex-wrap:wrap}
 .tab-btn{
   padding:.35rem .7rem;border-radius:10px;font-size:.72rem;font-weight:600;
   border:1px solid var(--brd);background:transparent;color:var(--muted);
