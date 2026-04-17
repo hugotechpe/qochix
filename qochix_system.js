@@ -33,14 +33,14 @@
     {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6]},
   ];
   const BRAND_IDS = ['almaria', 'ht'];
-  const BRAND_LABELS = { almaria: 'Almaria', ht: 'HugoTech' };
+  const BRAND_LABELS = { almaria: 'Almaria', ht: 'HugoTech', ambas: 'Ambas' };
 
   function normalizeBrandId(b) {
     if (!b) return '';
     const l = String(b).toLowerCase().replace(/\s+/g, '');
     if (l === 'hugotech' || l === 'ht') return 'ht';
     if (l === 'almaria') return 'almaria';
-    if (l === 'trazo') return 'trazo';
+    if (l === 'ambas') return 'ambas';
     if (l === 'mixto') return 'mixto';
     return l;
   }
@@ -92,16 +92,16 @@
       lineOverrides: {},
       brandOps: {},
       founderBrand: {
-        hugo: 'ht',
+        hugo: 'ambas',
         rossy: 'almaria',
-        vera: 'almaria',
+        vera: 'ambas',
         mechita: 'almaria',
       },
     },
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 15,
+      schemaVersion: 16,
     },
   };
 
@@ -239,9 +239,15 @@
         });
       }
     }},
-    { from: 13, to: 14, run(s) {
-      // SUED_F_BASE changed — curvas se recalculan automáticamente al cargar
-      // No se necesita migrar persons, solo forzar recarga de curvas
+    { from: 13, to: 14, run(s) {} },
+    { from: 14, to: 15, run(s) {} },
+    { from: 15, to: 16, run(s) {
+      if (s.P && s.P.founderBrand) {
+        if (s.P.founderBrand.hugo === 'ht') s.P.founderBrand.hugo = 'ambas';
+        if (s.P.founderBrand.vera === 'almaria') s.P.founderBrand.vera = 'ambas';
+        delete s.P.founderBrand.carlos;
+        delete s.P.founderBrand.nicole;
+      }
     }},
   ];
 
@@ -487,7 +493,7 @@
       return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, prices: p.slice(), vols: v.slice(), rev };
     });
     const bt = (b) => AÑOS.map((_, i) => lines.filter((l) => l.brand === b).reduce((s, l) => s + l.rev[i], 0));
-    return { lines, trazo: bt('trazo'), almaria: bt('almaria'), ht: bt('ht') };
+    return { lines, trazo: AÑOS.map(() => 0), almaria: bt('almaria'), ht: bt('ht') };
   }
 
   function capSalariesToRevenue(state, targetCurves, neto, hcost) {
@@ -626,9 +632,18 @@
     });
     state.persons.forEach(p => {
       const b = fb[p.id];
-      if (!b || !brands[b]) return;
+      if (!b) return;
       const curve = curves[p.id] || [];
-      AÑOS.forEach((_, i) => { brands[b].burn[i] += Number(curve[i] || 0); });
+      if (b === 'ambas') {
+        AÑOS.forEach((_, i) => {
+          const cost = Number(curve[i] || 0);
+          const half = Math.round(cost / 2);
+          brands.almaria.burn[i] += half;
+          brands.ht.burn[i] += cost - half;
+        });
+      } else if (brands[b]) {
+        AÑOS.forEach((_, i) => { brands[b].burn[i] += Number(curve[i] || 0); });
+      }
     });
     state.hires.forEach(h => {
       const b = normalizeBrandId(h.brand);

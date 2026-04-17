@@ -25,10 +25,32 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
 
+/* ── RECALC BAR ── */
+.recalc-bar{
+  position:fixed;top:58px;left:0;right:0;height:2px;z-index:200;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent);
+  background-size:200% 100%;
+  animation:recalcSlide .6s linear infinite;
+  opacity:0;transition:opacity .15s;pointer-events:none
+}
+.recalc-bar.active{opacity:1}
+@keyframes recalcSlide{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);z-index:6000;
+  background:rgba(17,21,32,.95);backdrop-filter:blur(12px);
+  border:1px solid rgba(62,207,207,.25);color:var(--teal);
+  padding:10px 20px;border-radius:12px;font-size:.8rem;font-weight:500;
+  opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.4)
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 /* ── LAYOUT ── */
-.app{display:grid;grid-template-columns:380px 1fr;grid-template-rows:auto 1fr;min-height:100vh;transition:grid-template-columns .5s cubic-bezier(.4,0,.2,1)}
+.app{display:grid;grid-template-columns:380px 1fr;grid-template-rows:auto 1fr;min-height:100vh;transition:grid-template-columns .4s cubic-bezier(.4,0,.2,1)}
 .app.sidebar-hidden{grid-template-columns:0px 1fr}
-.app.sidebar-hidden .sidebar{opacity:0;pointer-events:none;overflow:hidden}
+.app.sidebar-hidden .sidebar{opacity:0;pointer-events:none;overflow:hidden;transform:translateX(-20px)}
 
 /* ── TOPBAR ── */
 .topbar{
@@ -67,7 +89,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .sidebar{
   background:var(--bg2);border-right:1px solid var(--brd);
   overflow-y:auto;height:calc(100vh - 58px);position:sticky;top:58px;
-  transition:opacity .4s ease
+  transition:opacity .3s ease,transform .3s ease
 }
 .sb-sec{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--brd)}
 .sb-title{
@@ -194,7 +216,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .k-green::before{background:var(--green)}.k-coral::before{background:var(--coral)}.k-purple::before{background:var(--purple)}
 .kcard:hover{border-color:rgba(255,255,255,0.12);transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.3)}
 .klbl{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:.45rem}
-.kval{font-family:var(--serif);font-size:2rem;font-weight:900;line-height:1;margin-bottom:.25rem;transition:all .4s}
+.kval{font-family:var(--serif);font-size:2rem;font-weight:900;line-height:1;margin-bottom:.25rem;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s}
+.kval.updating{transform:translateY(-4px);opacity:.6}
 .k-gold .kval{color:var(--gold);text-shadow:0 0 25px rgba(212,168,83,.2)}.k-teal .kval{color:var(--teal)}
 .k-green .kval{color:var(--green)}.k-coral .kval{color:var(--coral)}.k-purple .kval{color:var(--purple)}
 .ksub{font-size:.72rem;color:var(--muted)}
@@ -287,30 +310,41 @@ tr:hover td{background:rgba(255,255,255,.02)}
 @media(max-width:900px){.lib-team{grid-template-columns:1fr}}
 
 /* Partner overview cards */
-.partner-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin:1.25rem 0}
-@media(max-width:1100px){.partner-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){.partner-grid{grid-template-columns:repeat(2,1fr)}}
+.partner-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:1.25rem 0}
+@media(max-width:1100px){.partner-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.partner-grid{grid-template-columns:1fr}}
-.ptnr-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1rem;transition:all .3s;position:relative;overflow:hidden}
+.ptnr-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1rem 1.1rem;transition:all .3s;position:relative;overflow:hidden}
 .ptnr-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px);box-shadow:var(--glow-gold)}
-.ptnr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
-.ptnr-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem}
-.ptnr-name{font-size:.88rem;font-weight:700}
-.ptnr-eq{font-family:var(--serif);font-size:1.15rem;font-weight:800;color:var(--gold)}
-.ptnr-role{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
-.ptnr-row{display:flex;justify-content:space-between;align-items:baseline;padding:.22rem 0;font-size:.72rem;border-bottom:1px solid rgba(255,255,255,.03)}
-.ptnr-row:last-child{border-bottom:none}
-.ptnr-yr{color:var(--muted);font-family:var(--mono);font-size:.65rem}
-.ptnr-sue{color:var(--teal);font-family:var(--mono);font-weight:600}
-.ptnr-eqi{color:var(--gold);font-family:var(--mono);font-size:.65rem}
-.ptnr-total{color:var(--text);font-family:var(--mono);font-weight:700;font-size:.75rem}
-.ptnr-foot{margin-top:.55rem;padding-top:.5rem;border-top:1px solid var(--brd);display:grid;grid-template-columns:1fr 1fr;gap:.35rem;font-size:.65rem;text-align:center}
+.ptnr-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem}
+.ptnr-name{font-size:.92rem;font-weight:700}
+.ptnr-eq{font-family:var(--serif);font-size:1.2rem;font-weight:800;color:var(--gold)}
+.ptnr-role{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
+.ptnr-section-lbl{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem;margin-top:.5rem;display:flex;justify-content:space-between;align-items:baseline}
+.ptnr-section-lbl .ptnr-col-hint{font-size:.5rem;letter-spacing:0;text-transform:none;opacity:.65}
+.ptnr-tbl{width:100%;border-collapse:collapse}
+.ptnr-tbl td{padding:.18rem 0;font-size:.72rem;font-family:var(--mono)}
+.ptnr-tbl td:first-child{color:var(--muted);font-size:.65rem;width:38px}
+.ptnr-tbl td:nth-child(2){text-align:right;color:var(--teal);font-weight:600}
+.ptnr-tbl td:nth-child(3){text-align:right;color:var(--gold);font-size:.62rem;width:60px}
+.ptnr-tbl td:nth-child(4){text-align:right;color:var(--text);font-weight:700}
+.ptnr-tbl tr{border-bottom:1px solid rgba(255,255,255,.03)}
+.ptnr-tbl tr:last-child{border-bottom:none}
+.ptnr-tbl tr.ptnr-tbl-head{border-bottom:1px solid var(--brd)}
+.ptnr-tbl tr.ptnr-tbl-head td{font-size:.48rem;text-transform:uppercase;letter-spacing:.04em;opacity:.5;padding-bottom:.25rem;font-weight:600;font-family:var(--mono)}
+.ptnr-tbl tr.ptnr-tbl-head td:nth-child(2){color:var(--teal)}
+.ptnr-tbl tr.ptnr-tbl-head td:nth-child(3){color:var(--gold)}
+.ptnr-tbl tr.ptnr-tbl-head td:nth-child(4){color:var(--text)}
+.ptnr-tbl tr.ptnr-sum{border-top:1px solid var(--brd);border-bottom:none}
+.ptnr-tbl tr.ptnr-sum td{padding-top:.35rem;font-weight:700;font-size:.72rem}
+.ptnr-tbl tr.ptnr-sum td:first-child{font-size:.55rem}
+.ptnr-divider{height:1px;background:var(--brd);margin:.45rem 0}
+.ptnr-foot{margin-top:.55rem;padding-top:.55rem;border-top:1px solid var(--brd);display:grid;grid-template-columns:1fr 1fr;gap:.4rem .25rem;font-size:.65rem;text-align:center}
 .ptnr-foot-item{display:flex;flex-direction:column;gap:.1rem}
-.ptnr-foot-lbl{color:var(--muted);font-size:.58rem;text-transform:uppercase;letter-spacing:.04em}
+.ptnr-foot-lbl{color:var(--muted);font-size:.55rem;text-transform:uppercase;letter-spacing:.04em}
 .ptnr-foot-val{font-family:var(--mono);font-weight:700}
-.ptnr-year-grid{display:grid;gap:.15rem}
-.ptnr-divider{height:1px;background:var(--brd);margin:.4rem 0}
-.ptnr-section-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem;margin-top:.35rem}
+.ptnr-lib-tag{display:inline-block;padding:.15rem .45rem;border-radius:6px;font-size:.62rem;font-weight:700;font-family:var(--mono)}
+.ptnr-lib-ok{background:rgba(82,201,122,.12);color:var(--green);border:1px solid rgba(82,201,122,.25)}
+.ptnr-lib-warn{background:rgba(232,107,95,.1);color:var(--coral);border:1px solid rgba(232,107,95,.2)}
 
 /* Line editable tables */
 .line-tbl{width:100%;min-width:780px;border-collapse:separate;border-spacing:0;font-size:.75rem}
@@ -470,6 +504,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </style>
 </head>
 <body>
+<div class="recalc-bar" id="recalc-bar"></div>
+<div class="toast" id="toast"></div>
 
 <!-- HERO SPLASH -->
 <div class="hero-overlay" id="hero">
@@ -709,7 +745,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
-        Cada card muestra el <strong>% de equity efectivo</strong>, el <strong>sueldo real</strong> que cada socio podría cobrar según el revenue (no la meta aspiracional), el <strong>ingreso por equity</strong> y el <strong>total mensual</strong>. <span style="color:var(--coral)">Los montos en rojo</span> indican que el revenue aún no alcanza para pagar la meta completa. Primero se pagan hires y sueldos protegidos de marca, luego el resto se reparte entre fundadores.
+        Cada card muestra el <strong>% de equity efectivo</strong> y la <strong>compensación mensual proyectada</strong> por socio. <span style="color:var(--teal)">Sueldo</span> es lo que Qochix le pagaría cada mes según el revenue real disponible. <span style="color:var(--gold)">Equity</span> es la distribución mensual de utilidades. <strong>Total</strong> = sueldo + equity por mes. <span style="color:var(--coral)">Montos en rojo</span> indican que el revenue no alcanza la meta — el socio cobra menos de su valor de mercado.
       </p>
       <div class="partner-grid" id="partner-grid"></div>
 
@@ -1577,6 +1613,7 @@ function initSidebar() {
       <div class="fld"><label>Marca asignada</label>
         <select onchange="onFounderBrand('${p.id}',this.value)" style="width:100%;padding:6px;background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:8px;font-size:.78rem">
           ${BIDs.map(b=>'<option value="'+b+'"'+(((P.founderBrand||{})[p.id]||'')=== b?' selected':'')+'>'+BL[b]+'</option>').join('')}
+          <option value="ambas"${((P.founderBrand||{})[p.id]||'')==='ambas'?' selected':''}>Ambas</option>
         </select></div>
     </div>
     <div style="margin-bottom:.35rem">
@@ -1963,7 +2000,28 @@ function calcRunway(){
 const fmt=(n,d=0)=>n===undefined||isNaN(n)?'—':'S/'+Math.round(n).toLocaleString('es-PE');
 const fmtX=n=>n.toFixed(1)+'x';
 
+function animateValue(el, newText){
+  if(!el) return;
+  if(el.textContent === newText) return;
+  el.classList.add('updating');
+  setTimeout(function(){
+    el.textContent = newText;
+    el.classList.remove('updating');
+  }, 150);
+}
+
+function showToast(msg, duration){
+  var t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(function(){t.classList.remove('show')}, duration||2000);
+}
+
 function recalc(){
+  var _recBar=document.getElementById('recalc-bar');
+  if(_recBar){_recBar.classList.add('active');clearTimeout(_recBar._tid);_recBar._tid=setTimeout(function(){_recBar.classList.remove('active')},400);}
   const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
   const fact=derived.fact;
   const factPact=derived.factPact;
@@ -2023,10 +2081,10 @@ function recalc(){
   const teamGap10=Math.max(0,(10000*PERSONS.length)-team2032);
 
   // ── KPIs dashboard ──
-  sv('kpi-pool',fmt(pool));
-  sv('kpi-dist',fmt(dist[6]));
-  sv('kpi-be',be);
-  sv('kpi-runway',rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
+  animateValue(sel('kpi-pool'),fmt(pool));
+  animateValue(sel('kpi-dist'),fmt(dist[6]));
+  animateValue(sel('kpi-be'),be);
+  animateValue(sel('kpi-runway'),rw.months>=24?rw.months+'m':'⚠️ '+rw.months+'m');
   sv('hero-kpi-pool',fmt(pool));
   sv('hero-kpi-fact',fmt(fact.total[6]));
   sv('hero-kpi-dist',fmt(dist[6]));
@@ -2158,7 +2216,7 @@ function recalc(){
     sv('ptot-'+p.id,fmt(tkt+bcTot+cashTot+s.sw));
   });
 
-  sv('kpi-rossy',String(derived.firstLiberationYear));
+  animateValue(sel('kpi-rossy'),String(derived.firstLiberationYear));
 
   // Liberation meter (equipo completo, automático por persona)
   const libIdx30=idx30;
@@ -3013,50 +3071,79 @@ function paintPartnerCards(derived, fact, eqById){
   const fmt=QSYS.fmtCurrency;
   const realCurves=fact.suedCurves;
   const targetCurves=fact.targetCurves||realCurves;
-  const roles={hugo:'CEO · HugoTech',rossy:'CEO · Almaria',vera:'COO · Almaria'};
+  var fbMap=P.founderBrand||{};
+  var roleBL=QSYS.BRAND_LABELS||{};
+  function brandRole(pid){
+    var b=fbMap[pid];
+    if(b==='ambas') return 'Almaria + HugoTech';
+    return roleBL[b]||'Socio';
+  }
   el.innerHTML=derived.personCards.map(function(pc){
     const p=PERSONS.find(function(x){return x.id===pc.id;});
     if(!p) return '';
-    var html='<div class="ptnr-card" style="--ac:'+p.c+'">';
-    html+='<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+p.c+';border-radius:16px 16px 0 0"></div>';
-    html+='<div class="ptnr-hdr"><span class="ptnr-name" style="color:'+p.c+'">'+p.name+'</span><span class="ptnr-eq">'+pc.equity.toFixed(1)+'%</span></div>';
-    html+='<div class="ptnr-role">'+(roles[p.id]||'Socio')+'</div>';
-    html+='<div class="ptnr-section-lbl">Sueldo Qochix / mes</div>';
-    html+='<div class="ptnr-year-grid">';
+    var h='<div class="ptnr-card">';
+    h+='<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+p.c+';border-radius:16px 16px 0 0"></div>';
+
+    // --- Header ---
+    h+='<div class="ptnr-hdr"><span class="ptnr-name" style="color:'+p.c+'">'+p.name+'</span><span class="ptnr-eq">'+pc.equity.toFixed(1)+'%</span></div>';
+    h+='<div class="ptnr-role">'+brandRole(p.id)+'</div>';
+
+    // --- Sueldo Qochix (mensual) ---
+    h+='<div class="ptnr-section-lbl"><span>Sueldo Qochix <span style="color:var(--teal)">/mes</span></span></div>';
+    h+='<table class="ptnr-tbl">';
     for(var i=1;i<=6;i++){
       var yr=2026+i;
       var real=realCurves[p.id]?realCurves[p.id][i]:0;
       var meta=targetCurves[p.id]?targetCurves[p.id][i]:0;
       var capped=real<meta;
-      html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr+'</span>';
+      h+='<tr><td>'+yr+'</td>';
       if(capped){
-        html+='<span class="ptnr-sue" style="color:var(--coral)" title="Meta: '+fmt(meta)+' — limitado por revenue">'+fmt(real)+'</span>';
+        h+='<td style="color:var(--coral)" title="Meta: '+fmt(meta)+'">'+fmt(real)+'</td>';
+        h+='<td style="color:var(--muted);font-size:.52rem;opacity:.45" title="Meta aspiracional">meta '+fmt(meta)+'</td>';
       } else {
-        html+='<span class="ptnr-sue">'+fmt(real)+'</span>';
+        h+='<td>'+fmt(real)+'</td><td style="font-size:.52rem;color:var(--green);opacity:.5">= meta</td>';
       }
-      html+='</div>';
+      h+='<td></td></tr>';
     }
-    html+='</div>';
-    html+='<div class="ptnr-divider"></div>';
-    html+='<div class="ptnr-section-lbl">Sueldo + Equity / mes</div>';
-    html+='<div class="ptnr-year-grid">';
+    h+='</table>';
+
+    // --- Sueldo + Equity + Total (mensual) ---
+    h+='<div class="ptnr-divider"></div>';
+    h+='<div class="ptnr-section-lbl"><span>Sueldo + Equity <span style="color:var(--gold)">/mes</span></span></div>';
+    h+='<table class="ptnr-tbl">';
+    h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>equity</td><td>total</td></tr>';
+    var sumSueAn=0, sumEqAn=0, sumTotAn=0;
     for(var j=1;j<=6;j++){
       var yr2=2026+j;
       var sue2=realCurves[p.id]?realCurves[p.id][j]:0;
       var eqAmt=Math.round(fact.dist[j]*(pc.equity/100));
       var total=sue2+eqAmt;
-      html+='<div class="ptnr-row"><span class="ptnr-yr">'+yr2+'</span><span class="ptnr-eqi">+'+fmt(eqAmt)+'</span><span class="ptnr-total">'+fmt(total)+'</span></div>';
+      sumSueAn+=sue2*12; sumEqAn+=eqAmt*12; sumTotAn+=total*12;
+      h+='<tr><td>'+yr2+'</td>';
+      h+='<td style="color:var(--teal)">'+fmt(sue2)+'</td>';
+      h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
+      h+='<td>'+fmt(total)+'</td></tr>';
     }
-    html+='</div>';
-    html+='<div class="ptnr-foot">';
-    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
+    h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Σ 6 años</td>';
+    h+='<td style="color:var(--teal)">'+fmt(sumSueAn)+'</td>';
+    h+='<td style="color:var(--gold)">'+fmt(sumEqAn)+'</td>';
+    h+='<td style="color:var(--green)">'+fmt(sumTotAn)+'</td></tr>';
+    h+='</table>';
+    h+='<div style="font-size:.5rem;color:var(--muted);opacity:.55;margin-top:.2rem;text-align:right">Σ = sumatoria mensual × 12 meses × 6 años</div>';
+
+    // --- Footer con métricas clave ---
+    h+='<div class="ptnr-foot">';
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado/mes</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
     var mult=pc.total2032/Math.max(1,p.sueldo);
-    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">×Mult 2032</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
-    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Inv. marca</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.brandCapitalTotal||0)+'</span></div>';
-    html+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Liberación</span><span class="ptnr-foot-val" style="color:var(--gold)">'+pc.liberationYear+'</span></div>';
-    html+='</div>';
-    html+='</div>';
-    return html;
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador 2032</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.brandCapitalTotal||0)+'</span></div>';
+    var libYr=pc.liberationYear;
+    var libOk=libYr<=2031;
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Año liberación</span><span class="ptnr-lib-tag '+(libOk?'ptnr-lib-ok':'ptnr-lib-warn')+'">'+libYr+'</span></div>';
+    h+='</div>';
+
+    h+='</div>';
+    return h;
   }).join('');
 
   paintEquityExplainer(derived, fact);
