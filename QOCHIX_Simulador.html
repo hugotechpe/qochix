@@ -329,51 +329,51 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .partner-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:1.25rem 0}
 @media(max-width:1100px){.partner-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.partner-grid{grid-template-columns:1fr}}
-.ptnr-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1rem 1.1rem;transition:all .3s;position:relative;overflow:hidden}
+.ptnr-card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:1.1rem 1.2rem;transition:all .3s;position:relative;overflow:hidden}
 .ptnr-card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px);box-shadow:var(--glow-gold)}
-.ptnr-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.15rem}
-.ptnr-name{font-size:.92rem;font-weight:700}
+.ptnr-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem}
+.ptnr-name{font-size:1.05rem;font-weight:700}
 .ptnr-eq{font-family:var(--serif);font-size:1.2rem;font-weight:800;color:var(--gold)}
-.ptnr-role{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
-.ptnr-section-lbl{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.15rem;margin-top:.5rem;display:flex;justify-content:space-between;align-items:baseline}
-.ptnr-section-lbl .ptnr-col-hint{font-size:.5rem;letter-spacing:0;text-transform:none;opacity:.65}
+.ptnr-role{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
+.ptnr-section-lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem;margin-top:.6rem;display:flex;justify-content:space-between;align-items:baseline}
+.ptnr-section-lbl .ptnr-col-hint{font-size:.65rem;letter-spacing:0;text-transform:none;opacity:.65}
 .ptnr-tbl{width:100%;border-collapse:collapse}
-.ptnr-tbl td{padding:.18rem 0;font-size:.72rem;font-family:var(--mono)}
-.ptnr-tbl td:first-child{color:var(--muted);font-size:.65rem;width:38px}
+.ptnr-tbl td{padding:.25rem .15rem;font-size:.82rem;font-family:var(--mono)}
+.ptnr-tbl td:first-child{color:var(--muted);font-size:.78rem;text-align:left}
 .ptnr-tbl td:nth-child(2){text-align:right;color:var(--teal);font-weight:600}
-.ptnr-tbl td:nth-child(3){text-align:right;color:var(--muted);font-size:.62rem;width:60px}
+.ptnr-tbl td:nth-child(3){text-align:right;color:var(--muted);font-size:.72rem}
 .ptnr-tbl td:nth-child(4){text-align:right;color:var(--text);font-weight:700}
-.ptnr-tbl tr{border-bottom:1px solid rgba(255,255,255,.03)}
+.ptnr-tbl tr{border-bottom:1px solid rgba(255,255,255,.04)}
 .ptnr-tbl tr:last-child{border-bottom:none}
 .ptnr-tbl tr.ptnr-tbl-head{border-bottom:1px solid var(--brd)}
-.ptnr-tbl tr.ptnr-tbl-head td{font-size:.48rem;text-transform:uppercase;letter-spacing:.04em;opacity:.5;padding-bottom:.25rem;font-weight:600;font-family:var(--mono)}
-.ptnr-tbl tr.ptnr-sum{border-top:1px solid var(--brd);border-bottom:none}
-.ptnr-tbl tr.ptnr-sum td{padding-top:.35rem;font-weight:700;font-size:.72rem}
-.ptnr-tbl tr.ptnr-sum td:first-child{font-size:.55rem}
+.ptnr-tbl tr.ptnr-tbl-head td{font-size:.62rem;text-transform:uppercase;letter-spacing:.04em;opacity:.55;padding-bottom:.3rem;font-weight:600;font-family:var(--mono)}
+.ptnr-tbl tr.ptnr-sum{border-top:1.5px solid var(--brd);border-bottom:none}
+.ptnr-tbl tr.ptnr-sum td{padding-top:.4rem;font-weight:700;font-size:.84rem}
+.ptnr-tbl tr.ptnr-sum td:first-child{font-size:.68rem}
 .ptnr-tbl-eq{width:100%;border-collapse:collapse}
-.ptnr-tbl-eq td{padding:.18rem .1rem;font-size:.66rem;font-family:var(--mono);text-align:right}
-.ptnr-tbl-eq td:first-child{color:var(--muted);font-size:.6rem;width:32px;text-align:left}
+.ptnr-tbl-eq td{padding:.25rem .15rem;font-size:.8rem;font-family:var(--mono);text-align:right}
+.ptnr-tbl-eq td:first-child{color:var(--muted);font-size:.75rem;text-align:left}
 .ptnr-tbl-eq td:nth-child(2){color:var(--teal);font-weight:600}
-.ptnr-tbl-eq td:nth-child(3){color:var(--coral);font-size:.56rem}
+.ptnr-tbl-eq td:nth-child(3){color:var(--green);font-size:.72rem}
 .ptnr-tbl-eq td:nth-child(4){color:var(--gold)}
 .ptnr-tbl-eq td:nth-child(5){color:var(--text);font-weight:700}
-.ptnr-tbl-eq tr{border-bottom:1px solid rgba(255,255,255,.03)}
+.ptnr-tbl-eq tr{border-bottom:1px solid rgba(255,255,255,.04)}
 .ptnr-tbl-eq tr:last-child{border-bottom:none}
 .ptnr-tbl-eq tr.ptnr-tbl-head{border-bottom:1px solid var(--brd)}
-.ptnr-tbl-eq tr.ptnr-tbl-head td{font-size:.42rem;text-transform:uppercase;letter-spacing:.04em;opacity:.5;padding-bottom:.25rem;font-weight:600;font-family:var(--mono)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td{font-size:.58rem;text-transform:uppercase;letter-spacing:.04em;opacity:.55;padding-bottom:.3rem;font-weight:600;font-family:var(--mono)}
 .ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(2){color:var(--teal)}
-.ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(3){color:var(--coral)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(3){color:var(--green)}
 .ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(4){color:var(--gold)}
 .ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(5){color:var(--text)}
-.ptnr-tbl-eq tr.ptnr-sum{border-top:1px solid var(--brd);border-bottom:none}
-.ptnr-tbl-eq tr.ptnr-sum td{padding-top:.35rem;font-weight:700;font-size:.66rem}
-.ptnr-tbl-eq tr.ptnr-sum td:first-child{font-size:.5rem}
-.ptnr-divider{height:1px;background:var(--brd);margin:.45rem 0}
-.ptnr-foot{margin-top:.55rem;padding-top:.55rem;border-top:1px solid var(--brd);display:grid;grid-template-columns:1fr 1fr;gap:.4rem .25rem;font-size:.65rem;text-align:center}
-.ptnr-foot-item{display:flex;flex-direction:column;gap:.1rem}
-.ptnr-foot-lbl{color:var(--muted);font-size:.55rem;text-transform:uppercase;letter-spacing:.04em}
-.ptnr-foot-val{font-family:var(--mono);font-weight:700}
-.ptnr-lib-tag{display:inline-block;padding:.15rem .45rem;border-radius:6px;font-size:.62rem;font-weight:700;font-family:var(--mono)}
+.ptnr-tbl-eq tr.ptnr-sum{border-top:1.5px solid var(--brd);border-bottom:none}
+.ptnr-tbl-eq tr.ptnr-sum td{padding-top:.4rem;font-weight:700;font-size:.82rem}
+.ptnr-tbl-eq tr.ptnr-sum td:first-child{font-size:.65rem}
+.ptnr-divider{height:1px;background:var(--brd);margin:.6rem 0}
+.ptnr-foot{margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--brd);display:grid;grid-template-columns:1fr 1fr;gap:.5rem .3rem;font-size:.78rem;text-align:center}
+.ptnr-foot-item{display:flex;flex-direction:column;gap:.15rem}
+.ptnr-foot-lbl{color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em}
+.ptnr-foot-val{font-family:var(--mono);font-weight:700;font-size:.85rem}
+.ptnr-lib-tag{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.78rem;font-weight:700;font-family:var(--mono)}
 .ptnr-lib-ok{background:rgba(82,201,122,.12);color:var(--green);border:1px solid rgba(82,201,122,.25)}
 .ptnr-lib-warn{background:rgba(232,107,95,.1);color:var(--coral);border:1px solid rgba(232,107,95,.2)}
 
@@ -3212,9 +3212,9 @@ function paintPartnerCards(derived, fact, eqById){
       h+='<tr><td>'+yr+'</td>';
       if(capped){
         h+='<td style="color:var(--coral)" title="Meta: '+fmt(meta)+'">'+fmt(real)+'</td>';
-        h+='<td style="color:var(--muted);font-size:.52rem;opacity:.45" title="Meta aspiracional">meta '+fmt(meta)+'</td>';
+        h+='<td style="color:var(--muted);font-size:.68rem;opacity:.5" title="Meta aspiracional">meta '+fmt(meta)+'</td>';
       } else {
-        h+='<td>'+fmt(real)+'</td><td style="font-size:.52rem;color:var(--green);opacity:.5">= meta</td>';
+        h+='<td>'+fmt(real)+'</td><td style="font-size:.68rem;color:var(--green);opacity:.55">= meta</td>';
       }
       h+='<td></td></tr>';
     }
@@ -3224,7 +3224,7 @@ function paintPartnerCards(derived, fact, eqById){
     h+='<div class="ptnr-divider"></div>';
     var tope=Number(p.sueldoTope||p.sueldo||0);
     h+='<div class="ptnr-section-lbl"><span>Ingreso real <span style="color:var(--gold)">/mes</span></span>';
-    h+='<span style="font-size:.55rem;color:var(--muted);margin-left:.3rem">tope sueldo: <strong style="color:var(--gold)">'+fmt(tope)+'</strong></span></div>';
+    h+='<span style="font-size:.7rem;color:var(--muted);margin-left:.4rem">tope sueldo: <strong style="color:var(--gold)">'+fmt(tope)+'</strong></span></div>';
     h+='<table class="ptnr-tbl-eq">';
     h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>reinv.</td><td>equity</td><td>neto</td></tr>';
     var sumCapAn=0, sumReinvAn=0, sumEqAn=0, sumNetoAn=0;
@@ -3244,21 +3244,21 @@ function paintPartnerCards(derived, fact, eqById){
         h+='<td style="color:var(--teal)">'+fmt(sueCapped)+'</td>';
       }
       if(reinv>0){
-        h+='<td style="color:var(--green);font-size:.58rem" title="Excedente sobre el tope → caja interna">'+fmt(reinv)+'</td>';
+        h+='<td style="color:var(--green)" title="Excedente sobre el tope → caja interna">'+fmt(reinv)+'</td>';
       } else {
-        h+='<td style="color:var(--muted);font-size:.58rem;opacity:.3">—</td>';
+        h+='<td style="color:var(--muted);opacity:.3">—</td>';
       }
       h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
       var netoColor=neto>=tope?'var(--green)':'var(--text)';
       h+='<td style="color:'+netoColor+';font-weight:700">'+fmt(neto)+'</td></tr>';
     }
-    h+='<tr class="ptnr-sum"><td style="font-size:.5rem">Σ '+nYrs+'a</td>';
+    h+='<tr class="ptnr-sum"><td>Σ '+nYrs+'a</td>';
     h+='<td style="color:var(--teal)">'+fmt(sumCapAn)+'</td>';
-    h+='<td style="color:var(--green);font-size:.55rem">'+fmt(sumReinvAn)+'</td>';
+    h+='<td style="color:var(--green)">'+fmt(sumReinvAn)+'</td>';
     h+='<td style="color:var(--gold)">'+fmt(sumEqAn)+'</td>';
     h+='<td style="color:var(--green)">'+fmt(sumNetoAn)+'</td></tr>';
     h+='</table>';
-    h+='<div style="font-size:.48rem;color:var(--muted);opacity:.55;margin-top:.15rem;text-align:right">Sueldo topeado a '+fmt(tope)+' · Excedente va a caja interna</div>';
+    h+='<div style="font-size:.65rem;color:var(--muted);opacity:.6;margin-top:.2rem;text-align:right">Sueldo topeado a '+fmt(tope)+' · Excedente → caja interna</div>';
 
     // Barra: ingreso neto vs tope en último año
     var lastCapped=Math.min(realCurves[p.id]?realCurves[p.id][AÑOS.length-1]:0,tope);
@@ -3268,9 +3268,9 @@ function paintPartnerCards(derived, fact, eqById){
     var pctTope=tope>0?Math.min(999,Math.round(lastNeto/tope*100)):0;
     var barPct=Math.min(100,pctTope);
     var barColor=pctTope>=100?'var(--green)':pctTope>=70?'var(--gold)':'var(--coral)';
-    h+='<div style="margin-top:.35rem;background:rgba(255,255,255,.06);border-radius:6px;height:16px;overflow:hidden;position:relative">';
-    h+='<div style="height:100%;width:'+barPct+'%;background:'+barColor+';border-radius:6px;transition:width .3s"></div>';
-    h+='<span style="position:absolute;top:0;left:0;right:0;text-align:center;font-size:.55rem;line-height:16px;color:var(--text);font-weight:600">';
+    h+='<div style="margin-top:.45rem;background:rgba(255,255,255,.06);border-radius:8px;height:22px;overflow:hidden;position:relative">';
+    h+='<div style="height:100%;width:'+barPct+'%;background:'+barColor+';border-radius:8px;transition:width .3s"></div>';
+    h+='<span style="position:absolute;top:0;left:0;right:0;text-align:center;font-size:.72rem;line-height:22px;color:var(--text);font-weight:600">';
     h+=pctTope+'% del tope en '+AÑOS[AÑOS.length-1];
     if(lastReinv>0) h+=' · '+fmt(lastReinv)+' reinvertido';
     h+='</span></div>';
@@ -3282,19 +3282,19 @@ function paintPartnerCards(derived, fact, eqById){
     var bCapTotal=pc.brandCapitalTotal||0;
     var bCashTotal=(pc.cashContribution||0)-tkt-Number(p.capital||0)-bCapTotal;
     h+='<table class="ptnr-tbl" style="margin-bottom:.35rem">';
-    if(tkt>0) h+='<tr><td style="width:auto">Ticket Qochix</td><td style="color:var(--gold)">'+fmt(tkt)+'</td><td></td><td></td></tr>';
+    if(tkt>0) h+='<tr><td>Ticket Qochix</td><td style="color:var(--gold)">'+fmt(tkt)+'</td><td></td><td></td></tr>';
     if(Number(p.capital||0)>0) h+='<tr><td>Capital previo</td><td style="color:var(--teal)">'+fmt(p.capital)+'</td><td></td><td></td></tr>';
     var bk=p.brandCapital||{};
     Object.keys(bk).forEach(function(k){
-      if(bk[k]>0) h+='<tr><td style="font-size:.58rem">Marca '+k+'</td><td style="color:var(--coral)">'+fmt(bk[k])+'</td><td style="font-size:.48rem;color:var(--muted)">histórico</td><td></td></tr>';
+      if(bk[k]>0) h+='<tr><td>Marca '+k+'</td><td style="color:var(--coral)">'+fmt(bk[k])+'</td><td style="color:var(--muted)">histórico</td><td></td></tr>';
     });
     var bc=p.brandCash||{};
     Object.keys(bc).forEach(function(k){
-      if(bc[k]>0) h+='<tr><td style="font-size:.58rem">Caja '+k+'</td><td style="color:var(--teal)">'+fmt(bc[k])+'</td><td style="font-size:.48rem;color:var(--muted)">caja real</td><td></td></tr>';
+      if(bc[k]>0) h+='<tr><td>Caja '+k+'</td><td style="color:var(--teal)">'+fmt(bc[k])+'</td><td style="color:var(--muted)">caja real</td><td></td></tr>';
     });
     var sweatVal=Math.max(0,(pc.investment||0)-(pc.cashContribution||0));
-    h+='<tr><td style="font-size:.58rem">Sweat equity</td><td style="color:var(--green)">'+fmt(sweatVal)+'</td><td style="font-size:.48rem;color:var(--muted)">trabajo</td><td></td></tr>';
-    h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Total pool</td><td style="font-weight:700">'+fmt(pc.investment||0)+'</td><td></td><td></td></tr>';
+    h+='<tr><td>Sweat equity</td><td style="color:var(--green)">'+fmt(sweatVal)+'</td><td style="color:var(--muted)">trabajo</td><td></td></tr>';
+    h+='<tr class="ptnr-sum"><td>Total pool</td><td style="font-weight:700">'+fmt(pc.investment||0)+'</td><td></td><td></td></tr>';
     h+='</table>';
 
     // --- Footer métricas ---
