@@ -706,108 +706,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
 
-  <div class="dash-note" id="dash-note"></div>
-  <div id="explain-dash" style="margin-top:.5rem;margin-bottom:.8rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
+  <!-- Resumen narrativo -->
+  <div id="dash-story" style="margin-bottom:1.2rem;padding:1rem 1.2rem;background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);font-size:.78rem;color:var(--text2);line-height:1.7"></div>
 
-  <!-- ROW 1: ¿Cuánto necesitamos vender? -->
-  <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:.45rem;margin-top:.25rem">📈 ¿Cuánto necesitamos vender?</div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-lbl">Fact. mínima break-even <span class="hint-badge" data-tip="Facturación bruta mensual mínima para que el neto (65%) cubra toda la planilla. Si facturas menos, los sueldos se ajustan a lo que hay."></span></div>
-      <div class="dash-val" id="dash-fact-min">—</div>
-      <div class="dash-sub">bruto mensual para cubrir planilla</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Fact. proyectada 2027 <span class="hint-badge" data-tip="Facturación bruta mensual que el modelo proyecta para 2027 (primer año completo). Se compara con el mínimo para saber si cubrimos costos."></span></div>
-      <div class="dash-val" id="dash-fact27">—</div>
-      <div class="dash-sub" id="dash-fact27-sub">primer año completo</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Brecha 2027 <span class="hint-badge" data-tip="Cuánto más necesitamos facturar al mes (sobre lo proyectado) para alcanzar el mínimo de break-even en 2027. Si dice Cubierto, ya superamos el umbral."></span></div>
-      <div class="dash-val" id="dash-gap-venta27">—</div>
-      <div class="dash-sub">faltante para cubrir costos</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Venta diaria 2027 <span class="hint-badge" data-tip="Ingreso promedio necesario cada día (facturación mínima ÷ 30 días) para cubrir todos los costos del ecosistema en 2027."></span></div>
-      <div class="dash-val" id="dash-venta-dia27">—</div>
-      <div class="dash-sub">promedio diario para cubrir costos</div>
-    </div>
-  </div>
-
-  <!-- ROW 2: Flujo y caja -->
-  <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mint);margin-bottom:.45rem">💵 Flujo y caja</div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-lbl">Facturación 2030 <span class="hint-badge" data-tip="Ingreso bruto mensual total de Almaria + HugoTech proyectado para 2030. Es el número que hay que alcanzar para que el modelo funcione."></span></div>
-      <div class="dash-val" id="dash-fact30">—</div>
-      <div class="dash-sub">ingreso total mensual proyectado</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Neto operativo 2030 <span class="hint-badge" data-tip="Facturación × porcentaje neto (65%). Es lo que realmente queda para pagar a las personas después de costos de venta, impuestos y operación."></span></div>
-      <div class="dash-val" id="dash-net30">—</div>
-      <div class="dash-sub" id="dash-net30-sub">después de costos de venta</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Colchón 2030 <span class="hint-badge" data-tip="Neto operativo menos toda la planilla (socios + equipo). Si es positivo, hay margen. Si es negativo, la planilla supera lo que se genera y hay ajuste."></span></div>
-      <div class="dash-val" id="dash-col30">—</div>
-      <div class="dash-sub">neto − planilla completa</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Pool invertido <span class="hint-badge" data-tip="Suma de todo lo que han invertido todos los socios: tickets de entrada + capital en marcas + sweat equity valorizado. Es la base para calcular el % de equity de cada uno."></span></div>
-      <div class="dash-val" id="kpi-pool">—</div>
-      <div class="dash-sub">tickets + capital + sweat equity</div>
-    </div>
-  </div>
-
-  <!-- ROW 3: Recuperación y retorno -->
-  <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:.45rem">🔄 Recuperación y retorno</div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-lbl">ROI equipo <span class="hint-badge" data-tip="Promedio de (retorno total ÷ inversión) por socio. Un ROI de ×5 significa que por cada sol invertido, el socio recibe 5 soles en sueldos + equity durante los 8 años."></span></div>
-      <div class="dash-val" id="dash-roi">—</div>
-      <div class="dash-sub">retorno total ÷ inversión por socio</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Ingreso equipo 2033 <span class="hint-badge" data-tip="Suma mensual de lo que reciben todos los socios en 2033 (sueldo + equity distribuible). Es el ingreso colectivo del equipo fundador."></span></div>
-      <div class="dash-val" id="dash-team-income">—</div>
-      <div class="dash-sub">sueldo + equity, todos los socios</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">1er distribuible <span class="hint-badge" data-tip="El primer año en que hay dinero sobrante para repartir por equity después de pagar planilla + reserva. Antes de este año, todo va a sueldos."></span></div>
-      <div class="dash-val" id="dash-first-dist">—</div>
-      <div class="dash-sub">año con equity real por 1ra vez</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Recuperación total <span class="hint-badge" data-tip="Suma acumulada de todo lo que recibirán los socios (sueldos + equity) durante los 8 años del modelo (2026-2033). Se compara con la inversión para calcular el ROI."></span></div>
-      <div class="dash-val" id="dash-recup-total">—</div>
-      <div class="dash-sub">sueldos + equity acumulados (8 años)</div>
-    </div>
-  </div>
-
-  <!-- ROW 4: Equipo y planilla -->
-  <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral);margin-bottom:.45rem">👥 Equipo y planilla</div>
-  <div class="dash-grid">
-    <div class="dash-card">
-      <div class="dash-lbl">Planilla 2030 <span class="hint-badge" data-tip="Costo mensual total de toda la planilla en 2030: sueldos de socios fundadores + equipo operativo (content creators, comerciales, etc)."></span></div>
-      <div class="dash-val" id="dash-pay30">—</div>
-      <div class="dash-sub">fundadores + equipo operativo</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Equipo op. 2033 <span class="hint-badge" data-tip="Costo mensual solo del equipo no fundador (content creators, comerciales, facilitadores) proyectado a 2033 con sus incrementos salariales."></span></div>
-      <div class="dash-val" id="dash-op32">—</div>
-      <div class="dash-sub">empleados no fundadores</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Liberados 2030 <span class="hint-badge" data-tip="Cuántos socios ya ganan (sueldo + equity) igual o más que su sueldo tope al 2030. Si todos están liberados, el modelo es sostenible."></span></div>
-      <div class="dash-val" id="dash-lib30">—</div>
-      <div class="dash-sub">socios cuyo ingreso ≥ su tope</div>
-    </div>
-    <div class="dash-card">
-      <div class="dash-lbl">Brecha 2030 <span class="hint-badge" data-tip="Cuánto falta en total (todos los socios sumados) para que cada uno gane al menos su sueldo tope mensual al 2030. Si es S/0, todos ya están cubiertos."></span></div>
-      <div class="dash-val" id="dash-gap30">—</div>
-      <div class="dash-sub">faltante para alcanzar sueldo tope</div>
-    </div>
-  </div>
+  <!-- Bloques narrativos dinámicos -->
+  <div id="dash-blocks" style="margin-bottom:1rem"></div>
 
   <!-- Liberation meter -->
   <div class="lib-bar">
@@ -2237,96 +2140,89 @@ function recalc(){
   const maxMult=Math.max(...heroMults);
   sv('hero-kpi-mult','×'+minMult.toFixed(1)+' – ×'+maxMult.toFixed(1));
 
-  // ROW 1: ¿Cuánto necesitamos vender?
+  // ── Dashboard narrativo ──
   const idx27=AÑOS.indexOf(2027);
   const factMinBE27=Math.round(fact.sued_tot[idx27]/Math.max(0.01,P.netoPct));
-  sv('dash-fact-min',fmt(factMinBE27)+'/mes');
-  sv('dash-fact27',fmt(fact.total[idx27])+'/mes');
   const gap27=Math.max(0,factMinBE27-fact.total[idx27]);
-  const gapV27El=sel('dash-gap-venta27');
-  if(gapV27El){gapV27El.textContent=gap27>0?fmt(gap27)+'/mes':'✅ Cubierto';gapV27El.style.color=gap27>0?'var(--coral)':'var(--green)';}
-  const dash27sub=sel('dash-fact27-sub');
-  if(dash27sub) dash27sub.textContent=fact.total[idx27]>=factMinBE27?'✅ supera el mínimo requerido':'⚠️ falta '+fmt(gap27)+' para cubrir planilla';
-  sv('dash-venta-dia27',fmt(Math.round(factMinBE27/30))+'/día');
-
-  // ROW 2: Flujo y caja
-  sv('dash-fact30',fmt(fact.total[idx30]));
-  sv('dash-net30',fmt(fact.neto[idx30]));
-  const net30sub=sel('dash-net30-sub');
-  if(net30sub) net30sub.textContent=Math.round(P.netoPct*100)+'% del bruto = '+fmt(fact.neto[idx30]);
-  const col30El=sel('dash-col30');
-  if(col30El){col30El.textContent=fmt(fact.colchon[idx30]);col30El.style.color=fact.colchon[idx30]>=0?'var(--green)':'var(--coral)';}
+  const factMinBELast=Math.round(fact.sued_tot[_li]/Math.max(0.01,P.netoPct));
+  const factMinDistLast=Math.round((fact.sued_tot[_li]+Number(P.reserva||0))/Math.max(0.01,P.netoPct));
+  const _tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
+  const _bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
+  const _tswAll=PERSONS.reduce((s,p)=>s+sw(p,sc[p.id]).sw,0);
+  const scLabel={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'}[P.sc]||'Neutro';
+  const avgPerSocio=PERSONS.length>0?Math.round(team2032/PERSONS.length):0;
   animateValue(sel('kpi-pool'),fmt(pool));
 
-  // ROW 3: Recuperación y retorno
-  sv('dash-roi','×'+teamRoiAvg.toFixed(1));
-  sv('dash-team-income',fmt(team2032)+'/mes');
-  sv('dash-first-dist',derived.firstDistYear||'—');
-  sv('dash-recup-total',fmt(teamRet7));
-
-  // ROW 4: Equipo y planilla
-  sv('dash-pay30',fmt(fact.sued_tot[idx30]));
-  sv('dash-op32',fmt(fact.hcost[_li]));
-  sv('dash-lib30',`${derived.liberatedBy2030}/${PERSONS.length}`);
-  sv('dash-gap30',fmt(teamGap2030));
-
-  const dashNote=sel('dash-note');
-  if(dashNote){
-    dashNote.innerHTML='Todas las métricas usan el mismo motor (<strong>deriveState</strong>). <strong>colchón = neto – planilla</strong>, <strong>distribuible = max(0, colchón – reserva)</strong>. Escenario activo: <strong>'+({p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'}[P.sc]||'Neutro')+'</strong>.';
+  // STORY
+  const storyEl=sel('dash-story');
+  if(storyEl){
+    let s='';
+    s+=`<div style="font-size:.85rem;font-weight:700;color:var(--gold);margin-bottom:.5rem">📋 Resumen ejecutivo — Escenario ${scLabel}</div>`;
+    s+=`<p style="margin:0 0 .5rem">Hoy el ecosistema QOCHIX tiene <strong style="color:var(--gold)">${fmt(pool)}</strong> invertido entre los ${PERSONS.length} socios (tickets + capital + sweat equity). Con el capital disponible, pueden operar <strong style="color:${rw.months>=12?'var(--green)':'var(--coral)'}">${rw.months} meses sin vender nada</strong>.</p>`;
+    s+=`<p style="margin:0 0 .5rem">Para que el modelo se sostenga, necesitan facturar al menos <strong style="color:var(--blue)">${fmt(factMinBELast)}/mes</strong> en el ${_lastYear} (para cubrir los ${fmt(fact.sued_tot[_li])} de planilla). El modelo proyecta ${fmt(fact.total[_li])}/mes → ${fact.total[_li]>=factMinBELast?'<strong style="color:var(--green)">Superan la meta ✅</strong>.':'<strong style="color:var(--coral)">Falta '+fmt(factMinBELast-fact.total[_li])+' para llegar</strong>.'}</p>`;
+    s+=`<p style="margin:0 0 .5rem">El <strong>break-even</strong> (primer año donde el neto cubre toda la planilla) llega en <strong style="color:var(--green)">${be}</strong>. Antes de ese año, los sueldos se ajustan proporcionalmente a lo que hay — nadie gana su meta completa todavía.</p>`;
+    if(dist[_li]>0){
+      s+=`<p style="margin:0 0 .5rem">A partir del ${derived.firstDistYear||'—'}, empieza a haber <strong style="color:var(--gold)">distribuible</strong> — dinero que se reparte por equity. En ${_lastYear}: facturan ${fmt(fact.total[_li])} → neto ${fmt(fact.neto[_li])} → pagan planilla ${fmt(fact.sued_tot[_li])} → quedan <strong style="color:var(--gold)">${fmt(dist[_li])}/mes</strong> para repartir entre socios.</p>`;
+    }else{
+      s+=`<p style="margin:0 0 .5rem;color:var(--coral)">⚠️ En este escenario <strong>no hay distribuible</strong> — toda la facturación se va a cubrir la planilla. Para generar distribuible, necesitan facturar <strong>${fmt(factMinDistLast)}/mes</strong> (planilla + reserva).</p>`;
+    }
+    s+=`<p style="margin:0">En 8 años (2026-${_lastYear}), el equipo habrá recibido <strong style="color:var(--gold)">${fmt(teamRet7)}</strong> en sueldos + equity — un retorno de <strong>×${teamRoiAvg.toFixed(1)}</strong> sobre lo invertido. En ${_lastYear}, los ${PERSONS.length} socios ganan en total <strong>${fmt(team2032)}/mes</strong> (promedio: ${fmt(avgPerSocio)}/mes por socio).</p>`;
+    storyEl.innerHTML=s;
   }
 
-  // ── Explain dashboard ──
-  const exDash=sel('explain-dash');
-  if(exDash){
-    const _tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
-    const _bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
-    const _tswAll=PERSONS.reduce((s,p)=>s+sw(p,sc[p.id]).sw,0);
-    const factMinBELast=Math.round(fact.sued_tot[_li]/Math.max(0.01,P.netoPct));
-    const factMinDistLast=Math.round((fact.sued_tot[_li]+Number(P.reserva||0))/Math.max(0.01,P.netoPct));
-    let h='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.6rem">';
+  // BLOCKS
+  const blocksEl=sel('dash-blocks');
+  if(blocksEl){
+    const bkStyle='background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.85rem 1rem;';
+    const hdrStyle='font-weight:700;font-size:.76rem;margin-bottom:.4rem;';
+    const valStyle='font-family:var(--serif);font-size:1.6rem;font-weight:900;line-height:1.1;margin-bottom:.35rem;';
+    const txtStyle='font-size:.72rem;color:var(--muted);line-height:1.55;';
+    let b='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.75rem">';
 
-    h+=`<div style="background:var(--bg2);border:1px solid rgba(91,168,245,.15);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--blue);font-size:.72rem;margin-bottom:.25rem">🎯 Meta de venta: ${fmt(factMinBELast)}/mes</div>
-      <div style="font-size:.7rem">Facturación bruta mínima para cubrir toda la planilla ${_lastYear} (S/${fmt(fact.sued_tot[_li])}). Para tener <strong>distribuible</strong> necesitas ${fmt(factMinDistLast)}/mes (+reserva). Hoy el modelo proyecta ${fmt(fact.total[_li])}/mes → ${fact.total[_li]>=factMinDistLast?'<strong style="color:var(--green)">Superado ✅</strong>':'<strong style="color:var(--coral)">Falta '+fmt(factMinDistLast-fact.total[_li])+'</strong>'}.</div>
+    // 1. Meta de venta
+    b+=`<div style="${bkStyle}border-left:3px solid var(--blue)">
+      <div style="${hdrStyle}color:var(--blue)">🎯 ¿Cuánto necesitamos vender?</div>
+      <div style="${valStyle}color:var(--blue)">${fmt(factMinBE27)}/mes</div>
+      <div style="${txtStyle}">Esta es la <strong>facturación bruta mínima en 2027</strong> (primer año completo) para cubrir toda la planilla. Hoy el modelo proyecta <strong>${fmt(fact.total[idx27])}/mes</strong> en 2027. ${gap27>0?'Faltan <strong style="color:var(--coral)">'+fmt(gap27)+'/mes</strong> — necesitan conseguir más clientes o subir precios.':'<strong style="color:var(--green)">✅ Ya lo cubren</strong> — pueden enfocarse en crecer.'} Eso es <strong>${fmt(Math.round(factMinBE27/30))}/día</strong> entre ambas marcas.</div>
     </div>`;
 
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--gold);font-size:.72rem;margin-bottom:.25rem">Distribuible ${_lastYear}: ${fmt(dist[_li])}/mes</div>
-      <div style="font-size:.7rem">Fact. ${fmt(fact.total[_li])} → neto ${fmt(fact.neto[_li])} − planilla ${fmt(fact.sued_tot[_li])} − reserva ${fmt(P.reserva)} = <strong>${fmt(dist[_li])}</strong> para repartir por equity entre socios.</div>
+    // 2. Flujo del dinero
+    b+=`<div style="${bkStyle}border-left:3px solid var(--mint)">
+      <div style="${hdrStyle}color:var(--mint)">💵 ¿Cómo fluye el dinero?</div>
+      <div style="${valStyle}color:var(--mint)">${fmt(fact.neto[idx30])} neto</div>
+      <div style="${txtStyle}">En <strong>2030</strong>: facturan <strong>${fmt(fact.total[idx30])}/mes</strong> → el 65% queda como neto operativo (<strong>${fmt(fact.neto[idx30])}</strong>) → se paga planilla de <strong>${fmt(fact.sued_tot[idx30])}</strong> → colchón: <strong style="color:${fact.colchon[idx30]>=0?'var(--green)':'var(--coral)'}">${fmt(fact.colchon[idx30])}</strong>. ${fact.colchon[idx30]>=0?'Hay margen — el modelo respira.':'La planilla supera al neto — los sueldos se ajustan a lo que hay.'}</div>
     </div>`;
 
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--green);font-size:.72rem;margin-bottom:.25rem">Break-even: ${be}</div>
-      <div style="font-size:.7rem">Primer año donde neto ≥ planilla. Antes de ${be} el ecosistema opera con pérdida — los sueldos se ajustan proporcionalmente al revenue disponible.</div>
+    // 3. Recuperación inversión
+    b+=`<div style="${bkStyle}border-left:3px solid var(--gold)">
+      <div style="${hdrStyle}color:var(--gold)">🔄 ¿Cuándo recuperamos lo invertido?</div>
+      <div style="${valStyle}color:var(--gold)">×${teamRoiAvg.toFixed(1)} ROI</div>
+      <div style="${txtStyle}">El equipo ha invertido <strong>${fmt(pool)}</strong> (tickets <strong>${fmt(_tktTot)}</strong> + capital <strong>${fmt(_bcAll)}</strong> + sweat <strong>${fmt(_tswAll)}</strong>). En 8 años recibirán <strong style="color:var(--gold)">${fmt(teamRet7)}</strong> en sueldos + equity — eso es <strong>×${teamRoiAvg.toFixed(1)}</strong> lo invertido. El primer año con distribuible real es <strong>${derived.firstDistYear||'—'}</strong>.</div>
     </div>`;
 
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--coral);font-size:.72rem;margin-bottom:.25rem">Runway: ${rw.months}m</div>
-      <div style="font-size:.7rem">Con caja de ${fmt(rw.capital)} y burn actual, sobreviven ${rw.months} meses sin ingresos. ${rw.months>=18?'Margen saludable.':rw.months>=9?'Zona media — monitorear.':'<strong style="color:var(--coral)">Ajustado — prioridad: ingresos.</strong>'}</div>
+    // 4. Ingreso por socio
+    b+=`<div style="${bkStyle}border-left:3px solid var(--teal)">
+      <div style="${hdrStyle}color:var(--teal)">👤 ¿Cuánto ganará cada socio en ${_lastYear}?</div>
+      <div style="${valStyle}color:var(--teal)">${fmt(team2032)}/mes</div>
+      <div style="${txtStyle}">Sumando sueldo + distribuible por equity, los ${PERSONS.length} socios ganan <strong>${fmt(team2032)}/mes</strong> en total. Promedio: <strong>${fmt(avgPerSocio)}/mes</strong> por socio. ${derived.liberatedBy2032===PERSONS.length?'<strong style="color:var(--green)">Todos superan su sueldo tope ✅</strong> — modelo sostenible.':'<strong>'+derived.liberatedBy2032+'/'+PERSONS.length+'</strong> socios superan su tope al 2032.'}</div>
     </div>`;
 
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--gold);font-size:.72rem;margin-bottom:.25rem">ROI equipo: ×${teamRoiAvg.toFixed(1)}</div>
-      <div style="font-size:.7rem">Cada sol invertido (tickets + capital + sweat) retorna en promedio ×${teamRoiAvg.toFixed(1)} en sueldos + equity al ${_lastYear}. Inversión total: ${fmt(teamInv)} → retorno acumulado: ${fmt(teamRet7)} en 8 años.</div>
+    // 5. Equipo operativo
+    b+=`<div style="${bkStyle}border-left:3px solid var(--coral)">
+      <div style="${hdrStyle}color:var(--coral)">👥 ¿Cuánto cuesta el equipo?</div>
+      <div style="${valStyle}color:var(--coral)">${fmt(fact.sued_tot[idx30])}/mes</div>
+      <div style="${txtStyle}">En <strong>2030</strong>, la planilla total es <strong>${fmt(fact.sued_tot[idx30])}/mes</strong> (socios: ${fmt(fact.sued_f[idx30])} + equipo operativo: ${fmt(fact.hcost[idx30])}). Para el ${_lastYear}, el equipo operativo solo cuesta <strong>${fmt(fact.hcost[_li])}/mes</strong>. ${fact.dist_no_op[idx30]>0&&fact.dist[idx30]===0?'<strong style="color:var(--coral)">Sin equipo operativo habría distribuible ('+fmt(fact.dist_no_op[idx30])+'/mes)</strong> — el equipo elimina el primer distribuible.':''}</div>
     </div>`;
 
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--purple);font-size:.72rem;margin-bottom:.25rem">Liberación: ${derived.liberatedBy2032}/${PERSONS.length} al 2032</div>
-      <div style="font-size:.7rem">Socios cuyo ingreso (sueldo capeado + equity) ≥ sueldo tope. ${derived.liberatedBy2032===PERSONS.length?'<strong style="color:var(--green)">Todos liberados ✅</strong>':'Faltan '+(PERSONS.length-derived.liberatedBy2032)+' por liberar.'}</div>
+    // 6. Supervivencia
+    b+=`<div style="${bkStyle}border-left:3px solid ${rw.months>=12?'var(--green)':'var(--coral)'}">
+      <div style="${hdrStyle}color:${rw.months>=12?'var(--green)':'var(--coral)'}">🏦 ¿Cuánto tiempo podemos aguantar?</div>
+      <div style="${valStyle}color:${rw.months>=12?'var(--green)':'var(--coral)'}">${rw.months} meses</div>
+      <div style="${txtStyle}">Con la caja actual de <strong>${fmt(rw.capital)}</strong>, el ecosistema sobrevive <strong>${rw.months} meses</strong> sin generar ningún ingreso. ${rw.months>=18?'Margen saludable — hay tiempo para experimentar y crecer.':rw.months>=12?'Zona estable — monitorear cada mes y priorizar ingresos.':rw.months>=6?'<strong style="color:var(--coral)">Zona de precaución</strong> — cada mes sin ingresos duele. Prioridad: vender.':'<strong style="color:var(--coral)">Zona roja</strong> — necesitan ingresos ya o inyectar capital.'}</div>
     </div>`;
 
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--text);font-size:.72rem;margin-bottom:.25rem">Pool invertido: ${fmt(pool)}</div>
-      <div style="font-size:.7rem">Tickets ${fmt(_tktTot)} + capital ${fmt(_bcAll)} + sweat ${fmt(_tswAll)}. Es la base para el % de equity de cada socio.</div>
-    </div>`;
-
-    h+=`<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.65rem .8rem">
-      <div style="font-weight:700;color:var(--teal);font-size:.72rem;margin-bottom:.25rem">Ingreso equipo ${_lastYear}: ${fmt(team2032)}/mes</div>
-      <div style="font-size:.7rem">Suma de lo que reciben todos los socios (sueldo + equity). ${team2032>0?'Promedio por socio: <strong>'+fmt(Math.round(team2032/PERSONS.length))+'/mes</strong>.':''}</div>
-    </div>`;
-
-    h+='</div>';
-    exDash.innerHTML=h;
+    b+='</div>';
+    blocksEl.innerHTML=b;
   }
   sv('gra-growth-30',growth30.toFixed(0)+'%');
   sv('gra-growth-32',growth32.toFixed(0)+'%');
