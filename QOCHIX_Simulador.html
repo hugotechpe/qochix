@@ -971,7 +971,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <!-- P&L anual comparativo -->
   <div class="panel open" style="margin-bottom:.75rem">
     <div class="phdr" onclick="toggleP(this)">
-      <span class="ptitle">📊 P&amp;L ANUAL COMPARATIVO (2026–2029)</span>
+      <span class="ptitle">📊 P&amp;L ANUAL COMPARATIVO (2026–2032)</span>
       <span class="ptgl">▼</span>
     </div>
     <div class="pbody">
@@ -3478,7 +3478,7 @@ function paintFlujoReal(yr){
   const netPct=P.netoPct||0.65;
   const costPct=1-netPct;
   const MONTH_NAMES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  const SHOW_YEARS=[2026,2027,2028,2029];
+  const SHOW_YEARS=[2026,2027,2028,2029,2030,2031,2032];
   const curves=derived.curves||fact.suedCurves||{};
 
   const scLabels={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
@@ -3594,7 +3594,7 @@ function paintFlujoReal(yr){
   const annHead=sel('fr-annual-head');
   const annBody=sel('fr-annual-body');
   if(annHead&&annBody){
-    annHead.innerHTML='<tr><th>ESTADO DE RESULTADOS</th>'+SHOW_YEARS.map(y=>'<th'+(y===_frYear?' style="color:var(--teal);border-bottom:2px solid var(--teal)"':'')+'>'+y+'</th>').join('')+'<th>Δ% 26→29</th></tr>';
+    annHead.innerHTML='<tr><th>ESTADO DE RESULTADOS</th>'+SHOW_YEARS.map(y=>'<th'+(y===_frYear?' style="color:var(--teal);border-bottom:2px solid var(--teal)"':'')+'>'+y+'</th>').join('')+'<th>Δ% 26→32</th></tr>';
     const r=[];
     function getYr(arr,y){const i=AÑOS.indexOf(y);return i>=0?(arr[i]||0):0;}
     const dAlm=SHOW_YEARS.map(y=>getYr(fact.alm,y));
@@ -3612,7 +3612,7 @@ function paintFlujoReal(yr){
     const dDist=SHOW_YEARS.map(y=>getYr(fact.dist,y));
     const dMarg=dTot.map((v,i)=>v>0?Math.round(dUtil[i]/v*100):0);
 
-    function pctChg(arr){return arr[0]>0?Math.round((arr[3]-arr[0])/arr[0]*100)+'%':(arr[3]>0?'∞':'—');}
+    function pctChg(arr){const last=arr[arr.length-1];return arr[0]>0?Math.round((last-arr[0])/arr[0]*100)+'%':(last>0?'∞':'—');}
     function annR(lbl,arr,cls,isDelta){
       const delta=isDelta!==false?pctChg(arr):'';
       return '<tr class="'+(cls||'')+'">'+'<td>'+lbl+'</td>'+arr.map((v,i)=>{
