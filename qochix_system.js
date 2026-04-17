@@ -71,10 +71,13 @@
         brandCash: {}, c: '#E98EB6' },
     ],
     hires: [
-      { role: 'Diana — Content HugoTech', brand: 'HugoTech', sue: 2000, growth: 1.15 },
-      { role: 'María — Content Almaria', brand: 'Almaria', sue: 2000, growth: 1.15 },
-      { role: 'Comercial HugoTech+Almaria', brand: 'Mixto', sue: 3000, growth: 1.20, startYear: 2027 },
-      { role: 'Facilitadora Almaria', brand: 'Almaria', sue: 2500, growth: 1.25 },
+      { role: 'Content Creator 1', brand: 'Mixto', sue: 2000, growth: 1.12 },
+      { role: 'Content Creator 2', brand: 'Mixto', sue: 2000, growth: 1.12 },
+      { role: 'Editor + Filmmaker', brand: 'Mixto', sue: 2000, growth: 1.12 },
+      { role: 'Comercial (base + 10% rev)', brand: 'Mixto', sue: 2500, growth: 1.15 },
+      { role: 'Contadora', brand: 'Mixto', sue: 500, growth: 1.10 },
+      { role: 'Community Manager', brand: 'Mixto', sue: 2000, growth: 1.12, startYear: 2028 },
+      { role: 'Asistente operaciones', brand: 'Mixto', sue: 2500, growth: 1.12, startYear: 2029 },
     ],
     P: {
       ticket: 5000,
@@ -274,6 +277,15 @@
         s.P.sue30 = { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 };
         s.P.sue32 = { hugo: 35000, rossy: 14000, vera: 12500, mechita: 24000 };
       }
+      s.hires = [
+        { role: 'Content Creator 1', brand: 'Mixto', sue: 2000, growth: 1.12 },
+        { role: 'Content Creator 2', brand: 'Mixto', sue: 2000, growth: 1.12 },
+        { role: 'Editor + Filmmaker', brand: 'Mixto', sue: 2000, growth: 1.12 },
+        { role: 'Comercial (base + 10% rev)', brand: 'Mixto', sue: 2500, growth: 1.15 },
+        { role: 'Contadora', brand: 'Mixto', sue: 500, growth: 1.10 },
+        { role: 'Community Manager', brand: 'Mixto', sue: 2000, growth: 1.12, startYear: 2028 },
+        { role: 'Asistente operaciones', brand: 'Mixto', sue: 2500, growth: 1.12, startYear: 2029 },
+      ];
     }},
   ];
 

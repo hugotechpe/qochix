@@ -1422,7 +1422,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=22.0&t=1776470400"></script>
+<script src="qochix_system.js?v=23.0&t=1776470400"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1733,10 +1733,13 @@ function addHire() {
   renderHires(); recalc();
 }
 
-// Costo equipo operativo por año (crece con el factor compuesto)
 function hiresCostByYear() {
   return AÑOS.map((_,yi)=>
-    Math.round(HIRES.reduce((s,h)=>s + h.sue * Math.pow(h.growth, yi), 0))
+    Math.round(HIRES.reduce((s,h)=>{
+      var startYi=h.startYear?Math.max(0,AÑOS.indexOf(h.startYear)):0;
+      if(startYi<0||yi<startYi) return s;
+      return s + h.sue * Math.pow(h.growth, yi - startYi);
+    }, 0))
   );
 }
 
@@ -3063,7 +3066,46 @@ function paintEffortTable(fact){
     var scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
     var firstDistYr=null;
     for(var y=1;y<=6;y++){if(fact.dist[y]>0){firstDistYr=2026+y;break;}}
-    noteEl.innerHTML='Escenario <strong>'+scn[P.sc]+'</strong>. '+(firstDistYr?'El primer año con distribuible es <strong>'+firstDistYr+'</strong>. ':'No hay distribuible en el horizonte. ')+'Para que el equipo reciba equity, la facturación total debe superar <strong>'+fmt(Math.round(fact.sued_tot[6]/P.netoPct))+'</strong>/mes (planilla ÷ neto%). Todo lo que pase por encima de eso, menos reserva, se reparte.';
+    var umbralEquity=fmt(Math.round(fact.sued_tot[6]/P.netoPct));
+    var nt='Escenario <strong>'+scn[P.sc]+'</strong>. ';
+    nt+=(firstDistYr?'El primer año con distribuible es <strong style="color:var(--gold)">'+firstDistYr+'</strong>. ':'<span style="color:var(--coral)">No hay distribuible en el horizonte (2027–2032).</span> ');
+    nt+='Para que el equipo reciba equity, la facturación bruta total debe superar <strong style="color:var(--teal)">'+umbralEquity+'</strong>/mes (planilla ÷ neto%).';
+
+    nt+='<div style="margin-top:.7rem;padding:.7rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
+    nt+='<strong style="color:var(--gold)">¿Cuándo cada socio alcanza su meta salarial?</strong><br>';
+    var eqById=Object.fromEntries(derived.personCards.map(function(c){return [c.id,Number(c.equity||0)];}));
+    PERSONS.forEach(function(p){
+      var pc=derived.personCards.find(function(c){return c.id===p.id;});
+      if(!pc) return;
+      var target=p.sueldo;
+      var crossYear='más allá de 2032';
+      for(var yi=0;yi<=6;yi++){
+        var sue=fact.suedCurves[p.id]?fact.suedCurves[p.id][yi]:0;
+        var eq=Math.round(fact.dist[yi]*(eqById[p.id]||0)/100);
+        if(sue+eq>=target){crossYear=''+(2026+yi);break;}
+      }
+      var total32=pc.total2032;
+      var pct32=target>0?Math.round(total32/target*100):0;
+      var color=crossYear==='más allá de 2032'?'var(--coral)':'var(--green)';
+      nt+='<span style="color:'+p.c+'">'+p.name+'</span>: meta <strong>'+fmt(target)+'/mes</strong> → cruza en <strong style="color:'+color+'">'+crossYear+'</strong>';
+      nt+=' (en 2032 llega a '+fmt(total32)+' = '+pct32+'% de su meta).<br>';
+    });
+    nt+='</div>';
+
+    nt+='<div style="margin-top:.5rem;padding:.6rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
+    nt+='<strong style="color:var(--teal)">Facturación necesaria por marca en 2032:</strong><br>';
+    nt+='Almaria debe facturar <strong style="color:var(--green)">'+fmt(fact.alm[6])+'</strong>/mes ('+fmt(Math.round(fact.alm[6]/22))+'/día laboral).<br>';
+    nt+='HugoTech debe facturar <strong style="color:var(--green)">'+fmt(fact.ht[6])+'</strong>/mes ('+fmt(Math.round(fact.ht[6]/22))+'/día laboral).<br>';
+    nt+='Total ecosistema: <strong>'+fmt(fact.total[6])+'</strong>/mes bruto → <strong style="color:var(--gold)">'+fmt(fact.neto[6])+'</strong>/mes neto.';
+    nt+='</div>';
+
+    nt+='<div style="margin-top:.5rem;padding:.6rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
+    nt+='<strong style="color:var(--coral)">Equipo operativo actual y proyectado:</strong><br>';
+    nt+='Hoy (2026): <strong>'+fmt(fact.hcost[0])+'</strong>/mes → 2032: <strong>'+fmt(fact.hcost[6])+'</strong>/mes.<br>';
+    nt+='Incluye content creators, editor, comercial (base + 10% revenue), contadora, y posiciones futuras (community manager 2028, asistente ops 2029).';
+    nt+='</div>';
+
+    noteEl.innerHTML=nt;
   }
 }
 var _lineEditTimer=0;
