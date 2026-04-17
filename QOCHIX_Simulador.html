@@ -3275,12 +3275,33 @@ function paintPartnerCards(derived, fact, eqById){
     if(lastReinv>0) h+=' · '+fmt(lastReinv)+' reinvertido';
     h+='</span></div>';
 
-    // --- Footer con métricas clave ---
+    // --- Desglose capital invertido ---
+    h+='<div class="ptnr-divider"></div>';
+    h+='<div class="ptnr-section-lbl"><span>Inversión desglosada</span></div>';
+    var tkt=pc.ticket||0;
+    var bCapTotal=pc.brandCapitalTotal||0;
+    var bCashTotal=(pc.cashContribution||0)-tkt-Number(p.capital||0)-bCapTotal;
+    h+='<table class="ptnr-tbl" style="margin-bottom:.35rem">';
+    if(tkt>0) h+='<tr><td style="width:auto">Ticket Qochix</td><td style="color:var(--gold)">'+fmt(tkt)+'</td><td></td><td></td></tr>';
+    if(Number(p.capital||0)>0) h+='<tr><td>Capital previo</td><td style="color:var(--teal)">'+fmt(p.capital)+'</td><td></td><td></td></tr>';
+    var bk=p.brandCapital||{};
+    Object.keys(bk).forEach(function(k){
+      if(bk[k]>0) h+='<tr><td style="font-size:.58rem">Marca '+k+'</td><td style="color:var(--coral)">'+fmt(bk[k])+'</td><td style="font-size:.48rem;color:var(--muted)">histórico</td><td></td></tr>';
+    });
+    var bc=p.brandCash||{};
+    Object.keys(bc).forEach(function(k){
+      if(bc[k]>0) h+='<tr><td style="font-size:.58rem">Caja '+k+'</td><td style="color:var(--teal)">'+fmt(bc[k])+'</td><td style="font-size:.48rem;color:var(--muted)">caja real</td><td></td></tr>';
+    });
+    var sweatVal=Math.max(0,(pc.investment||0)-(pc.cashContribution||0));
+    h+='<tr><td style="font-size:.58rem">Sweat equity</td><td style="color:var(--green)">'+fmt(sweatVal)+'</td><td style="font-size:.48rem;color:var(--muted)">trabajo</td><td></td></tr>';
+    h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Total pool</td><td style="font-weight:700">'+fmt(pc.investment||0)+'</td><td></td><td></td></tr>';
+    h+='</table>';
+
+    // --- Footer métricas ---
     h+='<div class="ptnr-foot">';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado/mes</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
     var multNeto=lastNeto/Math.max(1,tope);
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador '+AÑOS[AÑOS.length-1]+'</span><span class="ptnr-foot-val" style="color:'+(multNeto>=1?'var(--green)':'var(--coral)')+'">×'+multNeto.toFixed(1)+'</span></div>';
-    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.cashContribution||0)+'</span></div>';
     if(sumReinvAn>0){
       h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Reinversión acum.</span><span class="ptnr-foot-val" style="color:var(--green)">'+fmt(sumReinvAn)+'</span></div>';
     }
