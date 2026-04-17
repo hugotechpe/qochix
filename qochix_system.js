@@ -57,16 +57,16 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 58, capital: 0,
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoTope: 42000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 58, capital: 0,
         brandCapital: { almaria: 10000, ht: 40000 },
         brandCash: { almaria: 9400, ht: 16000 }, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 22, capital: 0,
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoTope: 17000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 22, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 18800 }, c: '#3ECFCF' },
-      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 15, capital: 0,
+      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoTope: 15000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 15, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'mechita', name: 'Mechita', sueldo: 12000, sueldoMarca: 0, hrs: 6, adj: 0.55, equity: 5, capital: 0,
+      { id: 'mechita', name: 'Mechita', sueldo: 12000, sueldoTope: 29000, sueldoMarca: 0, hrs: 6, adj: 0.55, equity: 5, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E98EB6' },
     ],
@@ -106,7 +106,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 19,
+      schemaVersion: 20,
     },
   };
 
@@ -310,6 +310,14 @@
     { from: 18, to: 19, run(s) {
       if (!s.P) s.P = {};
       if (!s.P.sue33) s.P.sue33 = { hugo: 42000, rossy: 17000, vera: 15000, mechita: 29000 };
+    }},
+    { from: 19, to: 20, run(s) {
+      var topes = { hugo: 42000, rossy: 17000, vera: 15000, mechita: 29000 };
+      if (s.persons) {
+        s.persons.forEach(function(p) {
+          if (p.sueldoTope == null) p.sueldoTope = topes[p.id] || p.sueldo || 0;
+        });
+      }
     }},
   ];
 
@@ -801,10 +809,14 @@
         const eq = Math.round(Number(fact.dist[index] || 0) * Number(effectiveEquity[person.id] || 0) / 100);
         return sue + eq;
       });
-      const crossIndex = yearlyTotals.findIndex((value) => value >= Number(person.sueldo || 0));
+      const sueldoTope = Number(person.sueldoTope || person.sueldo || 0);
+      const crossIndex = yearlyTotals.findIndex((value) => value >= sueldoTope);
       const eqLast = Math.round(fact.dist[lastYi] * Number(effectiveEquity[person.id] || 0) / 100);
       const sueLast = Number(pCurve[lastYi] || 0);
       const totalLast = sueLast + eqLast;
+      const brechaLast = Math.max(0, sueldoTope - sueLast);
+      const eqCubreBrechaLast = Math.min(eqLast, brechaLast);
+      const eqExcedenteLast = Math.max(0, eqLast - brechaLast);
       const brandCap = totalBrandCapital(person);
       const brandCash = totalBrandCash(person);
       const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash + swData.sw;
@@ -820,9 +832,13 @@
         brandCapitalTotal: brandCap,
         cashContribution: getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash,
         sue2030: Number(state.P.sue30[person.id] || 0),
+        sueldoTope,
         sueLast,
         eqLast,
         totalLast,
+        brechaLast,
+        eqCubreBrechaLast,
+        eqExcedenteLast,
         investment,
         yearlyTotals,
         liberationYear: crossIndex >= 0 ? AÑOS[crossIndex] : beyondLabel,

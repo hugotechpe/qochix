@@ -341,18 +341,33 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .ptnr-tbl td{padding:.18rem 0;font-size:.72rem;font-family:var(--mono)}
 .ptnr-tbl td:first-child{color:var(--muted);font-size:.65rem;width:38px}
 .ptnr-tbl td:nth-child(2){text-align:right;color:var(--teal);font-weight:600}
-.ptnr-tbl td:nth-child(3){text-align:right;color:var(--gold);font-size:.62rem;width:60px}
+.ptnr-tbl td:nth-child(3){text-align:right;color:var(--muted);font-size:.62rem;width:60px}
 .ptnr-tbl td:nth-child(4){text-align:right;color:var(--text);font-weight:700}
 .ptnr-tbl tr{border-bottom:1px solid rgba(255,255,255,.03)}
 .ptnr-tbl tr:last-child{border-bottom:none}
 .ptnr-tbl tr.ptnr-tbl-head{border-bottom:1px solid var(--brd)}
 .ptnr-tbl tr.ptnr-tbl-head td{font-size:.48rem;text-transform:uppercase;letter-spacing:.04em;opacity:.5;padding-bottom:.25rem;font-weight:600;font-family:var(--mono)}
-.ptnr-tbl tr.ptnr-tbl-head td:nth-child(2){color:var(--teal)}
-.ptnr-tbl tr.ptnr-tbl-head td:nth-child(3){color:var(--gold)}
-.ptnr-tbl tr.ptnr-tbl-head td:nth-child(4){color:var(--text)}
 .ptnr-tbl tr.ptnr-sum{border-top:1px solid var(--brd);border-bottom:none}
 .ptnr-tbl tr.ptnr-sum td{padding-top:.35rem;font-weight:700;font-size:.72rem}
 .ptnr-tbl tr.ptnr-sum td:first-child{font-size:.55rem}
+.ptnr-tbl-eq{width:100%;border-collapse:collapse}
+.ptnr-tbl-eq td{padding:.18rem .1rem;font-size:.66rem;font-family:var(--mono);text-align:right}
+.ptnr-tbl-eq td:first-child{color:var(--muted);font-size:.6rem;width:32px;text-align:left}
+.ptnr-tbl-eq td:nth-child(2){color:var(--teal);font-weight:600}
+.ptnr-tbl-eq td:nth-child(3){color:var(--coral);font-size:.56rem}
+.ptnr-tbl-eq td:nth-child(4){color:var(--gold)}
+.ptnr-tbl-eq td:nth-child(5){color:var(--text);font-weight:700}
+.ptnr-tbl-eq tr{border-bottom:1px solid rgba(255,255,255,.03)}
+.ptnr-tbl-eq tr:last-child{border-bottom:none}
+.ptnr-tbl-eq tr.ptnr-tbl-head{border-bottom:1px solid var(--brd)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td{font-size:.42rem;text-transform:uppercase;letter-spacing:.04em;opacity:.5;padding-bottom:.25rem;font-weight:600;font-family:var(--mono)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(2){color:var(--teal)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(3){color:var(--coral)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(4){color:var(--gold)}
+.ptnr-tbl-eq tr.ptnr-tbl-head td:nth-child(5){color:var(--text)}
+.ptnr-tbl-eq tr.ptnr-sum{border-top:1px solid var(--brd);border-bottom:none}
+.ptnr-tbl-eq tr.ptnr-sum td{padding-top:.35rem;font-weight:700;font-size:.66rem}
+.ptnr-tbl-eq tr.ptnr-sum td:first-child{font-size:.5rem}
 .ptnr-divider{height:1px;background:var(--brd);margin:.45rem 0}
 .ptnr-foot{margin-top:.55rem;padding-top:.55rem;border-top:1px solid var(--brd);display:grid;grid-template-columns:1fr 1fr;gap:.4rem .25rem;font-size:.65rem;text-align:center}
 .ptnr-foot-item{display:flex;flex-direction:column;gap:.1rem}
@@ -1621,13 +1636,17 @@ function initSidebar() {
           oninput="onHr('${p.id}',this.value)" title="Editar costo/hora">/hr
       </span>
     </div>
-    <div class="g2" style="margin-bottom:.5rem">
-      <div class="fld"><label>Valor mercado (S/)</label>
+    <div class="g3" style="margin-bottom:.5rem">
+      <div class="fld"><label>Valor mercado (S/) <span title="Lo que vale tu trabajo en el mercado">ℹ️</span></label>
         <input type="number" value="${p.sueldo}" step="500" min="500" max="80000"
           id="inp-sue-${p.id}" oninput="onS('${p.id}',this.value)"></div>
       <div class="fld"><label title="Lo que ya cobra de su marca actual. Se resta del sueldo Qochix para calcular sweat equity.">Sueldo marca actual (S/) ℹ️</label>
         <input type="number" value="${p.sueldoMarca||0}" step="500" min="0" max="80000"
           id="inp-smarca-${p.id}" oninput="onSueldoMarca('${p.id}',this.value)"></div>
+      <div class="fld"><label title="Ingreso mensual objetivo. El equity cubre la brecha entre tu sueldo Qochix y este tope.">Sueldo tope (S/) 🎯</label>
+        <input type="number" value="${p.sueldoTope||p.sueldo||0}" step="500" min="0" max="200000"
+          id="inp-stope-${p.id}" oninput="onSueldoTope('${p.id}',this.value)"
+          style="border-color:rgba(212,168,83,.35)"></div>
     </div>
     <div class="g2" style="margin-bottom:.5rem">
       <div class="fld"><label>Marca asignada</label>
@@ -1818,6 +1837,11 @@ function onS(id,v){
 function onSueldoMarca(id,v){
   const n=toNumLoose(v); if(n===null) return;
   const p=PERSONS.find(x=>x.id===id);p.sueldoMarca=n;
+  recalc();
+}
+function onSueldoTope(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  const p=PERSONS.find(x=>x.id===id);p.sueldoTope=n;
   recalc();
 }
 function onCap(id,v){
@@ -3196,39 +3220,67 @@ function paintPartnerCards(derived, fact, eqById){
     }
     h+='</table>';
 
-    // --- Sueldo + Equity + Total (mensual) ---
+    // --- Sueldo + Equity vs Tope (mensual) ---
     h+='<div class="ptnr-divider"></div>';
-    h+='<div class="ptnr-section-lbl"><span>Sueldo + Equity <span style="color:var(--gold)">/mes</span></span></div>';
-    h+='<table class="ptnr-tbl">';
-    h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>equity</td><td>total</td></tr>';
-    var sumSueAn=0, sumEqAn=0, sumTotAn=0;
+    var tope=Number(p.sueldoTope||p.sueldo||0);
+    h+='<div class="ptnr-section-lbl"><span>Sueldo + Equity <span style="color:var(--gold)">/mes</span></span>';
+    h+='<span style="font-size:.55rem;color:var(--muted);margin-left:.3rem">tope: <strong style="color:var(--gold)">'+fmt(tope)+'</strong></span></div>';
+    h+='<table class="ptnr-tbl-eq">';
+    h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>brecha</td><td>equity</td><td>total</td></tr>';
+    var sumSueAn=0, sumEqAn=0, sumTotAn=0, sumBrechaAn=0;
     var nYrs=AÑOS.length-1;
     for(var j=1;j<AÑOS.length;j++){
       var yr2=AÑOS[j];
       var sue2=realCurves[p.id]?realCurves[p.id][j]:0;
       var eqAmt=Math.round(fact.dist[j]*(pc.equity/100));
+      var brecha=Math.max(0,tope-sue2);
       var total=sue2+eqAmt;
-      sumSueAn+=sue2*12; sumEqAn+=eqAmt*12; sumTotAn+=total*12;
+      var cubreBrecha=Math.min(eqAmt,brecha);
+      var excedeBrecha=eqAmt>brecha;
+      sumSueAn+=sue2*12; sumEqAn+=eqAmt*12; sumTotAn+=total*12; sumBrechaAn+=brecha*12;
       h+='<tr><td>'+yr2+'</td>';
       h+='<td style="color:var(--teal)">'+fmt(sue2)+'</td>';
-      h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
-      h+='<td>'+fmt(total)+'</td></tr>';
+      if(brecha>0){
+        h+='<td style="color:var(--coral);font-size:.6rem" title="Falta '+fmt(brecha)+' para llegar al tope">'+fmt(brecha)+'</td>';
+      } else {
+        h+='<td style="color:var(--green);font-size:.6rem" title="Sueldo ya cubre el tope">✓</td>';
+      }
+      if(excedeBrecha){
+        h+='<td style="color:var(--gold)" title="Cubre brecha + excedente '+fmt(eqAmt-brecha)+'">'+fmt(eqAmt)+'</td>';
+      } else if(eqAmt>0 && brecha>0){
+        h+='<td style="color:var(--gold);opacity:.75" title="Cubre '+fmt(cubreBrecha)+' de '+fmt(brecha)+' de brecha">'+fmt(eqAmt)+'</td>';
+      } else {
+        h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
+      }
+      var totColor=total>=tope?'var(--green)':'var(--text)';
+      h+='<td style="color:'+totColor+'">'+fmt(total)+'</td></tr>';
     }
     h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Σ '+nYrs+' años</td>';
     h+='<td style="color:var(--teal)">'+fmt(sumSueAn)+'</td>';
+    h+='<td style="color:var(--coral);font-size:.55rem">'+fmt(sumBrechaAn)+'</td>';
     h+='<td style="color:var(--gold)">'+fmt(sumEqAn)+'</td>';
     h+='<td style="color:var(--green)">'+fmt(sumTotAn)+'</td></tr>';
     h+='</table>';
     h+='<div style="font-size:.5rem;color:var(--muted);opacity:.55;margin-top:.2rem;text-align:right">Σ = sumatoria mensual × 12 meses × '+nYrs+' años</div>';
+    // Progress bar: ¿Cuánto del tope se alcanza en el último año?
+    var lastSue=realCurves[p.id]?realCurves[p.id][AÑOS.length-1]:0;
+    var lastEq=Math.round(fact.dist[AÑOS.length-1]*(pc.equity/100));
+    var lastTotal=lastSue+lastEq;
+    var pctTope=tope>0?Math.min(100,Math.round(lastTotal/tope*100)):0;
+    var barColor=pctTope>=100?'var(--green)':pctTope>=70?'var(--gold)':'var(--coral)';
+    h+='<div style="margin-top:.35rem;background:rgba(255,255,255,.06);border-radius:6px;height:14px;overflow:hidden;position:relative">';
+    h+='<div style="height:100%;width:'+pctTope+'%;background:'+barColor+';border-radius:6px;transition:width .3s"></div>';
+    h+='<span style="position:absolute;top:0;left:0;right:0;text-align:center;font-size:.55rem;line-height:14px;color:var(--text);font-weight:600">'+pctTope+'% del tope en '+AÑOS[AÑOS.length-1]+'</span>';
+    h+='</div>';
 
     // --- Footer con métricas clave ---
     h+='<div class="ptnr-foot">';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado/mes</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
-    var mult=(pc.totalLast||pc.total2032||0)/Math.max(1,p.sueldo);
+    var mult=(pc.totalLast||pc.total2032||0)/Math.max(1,tope);
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador '+AÑOS[AÑOS.length-1]+'</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.cashContribution||0)+'</span></div>';
     var libYr=pc.liberationYear;
-    var libOk=libYr<=2031;
+    var libOk=typeof libYr==='number'&&libYr<=AÑOS[AÑOS.length-1];
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Año liberación</span><span class="ptnr-lib-tag '+(libOk?'ptnr-lib-ok':'ptnr-lib-warn')+'">'+libYr+'</span></div>';
     h+='</div>';
 

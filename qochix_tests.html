@@ -75,6 +75,13 @@
   assert('breakEven es número o 2034+', typeof d.breakEven === 'number' || d.breakEven === '2034+', 'be=' + d.breakEven);
   assert('fact tiene 8 arrays', d.fact.alm.length === 8 && d.fact.neto.length === 8);
 
+  group('sueldoTope y brecha');
+  var hugo = d.personCards.find(function(p){return p.id==='hugo'});
+  assert('sueldoTope existe en personCard', hugo.sueldoTope > 0, 'tope=' + hugo.sueldoTope);
+  assert('brechaLast >= 0', hugo.brechaLast >= 0, 'brecha=' + hugo.brechaLast);
+  assert('eqCubreBrechaLast <= eqLast', hugo.eqCubreBrechaLast <= hugo.eqLast);
+  assert('liberationYear compara vs sueldoTope', typeof hugo.liberationYear !== 'undefined');
+
   group('Escenarios impactan facturación');
   const dp = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'p' }) }));
   const dn = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'n' }) }));
