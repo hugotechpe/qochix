@@ -300,6 +300,49 @@
   <script src="qochix_help.js?v=10"></script>
   <script src="qochix_system.js?v=25.0&t=1776556800"></script>
   <script>
+    var hubErr=document.getElementById('hub-error');
+    function showHubError(msg){if(hubErr){hubErr.style.display='block';hubErr.innerHTML=msg+' <button onclick="localStorage.clear();sessionStorage.clear();location.reload()" style="margin-left:8px;padding:4px 10px;background:#f55;color:#fff;border:none;border-radius:4px;cursor:pointer">Reset todo y recargar</button>';}}
+    const byId = (id)=>document.getElementById(id);
+    const layout = document.querySelector('.layout');
+    const sideEl = document.querySelector('.side');
+    const sideToggle = byId('side-toggle');
+    const SIDE_KEY='qochix_hub_side_collapsed_v1';
+    var _sideIsCollapsed = false;
+    function paintSideToggle(){
+      if(sideToggle) sideToggle.textContent = _sideIsCollapsed ? '☰ Panel' : '✕ Panel';
+    }
+    function setSideCollapsed(next){
+      _sideIsCollapsed = !!next;
+      if (_sideIsCollapsed) {
+        if(layout) layout.classList.add('side-collapsed');
+        if (sideEl) {
+          sideEl.style.cssText = 'display:none !important;visibility:hidden;pointer-events:none;width:0;min-width:0;max-width:0;padding:0;border-right:none;overflow:hidden';
+        }
+        if(layout) layout.style.gridTemplateColumns = '0 minmax(0,1fr)';
+      } else {
+        if(layout) layout.classList.remove('side-collapsed');
+        if (sideEl) {
+          sideEl.style.cssText = '';
+        }
+        if(layout) layout.style.gridTemplateColumns = '';
+      }
+      paintSideToggle();
+      try{localStorage.setItem(SIDE_KEY, _sideIsCollapsed ? '1' : '0')}catch(e){}
+    }
+    if(sideToggle){
+      sideToggle.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        setSideCollapsed(!_sideIsCollapsed);
+      });
+    }
+    try{
+      var savedSide=localStorage.getItem(SIDE_KEY);
+      if(savedSide==='1') setSideCollapsed(true);
+      else setSideCollapsed(false);
+    }catch(e){ setSideCollapsed(false); }
+    paintSideToggle();
+
     const tabs = document.querySelectorAll('#tabs .btn');
     const frame = document.getElementById('frame');
     function openSrc(src, btn){
@@ -314,47 +357,6 @@
       const btn = [...tabs].find(b=>b.dataset.src===src);
       if(btn) openSrc(src,btn);
     }
-
-    var hubErr=document.getElementById('hub-error');
-    function showHubError(msg){if(hubErr){hubErr.style.display='block';hubErr.innerHTML=msg+' <button onclick="localStorage.clear();sessionStorage.clear();location.reload()" style="margin-left:8px;padding:4px 10px;background:#f55;color:#fff;border:none;border-radius:4px;cursor:pointer">Reset todo y recargar</button>';}}
-    const byId = (id)=>document.getElementById(id);
-    const layout = document.querySelector('.layout');
-    const sideEl = document.querySelector('.side');
-    const sideToggle = byId('side-toggle');
-    const SIDE_KEY='qochix_hub_side_collapsed_v1';
-    var _sideIsCollapsed = false;
-    function paintSideToggle(){
-      sideToggle.textContent = _sideIsCollapsed ? '☰ Panel' : '✕ Panel';
-    }
-    function setSideCollapsed(next){
-      _sideIsCollapsed = !!next;
-      if (_sideIsCollapsed) {
-        layout.classList.add('side-collapsed');
-        if (sideEl) {
-          sideEl.style.cssText = 'display:none !important;visibility:hidden;pointer-events:none;width:0;min-width:0;max-width:0;padding:0;border-right:none;overflow:hidden';
-        }
-        layout.style.gridTemplateColumns = '0 minmax(0,1fr)';
-      } else {
-        layout.classList.remove('side-collapsed');
-        if (sideEl) {
-          sideEl.style.cssText = '';
-        }
-        layout.style.gridTemplateColumns = '';
-      }
-      paintSideToggle();
-      try{localStorage.setItem(SIDE_KEY, _sideIsCollapsed ? '1' : '0')}catch(e){}
-    }
-    sideToggle.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      setSideCollapsed(!_sideIsCollapsed);
-    });
-    try{
-      var savedSide=localStorage.getItem(SIDE_KEY);
-      if(savedSide==='1') setSideCollapsed(true);
-      else setSideCollapsed(false);
-    }catch(e){ setSideCollapsed(false); }
-    paintSideToggle();
 
     const Q = window.QochixSystem;
     if(!Q){
@@ -402,7 +404,7 @@
       document.querySelectorAll('.capm-btn').forEach((btn)=>{
         btn.classList.toggle('active', btn.dataset.capmode===mode);
       });
-      ctlPm.disabled = mode !== 'equity_round';
+      if(ctlPm) ctlPm.disabled = mode !== 'equity_round';
     }
     function restoreBase(){
       if(!Q) return;
@@ -473,8 +475,10 @@
       document.querySelectorAll('.pre-btn').forEach((btn)=>{
         btn.classList.toggle('active', btn.dataset.preset===activeKey);
       });
-      if(activeKey && PRESETS[activeKey]) preHint.textContent = PRESETS[activeKey].label;
-      else preHint.textContent = 'Configuración personalizada: ajusta libremente escenario, neto y reserva.';
+      if(preHint){
+        if(activeKey && PRESETS[activeKey]) preHint.textContent = PRESETS[activeKey].label;
+        else preHint.textContent = 'Configuración personalizada: ajusta libremente escenario, neto y reserva.';
+      }
     }
     function applyPreset(key){
       const pr = PRESETS[key];
@@ -572,9 +576,9 @@
         animVal(byId('k-scn'), d.scenarioLabel);
         animVal(byId('k-dist'), d.fmtCurrency(d.distLast||d.dist2032));
         animVal(byId('k-pool'), d.fmtCurrency(d.pool));
-        byId('k-lib').textContent = d.liberatedBy2032+'/'+d.personCards.length;
-        byId('k-lib-detail').textContent = 'Primer cruce: '+d.firstLiberationYear;
-        byId('k-upd').textContent = d.updatedAtLabel;
+        var _kLib=byId('k-lib'); if(_kLib) _kLib.textContent = d.liberatedBy2032+'/'+d.personCards.length;
+        var _kLibD=byId('k-lib-detail'); if(_kLibD) _kLibD.textContent = 'Primer cruce: '+d.firstLiberationYear;
+        var _kUpd=byId('k-upd'); if(_kUpd) _kUpd.textContent = d.updatedAtLabel;
         var bfEl = byId('k-brand-fin');
         if(bfEl && d.brandFinancials){
           var BL = Q.BRAND_LABELS || {};
@@ -591,16 +595,16 @@
         paintCapMode(d.state.P.capitalMode || 'loan');
         paintPresetButtons(detectPreset(d.state));
         syncingControls = true;
-        ctlNeto.value = Math.round((d.state.P.netoPct || 0) * 100);
-        ctlNetoLbl.textContent = ctlNeto.value + '%';
-        ctlRsv.value = Math.round(d.state.P.reserva || 0);
+        if(ctlNeto) ctlNeto.value = Math.round((d.state.P.netoPct || 0) * 100);
+        if(ctlNetoLbl) ctlNetoLbl.textContent = (ctlNeto?ctlNeto.value:Math.round((d.state.P.netoPct||0)*100)) + '%';
+        if(ctlRsv) ctlRsv.value = Math.round(d.state.P.reserva || 0);
         var pmValue = Math.max(100000, Math.round((d.state.P.preMoney || 5000000) / 50000) * 50000);
-        ctlPm.value = pmValue;
-        ctlPmLbl.textContent = 'S/' + pmValue.toLocaleString('es-PE');
+        if(ctlPm) ctlPm.value = pmValue;
+        if(ctlPmLbl) ctlPmLbl.textContent = 'S/' + pmValue.toLocaleString('es-PE');
         var ticketValue = clampTicket(d.state.P.ticket || 5000);
-        ctlTkt.value = ticketValue;
-        ctlTktNum.value = ticketValue;
-        ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
+        if(ctlTkt) ctlTkt.value = ticketValue;
+        if(ctlTktNum) ctlTktNum.value = ticketValue;
+        if(ctlTktLbl) ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
         syncingControls = false;
         paintExec();
       }catch(err){console.error('Hub paint() error:',err);showHubError('Error en paint(): '+err.message);}
