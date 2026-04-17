@@ -1001,18 +1001,40 @@
   function dumpCurrentLines() {
     const state = getState();
     const ov = (state.P && state.P.lineOverrides) || {};
-    const result = SERVICE_LINES.map(def => {
+    return SERVICE_LINES.map(def => {
       const lo = ov[def.id] || {};
-      const f = lo.freq != null ? lo.freq : (def.freq || 1);
-      const g = lo.ppA != null ? lo.ppA : (def.ppA || 0);
       return {
-        id: def.id, freq: f, ppA: g,
-        prices: lo.prices || def.prices,
-        vols: lo.vols || def.vols,
-        changed: !!lo.prices || !!lo.vols || lo.freq != null || lo.ppA != null
+        id: def.id, brand: def.brand, name: def.name, unit: def.unit,
+        freq: lo.freq != null ? lo.freq : (def.freq || 1),
+        ppA: lo.ppA != null ? lo.ppA : (def.ppA || 0),
+        prices: (lo.prices || def.prices).slice(),
+        vols: (lo.vols || def.vols).slice(),
       };
     });
-    return JSON.stringify(result, null, 2);
+  }
+
+  function bakeDefaults() {
+    const state = getState();
+    const ov = (state.P && state.P.lineOverrides) || {};
+    const baked = SERVICE_LINES.map(def => {
+      const lo = ov[def.id] || {};
+      return {
+        id: def.id, brand: def.brand, name: def.name, unit: def.unit,
+        freq: lo.freq != null ? lo.freq : (def.freq || 1),
+        ppA: lo.ppA != null ? lo.ppA : (def.ppA || 0),
+        prices: (lo.prices || def.prices).slice(),
+        vols: (lo.vols || def.vols).slice(),
+      };
+    });
+    baked.forEach((b, i) => {
+      SERVICE_LINES[i].freq = b.freq;
+      SERVICE_LINES[i].ppA = b.ppA;
+      SERVICE_LINES[i].prices = b.prices;
+      SERVICE_LINES[i].vols = b.vols;
+    });
+    state.P.lineOverrides = {};
+    saveState(state);
+    return JSON.stringify(baked);
   }
 
   window.QochixSystem = {
@@ -1045,5 +1067,6 @@
     validateEquity,
     exportSnapshot,
     dumpCurrentLines,
+    bakeDefaults,
   };
 })();
