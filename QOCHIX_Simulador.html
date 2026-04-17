@@ -412,6 +412,24 @@ tr:hover td{background:rgba(255,255,255,.02)}
 @keyframes flash{0%{opacity:.4}100%{opacity:1}}
 .updated{animation:flash .5s}
 
+/* Flujo Real tab */
+.fr-year-tabs{display:flex;gap:.35rem}
+.fr-year-btn{background:var(--bg2);border:1px solid var(--brd);border-radius:8px;padding:.35rem .8rem;font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.fr-year-btn:hover{border-color:var(--teal);color:var(--teal)}
+.fr-year-btn.active{background:rgba(62,207,207,.12);border-color:var(--teal);color:var(--teal)}
+.fr-table{width:100%;border-collapse:collapse;font-size:.72rem}
+.fr-table th{background:var(--bg2);color:var(--muted);font-weight:600;text-transform:uppercase;font-size:.62rem;letter-spacing:.06em;padding:.5rem .6rem;text-align:right;border-bottom:1px solid var(--brd);white-space:nowrap}
+.fr-table th:first-child{text-align:left}
+.fr-table td{padding:.45rem .6rem;text-align:right;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.fr-table td:first-child{text-align:left;color:var(--muted);font-weight:500}
+.fr-table tr.fr-subtotal td{font-weight:700;border-top:1px solid var(--brd);background:rgba(255,255,255,.02)}
+.fr-table tr.fr-total td{font-weight:700;border-top:2px solid var(--gold);background:rgba(212,168,83,.06);color:var(--gold);font-size:.74rem}
+.fr-table tr.fr-negative td:not(:first-child){color:var(--coral)}
+.fr-table tr.fr-positive td:not(:first-child){color:var(--green)}
+.fr-table tr.fr-highlight td{background:rgba(62,207,207,.05)}
+.fr-brand-alm{color:#52C97A}
+.fr-brand-ht{color:#3ECFCF}
+
 /* Flow diagram */
 .flow-intro{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:1.25rem;max-width:52rem}
 .flow-intro strong{color:var(--text)}
@@ -598,6 +616,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
   <div class="tab-bar">
     <button class="tab-btn active" onclick="showTab('dashboard', this)">Dashboard</button>
+    <button class="tab-btn" onclick="showTab('flujoreal', this)" style="border-color:rgba(62,207,207,.35);color:var(--teal)">Flujo Real</button>
     <button class="tab-btn" onclick="showTab('graficos', this)">Gráficos</button>
     <button class="tab-btn" onclick="showTab('equipo', this)">Equipo</button>
     <button class="tab-btn" onclick="showTab('runway', this)">Runway</button>
@@ -907,6 +926,76 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
 </div><!-- /dashboard -->
+
+<!-- ══ TAB: FLUJO REAL ══ -->
+<div id="tab-flujoreal" class="tab-content">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+    <div>
+      <div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal)">💰 Flujo de caja real — desglose mensual</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:.2rem">Ingresos por línea, egresos, utilidad y caja acumulada mes a mes. Escenario: <strong id="fr-scenario-lbl">—</strong></div>
+    </div>
+    <div class="fr-year-tabs" id="fr-year-tabs"></div>
+  </div>
+
+  <!-- Resumen anual compacto -->
+  <div class="panel open" style="margin-bottom:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">📊 Resumen anual (2026–2029)</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <div class="tw"><table class="fr-table">
+        <thead id="fr-annual-head"></thead>
+        <tbody id="fr-annual-body"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- Detalle mensual del año seleccionado -->
+  <div class="panel open">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle" id="fr-detail-title">📅 Detalle mensual — 2026</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+
+      <!-- Ingresos por línea -->
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gold);margin-bottom:.5rem">Ingresos por línea de negocio</div>
+      <div class="tw"><table class="fr-table">
+        <thead id="fr-income-head"></thead>
+        <tbody id="fr-income-body"></tbody>
+      </table></div>
+
+      <!-- Egresos -->
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--coral);margin:.8rem 0 .5rem">Egresos mensuales</div>
+      <div class="tw"><table class="fr-table">
+        <thead id="fr-expense-head"></thead>
+        <tbody id="fr-expense-body"></tbody>
+      </table></div>
+
+      <!-- Resultado P&L -->
+      <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal);margin:.8rem 0 .5rem">Resultado mensual (P&amp;L)</div>
+      <div class="tw"><table class="fr-table">
+        <thead id="fr-pl-head"></thead>
+        <tbody id="fr-pl-body"></tbody>
+      </table></div>
+
+    </div>
+  </div>
+
+  <!-- Chart de utilidad mensual -->
+  <div class="panel open" style="margin-top:1rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle" id="fr-chart-title">📈 Utilidad neta mensual — 2026</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <div class="chart-wrap" style="height:240px"><canvas id="ch-flujoreal"></canvas></div>
+    </div>
+  </div>
+
+</div><!-- /flujoreal -->
 
 <!-- ══ TAB: VISTA CEO ══ -->
 <div id="tab-ceo" class="tab-content">
@@ -1381,7 +1470,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=33.0&t=1776989000"></script>
+<script src="qochix_system.js?v=34.0&t=1776989100"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1961,6 +2050,7 @@ function showTab(t,btn){
     }
     if(t==='graficos'||t==='equipo'||t==='runway') setTimeout(function(){try{renderCharts();}catch(e){console.error('renderCharts:',e);}}, 50);
     if(t==='flujo') setTimeout(function(){try{paintFlowTab();}catch(e){console.error('paintFlowTab:',e);}}, 30);
+    if(t==='flujoreal') setTimeout(function(){try{paintFlujoReal();}catch(e){console.error('paintFlujoReal:',e);}}, 30);
   }catch(e){console.error('showTab error:',e);}
 }
 function toggleP(hdr){
@@ -3323,6 +3413,233 @@ function renderCharts(fact,dist,rw,monthly){
     ]},options:{...CH_DEFAULTS,scales:{...CH_DEFAULTS.scales,y:{...CH_DEFAULTS.scales.y,ticks:{...CH_DEFAULTS.scales.y.ticks,callback:v=>'S/'+Math.round(v/1000)+'k'}}}}});
   }
   }catch(e){console.error('chart caja:',e)}
+}
+
+// ════════════════════════════════════════
+// FLUJO REAL — desglose mensual por línea
+// ════════════════════════════════════════
+let _frYear=2026;
+
+function paintFlujoReal(yr){
+  try{
+  if(yr!==undefined) _frYear=yr;
+  const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+  const fact=derived.fact;
+  const lr=fact.lineRevenue;
+  const fmt=QSYS.fmtCurrency;
+  const sc_m=({p:0.7,n:1.0,o:1.4})[P.sc]||1;
+  const netPct=P.netoPct||0.65;
+
+  const MONTH_NAMES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const SHOW_YEARS=[2026,2027,2028,2029];
+
+  sv('fr-scenario-lbl',({p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'})[P.sc]||P.sc);
+
+  // Year tabs
+  const tabsEl=sel('fr-year-tabs');
+  if(tabsEl){
+    tabsEl.innerHTML=SHOW_YEARS.map(y=>'<button class="fr-year-btn'+(y===_frYear?' active':'')+'" onclick="paintFlujoReal('+y+')">'+y+'</button>').join('');
+  }
+
+  const yi=AÑOS.indexOf(_frYear);
+  if(yi<0) return;
+
+  const mesesAnio=QSYS.MESES_POR_AÑO[yi]||12;
+  const startMonth=(_frYear===2026)?3:0;
+  const months=[];
+  for(let m=0;m<mesesAnio;m++){
+    const mi=(startMonth+m)%12;
+    months.push({idx:m, name:MONTH_NAMES[mi]+' '+_frYear, short:MONTH_NAMES[mi]});
+  }
+
+  // Monthly revenue per line (linear interpolation within year)
+  function monthlyRevForLine(line,yearIdx){
+    const annual=line.rev[yearIdx]||0;
+    const prev=yearIdx>0?(line.rev[yearIdx-1]||0):0;
+    const nm=mesesAnio;
+    const result=[];
+    for(let m=0;m<nm;m++){
+      const t=(m+0.5)/nm;
+      const val=Math.round(prev+(annual-prev)*t);
+      result.push(Math.max(0,val));
+    }
+    const sum=result.reduce((a,b)=>a+b,0);
+    if(sum>0){
+      const ratio=annual*nm/12/sum;
+      for(let m=0;m<nm;m++) result[m]=Math.round(result[m]*ratio);
+    }
+    return result;
+  }
+
+  // Build monthly data per line
+  const lineMonthly=lr.lines.map(line=>({
+    id:line.id, brand:line.brand, name:line.name,
+    monthly:monthlyRevForLine(line,yi)
+  }));
+
+  // Monthly hires cost
+  const hcostAnnual=fact.hcost[yi]||0;
+  const hcostMonth=Math.round(hcostAnnual);
+
+  // Monthly founder salary
+  const suedAnnual=fact.sued_f[yi]||0;
+  const suedMonth=Math.round(suedAnnual);
+
+  // Monthly reserve
+  const rsvMonth=Number(P.reserva||0);
+  const cajaResMes=fact.cajaMinMes?fact.cajaMinMes[yi]||0:0;
+
+  // ─── Resumen anual ───
+  const annHead=sel('fr-annual-head');
+  const annBody=sel('fr-annual-body');
+  if(annHead&&annBody){
+    annHead.innerHTML='<tr><th>Concepto</th>'+SHOW_YEARS.map(y=>'<th>'+y+'</th>').join('')+'</tr>';
+    const rows=[];
+    // Ingresos brutos por marca
+    const almArr=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?fact.alm[i]||0:0;});
+    const htArr=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?fact.ht[i]||0:0;});
+    const totalArr=SHOW_YEARS.map((_,i)=>almArr[i]+htArr[i]);
+    const netoArr=totalArr.map(v=>Math.round(v*netPct));
+    const suedFArr=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?fact.sued_f[i]||0:0;});
+    const hcArr=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?fact.hcost[i]||0:0;});
+    const planArr=SHOW_YEARS.map((_,i)=>suedFArr[i]+hcArr[i]);
+    const rsvArr=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return rsvMonth;});
+    const distArr=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?fact.dist[i]||0:0;});
+    const utilArr=SHOW_YEARS.map((_,i)=>netoArr[i]-planArr[i]-rsvArr[i]);
+
+    function annRow(label,arr,cls){
+      return '<tr class="'+(cls||'')+'">'+'<td>'+label+'</td>'+arr.map(v=>'<td>'+fmt(v)+'</td>').join('')+'</tr>';
+    }
+    rows.push(annRow('<span class="fr-brand-alm">🌿</span> Almaria',almArr));
+    rows.push(annRow('<span class="fr-brand-ht">⚡</span> HugoTech',htArr));
+    rows.push(annRow('<strong>Facturación bruta</strong>',totalArr,'fr-subtotal'));
+    rows.push(annRow('Neto operativo ('+Math.round(netPct*100)+'%)',netoArr));
+    rows.push(annRow('Planilla fundadores',suedFArr));
+    rows.push(annRow('Equipo operativo',hcArr));
+    rows.push(annRow('<strong>Total egresos</strong>',planArr,'fr-subtotal'));
+    rows.push(annRow('Reserva mensual',rsvArr));
+    rows.push(annRow('<strong>Distribuible</strong>',distArr,'fr-total'));
+    rows.push(annRow('Utilidad neta/mes',utilArr,utilArr.some(v=>v<0)?'fr-highlight':'fr-highlight'));
+    annBody.innerHTML=rows.join('');
+  }
+
+  // ─── Detalle mensual: título ───
+  sv('fr-detail-title','📅 Detalle mensual — '+_frYear);
+  sv('fr-chart-title','📈 Utilidad neta mensual — '+_frYear);
+
+  // ─── Ingresos por línea ───
+  const incHead=sel('fr-income-head');
+  const incBody=sel('fr-income-body');
+  if(incHead&&incBody){
+    incHead.innerHTML='<tr><th>Línea</th><th>Marca</th>'+months.map(m=>'<th>'+m.short+'</th>').join('')+'<th>Total</th></tr>';
+    const rows=[];
+
+    let almTotal=new Array(mesesAnio).fill(0);
+    let htTotal=new Array(mesesAnio).fill(0);
+
+    lineMonthly.forEach(line=>{
+      const brandLabel=line.brand==='almaria'?'<span class="fr-brand-alm">Almaria</span>':'<span class="fr-brand-ht">HugoTech</span>';
+      const sum=line.monthly.reduce((a,b)=>a+b,0);
+      rows.push('<tr><td>'+line.name+'</td><td>'+brandLabel+'</td>'+line.monthly.map(v=>'<td>'+(v>0?fmt(v):'—')+'</td>').join('')+'<td><strong>'+fmt(sum)+'</strong></td></tr>');
+      line.monthly.forEach((v,m)=>{
+        if(line.brand==='almaria') almTotal[m]+=v;
+        else htTotal[m]+=v;
+      });
+    });
+
+    const grandTotal=months.map((_,m)=>almTotal[m]+htTotal[m]);
+    const netoMonthly=grandTotal.map(v=>Math.round(v*netPct));
+
+    rows.push('<tr class="fr-subtotal"><td colspan="2"><span class="fr-brand-alm">🌿 Subtotal Almaria</span></td>'+almTotal.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(almTotal.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    rows.push('<tr class="fr-subtotal"><td colspan="2"><span class="fr-brand-ht">⚡ Subtotal HugoTech</span></td>'+htTotal.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(htTotal.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    rows.push('<tr class="fr-total"><td colspan="2"><strong>FACTURACIÓN BRUTA</strong></td>'+grandTotal.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(grandTotal.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    rows.push('<tr class="fr-highlight"><td colspan="2">Neto operativo ('+Math.round(netPct*100)+'%)</td>'+netoMonthly.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(netoMonthly.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+
+    incBody.innerHTML=rows.join('');
+
+    // ─── Egresos ───
+    const expHead=sel('fr-expense-head');
+    const expBody=sel('fr-expense-body');
+    if(expHead&&expBody){
+      expHead.innerHTML='<tr><th>Concepto</th>'+months.map(m=>'<th>'+m.short+'</th>').join('')+'<th>Total</th></tr>';
+      const erows=[];
+
+      // Founder salaries per person
+      const curves=derived.curves||fact.suedCurves||{};
+      PERSONS.forEach(p=>{
+        const mSue=Math.round((curves[p.id]||[])[yi]||0);
+        erows.push('<tr><td>'+p.name+' (sueldo)</td>'+months.map(()=>'<td>'+fmt(mSue)+'</td>').join('')+'<td><strong>'+fmt(mSue*mesesAnio)+'</strong></td></tr>');
+      });
+
+      // Hires detail
+      HIRES.forEach(h=>{
+        const startYi=h.startYear?Math.max(0,AÑOS.indexOf(h.startYear)):0;
+        if(yi<startYi){
+          erows.push('<tr style="opacity:.4"><td>'+h.role+' <span style="font-size:.6rem">(desde '+AÑOS[startYi]+')</span></td>'+months.map(()=>'<td>—</td>').join('')+'<td>—</td></tr>');
+        } else {
+          const sue=Math.round(Number(h.sue||0)*Math.pow(Number(h.growth||1),yi-startYi));
+          erows.push('<tr><td>'+h.role+'</td>'+months.map(()=>'<td>'+fmt(sue)+'</td>').join('')+'<td><strong>'+fmt(sue*mesesAnio)+'</strong></td></tr>');
+        }
+      });
+
+      // Reserve
+      erows.push('<tr><td>Reserva operativa</td>'+months.map(()=>'<td>'+fmt(rsvMonth)+'</td>').join('')+'<td><strong>'+fmt(rsvMonth*mesesAnio)+'</strong></td></tr>');
+
+      // Caja marca reserve
+      if(cajaResMes>0){
+        erows.push('<tr><td>Caja marca (ahorro)</td>'+months.map(()=>'<td>'+fmt(cajaResMes)+'</td>').join('')+'<td><strong>'+fmt(cajaResMes*mesesAnio)+'</strong></td></tr>');
+      }
+
+      // Total egresos
+      const suedMes=Math.round(suedAnnual);
+      const totalEgMes=suedMes+hcostMonth+rsvMonth+cajaResMes;
+      erows.push('<tr class="fr-total"><td><strong>TOTAL EGRESOS</strong></td>'+months.map(()=>'<td>'+fmt(totalEgMes)+'</td>').join('')+'<td><strong>'+fmt(totalEgMes*mesesAnio)+'</strong></td></tr>');
+
+      expBody.innerHTML=erows.join('');
+    }
+
+    // ─── P&L mensual ───
+    const plHead=sel('fr-pl-head');
+    const plBody=sel('fr-pl-body');
+    if(plHead&&plBody){
+      plHead.innerHTML='<tr><th>Concepto</th>'+months.map(m=>'<th>'+m.short+'</th>').join('')+'<th>Total</th></tr>';
+      const prows=[];
+
+      const totalEgMes=Math.round(suedAnnual)+hcostMonth+rsvMonth+cajaResMes;
+      const utilMonthly=netoMonthly.map(v=>v-totalEgMes);
+      let cajaAcum=derived.runway?derived.runway.capital||0:0;
+      const cajaMonthly=[];
+
+      prows.push('<tr class="fr-highlight"><td>Ingreso neto</td>'+netoMonthly.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(netoMonthly.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+      prows.push('<tr><td>Total egresos</td>'+months.map(()=>'<td style="color:var(--coral)">-'+fmt(totalEgMes)+'</td>').join('')+'<td><strong style="color:var(--coral)">-'+fmt(totalEgMes*mesesAnio)+'</strong></td></tr>');
+      prows.push('<tr class="'+(utilMonthly.some(v=>v<0)?'fr-total fr-negative':'fr-total fr-positive')+'"><td><strong>UTILIDAD NETA</strong></td>'+utilMonthly.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(utilMonthly.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+
+      utilMonthly.forEach(v=>{cajaAcum+=v;cajaMonthly.push(cajaAcum);});
+      if(_frYear===2026){
+        prows.push('<tr class="fr-highlight"><td>Caja acumulada</td>'+cajaMonthly.map(v=>'<td style="color:'+(v<0?'var(--coral)':'var(--teal)')+'">'+fmt(v)+'</td>').join('')+'<td></td></tr>');
+      }
+
+      plBody.innerHTML=prows.join('');
+
+      // ─── Chart ───
+      try{
+      destroyChart('flujoreal');
+      const cFR=sel('ch-flujoreal');
+      if(cFR){
+        charts.flujoreal=new Chart(cFR,{type:'bar',data:{
+          labels:months.map(m=>m.short),
+          datasets:[
+            {label:'Ingreso neto',data:netoMonthly,backgroundColor:'rgba(62,207,207,.25)',borderColor:'#3ECFCF',borderWidth:1,borderRadius:4},
+            {label:'Egresos',data:months.map(()=>-totalEgMes),backgroundColor:'rgba(232,107,95,.25)',borderColor:'#E86B5F',borderWidth:1,borderRadius:4},
+            {label:'Utilidad',data:utilMonthly,type:'line',borderColor:utilMonthly[utilMonthly.length-1]>=0?'#52C97A':'#E86B5F',borderWidth:2,tension:.3,pointRadius:4,pointBackgroundColor:utilMonthly.map(v=>v>=0?'#52C97A':'#E86B5F'),fill:false},
+          ]
+        },options:{...CH_DEFAULTS,interaction:{mode:'index',intersect:false}}});
+      }
+      }catch(e){console.error('chart flujoreal:',e)}
+    }
+  }
+
+  }catch(e){console.error('paintFlujoReal error:',e)}
 }
 
 // ════════════════════════════════════════
