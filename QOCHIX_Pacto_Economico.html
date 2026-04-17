@@ -1517,22 +1517,22 @@ footer {
   <div class="hero-stats" aria-label="Indicadores del modelo pesimista ×0,7">
     <div class="hs-cell">
       <div class="hs-val" id="hero-live-pool">&gt; S/1,1M</div>
-      <div class="hs-lbl">Pool valorado que el equipo pone (ticket + capital + sweat 3 años)</div>
+      <div class="hs-lbl">Pool valorado que el equipo pone (ticket + capital + sweat 10 años)</div>
     </div>
     <div class="hs-cell">
       <div class="hs-val" id="hero-live-fact">~S/231k</div>
-      <div class="hs-lbl">Facturación mensual total ecosistema · 2032 (×0,7)</div>
+      <div class="hs-lbl" id="hero-lbl-fact">Facturación mensual total ecosistema · último año (×0,7)</div>
     </div>
     <div class="hs-cell">
       <div class="hs-val" id="hero-live-dist">~S/43k</div>
-      <div class="hs-lbl">Distribuible mensual socios · 2032 (tras planilla y reserva)</div>
+      <div class="hs-lbl" id="hero-lbl-dist">Distribuible mensual socios · último año (tras planilla y reserva)</div>
     </div>
     <div class="hs-cell">
       <div class="hs-val" id="hero-live-mult">×1,9 – ×3,6</div>
-      <div class="hs-lbl">Rango de ingreso total 2032 vs sueldo de hoy (sueldo Qochix + equity)</div>
+      <div class="hs-lbl" id="hero-lbl-mult">Rango de ingreso total al horizonte vs sueldo de hoy (sueldo Qochix + equity)</div>
     </div>
   </div>
-  <div class="hero-equity">
+  <div class="hero-equity" id="hero-equity-pills">
     <div class="eq-pill">
       <span class="eq-pct" id="hero-eq-hugo">63%</span>
       <span class="eq-name">Hugo</span>
@@ -1545,14 +1545,18 @@ footer {
       <span class="eq-pct" id="hero-eq-vera">11%</span>
       <span class="eq-name">Vera</span>
     </div>
+    <div class="eq-pill">
+      <span class="eq-pct" id="hero-eq-mechita">5%</span>
+      <span class="eq-name">Mechita</span>
+    </div>
   </div>
 
   <div class="hero-scenario" id="hero-scenario" aria-labelledby="hs-sc-heading">
-    <p class="hs-sc-title" id="hs-sc-heading">¿Cuánto podrías ganar al mes en 2032?</p>
+    <p class="hs-sc-title" id="hs-sc-heading">¿Cuánto podrías ganar al mes en el horizonte?</p>
     <p class="hs-sc-sub">
-      Proyección <strong style="color:var(--text)">2032</strong> — mismo motor que el simulador: facturación × escenario, neto 65%, planilla fundadores + equipo operativo, reserva S/3.000.
+      Proyección al último año del horizonte — mismo motor que el simulador: facturación × escenario, neto 65%, planilla fundadores + equipo operativo, reserva S/3.000.
       Cada tarjeta muestra <strong style="color:var(--text)">equity</strong> (dueño) + <strong style="color:var(--text)">sueldo Qochix</strong> (trabajo) = <strong style="color:var(--text)">total mensual</strong>.
-      Los sueldos Qochix del pacto siguen la <strong>tabla año a año</strong> (2030 y 2032 como anclas en el simulador); en el simulador puedes probar otras metas y ver cuánta facturación extra hace falta. Lo que cambia con la pestaña aquí es solo el reparto por <strong>equity</strong>.
+      Los sueldos Qochix del pacto siguen la <strong>tabla año a año</strong> (anclas definidas en el simulador); en el simulador puedes probar otras metas y ver cuánta facturación extra hace falta. Lo que cambia con la pestaña aquí es solo el reparto por <strong>equity</strong>.
     </p>
     <div class="hs-sc-tabs" role="tablist" aria-label="Escenario de facturación">
       <button type="button" class="sc-p active" role="tab" aria-selected="true" id="tab-hs-p" data-sc="p">📉 Pesimista ×0,7</button>
@@ -1600,7 +1604,7 @@ footer {
         <div class="live-sub">Ticket + capital + sweat equity a 3 años.</div>
       </div>
       <div class="live-card">
-        <div class="live-label">Distribuible 2032</div>
+        <div class="live-label" id="live-lbl-dist">Distribuible último año</div>
         <div class="live-value" id="live-pacto-dist">—</div>
         <div class="live-sub">Después de planilla operativa y reserva.</div>
       </div>
@@ -1612,10 +1616,10 @@ footer {
       <div class="live-card">
         <div class="live-label">Liberación equipo</div>
         <div class="live-value" id="live-pacto-rossy">—</div>
-        <div class="live-sub">Personas liberadas al 2032 y primer año de cruce.</div>
+        <div class="live-sub" id="live-sub-lib">Personas liberadas al horizonte y primer año de cruce.</div>
       </div>
       <div class="live-card">
-        <div class="live-label">Hugo total 2032</div>
+        <div class="live-label" id="live-lbl-hugo">Hugo total último año</div>
         <div class="live-value" id="live-pacto-hugo">—</div>
         <div class="live-sub">Sueldo Qochix + equity en el escenario activo.</div>
       </div>
@@ -1763,10 +1767,10 @@ footer {
     <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:2rem;">Facturación proyectada: así crece el ecosistema (S/mes)</h3>
     <div class="table-wrap">
       <table>
-        <thead>
+        <thead id="pact-fact-thead">
           <tr>
             <th>Marca</th>
-            <th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th>
+            <th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th><th>2035</th>
           </tr>
         </thead>
         <tbody id="pact-fact-tbody">
@@ -1971,15 +1975,15 @@ footer {
       <div class="stat-desc">En abril 2027, al cumplir 12 meses, recibes el primer tercio de golpe.</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num">S/5k</div>
+      <div class="stat-num" id="stat-ticket-val">S/5k</div>
       <div class="stat-label">recuperas si salís antes</div>
-      <div class="stat-desc">Solo el ticket de entrada. Las acciones van al ecosistema.</div>
+      <div class="stat-desc">Solo el ticket de entrada (varía por socio). Las acciones van al ecosistema.</div>
     </div>
   </div>
 
   <div class="reveal" style="margin-top:3rem">
     <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1rem;">¿Cuántas acciones tienes en cada momento?</h3>
-    <div class="vesting-box">
+    <div class="vesting-box" id="vesting-box-dynamic">
       <div class="vesting-header">
         <div>Socio</div>
         <div>Cliff abr 2027<br>(33%)</div>
@@ -1987,14 +1991,8 @@ footer {
         <div>Abr 2028<br>(+12m)</div>
         <div>Abr 2029<br>(100%) ✓</div>
       </div>
-      <div class="vesting-row">
-        <div>Hugo</div><div>20.98%</div><div>29.73%</div><div>41.99%</div><div>63.00%</div>
-      </div>
-      <div class="vesting-row">
-        <div>Rossy</div><div>5.66%</div><div>8.02%</div><div>11.33%</div><div>17.00%</div>
-      </div>
-      <div class="vesting-row">
-        <div>Vera</div><div>3.66%</div><div>5.19%</div><div>7.33%</div><div>11.00%</div>
+      <div id="vesting-rows">
+        <div class="vesting-row"><div>—</div><div>—</div><div>—</div><div>—</div><div>—</div></div>
       </div>
     </div>
   </div>
@@ -2046,7 +2044,7 @@ footer {
       <p>
         Esto es lo que cambia todo. Es lo que recibes por ser <strong>DUEÑO</strong> del ecosistema — no empleado, dueño. 
         Fórmula: <strong>distribuible × tu % equity</strong>. 
-        En escenario pesimista con equipo operativo, el primer reparto material aparece en <strong>2030</strong> y crece hasta 2032. Para 2032, el equity suma fuerte al sueldo. Esa es la magia de ser fundador.
+        En escenario pesimista con equipo operativo, el primer reparto material aparece en <strong>2030</strong> y crece durante el horizonte completo. El equity suma fuerte al sueldo. Esa es la magia de ser fundador.
       </p>
     </div>
   </div>
@@ -2055,19 +2053,16 @@ footer {
     <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1.5rem;">Sueldos Qochix: crece cada año hasta el punto de cruce</h3>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr><th>Persona</th><th>Corp. hoy</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>Cruce</th></tr>
+        <thead id="pact-sued-thead">
+          <tr><th>Persona</th><th>Corp. hoy</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th><th>2035</th><th>Cruce</th></tr>
         </thead>
-        <tbody>
-          <tr class="tr-hugo"><td>Hugo</td><td class="td-muted">S/30k</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/4,000</td><td>S/10,000</td><td>S/20,000</td><td>S/27,500</td><td class="td-gold">S/35,000</td><td class="td-gold">S/42,000</td><td class="td-green">2032 ★</td></tr>
-          <tr><td>Rossy</td><td class="td-muted">S/7k</td><td class="td-muted">—</td><td>S/1,000</td><td>S/2,500</td><td>S/7,500</td><td>S/9,000</td><td>S/11,500</td><td class="td-gold">S/14,000</td><td class="td-gold">S/17,000</td><td class="td-green">2030</td></tr>
-          <tr><td>Vera</td><td class="td-muted">S/6.5k</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/2,000</td><td>S/7,500</td><td>S/8,500</td><td>S/10,500</td><td class="td-gold">S/12,500</td><td class="td-gold">S/15,000</td><td class="td-green">2030</td></tr>
-          <tr><td>Mechita</td><td class="td-muted">S/12k</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/7,000</td><td>S/10,000</td><td>S/15,000</td><td>S/19,500</td><td class="td-gold">S/24,000</td><td class="td-gold">S/29,000</td><td class="td-green">2030</td></tr>
+        <tbody id="pact-sued-tbody">
+          <tr><td colspan="13" class="td-muted">Cargando...</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="nota-importante">
-      <strong>¿Por qué 2032 importa tanto para Hugo?</strong> Ese año Qochix le paga exactamente lo mismo que su trabajo corporativo actual (S/30,000/mes). Es el año en que la decisión de salir del corporativo deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar el equity mensual <span id="pact-hugo-eq-note">(pesimista ×0,7)</span>.
+    <div class="nota-importante" id="pact-hugo-note-wrap">
+      <span id="pact-hugo-note-text"><strong>¿Por qué importa el punto de cruce de Hugo?</strong> El año en que Qochix le paga lo mismo que su trabajo corporativo actual. Es cuando la decisión de apostar por el ecosistema deja de ser valiente y se vuelve obvia. Y eso es solo el sueldo — sin contar el equity mensual</span> <span id="pact-hugo-eq-note">(pesimista ×0,7)</span>.
     </div>
   </div>
 
@@ -2076,7 +2071,7 @@ footer {
     <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">Lo que recibes cada mes por tu % del ecosistema. Aparte del sueldo. Para anual: × 12. Estos números cambian todo.</p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Persona</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>Acum 8a</th></tr></thead>
+        <thead id="pact-eq-thead"><tr><th>Persona</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th><th>2035</th><th>Acum 10a</th></tr></thead>
         <tbody id="pact-eq-tbody">
           <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/9,446</td><td>S/19,098</td><td class="td-big">S/26,906</td><td class="td-gold">S/665,400</td></tr>
           <tr><td>Rossy</td><td class="td-gold">17%</td><td class="td-muted">—</td><td class="td-muted">—</td><td class="td-muted">—</td><td>S/2,549</td><td>S/5,154</td><td class="td-gold">S/7,260</td><td class="td-muted">S/179,556</td></tr>
@@ -2101,7 +2096,7 @@ footer {
     <p class="section-label">La foto completa</p>
     <h2 class="section-title">Lo que ganas hoy vs<br>lo que <em>ganarás</em></h2>
     <p class="section-body">
-      Llegó el momento de la verdad. Esta es la tabla más importante de todo el documento. Te muestra dónde estás hoy y dónde podrías estar en 2032 si le metemos con todo. Prené la pantalla.
+      Llegó el momento de la verdad. Esta es la tabla más importante de todo el documento. Te muestra dónde estás hoy y dónde podrías estar al final del horizonte si le metemos con todo. Prené la pantalla.
     </p>
   </div>
 
@@ -2249,7 +2244,7 @@ footer {
       </div>
     </div>
     <p style="color:var(--muted); font-size:0.82rem;">
-      Este patrimonio es <strong style="color:var(--text)">completamente independiente</strong> del sueldo mensual y del equity distribuido. Es el valor de ser dueño mayoritario de un ecosistema cuyo flujo operativo —en el modelo pesimista— apunta a ~<strong>S/230k/mes</strong> de facturación en 2032. <strong style="color:var(--gold)">Eso no se compra. Se construye.</strong>
+      Este patrimonio es <strong style="color:var(--text)">completamente independiente</strong> del sueldo mensual y del equity distribuido. Es el valor de ser dueño mayoritario de un ecosistema cuyo flujo operativo —en el modelo pesimista— crece sostenidamente durante el horizonte de 10 años. <strong style="color:var(--gold)">Eso no se compra. Se construye.</strong>
     </p>
   </div>
 </section>
@@ -2432,7 +2427,7 @@ footer {
         </div>
         <div style="padding:1rem 1.1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
           <div style="font-weight:600; font-size:0.88rem; color:var(--green)">Simulador web</div>
-          <p style="font-size:0.82rem; color:var(--muted); margin-top:0.35rem; line-height:1.55">Mover escenario (×0,7 / ×1 / ×1,4), ticket, equity, metas 2030/2032 y equipo — ver impacto en distribuible y runway.</p>
+          <p style="font-size:0.82rem; color:var(--muted); margin-top:0.35rem; line-height:1.55">Mover escenario (×0,7 / ×1 / ×1,4), ticket, equity, metas año a año y equipo — ver impacto en distribuible y runway.</p>
         </div>
         <div style="padding:1rem 1.1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
           <div style="font-weight:600; font-size:0.88rem; color:var(--coral)">Deck base (presentación)</div>
@@ -2484,7 +2479,7 @@ footer {
       <h3 style="font-family:var(--serif); font-size:1.2rem; margin-bottom:0.85rem;">Si el año va flojo (ventas por debajo del plan)</h3>
       <ul style="font-size:0.88rem; color:var(--muted); line-height:1.75; padding-left:1.1rem; margin:0">
         <li><strong style="color:var(--text)">Congelar nuevas contrataciones</strong> hasta que el distribuible vuelva a ser positivo en el modelo actualizado.</li>
-        <li><strong style="color:var(--text)">Revisar sueldos Qochix</strong> (metas 2030/2032) solo después de acuerdo explícito — el % equity no se “recorta” por chat.</li>
+        <li><strong style="color:var(--text)">Revisar sueldos Qochix</strong> (metas año a año) solo después de acuerdo explícito — el % equity no se “recorta” por chat.</li>
         <li><strong style="color:var(--text)">Préstamos / marcas:</strong> cumplir devoluciones acordadas; resolver renovaciones antes de que venzan; no usar activos de una marca para saldar otra sin acta.</li>
       </ul>
     </div>
@@ -2604,7 +2599,7 @@ footer {
       <div class="term-block">
         <h4>¿Por qué dos flujos: sueldo y equity?</h4>
         <p class="term-meta">Trabajo hoy vs propiedad mañana</p>
-        <p>El <strong>sueldo</strong> paga el rol operativo (y puede ser adicional al corporativo mientras el ecosistema crece). El <strong>equity</strong> paga el riesgo de construir algo que valga más con el tiempo. En los números fuertes de 2032, el equity suele ser la parte que más escala.</p>
+        <p>El <strong>sueldo</strong> paga el rol operativo (y puede ser adicional al corporativo mientras el ecosistema crece). El <strong>equity</strong> paga el riesgo de construir algo que valga más con el tiempo. En los últimos años del horizonte, el equity suele ser la parte que más escala.</p>
       </div>
       <div class="term-block">
         <h4>¿Por qué el escenario de este documento es “pesimista ×0,7”?</h4>
@@ -2706,7 +2701,7 @@ footer {
         <ul>
           <li><strong>Excel:</strong> fórmulas y supuestos que se pueden cambiar sin reescribir el pacto.</li>
           <li><strong>Este pacto (HTML):</strong> reglas, equity, escenario pesimista ×0,7 y narrativa.</li>
-          <li><strong>Simulador web:</strong> escenarios ×0,7 / ×1 / ×1,4, runway, metas 2030/2032.</li>
+          <li><strong>Simulador web:</strong> escenarios ×0,7 / ×1 / ×1,4, runway, metas año a año.</li>
           <li><strong>Deck base:</strong> presentación para alinear al equipo en reuniones.</li>
         </ul>
       </div>
@@ -2755,10 +2750,10 @@ footer {
 <section style="padding:4rem 2rem">
   <div class="pregunta-final reveal">
     <p class="pf-eyebrow">La única pregunta que importa</p>
-    <h2 class="pf-title">¿Estás dispuesto a apostar por ti mismo — a <em>multiplicar tu ingreso total (sueldo Qochix + equity) entre ×1,9 y ×3,6 hacia 2032</em> en el escenario pesimista del modelo — y ser dueño de algo que construiste con tus manos?</h2>
+    <h2 class="pf-title">¿Estás dispuesto a apostar por ti mismo — a <em>multiplicar tu ingreso total (sueldo Qochix + equity)</em> en el escenario pesimista del modelo — y ser dueño de algo que construiste con tus manos?</h2>
     <p style="color:var(--muted); max-width:550px; margin:0 auto; font-size:0.95rem; line-height:1.7">
       Ningún trabajo corporativo te va a dar esto. Ningún ascenso. Ningún bono.
-      Esto solo lo consigues construyéndolo tú. Y no estás solo — somos 3.
+      Esto solo lo consigues construyéndolo tú. Y no estás solo — somos 4.
     </p>
     <div class="pf-options">
       <button class="pf-btn pf-btn-yes" onclick="alert('¡Qochix arranca! Nos vemos el 2 de abril. A construir. 🚀')">
@@ -2884,15 +2879,16 @@ function showTermTab(panelId, btn) {
     const planilla2032 = derived.personCards.reduce((sum, person) => sum + (person.sueLast||0), 0);
     const label = key === 'p' ? 'Pesimista ×0,7' : key === 'n' ? 'Neutro ×1,0' : 'Optimista ×1,4';
     const intro = key === 'p'
-      ? 'Si la facturación del ecosistema va al <strong>70%</strong> del plan base, este sería el <strong>distribuible equity</strong> 2032 y su cruce con los sueldos Qochix activos.'
+      ? 'Si la facturación del ecosistema va al <strong>70%</strong> del plan base, este sería el <strong>distribuible equity</strong> al último año y su cruce con los sueldos Qochix activos.'
       : key === 'n'
         ? 'Escenario <strong>central</strong>: misma lógica del sistema base, sin reescribir cifras a mano. Acá ves el efecto de abrir el multiplicador a ×1,0.'
         : 'Escenario de <strong>upside</strong>: el sistema recalcula el equity distribuible si el ecosistema ejecuta a ×1,4 del plan base.';
     blurb.innerHTML = intro;
-    totalEl.textContent = 'Pool equity (distribuible socios) · 2032 · ' + label + ' · ' + fmt(derived.dist2032);
+    var _lastYr = derived.years[derived.years.length - 1];
+    totalEl.textContent = 'Pool equity (distribuible socios) · ' + _lastYr + ' · ' + label + ' · ' + fmt(derived.distLast);
     if (comboEl) {
       comboEl.innerHTML =
-        'Planilla fundadores 2032: ' + fmt(planilla2032) + '/mes &nbsp;·&nbsp; ' +
+        'Planilla fundadores ' + _lastYr + ': ' + fmt(planilla2032) + '/mes &nbsp;·&nbsp; ' +
         'Efectivo total Qochix/mes (sueldos + equity): <strong>' + fmt(derived.totalLast||0) + '</strong>';
     }
     grid.innerHTML = derived.personCards.map((person) => (
@@ -2979,23 +2975,36 @@ function showTermTab(panelId, btn) {
     byId('live-updated-pacto').textContent = derived.updatedAtLabel;
     byId('live-pacto-scn').textContent = derived.scenarioLabel;
     byId('live-pacto-pool').textContent = derived.fmtCurrency(derived.pool);
-    byId('live-pacto-dist').textContent = derived.fmtCurrency(derived.dist2032);
+    byId('live-pacto-dist').textContent = derived.fmtCurrency(derived.distLast);
     byId('live-pacto-first').textContent = String(derived.firstDistYear);
-    byId('live-pacto-rossy').textContent = `${derived.liberatedBy2032}/${derived.personCards.length} · ${derived.firstLiberationYear}`;
+    const libByHorizon = derived.personCards.filter((p) => typeof p.liberationYear === 'number' && p.liberationYear <= horizon).length;
+    byId('live-pacto-rossy').textContent = `${libByHorizon}/${derived.personCards.length} · ${derived.firstLiberationYear}`;
     byId('live-pacto-hugo').textContent = hugo ? derived.fmtCurrency(hugo.totalLast||0) : '—';
+    var lblDistL = byId('live-lbl-dist');
+    if (lblDistL) lblDistL.textContent = 'Distribuible ' + horizon;
+    var lblHugoL = byId('live-lbl-hugo');
+    if (lblHugoL) lblHugoL.textContent = 'Hugo total ' + horizon;
+    var subLib = byId('live-sub-lib');
+    if (subLib) subLib.textContent = 'Personas liberadas al ' + horizon + ' y primer año de cruce.';
     byId('hero-live-pool').textContent = derived.fmtCurrency(derived.pool);
-    byId('hero-live-fact').textContent = derived.fmtCurrency(derived.totalFact2032);
-    byId('hero-live-dist').textContent = derived.fmtCurrency(derived.dist2032);
+    byId('hero-live-fact').textContent = derived.fmtCurrency(derived.totalFactLast);
+    byId('hero-live-dist').textContent = derived.fmtCurrency(derived.distLast);
     byId('hero-live-mult').textContent = '×' + minX.toFixed(1) + ' – ×' + maxX.toFixed(1);
+    var lblFact = byId('hero-lbl-fact');
+    if (lblFact) lblFact.textContent = 'Facturación mensual total ecosistema · ' + horizon + ' (' + derived.scenarioLabel + ')';
+    var lblDist = byId('hero-lbl-dist');
+    if (lblDist) lblDist.textContent = 'Distribuible mensual socios · ' + horizon + ' (tras planilla y reserva)';
+    var lblMult = byId('hero-lbl-mult');
+    if (lblMult) lblMult.textContent = 'Rango de ingreso total ' + horizon + ' vs sueldo de hoy (sueldo Qochix + equity)';
     derived.personCards.forEach((person) => {
       const el = byId('hero-eq-' + person.id);
-      if (el) el.textContent = person.equity + '%';
+      if (el) el.textContent = person.equity.toFixed(1) + '%';
     });
     const note = byId('live-pacto-note');
     if (!note) return;
     note.innerHTML =
       '<strong>Lectura rápida.</strong> Equity total: <strong>' + derived.eqSum.toFixed(1) + '%</strong>. ' +
-      'Facturación total 2032 del escenario activo: <strong>' + derived.fmtCurrency(derived.totalFact2032) + '</strong>/mes. ' +
+      'Facturación total ' + horizon + ' del escenario activo: <strong>' + derived.fmtCurrency(derived.totalFactLast) + '</strong>/mes. ' +
       'En 2030 el sistema ya proyecta <strong>' + derived.fmtCurrency(derived.fact.total[idx30]) + '</strong>/mes de facturación y un distribuible de <strong>' + derived.fmtCurrency(derived.dist2030) + '</strong>/mes. ' +
       (derived.state.P.sc === 'p'
         ? 'Estás viendo el mismo piso conservador que estructura el cuerpo del pacto.'
@@ -3035,7 +3044,7 @@ function showTermTab(panelId, btn) {
         steps.innerHTML =
           '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 1 · Arranque</div><span class="live-step-tag mid">Base</span></div><div class="live-step-copy">En ' + years[0] + ' el sistema mueve <strong>' + derived.fmtCurrency(derived.fact.total[0]) + '/mes</strong>; de eso solo quedan <strong>' + derived.fmtCurrency(derived.fact.neto[0]) + '/mes</strong> de neto y todavía no sobra aire para repartir.</div></div>' +
           '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 2 · Quiebre</div><span class="live-step-tag ' + paceBreak.cls + '">' + paceBreak.label + '</span></div><div class="live-step-copy">En ' + breakYear + ' el colchón se vuelve no negativo. No es abundancia todavía: es el punto donde la estructura deja de comer más aire del que el negocio produce.</div></div>' +
-          '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 3 · Reparto</div><span class="live-step-tag ' + paceDist.cls + '">' + paceDist.label + '</span></div><div class="live-step-copy">En ' + firstDist + ' aparece el primer reparto real; al ' + horizon + ' el distribuible llega a <strong>' + derived.fmtCurrency(derived.dist2032) + '/mes</strong> y el equipo liberado ya suma <strong>' + derived.liberatedBy2032 + '/' + derived.personCards.length + '</strong>.</div></div>';
+          '<div class="live-step"><div class="live-step-top"><div class="live-step-title">Acto 3 · Reparto</div><span class="live-step-tag ' + paceDist.cls + '">' + paceDist.label + '</span></div><div class="live-step-copy">En ' + firstDist + ' aparece el primer reparto real; al ' + horizon + ' el distribuible llega a <strong>' + derived.fmtCurrency(derived.distLast) + '/mes</strong>.</div></div>';
       }
     }
     const table = byId('live-pacto-lib-table');
@@ -3077,6 +3086,31 @@ function showTermTab(panelId, btn) {
           '</article>'
         );
       }).join('');
+    }
+    var statTk = byId('stat-ticket-val');
+    if (statTk) {
+      var tks = derived.personCards.map(function(p){ return p.ticket; });
+      var mn = Math.min.apply(null, tks);
+      var mx = Math.max.apply(null, tks);
+      statTk.textContent = mn === mx
+        ? 'S/' + (mn/1000).toFixed(0) + 'k'
+        : 'S/' + (mn/1000).toFixed(0) + 'k–' + (mx/1000).toFixed(0) + 'k';
+    }
+    var vestRows = byId('vesting-rows');
+    if (vestRows) {
+      var vestPcts = [1/3, 1/3 + 5/24*2/3, 1/3 + 12/24*2/3, 1];
+      var vh = '';
+      derived.personCards.forEach(function(person) {
+        var eq = Number(person.equity || 0);
+        vh += '<div class="vesting-row"><div>' + person.name + '</div>';
+        vestPcts.forEach(function(pct, pi) {
+          var val = (eq * pct).toFixed(2) + '%';
+          if (pi === vestPcts.length - 1) val = eq.toFixed(2) + '%';
+          vh += '<div>' + val + '</div>';
+        });
+        vh += '</div>';
+      });
+      vestRows.innerHTML = vh;
     }
   }
 
@@ -3142,6 +3176,34 @@ function showTermTab(panelId, btn) {
       ph+='<tr class="tr-total"><td>TOTAL POOL</td><td>100%</td><td>'+fmt(totalTk)+'</td><td>'+fmt(totalCap)+'</td><td>'+fmt(Math.round(totalSw))+'</td><td>'+fmt(Math.round(totalAll))+'</td><td>—</td><td>—</td></tr>';
       ptb.innerHTML=ph;
     }
+    // Sueldos table
+    var stb=document.getElementById('pact-sued-tbody');
+    if(stb){
+      var sh='';
+      var curves=d.curves||{};
+      pc.forEach(function(p){
+        var pr=d.state.persons.find(function(x){return x.id===p.id})||{};
+        var sueldo=Number(pr.sueldo||0);
+        var crv=curves[p.id]||[];
+        var crossYr='—';
+        for(var ci=0;ci<_ny;ci++){if(Number(crv[ci]||0)>=sueldo&&sueldo>0){crossYr=_yrs[ci];break;}}
+        sh+='<tr'+(p.id==='hugo'?' class="tr-hugo"':'')+'><td>'+p.name+'</td><td class="td-muted">S/'+(sueldo/1000).toFixed(0)+'k</td>';
+        for(var si=0;si<_ny;si++){
+          var sv=Number(crv[si]||0);
+          var cls=sv===0?'td-muted':(si>=_ny-2?'td-gold':'');
+          sh+='<td class="'+cls+'">'+(sv>0?fmt(sv):'—')+'</td>';
+        }
+        sh+='<td class="td-green">'+(crossYr!=='—'?crossYr+(p.id==='hugo'?' ★':''):'—')+'</td></tr>';
+      });
+      stb.innerHTML=sh;
+    }
+    // Dynamic headers
+    var fth=document.getElementById('pact-fact-thead');
+    if(fth){var fhh='<tr><th>Marca</th>';for(var yi=0;yi<_ny;yi++){fhh+='<th>'+_yrs[yi]+'</th>';}fhh+='</tr>';fth.innerHTML=fhh;}
+    var sth=document.getElementById('pact-sued-thead');
+    if(sth){var shh='<tr><th>Persona</th><th>Corp. hoy</th>';for(var yi2=0;yi2<_ny;yi2++){shh+='<th>'+_yrs[yi2]+'</th>';}shh+='<th>Cruce</th></tr>';sth.innerHTML=shh;}
+    var eth=document.getElementById('pact-eq-thead');
+    if(eth){var ehh='<tr><th>Persona</th><th>%</th>';for(var yi3=1;yi3<_ny;yi3++){ehh+='<th>'+_yrs[yi3]+'</th>';}ehh+='<th>Acum '+_ny+'a</th></tr>';eth.innerHTML=ehh;}
     // Equity mensual table
     var eqtb=document.getElementById('pact-eq-tbody');
     if(eqtb){
