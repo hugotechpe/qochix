@@ -14,11 +14,11 @@
     ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133],
   };
   const SUED_F_BASE = {
-    //         2026  2027  2028  2029   2030   2031   2032
-    hugo:   [    0,    0, 3000, 9000, 14000, 20000, 30000],
-    rossy:  [    0, 1000, 2500, 7500,  9000, 10500, 12000],
-    vera:   [    0,    0, 2000, 7500,  8500,  9200, 10000],
-    mechita:[    0,    0, 1800, 6500,  8000,  9000, 10000],
+    //         2026  2027   2028   2029   2030   2031   2032
+    hugo:   [    0,    0,  4000, 10000, 20000, 27500, 35000],
+    rossy:  [    0, 1000,  2500,  7500,  9000, 11500, 14000],
+    vera:   [    0,    0,  2000,  7500,  8500, 10500, 12500],
+    mechita:[    0,    0,  7000, 10000, 15000, 19500, 24000],
   };
   const SERVICE_LINES = [
     // ── Almaria (3) — todos los precios suben 2028 ──
@@ -57,16 +57,16 @@
 
   const DEFAULTS = {
     persons: [
-      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 0.5, equity: 58, capital: 0,
-        brandCapital: { almaria: 10000, ht: 30000 },
+      { id: 'hugo', name: 'Hugo', sueldo: 30000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 58, capital: 0,
+        brandCapital: { almaria: 10000, ht: 40000 },
         brandCash: { almaria: 9400, ht: 16000 }, c: '#D4A853' },
-      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 22, capital: 0,
+      { id: 'rossy', name: 'Rossy', sueldo: 7000, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 22, capital: 0,
         brandCapital: { almaria: 20000 },
         brandCash: { almaria: 18800 }, c: '#3ECFCF' },
-      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 0.7, equity: 15, capital: 0,
+      { id: 'vera', name: 'Vera', sueldo: 6500, sueldoMarca: 0, hrs: 6, adj: 1.0, equity: 15, capital: 0,
         brandCapital: { almaria: 4000 },
         brandCash: { almaria: 3800 }, c: '#52C97A' },
-      { id: 'mechita', name: 'Mechita', sueldo: 6000, sueldoMarca: 0, hrs: 5, adj: 0.7, equity: 5, capital: 0,
+      { id: 'mechita', name: 'Mechita', sueldo: 12000, sueldoMarca: 0, hrs: 6, adj: 0.55, equity: 5, capital: 0,
         brandCapital: {},
         brandCash: {}, c: '#E98EB6' },
     ],
@@ -86,10 +86,10 @@
       capitalMode: 'loan',
       equityMode: 'auto_pool',
       preMoney: 5000000,
-      sue28: { hugo: 3000, rossy: 2500, vera: 2000, mechita: 1800 },
-      sue29: { hugo: 9000, rossy: 7500, vera: 7500, mechita: 6500 },
-      sue30: { hugo: 14000, rossy: 9000, vera: 8500, mechita: 8000 },
-      sue32: { hugo: 30000, rossy: 12000, vera: 10000, mechita: 10000 },
+      sue28: { hugo: 4000, rossy: 2500, vera: 2000, mechita: 7000 },
+      sue29: { hugo: 10000, rossy: 7500, vera: 7500, mechita: 10000 },
+      sue30: { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 },
+      sue32: { hugo: 35000, rossy: 14000, vera: 12500, mechita: 24000 },
       lineOverrides: {},
       brandOps: {},
       founderBrand: {
@@ -102,7 +102,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 16,
+      schemaVersion: 17,
     },
   };
 
@@ -248,6 +248,29 @@
         if (s.P.founderBrand.vera === 'almaria') s.P.founderBrand.vera = 'ambas';
         delete s.P.founderBrand.carlos;
         delete s.P.founderBrand.nicole;
+      }
+    }},
+    { from: 16, to: 17, run(s) {
+      if (s.persons) {
+        var fixes = {
+          hugo: { sueldo: 30000, adj: 1.0, brandCapital: { almaria: 10000, ht: 40000 } },
+          rossy: { adj: 1.0 },
+          vera: { adj: 1.0 },
+          mechita: { sueldo: 12000, hrs: 6, adj: 0.55 },
+        };
+        s.persons.forEach(function(p) {
+          var f = fixes[p.id]; if (!f) return;
+          if (f.sueldo != null) p.sueldo = f.sueldo;
+          if (f.adj != null) p.adj = f.adj;
+          if (f.hrs != null) p.hrs = f.hrs;
+          if (f.brandCapital) p.brandCapital = { ...(p.brandCapital || {}), ...f.brandCapital };
+        });
+      }
+      if (s.P) {
+        s.P.sue28 = { hugo: 4000, rossy: 2500, vera: 2000, mechita: 7000 };
+        s.P.sue29 = { hugo: 10000, rossy: 7500, vera: 7500, mechita: 10000 };
+        s.P.sue30 = { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 };
+        s.P.sue32 = { hugo: 35000, rossy: 14000, vera: 12500, mechita: 24000 };
       }
     }},
   ];
