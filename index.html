@@ -596,8 +596,8 @@
         ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
         syncingControls = false;
         paintExec();
-        hideRecalcBar();
-      }catch(err){console.error('Hub paint() error:',err);hideRecalcBar();showHubError('Error en paint(): '+err.message);}
+      }catch(err){console.error('Hub paint() error:',err);showHubError('Error en paint(): '+err.message);}
+      finally{hideRecalcBar();}
     }
     function openModal(id){document.getElementById(id).classList.add('open')}
     function closeModal(id){document.getElementById(id).classList.remove('open')}

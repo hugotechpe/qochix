@@ -2053,6 +2053,7 @@ function showToast(msg, duration){
 function recalc(){
   var _ov=document.getElementById('recalc-overlay');
   if(_ov){_ov.classList.add('active');clearTimeout(_ov._tid);}
+  try{
   const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
   const fact=derived.fact;
   const factPact=derived.factPact;
@@ -2773,8 +2774,8 @@ function recalc(){
 
   renderCharts(fact,dist,rw,monthly);
   scheduleSharedSync();
-
-  if(_ov){_ov._tid=setTimeout(function(){_ov.classList.remove('active');},350);}
+  }catch(e){console.error('recalc error:',e);}
+  finally{if(_ov){_ov._tid=setTimeout(function(){_ov.classList.remove('active');},300);}}
 }
 
 // ════════════════════════════════════════
