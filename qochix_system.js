@@ -22,15 +22,17 @@
   };
   const SERVICE_LINES = [
     // ── Almaria (3) — todos los precios suben 2028 ──
-    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,35,35,35,35,35,35],vols:[16,80,160,280,500,700,900,1100]},
-    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,75,75,75,75,75,75],vols:[8,60,160,250,700,1000,1200,1400]},
-    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,75,75,75,75,75,75],vols:[5,60,150,180,450,680,950,1150]},
+    // freq = cada cuántos meses ocurre (1=mensual). vols = cantidad por evento/periodo.
+    // Revenue mensual = precio × vol / freq × escenario
+    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit',freq:1,prices:[25,25,35,35,35,35,35,35],vols:[16,80,160,280,500,700,900,1100]},
+    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona',freq:1,prices:[55,55,75,75,75,75,75,75],vols:[8,60,160,250,700,1000,1200,1400]},
+    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona',freq:1,prices:[55,55,75,75,75,75,75,75],vols:[5,60,150,180,450,680,950,1150]},
     // ── HugoTech (5) — precios suben 2028 ──
-    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,200,200,200,200,200,200],vols:[15,20,28,35,48,55,65,75]},
-    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,2000,2000,2000,2000,2000,2000],vols:[1,3,3,4,7,8,10,12]},
-    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona/mes',prices:[100,100,400,400,400,400,400,400],vols:[8,24,14,18,24,32,40,48]},
-    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[0,400,1500,1500,1500,1500,1500,1500],vols:[0,5,3,5,7,10,12,15]},
-    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6,8]},
+    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr',freq:1,prices:[150,150,200,200,200,200,200,200],vols:[15,20,28,35,48,55,65,75]},
+    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller',freq:1,prices:[1250,1250,2000,2000,2000,2000,2000,2000],vols:[2,5,8,12,16,20,25,30]},
+    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona',freq:2,prices:[100,100,400,400,400,400,400,400],vols:[24,24,36,36,48,48,64,64]},
+    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona',freq:3,prices:[0,400,1500,1500,1500,1500,1500,1500],vols:[0,30,30,50,50,50,60,60]},
+    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona',freq:1,prices:[0,1000,1000,3500,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6,8]},
   ];
   const BRAND_IDS = ['almaria', 'ht'];
   const BRAND_LABELS = { almaria: 'Almaria', ht: 'HugoTech', ambas: 'Ambas' };
@@ -590,8 +592,9 @@
       const lo = ov[def.id] || {};
       const p = lo.prices || def.prices;
       const v = lo.vols || def.vols;
-      const rev = AÑOS.map((_, i) => Math.round((p[i] || 0) * (v[i] || 0) * m));
-      return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, prices: p.slice(), vols: v.slice(), rev };
+      const f = lo.freq != null ? lo.freq : (def.freq || 1);
+      const rev = AÑOS.map((_, i) => Math.round((p[i] || 0) * (v[i] || 0) / f * m));
+      return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, freq: f, prices: p.slice(), vols: v.slice(), rev };
     });
     const bt = (b) => AÑOS.map((_, i) => lines.filter((l) => l.brand === b).reduce((s, l) => s + l.rev[i], 0));
     return { lines, almaria: bt('almaria'), ht: bt('ht') };
@@ -991,6 +994,23 @@
     };
   }
 
+  function dumpCurrentLines() {
+    const state = getState();
+    const ov = (state.P && state.P.lineOverrides) || {};
+    const result = SERVICE_LINES.map(def => {
+      const lo = ov[def.id] || {};
+      const f = lo.freq != null ? lo.freq : (def.freq || 1);
+      return {
+        id: def.id,
+        freq: f,
+        prices: lo.prices || def.prices,
+        vols: lo.vols || def.vols,
+        changed: !!lo.prices || !!lo.vols || lo.freq != null
+      };
+    });
+    return JSON.stringify(result, null, 2);
+  }
+
   window.QochixSystem = {
     STORAGE_KEY,
     DEFAULTS: clone(DEFAULTS),
@@ -1020,5 +1040,6 @@
     compareScenarios,
     validateEquity,
     exportSnapshot,
+    dumpCurrentLines,
   };
 })();

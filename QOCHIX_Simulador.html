@@ -386,7 +386,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .ptnr-lib-warn{background:rgba(232,107,95,.1);color:var(--coral);border:1px solid rgba(232,107,95,.2)}
 
 /* Line editable tables */
-.line-tbl{width:100%;min-width:780px;border-collapse:separate;border-spacing:0;font-size:.75rem}
+.line-tbl{width:100%;min-width:880px;border-collapse:separate;border-spacing:0;font-size:.75rem}
 .line-tbl th{padding:6px 4px;text-align:center;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--brd);background:rgba(0,0,0,.12)}
 .line-tbl td{padding:5px 3px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 .line-tbl tr:hover td{background:rgba(255,255,255,.02)}
@@ -394,7 +394,13 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .line-input:focus{border-color:var(--gold);outline:none;box-shadow:0 0 0 2px rgba(212,168,83,.15)}
 .line-input::-webkit-inner-spin-button{-webkit-appearance:none}
 .line-input[type=number]{-moz-appearance:textfield}
-@media(max-width:600px){.line-input{width:40px;font-size:.62rem}}
+.line-price{color:var(--gold)!important;font-size:.62rem!important;width:48px!important}
+.line-row-price td{padding-bottom:1px!important}
+.line-row-vol td{padding-top:1px!important}
+.line-freq-sel{background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:3px 4px;font-size:.58rem;cursor:pointer;transition:border-color .2s}
+.line-freq-sel:focus{border-color:var(--gold);outline:none}
+.line-freq-sel option{background:var(--bg);color:var(--text)}
+@media(max-width:600px){.line-input{width:40px;font-size:.62rem}.line-price{width:38px!important}.line-freq-sel{font-size:.52rem;padding:2px}}
 
 /* Monthly table (runway) */
 .runway-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.25rem}
@@ -1375,7 +1381,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=25.0&t=1776556800"></script>
+<script src="qochix_system.js?v=26.0&t=1776643200"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -3568,42 +3574,64 @@ function paintEffortTable(fact, derived){
       {key:'ht',label:'💻 HugoTech',color:'var(--teal)'},
     ];
     var bhtml='';
+    var freqLabels={1:'Mensual',2:'Bimestral',3:'Trimestral',4:'Cuatrim.',6:'Semestral',12:'Anual'};
     brandKeys.forEach(function(bk){
       var blines=lr.lines.filter(function(l){return l.brand===bk.key});
       bhtml+='<div class="line-brand-section" style="border-top:3px solid '+bk.color+';margin-top:1rem;padding-top:.75rem">';
       bhtml+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem"><span style="font-size:.85rem;font-weight:700;color:'+bk.color+'">'+bk.label+' — líneas de ingreso</span><span style="font-size:.65rem;color:var(--muted)">Edita precio y volumen por año</span></div>';
-      bhtml+='<div class="tw"><table class="line-tbl"><thead><tr><th style="text-align:left;min-width:130px">Línea</th><th>$/u</th>';
+      bhtml+='<div class="tw"><table class="line-tbl"><thead><tr><th style="text-align:left;min-width:110px">LÍNEA</th><th style="font-size:.55rem;min-width:52px">Cada…</th><th style="font-size:.5rem"></th>';
       for(var y=0;y<AÑOS.length;y++) bhtml+='<th>'+AÑOS[y]+'</th>';
-      bhtml+='<th style="font-size:.62rem">Rev '+AÑOS[AÑOS.length-1]+'</th></tr></thead><tbody>';
+      bhtml+='<th style="font-size:.62rem">REV '+AÑOS[AÑOS.length-1]+'</th></tr></thead><tbody>';
       blines.forEach(function(line){
-        var basePrice=0;for(var bp=0;bp<AÑOS.length;bp++){if(line.prices[bp]>0){basePrice=line.prices[bp];break;}}
-        var isTiered=false;for(var tp=0;tp<AÑOS.length;tp++){if(line.prices[tp]!==line.prices[0]){isTiered=true;break;}}
-        bhtml+='<tr><td style="font-size:.72rem;color:var(--text2);white-space:nowrap" title="'+line.unit+'">'+line.name+'<br><span style="font-size:.58rem;color:var(--muted)">'+line.unit+'</span></td>';
-        if(isTiered){
-          var priceLabel=line.prices.filter(function(p){return p>0}).filter(function(v,i,a){return a.indexOf(v)===i}).map(function(p){return 'S/'+p}).join('→');
-          bhtml+='<td style="font-size:.62rem;color:var(--muted);text-align:center" title="Precio escalonado">'+priceLabel+'</td>';
-        }else{
-          bhtml+='<td><input type="number" class="line-input" value="'+basePrice+'" data-line="'+line.id+'" data-field="price" min="0"></td>';
-        }
+        var f=line.freq||1;
+        var avgLast=Math.round((line.vols[AÑOS.length-1]||0)/f);
+        var unitLabel=f>1?(line.unit+'/evento'):(line.unit+'/mes');
+        // Row 1: Name + frequency + prices per year
+        bhtml+='<tr class="line-row-price" style="border-top:2px solid rgba(255,255,255,.06)">';
+        bhtml+='<td rowspan="2" style="font-size:.72rem;color:var(--text2);white-space:nowrap;vertical-align:middle" title="'+line.unit+'">';
+        bhtml+='<strong>'+line.name+'</strong><br><span style="font-size:.55rem;color:var(--muted)">'+unitLabel+'</span></td>';
+        bhtml+='<td rowspan="2" style="vertical-align:middle"><select class="line-freq-sel" data-line="'+line.id+'" style="background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:2px 3px;font-size:.58rem;width:100%">';
+        [1,2,3,4,6,12].forEach(function(fv){
+          bhtml+='<option value="'+fv+'"'+(f===fv?' selected':'')+'>'+freqLabels[fv]+'</option>';
+        });
+        bhtml+='</select></td>';
+        bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:var(--gold);letter-spacing:.03em;padding:1px 2px;border:none">S/</td>';
         for(var yi=0;yi<AÑOS.length;yi++){
-          bhtml+='<td><input type="number" class="line-input line-vol" value="'+line.vols[yi]+'" data-line="'+line.id+'" data-field="vol" data-yi="'+yi+'" min="0"'+(line.vols[yi]===0?' style="opacity:.4"':'')+'></td>';
+          var pr=line.prices[yi]||0;
+          bhtml+='<td><input type="number" class="line-input line-price" value="'+pr+'" data-line="'+line.id+'" data-field="price" data-yi="'+yi+'" min="0"'+(pr===0?' style="opacity:.4"':'')+'></td>';
         }
-        bhtml+='<td style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap">'+fmt(line.rev[AÑOS.length-1])+'</td></tr>';
+        bhtml+='<td rowspan="2" style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap;vertical-align:middle">'+fmt(line.rev[AÑOS.length-1]);
+        if(f>1) bhtml+='<br><span style="font-size:.5rem;color:var(--muted)">'+avgLast+' '+line.unit+'/mes</span>';
+        bhtml+='</td></tr>';
+        // Row 2: volumes per year
+        bhtml+='<tr class="line-row-vol">';
+        bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:var(--teal);letter-spacing:.03em;padding:1px 2px;border:none">QTY</td>';
+        for(var yi2=0;yi2<AÑOS.length;yi2++){
+          var vRaw=line.vols[yi2]||0;
+          var vAvg=Math.round(vRaw/f);
+          var tooltip=f>1?(vRaw+' por evento ÷ '+f+' meses = '+vAvg+'/mes'):(vRaw+'/mes');
+          bhtml+='<td title="'+tooltip+'"><input type="number" class="line-input line-vol" value="'+vRaw+'" data-line="'+line.id+'" data-field="vol" data-yi="'+yi2+'" min="0"'+(vRaw===0?' style="opacity:.4"':'')+'></td>';
+        }
+        bhtml+='</tr>';
       });
       var brandTotal=blines.reduce(function(s,l){return s+l.rev[AÑOS.length-1]},0);
-      bhtml+='<tr style="border-top:2px solid var(--brd)"><td style="font-weight:700;font-size:.78rem">Total/mes</td><td></td>';
+      bhtml+='<tr style="border-top:2px solid var(--brd)"><td style="font-weight:700;font-size:.78rem">Total/mes</td><td></td><td></td>';
       for(var yt=0;yt<AÑOS.length;yt++){
         var yrTotal=blines.reduce(function(s,l){return s+l.rev[yt]},0);
         bhtml+='<td style="font-size:.68rem;font-weight:600;text-align:center;color:'+bk.color+'">'+fmt(yrTotal)+'</td>';
       }
       bhtml+='<td style="font-size:.78rem;font-weight:700;color:'+bk.color+';text-align:right">'+fmt(brandTotal)+'</td></tr>';
       bhtml+='</tbody></table></div>';
-      bhtml+='<div style="font-size:.62rem;color:var(--muted);text-align:right;margin-top:.2rem">≈ '+fmt(Math.round(brandTotal/22))+' por día laboral en 2032</div>';
+      bhtml+='<div style="font-size:.62rem;color:var(--muted);text-align:right;margin-top:.2rem">≈ '+fmt(Math.round(brandTotal/22))+' por día laboral en '+AÑOS[AÑOS.length-1]+'</div>';
       bhtml+='</div>';
     });
     bdEl.innerHTML=bhtml;
     bdEl.querySelectorAll('.line-input').forEach(function(inp){
+      inp.addEventListener('input',function(){onLineEdit(inp)});
       inp.addEventListener('change',function(){onLineEdit(inp)});
+    });
+    bdEl.querySelectorAll('.line-freq-sel').forEach(function(selEl2){
+      selEl2.addEventListener('change',function(){onFreqEdit(selEl2)});
     });
   }
 
@@ -3670,17 +3698,20 @@ function onLineEdit(inp){
   var lo=ov[lineId];
   if(field==='price'){
     if(!lo.prices) lo.prices=def.prices.slice();
-    var origBase=0;for(var i=0;i<AÑOS.length;i++){if(def.prices[i]>0){origBase=def.prices[i];break;}}
-    if(origBase>0){
-      var scale=val/origBase;
-      lo.prices=def.prices.map(function(p){return p>0?Math.round(p*scale):0;});
-    }else{
-      for(var j=0;j<AÑOS.length;j++) lo.prices[j]=val;
-    }
+    lo.prices[yi]=val;
   }else{
     if(!lo.vols) lo.vols=def.vols.slice();
     lo.vols[yi]=val;
   }
+  clearTimeout(_lineEditTimer);
+  _lineEditTimer=setTimeout(function(){recalc();scheduleSharedSync();},150);
+}
+function onFreqEdit(selEl){
+  var lineId=selEl.getAttribute('data-line');
+  var val=Math.max(1,parseInt(selEl.value,10)||1);
+  if(!P.lineOverrides) P.lineOverrides={};
+  if(!P.lineOverrides[lineId]) P.lineOverrides[lineId]={};
+  P.lineOverrides[lineId].freq=val;
   clearTimeout(_lineEditTimer);
   _lineEditTimer=setTimeout(function(){recalc();scheduleSharedSync();},150);
 }
