@@ -4120,8 +4120,6 @@ if(_isEmbedded){
   try{ document.getElementById('hero').style.display='none'; }catch(e){}
   var _appE=document.getElementById('app-root');
   if(_appE) _appE.classList.add('sidebar-hidden');
-  var _sbBtnE=document.getElementById('sb-toggle');
-  if(_sbBtnE) _sbBtnE.style.display='none';
 }
 QSYS.subscribe((nextState,meta={})=>{
   if(meta.via==='local') return;
