@@ -1,8 +1,8 @@
 (() => {
   const STORAGE_KEY = 'qochix_system_state_v1';
   const CHANNEL_NAME = 'qochix_system_channel_v1';
-  const AÑOS = [2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033];
-  const MESES_POR_AÑO = [9, 12, 12, 12, 12, 12, 12, 12];
+  const AÑOS = [2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035];
+  const MESES_POR_AÑO = [9, 12, 12, 12, 12, 12, 12, 12, 12, 12];
   const SC = { p: 0.7, n: 1.0, o: 1.4 };
   const SC_LABELS = {
     p: 'Pesimista ×0.7',
@@ -14,27 +14,42 @@
     ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133, 108000],
   };
   const SUED_F_BASE = {
-    //         2026  2027   2028   2029   2030   2031   2032   2033
-    hugo:   [    0,    0,  4000, 10000, 20000, 26500, 33000, 33000],
-    rossy:  [    0, 1000,  2500,  7500,  9000, 11500, 14000, 14000],
-    vera:   [    0,    0,  2000,  7500,  8500, 10500, 12500, 12500],
-    mechita:[    0,    0,  7000, 10000, 15000, 19500, 24000, 24000],
+    //         2026  2027   2028   2029   2030   2031   2032   2033   2034   2035
+    hugo:   [    0,    0,  4000, 10000, 20000, 26500, 33000, 33000, 33000, 33000],
+    rossy:  [    0, 1000,  2500,  7500,  9000, 11500, 14000, 14000, 14000, 14000],
+    vera:   [    0,    0,  2000,  7500,  8500, 10500, 12500, 12500, 12500, 12500],
+    mechita:[    0,    0,  7000, 10000, 15000, 19500, 24000, 24000, 24000, 24000],
   };
   const SERVICE_LINES = [
-    // ── Almaria (3) — todos los precios suben 2028 ──
-    // freq  = cada cuántos meses ocurre (1=mensual)
-    // ppA   = personas por activación (0 = n/a, vol ya son unidades finales)
-    // vols  = cuando ppA>0 → número de activaciones; cuando ppA=0 → unidades directas
+    // ── Almaria (3) ──
+    // freq = cada cuántos meses | ppA = personas por activación (0=n/a)
     // Revenue = precio × vol × max(ppA,1) / freq × escenario
-    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit',freq:1,ppA:0,prices:[25,25,35,35,35,35,35,35],vols:[16,80,160,280,500,700,900,1100]},
-    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona',freq:1,ppA:10,prices:[55,55,75,75,75,75,75,75],vols:[1,6,16,25,70,100,120,140]},
-    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona',freq:1,ppA:15,prices:[55,55,75,75,75,75,75,75],vols:[1,4,10,12,30,45,63,77]},
-    // ── HugoTech (5) — precios suben 2028 ──
-    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr',freq:1,ppA:0,prices:[150,150,200,200,200,200,200,200],vols:[15,20,28,35,48,55,65,75]},
-    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller',freq:1,ppA:0,prices:[1250,1250,2000,2000,2000,2000,2000,2000],vols:[2,5,8,12,16,20,25,30]},
-    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona',freq:2,ppA:0,prices:[100,100,400,400,400,400,400,400],vols:[24,24,36,36,48,48,64,64]},
-    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona',freq:3,ppA:0,prices:[0,400,1500,1500,1500,1500,1500,1500],vols:[0,30,30,50,50,50,60,60]},
-    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona',freq:1,ppA:0,prices:[0,1000,1000,3500,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6,8]},
+    //           2026  2027  2028  2029  2030  2031  2032  2033  2034  2035
+    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit',freq:1,ppA:0,
+      prices:[20, 22, 28, 32, 35, 38, 42, 45, 48, 50],
+      vols:  [15, 55,110,180,300,420,550,680,780,870]},
+    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona',freq:1,ppA:12,
+      prices:[50, 55, 65, 70, 75, 75, 80, 80, 85, 85],
+      vols:  [ 0,  2,  4,  7, 10, 14, 18, 22, 26, 30]},
+    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona',freq:1,ppA:15,
+      prices:[50, 55, 65, 70, 75, 75, 80, 80, 85, 85],
+      vols:  [ 0,  1,  2,  4,  6,  8, 10, 12, 14, 15]},
+    // ── HugoTech (5) ──
+    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr',freq:1,ppA:0,
+      prices:[80, 90,100,120,150,160,170,180,190,200],
+      vols:  [ 8, 12, 16, 20, 26, 30, 34, 37, 39, 40]},
+    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller',freq:1,ppA:0,
+      prices:[1000,1200,1500,1800,2000,2000,2200,2400,2600,2800],
+      vols:  [   2,   4,   6,   8,  11,  14,  16,  18,  20,  22]},
+    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona',freq:2,ppA:0,
+      prices:[100,100,300,350,400,400,450,450,480,500],
+      vols:  [ 18, 22, 28, 32, 38, 44, 50, 54, 57, 60]},
+    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona',freq:3,ppA:0,
+      prices:[  0,300,800,1200,1500,1500,1800,1800,2000,2000],
+      vols:  [  0, 22, 28,  32,  38,  42,  46,  50,  54,  56]},
+    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona',freq:3,ppA:0,
+      prices:[  0,  0,800,1500,2500,3000,3000,3500,3500,3500],
+      vols:  [  0,  0,  8,  12,  14,  16,  18,  20,  22,  22]},
   ];
   const BRAND_IDS = ['almaria', 'ht'];
   const BRAND_LABELS = { almaria: 'Almaria', ht: 'HugoTech', ambas: 'Ambas' };
@@ -98,6 +113,8 @@
       sue30: { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 },
       sue32: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
       sue33: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
+      sue34: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
+      sue35: { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 },
       lineOverrides: {},
       cajaMinMarca: 1000,
       cajaMinGrowthQ: 1.10,
@@ -112,7 +129,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 21,
+      schemaVersion: 22,
     },
   };
 
@@ -339,6 +356,13 @@
         s.P.sue33 = { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 };
       }
     }},
+    { from: 21, to: 22, run(s) {
+      if (s.P) {
+        s.P.lineOverrides = {};
+        s.P.sue34 = { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 };
+        s.P.sue35 = { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 };
+      }
+    }},
   ];
 
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -380,6 +404,8 @@
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
         sue33: { ...next.P.sue33, ...(raw.P.sue33 || {}) },
+        sue34: { ...next.P.sue34, ...(raw.P.sue34 || {}) },
+        sue35: { ...next.P.sue35, ...(raw.P.sue35 || {}) },
         lineOverrides: raw.P.lineOverrides || next.P.lineOverrides || {},
         brandOps: { ...next.P.brandOps, ...(raw.P.brandOps || {}) },
         founderBrand: { ...next.P.founderBrand, ...(raw.P.founderBrand || {}) },
@@ -533,7 +559,7 @@
     return out;
   }
 
-  function buildSuedCurve(id, target28, target29, target30, target32, target33) {
+  function buildSuedCurve(id, target28, target29, target30, target32, target33, target34, target35) {
     const base = SUED_F_BASE[id];
     const parse = (v, fallback) => v != null && !Number.isNaN(+v) ? Math.max(0, Math.round(+v)) : (fallback || 0);
     const t28 = parse(target28, base[2]);
@@ -541,6 +567,8 @@
     const t30 = parse(target30, base[4]);
     const t32 = parse(target32, base[6]);
     const t33 = parse(target33, base[7]);
+    const t34 = parse(target34, base[8]);
+    const t35 = parse(target35, base[9]);
     const b0 = base[0] || 0;
     const arr = [];
     arr[0] = b0;
@@ -551,6 +579,8 @@
     arr[5] = Math.round(t30 + (t32 - t30) * 0.5);
     arr[6] = t32;
     arr[7] = t33;
+    arr[8] = t34;
+    arr[9] = t35;
     return arr;
   }
 
@@ -560,7 +590,9 @@
       Number((state.P.sue29 || {})[person.id]) === SUED_F_BASE[person.id][3] &&
       Number(state.P.sue30[person.id]) === SUED_F_BASE[person.id][4] &&
       Number(state.P.sue32[person.id]) === SUED_F_BASE[person.id][6] &&
-      Number((state.P.sue33 || {})[person.id]) === SUED_F_BASE[person.id][7]
+      Number((state.P.sue33 || {})[person.id]) === SUED_F_BASE[person.id][7] &&
+      Number((state.P.sue34 || {})[person.id] ?? SUED_F_BASE[person.id][8]) === SUED_F_BASE[person.id][8] &&
+      Number((state.P.sue35 || {})[person.id] ?? SUED_F_BASE[person.id][9]) === SUED_F_BASE[person.id][9]
     ));
   }
 
@@ -568,7 +600,7 @@
     if (metasMatchPactAnchors(state)) return founderCurvesPact();
     const out = {};
     state.persons.forEach((person) => {
-      out[person.id] = buildSuedCurve(person.id, (state.P.sue28 || {})[person.id], (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id], (state.P.sue33 || {})[person.id]);
+      out[person.id] = buildSuedCurve(person.id, (state.P.sue28 || {})[person.id], (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id], (state.P.sue33 || {})[person.id], (state.P.sue34 || {})[person.id], (state.P.sue35 || {})[person.id]);
     });
     return out;
   }
@@ -648,7 +680,7 @@
     const colchon = neto.map((value, i) => value - sued_tot[i]);
     const cajaMin = Number(state.P.cajaMinMarca || 0);
     const cajaGQ = Number(state.P.cajaMinGrowthQ || 1);
-    const mesesAnio = [9,12,12,12,12,12,12,12];
+    const mesesAnio = MESES_POR_AÑO;
     const cajaReserva = AÑOS.map(function(_,yi){
       if(yi===0 || cajaMin<=0) return 0;
       var monthsSoFar=mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0);
@@ -663,9 +695,13 @@
     const cajaAcum = AÑOS.map(function(_,yi){
       var sum=0; for(var j=0;j<=yi;j++) sum+=cajaReserva[j]; return sum;
     });
-    const dist = colchon.map(function(value,i){ return Math.max(0, value - Number(state.P.reserva || 0) - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
-    const dist_no_op = neto.map(function(value, i){ return Math.max(0, value - sued_f[i] - Number(state.P.reserva || 0) - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
-    return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, cajaReserva, cajaAcum, cajaMinMes: AÑOS.map(function(_,yi){ if(yi===0) return 0; var qE=Math.floor((mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0)-1)/3); return Math.round(cajaMin*Math.pow(cajaGQ,Math.max(0,qE)))*2; }), suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
+    const cajaMinMes = AÑOS.map(function(_,yi){ if(yi===0) return 0; var qE=Math.floor((mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0)-1)/3); return Math.round(cajaMin*Math.pow(cajaGQ,Math.max(0,qE)))*2; });
+    const rsvMes = Number(state.P.reserva || 0);
+    const dist = colchon.map(function(value,i){ return Math.max(0, value - rsvMes - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
+    const dist_no_op = neto.map(function(value, i){ return Math.max(0, value - sued_f[i] - rsvMes - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
+    const cajaNeta = AÑOS.map(function(_,i){ return colchon[i] - rsvMes - Math.round(cajaReserva[i]/(mesesAnio[i]||12)); });
+    const cajaNetaAcum = AÑOS.map(function(_,i){ var s=0; for(var j=0;j<=i;j++) s += cajaNeta[j] * mesesAnio[j]; return s; });
+    return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, cajaNeta, cajaNetaAcum, cajaReserva, cajaAcum, cajaMinMes, suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
   }
 
   function calcMonthly(state, curves) {
