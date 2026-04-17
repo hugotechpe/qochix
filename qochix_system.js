@@ -86,6 +86,7 @@
       capitalMode: 'loan',
       equityMode: 'auto_pool',
       preMoney: 5000000,
+      sue28: { hugo: 3000, rossy: 2500, vera: 2000, mechita: 1800 },
       sue29: { hugo: 9000, rossy: 7500, vera: 7500, mechita: 6500 },
       sue30: { hugo: 14000, rossy: 9000, vera: 8500, mechita: 8000 },
       sue32: { hugo: 30000, rossy: 12000, vera: 10000, mechita: 10000 },
@@ -280,6 +281,7 @@
         ...next.P,
         ...raw.P,
         tickets: { ...next.P.tickets, ...(raw.P.tickets || {}) },
+        sue28: { ...next.P.sue28, ...(raw.P.sue28 || {}) },
         sue29: { ...next.P.sue29, ...(raw.P.sue29 || {}) },
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
@@ -434,16 +436,18 @@
     return out;
   }
 
-  function buildSuedCurve(id, target29, target30, target32) {
+  function buildSuedCurve(id, target28, target29, target30, target32) {
     const base = SUED_F_BASE[id];
-    const t29 = target29 != null && !Number.isNaN(+target29) ? Math.max(0, Math.round(+target29)) : (base[3] || 0);
-    const t30 = target30 != null && !Number.isNaN(+target30) ? Math.max(0, Math.round(+target30)) : (base[4] || 0);
-    const t32 = target32 != null && !Number.isNaN(+target32) ? Math.max(0, Math.round(+target32)) : (base[6] || 0);
+    const parse = (v, fallback) => v != null && !Number.isNaN(+v) ? Math.max(0, Math.round(+v)) : (fallback || 0);
+    const t28 = parse(target28, base[2]);
+    const t29 = parse(target29, base[3]);
+    const t30 = parse(target30, base[4]);
+    const t32 = parse(target32, base[6]);
     const b0 = base[0] || 0;
     const arr = [];
-    for (let i = 0; i < 3; i += 1) {
-      arr[i] = Math.round(b0 + (t29 - b0) * (i / 3));
-    }
+    arr[0] = b0;
+    arr[1] = Math.round(b0 + (t28 - b0) * 0.5);
+    arr[2] = t28;
     arr[3] = t29;
     arr[4] = t30;
     arr[5] = Math.round(t30 + (t32 - t30) * 0.5);
@@ -453,6 +457,7 @@
 
   function metasMatchPactAnchors(state) {
     return state.persons.every((person) => (
+      Number((state.P.sue28 || {})[person.id]) === SUED_F_BASE[person.id][2] &&
       Number((state.P.sue29 || {})[person.id]) === SUED_F_BASE[person.id][3] &&
       Number(state.P.sue30[person.id]) === SUED_F_BASE[person.id][4] &&
       Number(state.P.sue32[person.id]) === SUED_F_BASE[person.id][6]
@@ -463,7 +468,7 @@
     if (metasMatchPactAnchors(state)) return founderCurvesPact();
     const out = {};
     state.persons.forEach((person) => {
-      out[person.id] = buildSuedCurve(person.id, (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id]);
+      out[person.id] = buildSuedCurve(person.id, (state.P.sue28 || {})[person.id], (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id]);
     });
     return out;
   }
