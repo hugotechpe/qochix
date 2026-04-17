@@ -150,7 +150,7 @@
     .sc-btn,.capm-btn,.pre-btn{transition:all .2s cubic-bezier(.4,0,.2,1)}
     .sc-btn:hover,.capm-btn:hover{transform:translateY(-1px)}
     .sc-btn.active,.capm-btn.active,.pre-btn.active{transform:scale(1.03)}
-    @media (max-width:1000px){.layout:not(.side-forced){grid-template-columns:1fr}.layout:not(.side-forced) .side{display:none}.cmp-grid{grid-template-columns:1fr}}
+    @media (max-width:1000px){.layout{grid-template-columns:1fr!important}.layout .side{display:none!important}.cmp-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -315,16 +315,10 @@
       _sideIsCollapsed = !!next;
       if (_sideIsCollapsed) {
         if(layout) layout.classList.add('side-collapsed');
-        if (sideEl) {
-          sideEl.style.cssText = 'display:none !important;visibility:hidden;pointer-events:none;width:0;min-width:0;max-width:0;padding:0;border-right:none;overflow:hidden';
-        }
-        if(layout) layout.style.gridTemplateColumns = '0 minmax(0,1fr)';
+        if(sideEl) sideEl.setAttribute('data-collapsed','1');
       } else {
         if(layout) layout.classList.remove('side-collapsed');
-        if (sideEl) {
-          sideEl.style.cssText = '';
-        }
-        if(layout) layout.style.gridTemplateColumns = '';
+        if(sideEl) sideEl.removeAttribute('data-collapsed');
       }
       paintSideToggle();
       try{localStorage.setItem(SIDE_KEY, _sideIsCollapsed ? '1' : '0')}catch(e){}
