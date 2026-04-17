@@ -127,15 +127,27 @@
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     .k .v{transition:opacity .25s,transform .25s}
     .k .v.updating{opacity:.5;transform:translateY(-2px)}
-    .recalc-bar{
-      position:fixed;top:0;left:0;right:0;height:2px;z-index:6000;
-      background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent);
-      background-size:200% 100%;
-      animation:recalcSlide .6s linear infinite;
-      opacity:0;transition:opacity .15s;pointer-events:none
+    .recalc-overlay{
+      position:fixed;inset:0;z-index:9000;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(10,12,20,.55);
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      opacity:0;pointer-events:none;transition:opacity .15s ease
     }
-    .recalc-bar.active{opacity:1}
-    @keyframes recalcSlide{0%{background-position:100% 0}100%{background-position:-100% 0}}
+    .recalc-overlay.active{opacity:1;pointer-events:auto}
+    .recalc-pill{
+      display:flex;align-items:center;gap:.7rem;
+      padding:.7rem 1.6rem;
+      background:var(--bg2);border:1px solid var(--brd);
+      border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.4)
+    }
+    .recalc-spinner{
+      width:20px;height:20px;border:2.5px solid var(--brd);
+      border-top-color:var(--gold);border-radius:50%;
+      animation:recalcSpin .6s linear infinite
+    }
+    .recalc-label{font-size:.8rem;font-weight:600;color:var(--gold);letter-spacing:.03em}
+    @keyframes recalcSpin{to{transform:rotate(360deg)}}
     .sc-btn,.capm-btn,.pre-btn{transition:all .2s cubic-bezier(.4,0,.2,1)}
     .sc-btn:hover,.capm-btn:hover{transform:translateY(-1px)}
     .sc-btn.active,.capm-btn.active,.pre-btn.active{transform:scale(1.03)}
@@ -263,8 +275,8 @@
     </div>
   </div>
 
-  <!-- Recalc bar -->
-  <div class="recalc-bar" id="recalc-bar"></div>
+  <!-- Recalc overlay -->
+  <div class="recalc-overlay" id="recalc-overlay"><div class="recalc-pill"><div class="recalc-spinner"></div><span class="recalc-label">Recalculando…</span></div></div>
   <!-- Toast -->
   <div class="toast" id="toast"></div>
   <div id="hub-error" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a0000;border-top:2px solid #f55;padding:12px 16px;font-size:13px;color:#faa;z-index:9999"></div>
@@ -535,12 +547,15 @@
       el.classList.add('updating');
       setTimeout(function(){ el.textContent=txt; el.classList.remove('updating'); },130);
     }
-    var _hubRecBar=byId('recalc-bar');
+    var _hubOv=byId('recalc-overlay');
     function showRecalcBar(){
-      if(!_hubRecBar) return;
-      _hubRecBar.classList.add('active');
-      clearTimeout(_hubRecBar._t);
-      _hubRecBar._t=setTimeout(function(){_hubRecBar.classList.remove('active');},500);
+      if(!_hubOv) return;
+      _hubOv.classList.add('active');
+      clearTimeout(_hubOv._t);
+    }
+    function hideRecalcBar(){
+      if(!_hubOv) return;
+      _hubOv._t=setTimeout(function(){_hubOv.classList.remove('active');},300);
     }
 
     function paint(){
@@ -581,7 +596,8 @@
         ctlTktLbl.textContent = 'S/' + ticketValue.toLocaleString('es-PE');
         syncingControls = false;
         paintExec();
-      }catch(err){console.error('Hub paint() error:',err);showHubError('Error en paint(): '+err.message);}
+        hideRecalcBar();
+      }catch(err){console.error('Hub paint() error:',err);hideRecalcBar();showHubError('Error en paint(): '+err.message);}
     }
     function openModal(id){document.getElementById(id).classList.add('open')}
     function closeModal(id){document.getElementById(id).classList.remove('open')}

@@ -25,16 +25,34 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
 
-/* ── RECALC BAR ── */
-.recalc-bar{
-  position:fixed;top:58px;left:0;right:0;height:2px;z-index:200;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent);
-  background-size:200% 100%;
-  animation:recalcSlide .6s linear infinite;
-  opacity:0;transition:opacity .15s;pointer-events:none
+/* ── RECALC OVERLAY ── */
+.recalc-overlay{
+  position:fixed;inset:0;z-index:9000;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,12,20,.55);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:0;pointer-events:none;
+  transition:opacity .15s ease
 }
-.recalc-bar.active{opacity:1}
-@keyframes recalcSlide{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.recalc-overlay.active{opacity:1;pointer-events:auto}
+.recalc-pill{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.7rem 1.6rem;
+  background:var(--bg2);border:1px solid var(--brd);
+  border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.4)
+}
+.recalc-spinner{
+  width:20px;height:20px;
+  border:2.5px solid var(--brd);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:recalcSpin .6s linear infinite
+}
+.recalc-label{
+  font-size:.8rem;font-weight:600;color:var(--gold);
+  letter-spacing:.03em
+}
+@keyframes recalcSpin{to{transform:rotate(360deg)}}
 
 /* ── TOAST ── */
 .toast{
@@ -504,7 +522,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </style>
 </head>
 <body>
-<div class="recalc-bar" id="recalc-bar"></div>
+<div class="recalc-overlay" id="recalc-overlay"><div class="recalc-pill"><div class="recalc-spinner"></div><span class="recalc-label">Recalculando…</span></div></div>
 <div class="toast" id="toast"></div>
 
 <!-- HERO SPLASH -->
@@ -2033,8 +2051,8 @@ function showToast(msg, duration){
 }
 
 function recalc(){
-  var _recBar=document.getElementById('recalc-bar');
-  if(_recBar){_recBar.classList.add('active');clearTimeout(_recBar._tid);_recBar._tid=setTimeout(function(){_recBar.classList.remove('active')},400);}
+  var _ov=document.getElementById('recalc-overlay');
+  if(_ov){_ov.classList.add('active');clearTimeout(_ov._tid);}
   const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
   const fact=derived.fact;
   const factPact=derived.factPact;
@@ -2755,6 +2773,8 @@ function recalc(){
 
   renderCharts(fact,dist,rw,monthly);
   scheduleSharedSync();
+
+  if(_ov){_ov._tid=setTimeout(function(){_ov.classList.remove('active');},350);}
 }
 
 // ════════════════════════════════════════
