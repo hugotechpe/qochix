@@ -591,9 +591,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <button class="sc-btn o" onclick="setScenario('o')">🚀 Optimista ×1.4</button>
   </div>
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="showTab('dashboard', this)">Dashboard</button>
+    <button class="tab-btn" onclick="showTab('dashboard', this)">Dashboard</button>
     <button class="tab-btn" onclick="showTab('graficos', this)">Gráficos</button>
-    <button class="tab-btn" onclick="showTab('equipo', this)">Equipo</button>
+    <button class="tab-btn active" onclick="showTab('equipo', this)">Equipo</button>
     <button class="tab-btn" onclick="showTab('runway', this)">Runway</button>
     <button class="tab-btn" onclick="showTab('apuesta', this)">Apuesta</button>
     <button class="tab-btn" onclick="showTab('ceo', this)">Vista CEO</button>
@@ -683,7 +683,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <main class="main">
 
 <!-- ══ TAB: DASHBOARD ══ -->
-<div id="tab-dashboard" class="tab-content active">
+<div id="tab-dashboard" class="tab-content">
 
   <div id="kpi-wrapper">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
@@ -1046,7 +1046,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div><!-- /graficos -->
 
 <!-- ══ TAB: EQUIPO ══ -->
-<div id="tab-equipo" class="tab-content">
+<div id="tab-equipo" class="tab-content active">
 
   <div class="nota warn" style="margin-bottom:1rem">
     <strong>⚠️ Esto es lo que el modelo original NO incluía.</strong> El equipo operativo (fuera del equipo co-fundador) reduce directamente el distribuible. Sin esto, los números de 2027 están sobreestimados.

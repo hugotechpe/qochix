@@ -328,7 +328,6 @@
     function openSrc(src, btn){
       frame.src = src;
       tabs.forEach(b=>b.classList.toggle('active', b===btn));
-      if(src==='QOCHIX_Simulador.html') setSideOpen(true);
       history.replaceState(null,'','#'+encodeURIComponent(src));
     }
     tabs.forEach(btn=>btn.addEventListener('click',()=>openSrc(btn.dataset.src,btn)));
