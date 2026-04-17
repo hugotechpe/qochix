@@ -1381,7 +1381,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=30.0&t=1776988800"></script>
+<script src="qochix_system.js?v=32.0&t=1776988900"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -3201,14 +3201,14 @@ function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}
 
 function renderCharts(fact,dist,rw,monthly){
   let eqById={};
+  const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
   if(!fact){
-    const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
     fact=derived.fact;dist=fact.dist;rw=derived.runway;monthly=rw.monthly;
-    eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
-  } else {
-    const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
-    eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
   }
+  eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
+  const sc=derived.curves||fact.suedCurves||{};
+  const _li=AÑOS.length-1;
+  const _lastYear=AÑOS[_li];
   const labels=AÑOS.map(String);
 
   // Facturación stacked area
