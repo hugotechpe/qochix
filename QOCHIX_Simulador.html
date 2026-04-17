@@ -1381,7 +1381,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=26.0&t=1776643200"></script>
+<script src="qochix_system.js?v=27.0&t=1776729600"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -3584,13 +3584,26 @@ function paintEffortTable(fact, derived){
       bhtml+='<th style="font-size:.62rem">REV '+AÑOS[AÑOS.length-1]+'</th></tr></thead><tbody>';
       blines.forEach(function(line){
         var f=line.freq||1;
-        var avgLast=Math.round((line.vols[AÑOS.length-1]||0)/f);
+        var g=line.ppA||0;
+        var mult=g>0?g:1;
+        var totalLast=(line.vols[AÑOS.length-1]||0)*mult;
+        var avgLast=Math.round(totalLast/f);
+        var nRows=g>0?3:2;
         var unitLabel=f>1?(line.unit+'/evento'):(line.unit+'/mes');
+        if(g>0) unitLabel='activ/mes';
         // Row 1: Name + frequency + prices per year
         bhtml+='<tr class="line-row-price" style="border-top:2px solid rgba(255,255,255,.06)">';
-        bhtml+='<td rowspan="2" style="font-size:.72rem;color:var(--text2);white-space:nowrap;vertical-align:middle" title="'+line.unit+'">';
-        bhtml+='<strong>'+line.name+'</strong><br><span style="font-size:.55rem;color:var(--muted)">'+unitLabel+'</span></td>';
-        bhtml+='<td rowspan="2" style="vertical-align:middle"><select class="line-freq-sel" data-line="'+line.id+'" style="background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:2px 3px;font-size:.58rem;width:100%">';
+        bhtml+='<td rowspan="'+nRows+'" style="font-size:.72rem;color:var(--text2);white-space:nowrap;vertical-align:middle" title="'+line.unit+'">';
+        bhtml+='<strong>'+line.name+'</strong><br>';
+        if(g>0){
+          bhtml+='<span style="font-size:.55rem;color:var(--muted)">×</span> ';
+          bhtml+='<input type="number" class="line-ppa-input" value="'+g+'" data-line="'+line.id+'" min="1" style="width:28px;background:var(--bg2);border:1px solid var(--brd);border-radius:4px;color:var(--green);font-size:.6rem;text-align:center;padding:1px;font-family:var(--mono)">';
+          bhtml+='<span style="font-size:.55rem;color:var(--muted)"> pers/activ</span>';
+        }else{
+          bhtml+='<span style="font-size:.55rem;color:var(--muted)">'+unitLabel+'</span>';
+        }
+        bhtml+='</td>';
+        bhtml+='<td rowspan="'+nRows+'" style="vertical-align:middle"><select class="line-freq-sel" data-line="'+line.id+'" style="background:var(--bg2);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:2px 3px;font-size:.58rem;width:100%">';
         [1,2,3,4,6,12].forEach(function(fv){
           bhtml+='<option value="'+fv+'"'+(f===fv?' selected':'')+'>'+freqLabels[fv]+'</option>';
         });
@@ -3600,19 +3613,32 @@ function paintEffortTable(fact, derived){
           var pr=line.prices[yi]||0;
           bhtml+='<td><input type="number" class="line-input line-price" value="'+pr+'" data-line="'+line.id+'" data-field="price" data-yi="'+yi+'" min="0"'+(pr===0?' style="opacity:.4"':'')+'></td>';
         }
-        bhtml+='<td rowspan="2" style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap;vertical-align:middle">'+fmt(line.rev[AÑOS.length-1]);
-        if(f>1) bhtml+='<br><span style="font-size:.5rem;color:var(--muted)">'+avgLast+' '+line.unit+'/mes</span>';
-        bhtml+='</td></tr>';
-        // Row 2: volumes per year
+        var revCell='<td rowspan="'+nRows+'" style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap;vertical-align:middle">'+fmt(line.rev[AÑOS.length-1]);
+        if(f>1||g>0) revCell+='<br><span style="font-size:.5rem;color:var(--muted)">'+avgLast+' '+line.unit+'/mes</span>';
+        revCell+='</td>';
+        bhtml+=revCell+'</tr>';
+        // Row 2: volumes (activaciones if ppA, else direct qty)
         bhtml+='<tr class="line-row-vol">';
-        bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:var(--teal);letter-spacing:.03em;padding:1px 2px;border:none">QTY</td>';
+        var qtyLabel=g>0?'ACTIV':'QTY';
+        var qtyColor=g>0?'var(--green)':'var(--teal)';
+        bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:'+qtyColor+';letter-spacing:.03em;padding:1px 2px;border:none">'+qtyLabel+'</td>';
         for(var yi2=0;yi2<AÑOS.length;yi2++){
           var vRaw=line.vols[yi2]||0;
-          var vAvg=Math.round(vRaw/f);
-          var tooltip=f>1?(vRaw+' por evento ÷ '+f+' meses = '+vAvg+'/mes'):(vRaw+'/mes');
+          var totalPers=vRaw*mult;
+          var tooltip=g>0?(vRaw+' activ × '+g+' pers = '+totalPers+' pers'):(f>1?(vRaw+' por evento ÷ '+f+' meses = '+Math.round(vRaw/f)+'/mes'):(vRaw+'/mes'));
           bhtml+='<td title="'+tooltip+'"><input type="number" class="line-input line-vol" value="'+vRaw+'" data-line="'+line.id+'" data-field="vol" data-yi="'+yi2+'" min="0"'+(vRaw===0?' style="opacity:.4"':'')+'></td>';
         }
         bhtml+='</tr>';
+        // Row 3: total personas (only when ppA > 0)
+        if(g>0){
+          bhtml+='<tr class="line-row-total">';
+          bhtml+='<td class="line-sublabel" style="font-size:.5rem;color:var(--muted);letter-spacing:.03em;padding:0 2px;border:none">PERS</td>';
+          for(var yi3=0;yi3<AÑOS.length;yi3++){
+            var tp=Math.round((line.vols[yi3]||0)*g);
+            bhtml+='<td style="font-size:.55rem;text-align:center;color:var(--muted);padding:0 2px">'+tp+'</td>';
+          }
+          bhtml+='</tr>';
+        }
       });
       var brandTotal=blines.reduce(function(s,l){return s+l.rev[AÑOS.length-1]},0);
       bhtml+='<tr style="border-top:2px solid var(--brd)"><td style="font-weight:700;font-size:.78rem">Total/mes</td><td></td><td></td>';
@@ -3632,6 +3658,10 @@ function paintEffortTable(fact, derived){
     });
     bdEl.querySelectorAll('.line-freq-sel').forEach(function(selEl2){
       selEl2.addEventListener('change',function(){onFreqEdit(selEl2)});
+    });
+    bdEl.querySelectorAll('.line-ppa-input').forEach(function(inp){
+      inp.addEventListener('input',function(){onPpAEdit(inp)});
+      inp.addEventListener('change',function(){onPpAEdit(inp)});
     });
   }
 
@@ -3712,6 +3742,15 @@ function onFreqEdit(selEl){
   if(!P.lineOverrides) P.lineOverrides={};
   if(!P.lineOverrides[lineId]) P.lineOverrides[lineId]={};
   P.lineOverrides[lineId].freq=val;
+  clearTimeout(_lineEditTimer);
+  _lineEditTimer=setTimeout(function(){recalc();scheduleSharedSync();},150);
+}
+function onPpAEdit(inp){
+  var lineId=inp.getAttribute('data-line');
+  var val=Math.max(1,parseInt(inp.value,10)||1);
+  if(!P.lineOverrides) P.lineOverrides={};
+  if(!P.lineOverrides[lineId]) P.lineOverrides[lineId]={};
+  P.lineOverrides[lineId].ppA=val;
   clearTimeout(_lineEditTimer);
   _lineEditTimer=setTimeout(function(){recalc();scheduleSharedSync();},150);
 }
