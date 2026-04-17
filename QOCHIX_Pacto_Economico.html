@@ -1512,7 +1512,7 @@ footer {
     Sumarte como socio no es un currito ni un side project de fin de semana: es <strong>decidir construir un activo</strong> con dos personas más, dos marcas que ya respiran y un modelo que —si le metemos— puede cambiar el piso financiero de cada uno.
     No es magia: va <strong>tiempo</strong> (años de constancia), <strong>esfuerzo</strong> (horas que podrías no darle), <strong>dinero</strong> (ticket, capital, dejar de facturar otras cosas) y <strong>pasión</strong> (la que te hace volver cuando está difícil).
     Si eso resuena, los números de abajo son el premio posible —proyectados, exigentes, con riesgo real— no una promesa del cielo.
-    <span class="hp-line">Escenario pesimista ×0,7 (mismo motor que el simulador) · 2026–2033 · cambia de pestaña arriba o abre el simulador para neutro u optimista</span>
+    <span class="hp-line">Escenario pesimista ×0,7 (mismo motor que el simulador) · 2026–2035 · cambia de pestaña arriba o abre el simulador para neutro u optimista</span>
   </p>
   <div class="hero-stats" aria-label="Indicadores del modelo pesimista ×0,7">
     <div class="hs-cell">
@@ -1831,21 +1831,22 @@ footer {
 
   <div style="margin-top:3.5rem" class="two-col reveal">
     <div>
-      <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1.25rem;">S/5,000 — tu entrada al juego</h3>
+      <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:1.25rem;">Tu ticket — la entrada al juego</h3>
       <p style="color:var(--muted); font-size:0.92rem; line-height:1.8; margin-bottom:1.25rem;">
         No es mucho. Pero es suficiente para que duela si lo pierdes. <strong style="color:var(--text)">Esa es exactamente la idea.</strong> El ticket no es un pago — es una declaración: "me la juego con ustedes". Cuando todos tenemos algo en riesgo, nadie se va a la primera dificultad.
       </p>
       <p style="color:var(--muted); font-size:0.92rem; line-height:1.8; margin-bottom:1.5rem;">
-        Los S/15,000 totales tienen un destino claro: <strong style="color:var(--text)">S/4,800</strong> para ads de las 2 marcas en los primeros 3 meses + <strong style="color:var(--text)">S/10,200</strong> de colchón operativo.
+        Los S/30,000 totales tienen un destino claro: <strong style="color:var(--text)">pauta publicitaria</strong> para las 2 marcas en los primeros meses + <strong style="color:var(--text)">colchón operativo</strong> para imprevistos.
       </p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Persona</th><th>Monto</th><th>Plan</th><th>S/cuota</th></tr></thead>
-          <tbody>
+          <tbody id="pact-ticket-tbody">
             <tr><td>Hugo</td><td class="td-gold">S/5,000</td><td class="td-muted">1 pago abr</td><td class="td-muted">S/5,000</td></tr>
             <tr><td>Rossy</td><td class="td-gold">S/5,000</td><td class="td-muted">3 cuotas</td><td class="td-muted">S/1,667</td></tr>
             <tr><td>Vera</td><td class="td-gold">S/5,000</td><td class="td-muted">3 cuotas</td><td class="td-muted">S/1,667</td></tr>
-            <tr class="tr-total"><td>TOTAL</td><td>S/15,000</td><td>—</td><td>—</td></tr>
+            <tr><td>Mechita</td><td class="td-gold">S/15,000</td><td class="td-muted">3 cuotas</td><td class="td-muted">S/5,000</td></tr>
+            <tr class="tr-total"><td>TOTAL</td><td>S/30,000</td><td>—</td><td>—</td></tr>
           </tbody>
         </table>
       </div>
@@ -1858,7 +1859,7 @@ footer {
       </p>
       <div class="formula-box">
         <span class="comment">// Fórmula del sweat equity:</span><br>
-        Valor/hora × horas/mes × 93 meses (horizonte 2026–2033) × factor ajuste<br><br>
+        Valor/hora × horas/mes × 117 meses (horizonte 2026–2035) × factor ajuste<br><br>
         <span class="comment">// Factor ajuste:</span><br>
         × 0.6 si tienes trabajo corporativo (40% de tu tiempo)<br>
         × 0.7 si tienes otro trabajo (30% de tu tiempo)<br>
@@ -2001,12 +2002,22 @@ footer {
     <div class="callout" style="background:linear-gradient(135deg,rgba(82,201,122,0.08),rgba(82,201,122,0.02)); border-color:rgba(82,201,122,0.2)">
       <div class="callout-icon">✅</div>
       <h3>Good Leaver</h3>
-      <p>Salida por enfermedad, acuerdo mutuo o cambio de vida. <strong>Conserva las acciones ya ganadas</strong> al precio de valoración actual del mercado. Sale sin quedar mal.</p>
+      <p>Salida por enfermedad, acuerdo mutuo o cambio de vida. <strong>Conserva las acciones ya consolidadas</strong> y puede venderlas al precio de valoración actual del mercado (con derecho de preferencia para los demás socios). Sale limpio y sin conflicto.</p>
+      <ul style="font-size:0.82rem; color:var(--muted); margin-top:0.5rem; padding-left:1.2rem; line-height:1.6">
+        <li>Acciones no consolidadas regresan al ecosistema</li>
+        <li>Puede seguir cobrando equity como dueño pasivo</li>
+        <li>Ejemplo: si se va al mes 18 con 50% consolidado, mantiene la mitad de su %</li>
+      </ul>
     </div>
     <div class="callout" style="background:linear-gradient(135deg,rgba(232,107,95,0.08),rgba(232,107,95,0.02)); border-color:rgba(232,107,95,0.2)">
       <div class="callout-icon">⚠️</div>
       <h3>Bad Leaver</h3>
-      <p>Abandono, incumplimiento o conflicto sin acuerdo. <strong>Conserva acciones ganadas</strong> pero a precio nominal S/1 por acción. Pierde el valor real. Esto disuade salidas problemáticas.</p>
+      <p>Abandono sin aviso, incumplimiento grave o conflicto sin voluntad de resolver. <strong>Conserva acciones consolidadas</strong> pero solo al precio nominal (S/1 por acción). Pierde el valor real acumulado. Esto protege al equipo de salidas irresponsables.</p>
+      <ul style="font-size:0.82rem; color:var(--muted); margin-top:0.5rem; padding-left:1.2rem; line-height:1.6">
+        <li>Los demás socios pueden comprar esas acciones a S/1 c/u</li>
+        <li>Acciones no consolidadas también regresan al ecosistema</li>
+        <li>El ticket de entrada se devuelve según las reglas del cliff</li>
+      </ul>
     </div>
   </div>
 
@@ -2035,7 +2046,7 @@ footer {
       <h3>Sueldo: lo que ganas por trabajar</h3>
       <p>
         Es lo que Qochix te paga por <strong>tu trabajo operativo</strong>. Crece gradualmente según la capacidad del ecosistema. 
-        Hugo/Rossy/Vera: es <strong>ADICIONAL</strong> a tu trabajo corporativo — ingreso extra, no reemplazo. Hasta que el cruce haga obvia la salida.
+        Para los fundadores es <strong>ADICIONAL</strong> a tu ingreso actual — ingreso extra, no reemplazo. Hasta que el punto de cruce haga obvia la transición.
       </p>
     </div>
     <div class="callout" style="background:linear-gradient(135deg,rgba(212,168,83,0.08),rgba(212,168,83,0.02)); border-color:rgba(212,168,83,0.2)">
@@ -2206,11 +2217,11 @@ footer {
   <div class="reveal" style="margin-top:4rem">
     <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:0.5rem;">Tu inversión se paga sola — y después sigue pagando</h3>
     <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">
-      Cada sol que pusiste vuelve multiplicado (sueldos Qochix + equity acumulado en 8 años, escenario pesimista ×0,7). Los números coinciden con la lógica del simulador.
+      Cada sol que pusiste vuelve multiplicado (sueldos Qochix + equity acumulado en 10 años, escenario pesimista ×0,7). Los números coinciden con la lógica del simulador.
     </p>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Persona</th><th>% equity</th><th>Total invertido</th><th>Retorno 8 años</th><th>ROI</th><th>Punto equilibrio</th><th>Nota</th></tr></thead>
+        <thead id="pact-roi-thead"><tr><th>Persona</th><th>% equity</th><th>Total invertido</th><th>Retorno 10 años</th><th>ROI</th><th>Punto equilibrio</th><th>Nota</th></tr></thead>
         <tbody id="pact-roi-tbody">
           <tr class="tr-hugo"><td>Hugo</td><td class="td-gold">63%</td><td>S/710,179</td><td class="td-gold">S/1,625,400</td><td class="td-big">2.3x</td><td class="td-green">2031</td><td class="td-muted" style="font-family:var(--sans)">Más patrimonio S/1.9M-4.4M</td></tr>
           <tr><td>Rossy</td><td class="td-gold">17%</td><td>S/180,152</td><td class="td-gold">S/587,556</td><td class="td-gold">3.3x</td><td class="td-green">2030</td><td class="td-muted" style="font-family:var(--sans)">Muy buen ROI</td></tr>
@@ -2224,7 +2235,7 @@ footer {
   <div class="reveal" style="margin-top:4rem">
     <h3 style="font-family:var(--serif); font-size:1.4rem; margin-bottom:0.5rem;">Patrimonio Hugo: el valor de ser el dueño</h3>
     <p style="color:var(--muted); font-size:0.88rem; margin-bottom:1.5rem;">
-      Esto va más allá del sueldo y del equity mensual. Si Qochix se valorara como empresa — y con estos números va a tener valor real — ser dueño del 63% significa esto:
+      Esto va más allá del sueldo y del equity mensual. Si Qochix se valorara como empresa — y con estos números va a tener valor real — ser dueño mayoritario significa esto:
     </p>
     <div class="patrimonio-cards">
       <div class="pat-card" style="border-color:var(--faint)">
@@ -2271,7 +2282,7 @@ footer {
           <div class="tl-dot"></div>
           <div class="tl-date">Antes del cliff (antes de abr 2027)</div>
           <div class="tl-title" style="color:var(--coral)">No hay acciones. Solo tu ticket.</div>
-          <div class="tl-body">Recuperas tus S/5,000 y nada más. Duro, pero justo. Protege a los que se quedan dando todo.</div>
+          <div class="tl-body">Recuperas tu ticket de entrada (según el monto que pusiste) y nada más. Duro, pero justo. Protege a los que se quedan dando todo.</div>
         </div>
         <div class="tl-item">
           <div class="tl-dot"></div>
@@ -2289,20 +2300,27 @@ footer {
     </div>
 
     <div>
-      <h3 style="font-family:var(--serif); font-size:1.3rem; margin-bottom:1.25rem;">Agenda pendiente para el 2 de Abril</h3>
+      <h3 style="font-family:var(--serif); font-size:1.3rem; margin-bottom:1.25rem;">Próximos pasos tras la firma</h3>
       <div style="display:flex; flex-direction:column; gap:0.75rem">
+        <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
+          <span style="color:var(--green); font-size:1.1rem; flex-shrink:0">✓</span>
+          <div>
+            <div style="font-weight:600; font-size:0.88rem">Tickets de entrada confirmados</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Hugo S/5k · Rossy S/5k · Vera S/5k · Mechita S/15k</div>
+          </div>
+        </div>
         <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
           <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">①</span>
           <div>
-            <div style="font-weight:600; font-size:0.88rem">Tickets S/5,000 c/u</div>
-            <div style="font-size:0.8rem; color:var(--muted)">Plazos de pago confirmados por cada socio</div>
+            <div style="font-weight:600; font-size:0.88rem">Estructura legal Qochix</div>
+            <div style="font-size:0.8rem; color:var(--muted)">RUC, SAC — formalizar antes de julio 2026</div>
           </div>
         </div>
         <div style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; background:var(--bg2); border-radius:12px; border:1px solid var(--border)">
           <span style="color:var(--gold); font-size:1.1rem; flex-shrink:0">②</span>
           <div>
-            <div style="font-weight:600; font-size:0.88rem">Estructura legal Qochix</div>
-            <div style="font-size:0.8rem; color:var(--muted)">RUC, SAC — formalizar antes de julio 2026</div>
+            <div style="font-weight:600; font-size:0.88rem">Primer lanzamiento HugoTech</div>
+            <div style="font-size:0.8rem; color:var(--muted)">Primera cohorte B2B y sesiones abiertas — julio 2026</div>
           </div>
         </div>
       </div>
@@ -2543,13 +2561,13 @@ footer {
       <div class="term-block">
         <h4>Ticket de entrada</h4>
         <p class="term-meta">Señal de compromiso</p>
-        <p><strong>Qué es:</strong> aporte en efectivo (aquí <strong>S/5.000</strong> por persona, con planes de cuotas distintos). No compra acciones al instante: acompaña el acuerdo y cubre arranque (pauta + colchón).</p>
+        <p><strong>Qué es:</strong> aporte en efectivo (entre <strong>S/5k y S/15k</strong> según el socio, con planes de cuotas distintos). No compra acciones al instante: acompaña el acuerdo y cubre arranque (pauta + colchón).</p>
         <p><strong>Por qué existe:</strong> que “duela un poco” alinea incentivos; si todos tienen piel en el juego, es más difícil abandonar a la primera fricción.</p>
       </div>
       <div class="term-block">
         <h4>Sweat equity</h4>
         <p class="term-meta">Tiempo valorado en soles</p>
-        <p><strong>Qué es:</strong> el valor económico del tiempo que cada uno dedica a Qochix, calculado como valor/hora de mercado × horas/mes × <strong>93 meses (horizonte completo)</strong> × <strong>factor de ajuste</strong> (0,6 corporativo, 0,7 otro trabajo, 1,0 dedicación plena a Qochix en esas horas).</p>
+        <p><strong>Qué es:</strong> el valor económico del tiempo que cada uno dedica a Qochix, calculado como valor/hora de mercado × horas/mes × <strong>117 meses (horizonte 2026–2035)</strong> × <strong>factor de ajuste</strong> (0,6 corporativo, 0,7 otro trabajo, 1,0 dedicación plena a Qochix en esas horas).</p>
         <p><strong>Para qué sirve:</strong> que las madrugadas y fines de semana cuenten en el pool de inversión total, no solo el cash.</p>
       </div>
       <div class="term-block">
@@ -3253,6 +3271,9 @@ function showTermTab(panelId, btn) {
       });
       ag.innerHTML=ah;
     }
+    // ROI header dynamic
+    var rth=document.getElementById('pact-roi-thead');
+    if(rth){rth.innerHTML='<tr><th>Persona</th><th>% equity</th><th>Total invertido</th><th>Retorno '+_ny+'a</th><th>ROI</th><th>Punto equilibrio</th><th>Nota</th></tr>';}
     // ROI table
     var rtb=document.getElementById('pact-roi-tbody');
     if(rtb){
