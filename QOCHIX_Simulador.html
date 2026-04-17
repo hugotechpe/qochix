@@ -2170,58 +2170,121 @@ function recalc(){
     storyEl.innerHTML=s;
   }
 
-  // BLOCKS
+  // BLOCKS — Timeline por año
   const blocksEl=sel('dash-blocks');
   if(blocksEl){
-    const bkStyle='background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.85rem 1rem;';
-    const hdrStyle='font-weight:700;font-size:.76rem;margin-bottom:.4rem;';
-    const valStyle='font-family:var(--serif);font-size:1.6rem;font-weight:900;line-height:1.1;margin-bottom:.35rem;';
-    const txtStyle='font-size:.72rem;color:var(--muted);line-height:1.55;';
-    let b='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.75rem">';
+    const beYear=typeof be==='number'?be:9999;
 
-    // 1. Meta de venta
-    b+=`<div style="${bkStyle}border-left:3px solid var(--blue)">
-      <div style="${hdrStyle}color:var(--blue)">🎯 ¿Cuánto necesitamos vender?</div>
-      <div style="${valStyle}color:var(--blue)">${fmt(factMinBE27)}/mes</div>
-      <div style="${txtStyle}">Esta es la <strong>facturación bruta mínima en 2027</strong> (primer año completo) para cubrir toda la planilla. Hoy el modelo proyecta <strong>${fmt(fact.total[idx27])}/mes</strong> en 2027. ${gap27>0?'Faltan <strong style="color:var(--coral)">'+fmt(gap27)+'/mes</strong> — necesitan conseguir más clientes o subir precios.':'<strong style="color:var(--green)">✅ Ya lo cubren</strong> — pueden enfocarse en crecer.'} Eso es <strong>${fmt(Math.round(factMinBE27/30))}/día</strong> entre ambas marcas.</div>
+    function tlRow(label,arr,color,opts){
+      opts=opts||{};
+      const maxVal=Math.max(...arr.filter(v=>!isNaN(v)&&v!==0).map(Math.abs),1);
+      let h='<div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.15rem">';
+      h+='<div style="width:120px;flex-shrink:0;font-size:.62rem;font-weight:600;color:'+color+';text-transform:uppercase;letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+label+'">'+label+'</div>';
+      h+='<div style="display:flex;flex:1;gap:2px">';
+      for(let i=0;i<AÑOS.length;i++){
+        const v=arr[i]||0;
+        const pct=Math.min(100,Math.round(Math.abs(v)/maxVal*100));
+        const neg=v<0;
+        const barC=neg?'var(--coral)':color;
+        const isBeYear=opts.markBE&&AÑOS[i]===beYear;
+        const isFirstDist=opts.markDist&&dist[i]>0&&(i===0||dist[i-1]<=0);
+        let ring='';
+        if(isBeYear) ring='box-shadow:0 0 0 2px var(--green);';
+        if(isFirstDist) ring='box-shadow:0 0 0 2px var(--gold);';
+        h+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px">';
+        h+='<div style="font-size:.55rem;color:var(--muted);line-height:1">'+AÑOS[i]+'</div>';
+        h+='<div style="width:100%;height:22px;background:rgba(255,255,255,.03);border-radius:3px;position:relative;overflow:hidden;'+ring+'">';
+        h+='<div style="position:absolute;bottom:0;left:0;right:0;height:'+pct+'%;background:'+barC+';opacity:.55;border-radius:2px;transition:height .4s"></div>';
+        h+='</div>';
+        const dispV=v===0?'—':(neg?'-':'')+fmt(Math.abs(v));
+        h+='<div style="font-size:.56rem;font-weight:600;color:'+(neg?'var(--coral)':v>0?'var(--text2)':'var(--faint)')+';line-height:1;white-space:nowrap">'+dispV+'</div>';
+        h+='</div>';
+      }
+      h+='</div></div>';
+      return h;
+    }
+
+    const bkStyle='background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.85rem 1rem;margin-bottom:.75rem;overflow-x:auto;';
+    const hdrStyle='font-weight:700;font-size:.78rem;margin-bottom:.1rem;';
+    const subStyle='font-size:.68rem;color:var(--muted);margin-bottom:.6rem;line-height:1.45;';
+    const noteStyle='font-size:.68rem;color:var(--muted);line-height:1.5;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,.04);';
+    let b='';
+
+    // 1. Facturación — ¿Cuánto vendemos cada año?
+    const factMinByYear=AÑOS.map((_,i)=>Math.round(fact.sued_tot[i]/Math.max(0.01,P.netoPct)));
+    b+=`<div style="${bkStyle}">
+      <div style="${hdrStyle}color:var(--blue)">📈 Facturación — ¿Cuánto vendemos cada año?</div>
+      <div style="${subStyle}">El ingreso bruto mensual de Almaria + HugoTech. La línea punteada es el <strong>mínimo para cubrir planilla</strong>. Cuando la barra supera al mínimo, el modelo se sostiene.</div>
+      ${tlRow('Facturación',fact.total,'var(--blue)',{markBE:true})}
+      ${tlRow('Mínimo p/ planilla',factMinByYear,'var(--orange)')}
+      ${tlRow('Almaria',fact.alm,'var(--green)')}
+      ${tlRow('HugoTech',fact.ht,'var(--teal)')}
+      <div style="${noteStyle}">🎯 En <strong>2027</strong> necesitan facturar al menos <strong style="color:var(--blue)">${fmt(factMinBE27)}/mes</strong> (${fmt(Math.round(factMinBE27/30))}/día). ${gap27>0?'Faltan <strong style="color:var(--coral)">'+fmt(gap27)+'/mes</strong>.':'<strong style="color:var(--green)">✅ Cubierto.</strong>'}</div>
     </div>`;
 
-    // 2. Flujo del dinero
-    b+=`<div style="${bkStyle}border-left:3px solid var(--mint)">
-      <div style="${hdrStyle}color:var(--mint)">💵 ¿Cómo fluye el dinero?</div>
-      <div style="${valStyle}color:var(--mint)">${fmt(fact.neto[idx30])} neto</div>
-      <div style="${txtStyle}">En <strong>2030</strong>: facturan <strong>${fmt(fact.total[idx30])}/mes</strong> → el 65% queda como neto operativo (<strong>${fmt(fact.neto[idx30])}</strong>) → se paga planilla de <strong>${fmt(fact.sued_tot[idx30])}</strong> → colchón: <strong style="color:${fact.colchon[idx30]>=0?'var(--green)':'var(--coral)'}">${fmt(fact.colchon[idx30])}</strong>. ${fact.colchon[idx30]>=0?'Hay margen — el modelo respira.':'La planilla supera al neto — los sueldos se ajustan a lo que hay.'}</div>
+    // 2. Flujo — ¿Cómo se distribuye el dinero?
+    b+=`<div style="${bkStyle}">
+      <div style="${hdrStyle}color:var(--mint)">💵 Flujo — ¿Qué queda después de costos y sueldos?</div>
+      <div style="${subStyle}">Del bruto, el 65% queda como neto. De ahí se paga la planilla. Lo que sobra es el <strong>colchón</strong>. Si el colchón cubre la reserva, hay <strong>distribuible</strong> para repartir por equity.</div>
+      ${tlRow('Neto operativo',fact.neto,'var(--mint)')}
+      ${tlRow('Planilla total',fact.sued_tot,'var(--coral)')}
+      ${tlRow('Colchón',fact.colchon,'var(--sky)',{markBE:true})}
+      ${tlRow('💰 Distribuible',fact.dist,'var(--gold)',{markDist:true})}
+      <div style="${noteStyle}">El colchón se vuelve positivo en <strong style="color:var(--green)">${be}</strong> (break-even). ${dist[_li]>0?'En '+_lastYear+' quedan <strong style="color:var(--gold)">'+fmt(dist[_li])+'/mes</strong> para repartir.':'En este escenario no hay distribuible — todo se va a sueldos.'}</div>
     </div>`;
 
-    // 3. Recuperación inversión
-    b+=`<div style="${bkStyle}border-left:3px solid var(--gold)">
-      <div style="${hdrStyle}color:var(--gold)">🔄 ¿Cuándo recuperamos lo invertido?</div>
-      <div style="${valStyle}color:var(--gold)">×${teamRoiAvg.toFixed(1)} ROI</div>
-      <div style="${txtStyle}">El equipo ha invertido <strong>${fmt(pool)}</strong> (tickets <strong>${fmt(_tktTot)}</strong> + capital <strong>${fmt(_bcAll)}</strong> + sweat <strong>${fmt(_tswAll)}</strong>). En 8 años recibirán <strong style="color:var(--gold)">${fmt(teamRet7)}</strong> en sueldos + equity — eso es <strong>×${teamRoiAvg.toFixed(1)}</strong> lo invertido. El primer año con distribuible real es <strong>${derived.firstDistYear||'—'}</strong>.</div>
+    // 3. Ingreso por socio — evolución
+    const teamTotalsByYear=AÑOS.map((_,i)=>{
+      return derived.personCards.reduce((s,p)=>s+Number(p.yearlyTotals[i]||0),0);
+    });
+    const teamSueByYear=AÑOS.map((_,i)=>fact.sued_f[i]);
+    const teamEqByYear=AÑOS.map((_,i)=>{
+      return derived.personCards.reduce((s,p)=>s+Math.round(dist[i]*(eqById[p.id]||0)/100),0);
+    });
+    b+=`<div style="${bkStyle}">
+      <div style="${hdrStyle}color:var(--teal)">👤 Ingreso del equipo — ¿Cuánto reciben los socios?</div>
+      <div style="${subStyle}">Suma mensual de lo que reciben <strong>todos los ${PERSONS.length} socios</strong>: sueldo + equity distribuible. El equity empieza a aparecer cuando hay distribuible.</div>
+      ${tlRow('Sueldo socios',teamSueByYear,'var(--sky)')}
+      ${tlRow('Equity socios',teamEqByYear,'var(--gold)')}
+      ${tlRow('Total equipo',teamTotalsByYear,'var(--teal)')}
+      <div style="${noteStyle}">En <strong>${_lastYear}</strong>: <strong style="color:var(--teal)">${fmt(team2032)}/mes</strong> total (promedio <strong>${fmt(avgPerSocio)}/mes</strong> por socio). ${derived.liberatedBy2032===PERSONS.length?'<strong style="color:var(--green)">Todos liberados ✅</strong>':derived.liberatedBy2032+'/'+PERSONS.length+' liberados al 2032.'}</div>
     </div>`;
 
-    // 4. Ingreso por socio
-    b+=`<div style="${bkStyle}border-left:3px solid var(--teal)">
-      <div style="${hdrStyle}color:var(--teal)">👤 ¿Cuánto ganará cada socio en ${_lastYear}?</div>
-      <div style="${valStyle}color:var(--teal)">${fmt(team2032)}/mes</div>
-      <div style="${txtStyle}">Sumando sueldo + distribuible por equity, los ${PERSONS.length} socios ganan <strong>${fmt(team2032)}/mes</strong> en total. Promedio: <strong>${fmt(avgPerSocio)}/mes</strong> por socio. ${derived.liberatedBy2032===PERSONS.length?'<strong style="color:var(--green)">Todos superan su sueldo tope ✅</strong> — modelo sostenible.':'<strong>'+derived.liberatedBy2032+'/'+PERSONS.length+'</strong> socios superan su tope al 2032.'}</div>
+    // 4. Planilla — ¿Cuánto cuesta mantener el ecosistema?
+    b+=`<div style="${bkStyle}">
+      <div style="${hdrStyle}color:var(--coral)">👥 Planilla — ¿Cuánto cuesta mantener todo?</div>
+      <div style="${subStyle}">La planilla incluye sueldos de socios fundadores + equipo operativo (content creators, comerciales, etc). Este costo se paga del neto operativo.</div>
+      ${tlRow('Socios fundadores',fact.sued_f,'var(--sky)')}
+      ${tlRow('Equipo operativo',fact.hcost,'var(--orange)')}
+      ${tlRow('Planilla total',fact.sued_tot,'var(--coral)')}
+      <div style="${noteStyle}">La planilla crece de <strong>${fmt(fact.sued_tot[0])}</strong> en 2026 a <strong style="color:var(--coral)">${fmt(fact.sued_tot[_li])}</strong> en ${_lastYear}. El equipo operativo representa el <strong>${fact.sued_tot[_li]>0?Math.round(fact.hcost[_li]/fact.sued_tot[_li]*100):0}%</strong> de la planilla total.</div>
     </div>`;
 
-    // 5. Equipo operativo
-    b+=`<div style="${bkStyle}border-left:3px solid var(--coral)">
-      <div style="${hdrStyle}color:var(--coral)">👥 ¿Cuánto cuesta el equipo?</div>
-      <div style="${valStyle}color:var(--coral)">${fmt(fact.sued_tot[idx30])}/mes</div>
-      <div style="${txtStyle}">En <strong>2030</strong>, la planilla total es <strong>${fmt(fact.sued_tot[idx30])}/mes</strong> (socios: ${fmt(fact.sued_f[idx30])} + equipo operativo: ${fmt(fact.hcost[idx30])}). Para el ${_lastYear}, el equipo operativo solo cuesta <strong>${fmt(fact.hcost[_li])}/mes</strong>. ${fact.dist_no_op[idx30]>0&&fact.dist[idx30]===0?'<strong style="color:var(--coral)">Sin equipo operativo habría distribuible ('+fmt(fact.dist_no_op[idx30])+'/mes)</strong> — el equipo elimina el primer distribuible.':''}</div>
+    // 5. ROI y recuperación acumulada
+    const accumByYear=[];
+    let accum=0;
+    AÑOS.forEach((_,i)=>{
+      const yearIncome=teamTotalsByYear[i]*12;
+      accum+=yearIncome;
+      accumByYear.push(accum);
+    });
+    const roiByYear=accumByYear.map(v=>pool>0?v/pool:0);
+    b+=`<div style="${bkStyle}">
+      <div style="${hdrStyle}color:var(--gold)">🔄 Recuperación — ¿Cuándo devuelve lo invertido?</div>
+      <div style="${subStyle}">El equipo ha invertido <strong>${fmt(pool)}</strong>. Esta línea muestra cuánto han recuperado <strong>en total</strong> (sueldos + equity acumulados) año a año, y el multiplicador (ROI) sobre lo invertido.</div>
+      ${tlRow('Acumulado equipo',accumByYear,'var(--gold)')}
+      <div style="display:flex;align-items:center;gap:.3rem;margin-top:.25rem">
+        <div style="width:120px;flex-shrink:0;font-size:.62rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em">ROI</div>
+        <div style="display:flex;flex:1;gap:2px">
+          ${AÑOS.map((_,i)=>{
+            const r=roiByYear[i];
+            return '<div style="flex:1;text-align:center;font-size:.58rem;font-weight:700;color:'+(r>=1?'var(--green)':'var(--muted)')+'">×'+r.toFixed(1)+'</div>';
+          }).join('')}
+        </div>
+      </div>
+      <div style="${noteStyle}">Al ${_lastYear}: recuperación total de <strong style="color:var(--gold)">${fmt(teamRet7)}</strong> = <strong>×${teamRoiAvg.toFixed(1)}</strong> lo invertido. Primer distribuible en <strong>${derived.firstDistYear||'—'}</strong>.</div>
     </div>`;
 
-    // 6. Supervivencia
-    b+=`<div style="${bkStyle}border-left:3px solid ${rw.months>=12?'var(--green)':'var(--coral)'}">
-      <div style="${hdrStyle}color:${rw.months>=12?'var(--green)':'var(--coral)'}">🏦 ¿Cuánto tiempo podemos aguantar?</div>
-      <div style="${valStyle}color:${rw.months>=12?'var(--green)':'var(--coral)'}">${rw.months} meses</div>
-      <div style="${txtStyle}">Con la caja actual de <strong>${fmt(rw.capital)}</strong>, el ecosistema sobrevive <strong>${rw.months} meses</strong> sin generar ningún ingreso. ${rw.months>=18?'Margen saludable — hay tiempo para experimentar y crecer.':rw.months>=12?'Zona estable — monitorear cada mes y priorizar ingresos.':rw.months>=6?'<strong style="color:var(--coral)">Zona de precaución</strong> — cada mes sin ingresos duele. Prioridad: vender.':'<strong style="color:var(--coral)">Zona roja</strong> — necesitan ingresos ya o inyectar capital.'}</div>
-    </div>`;
-
-    b+='</div>';
     blocksEl.innerHTML=b;
   }
   sv('gra-growth-30',growth30.toFixed(0)+'%');
