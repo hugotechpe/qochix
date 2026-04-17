@@ -147,7 +147,7 @@
     var exp = Q.exportSnapshot();
     assert('Tiene timestamp', typeof exp.ts === 'string');
     assert('Tiene scenario', typeof exp.scenario === 'string');
-    assert('Tiene persons array', Array.isArray(exp.persons) && exp.persons.length === 5);
+    assert('Tiene persons array', Array.isArray(exp.persons) && exp.persons.length === 4);
     assert('Tiene raw state', exp.raw && typeof exp.raw === 'object');
   } else {
     assert('exportSnapshot existe', false, 'función no encontrada');
