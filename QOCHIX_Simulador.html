@@ -4118,8 +4118,6 @@ var _isEmbedded=false;
 try{ _isEmbedded = window.top!==window.self; }catch(e){ _isEmbedded=true; }
 if(_isEmbedded){
   try{ document.getElementById('hero').style.display='none'; }catch(e){}
-  var _appE=document.getElementById('app-root');
-  if(_appE) _appE.classList.add('sidebar-hidden');
 }
 QSYS.subscribe((nextState,meta={})=>{
   if(meta.via==='local') return;
