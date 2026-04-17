@@ -128,25 +128,24 @@
     .k .v{transition:opacity .25s,transform .25s}
     .k .v.updating{opacity:.5;transform:translateY(-2px)}
     .recalc-overlay{
-      position:fixed;inset:0;z-index:9000;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(10,12,20,.55);
-      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-      opacity:0;pointer-events:none;transition:opacity .15s ease
+      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.92);
+      z-index:9000;pointer-events:none;
+      opacity:0;transition:opacity .18s ease,transform .18s ease
     }
-    .recalc-overlay.active{opacity:1;pointer-events:auto}
+    .recalc-overlay.active{opacity:1;transform:translate(-50%,-50%) scale(1)}
     .recalc-pill{
-      display:flex;align-items:center;gap:.7rem;
-      padding:.7rem 1.6rem;
-      background:var(--bg2);border:1px solid var(--brd);
-      border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.4)
+      display:flex;align-items:center;gap:.65rem;
+      padding:.65rem 1.4rem;
+      background:rgba(18,22,36,.92);border:1px solid var(--brd);
+      border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.5);
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
     }
     .recalc-spinner{
-      width:20px;height:20px;border:2.5px solid var(--brd);
+      width:18px;height:18px;border:2.5px solid var(--brd);
       border-top-color:var(--gold);border-radius:50%;
-      animation:recalcSpin .6s linear infinite
+      animation:recalcSpin .55s linear infinite
     }
-    .recalc-label{font-size:.8rem;font-weight:600;color:var(--gold);letter-spacing:.03em}
+    .recalc-label{font-size:.78rem;font-weight:600;color:var(--gold);letter-spacing:.03em}
     @keyframes recalcSpin{to{transform:rotate(360deg)}}
     .sc-btn,.capm-btn,.pre-btn{transition:all .2s cubic-bezier(.4,0,.2,1)}
     .sc-btn:hover,.capm-btn:hover{transform:translateY(-1px)}
@@ -299,7 +298,7 @@
   })();
   </script>
   <script src="qochix_help.js?v=10"></script>
-  <script src="qochix_system.js?v=21.2&t=1776297600"></script>
+  <script src="qochix_system.js?v=22.0&t=1776470400"></script>
   <script>
     const tabs = document.querySelectorAll('#tabs .btn');
     const frame = document.getElementById('frame');
@@ -362,7 +361,7 @@
       showHubError('QochixSystem no cargó. Intentando recuperación automática…');
       try{
         const recovery = document.createElement('script');
-        recovery.src = 'qochix_system.js?v=21.2&t=1776297600&r=' + Date.now();
+        recovery.src = 'qochix_system.js?v=22.0&t=1776470400&r=' + Date.now();
         recovery.onload = function(){ location.reload(); };
         recovery.onerror = function(){ showHubError('No se pudo recuperar QochixSystem. Usa "Reset todo y recargar".'); };
         document.head.appendChild(recovery);
