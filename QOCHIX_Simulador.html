@@ -2315,7 +2315,7 @@ function recalc(){
     const netPct=Math.round(P.netoPct*100);
     const reservaNum=Number(P.reserva||0);
 
-    r+='<div style="display:flex;overflow-x:auto;gap:.65rem;padding:.25rem 0">';
+    r+='<div style="display:flex;overflow-x:auto;gap:.85rem;padding:.35rem 0">';
     for(let yi=1;yi<AÑOS.length;yi++){
       const year=AÑOS[yi];
       const factT=fact.total[yi];
@@ -2331,41 +2331,37 @@ function recalc(){
       const hasDist=distY>0;
 
       const borderC=hasDist?'var(--gold)':colPos?'var(--green)':'var(--coral)';
-      const tagText=hasDist?'💰 Hay distribuible':colPos?'✅ Break-even':colchonY>=-2000?'⚡ Casi':'🔴 En rojo';
+      const tagText=hasDist?'💰 Distribuible':colPos?'✅ Break-even':colchonY>=-2000?'⚡ Casi':'🔴 En rojo';
       const tagC=hasDist?'var(--gold)':colPos?'var(--green)':'var(--coral)';
       const perDay=Math.round(factT/30);
 
-      r+=`<div style="min-width:210px;flex-shrink:0;background:var(--bg2);border:1px solid var(--brd);border-top:3px solid ${borderC};border-radius:14px;padding:.75rem .85rem;position:relative">`;
+      r+=`<div style="min-width:280px;flex-shrink:0;background:var(--bg2);border:1px solid var(--brd);border-top:3px solid ${borderC};border-radius:14px;padding:1rem 1.1rem;position:relative">`;
 
-      // Year header
-      r+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.55rem">`;
-      r+=`<div style="font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--text)">${year}</div>`;
-      r+=`<div style="font-size:.56rem;font-weight:700;color:${tagC};background:${tagC}15;padding:.2rem .5rem;border-radius:20px;text-transform:uppercase;letter-spacing:.04em">${tagText}</div>`;
+      r+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.65rem">`;
+      r+=`<div style="font-family:var(--serif);font-size:1.7rem;font-weight:900;color:var(--text)">${year}</div>`;
+      r+=`<div style="font-size:.7rem;font-weight:700;color:${tagC};background:${tagC}15;padding:.25rem .6rem;border-radius:20px;text-transform:uppercase;letter-spacing:.04em">${tagText}</div>`;
       r+=`</div>`;
 
-      // Meta de facturación
-      r+=`<div style="margin-bottom:.55rem">`;
-      r+=`<div style="font-size:.56rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.2rem">Necesitan facturar</div>`;
-      r+=`<div style="font-family:var(--serif);font-size:1.15rem;font-weight:800;color:var(--blue);line-height:1">${fmt(factT)}<span style="font-size:.65rem;font-weight:500;color:var(--muted)">/mes</span></div>`;
-      r+=`<div style="font-size:.6rem;color:var(--muted);margin-top:.15rem">${fmt(perDay)}/día entre ambas marcas</div>`;
+      r+=`<div style="margin-bottom:.65rem">`;
+      r+=`<div style="font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem">Necesitan facturar</div>`;
+      r+=`<div style="font-family:var(--serif);font-size:1.4rem;font-weight:800;color:var(--blue);line-height:1">${fmt(factT)}<span style="font-size:.8rem;font-weight:500;color:var(--muted)">/mes</span></div>`;
+      r+=`<div style="font-size:.72rem;color:var(--muted);margin-top:.2rem">${fmt(perDay)}/día entre ambas marcas</div>`;
       r+=`</div>`;
 
-      // Desglose por marca
-      r+=`<div style="display:flex;gap:.35rem;margin-bottom:.5rem">`;
-      r+=`<div style="flex:1;background:rgba(82,201,122,.06);border:1px solid rgba(82,201,122,.12);border-radius:8px;padding:.35rem .4rem">`;
-      r+=`<div style="font-size:.5rem;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.05em">🌿 Almaria</div>`;
-      r+=`<div style="font-size:.82rem;font-weight:800;color:var(--green);line-height:1.1">${fmt(factAlm)}</div>`;
-      r+=`<div style="font-size:.5rem;color:var(--muted)">${almPct}% del total</div>`;
+      r+=`<div style="display:flex;gap:.45rem;margin-bottom:.6rem">`;
+      r+=`<div style="flex:1;background:rgba(82,201,122,.06);border:1px solid rgba(82,201,122,.12);border-radius:10px;padding:.5rem .55rem">`;
+      r+=`<div style="font-size:.65rem;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.05em">🌿 Almaria</div>`;
+      r+=`<div style="font-size:1.05rem;font-weight:800;color:var(--green);line-height:1.15">${fmt(factAlm)}</div>`;
+      r+=`<div style="font-size:.65rem;color:var(--muted)">${almPct}% del total</div>`;
       r+=`</div>`;
-      r+=`<div style="flex:1;background:rgba(62,207,207,.06);border:1px solid rgba(62,207,207,.12);border-radius:8px;padding:.35rem .4rem">`;
-      r+=`<div style="font-size:.5rem;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.05em">💻 HugoTech</div>`;
-      r+=`<div style="font-size:.82rem;font-weight:800;color:var(--teal);line-height:1.1">${fmt(factHt)}</div>`;
-      r+=`<div style="font-size:.5rem;color:var(--muted)">${100-almPct}% del total</div>`;
+      r+=`<div style="flex:1;background:rgba(62,207,207,.06);border:1px solid rgba(62,207,207,.12);border-radius:10px;padding:.5rem .55rem">`;
+      r+=`<div style="font-size:.65rem;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.05em">💻 HugoTech</div>`;
+      r+=`<div style="font-size:1.05rem;font-weight:800;color:var(--teal);line-height:1.15">${fmt(factHt)}</div>`;
+      r+=`<div style="font-size:.65rem;color:var(--muted)">${100-almPct}% del total</div>`;
       r+=`</div>`;
       r+=`</div>`;
 
-      // Flujo visual (embudo)
-      r+=`<div style="font-size:.56rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem">Así se distribuye</div>`;
+      r+=`<div style="font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem">Así se distribuye</div>`;
       const flowItems=[
         {label:'Neto ('+netPct+'%)',val:netoY,color:'var(--mint)'},
         {label:'Planilla socios',val:suedFY,color:'var(--sky)',neg:true},
@@ -2375,30 +2371,29 @@ function recalc(){
       flowItems.forEach(function(item){
         const barMax=netoY||1;
         const barW=Math.min(100,Math.max(5,Math.round(Math.abs(item.val)/barMax*100)));
-        r+=`<div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.2rem">`;
-        r+=`<div style="width:85px;flex-shrink:0;font-size:.55rem;color:${item.color};font-weight:600;white-space:nowrap;text-align:right">${item.neg?'−':''} ${fmt(Math.abs(item.val))}</div>`;
-        r+=`<div style="flex:1;height:8px;background:rgba(255,255,255,.03);border-radius:4px;overflow:hidden">`;
-        r+=`<div style="width:${barW}%;height:100%;background:${item.color};opacity:.5;border-radius:4px"></div>`;
+        r+=`<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem">`;
+        r+=`<div style="width:95px;flex-shrink:0;font-size:.72rem;color:${item.color};font-weight:700;white-space:nowrap;text-align:right">${item.neg?'−':''} ${fmt(Math.abs(item.val))}</div>`;
+        r+=`<div style="flex:1;height:10px;background:rgba(255,255,255,.04);border-radius:5px;overflow:hidden">`;
+        r+=`<div style="width:${barW}%;height:100%;background:${item.color};opacity:.55;border-radius:5px"></div>`;
         r+=`</div>`;
-        r+=`<div style="font-size:.48rem;color:var(--muted);flex-shrink:0;width:70px">${item.label}</div>`;
+        r+=`<div style="font-size:.65rem;color:var(--muted);flex-shrink:0;width:85px">${item.label}</div>`;
         r+=`</div>`;
       });
 
-      // Distribuible
       if(hasDist){
-        r+=`<div style="margin-top:.4rem;padding:.35rem .45rem;background:rgba(212,168,83,.06);border:1px solid rgba(212,168,83,.15);border-radius:8px;text-align:center">`;
-        r+=`<div style="font-size:.5rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.06em">💰 Distribuible</div>`;
-        r+=`<div style="font-family:var(--serif);font-size:.95rem;font-weight:800;color:var(--gold);line-height:1.1">${fmt(distY)}/mes</div>`;
-        r+=`<div style="font-size:.5rem;color:var(--muted)">se reparte por equity entre socios</div>`;
+        r+=`<div style="margin-top:.5rem;padding:.45rem .55rem;background:rgba(212,168,83,.06);border:1px solid rgba(212,168,83,.15);border-radius:10px;text-align:center">`;
+        r+=`<div style="font-size:.65rem;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.06em">💰 Distribuible</div>`;
+        r+=`<div style="font-family:var(--serif);font-size:1.2rem;font-weight:800;color:var(--gold);line-height:1.1">${fmt(distY)}/mes</div>`;
+        r+=`<div style="font-size:.65rem;color:var(--muted)">se reparte por equity entre socios</div>`;
         r+=`</div>`;
       }else if(colPos){
-        r+=`<div style="margin-top:.4rem;padding:.25rem .4rem;background:rgba(82,201,122,.04);border:1px solid rgba(82,201,122,.1);border-radius:8px;text-align:center">`;
-        r+=`<div style="font-size:.52rem;color:var(--green)">Colchón positivo pero no cubre la reserva (${fmt(reservaNum)}). Sin distribuible aún.</div>`;
+        r+=`<div style="margin-top:.5rem;padding:.35rem .5rem;background:rgba(82,201,122,.04);border:1px solid rgba(82,201,122,.1);border-radius:10px;text-align:center">`;
+        r+=`<div style="font-size:.68rem;color:var(--green)">Colchón positivo pero no cubre la reserva (${fmt(reservaNum)}). Sin distribuible aún.</div>`;
         r+=`</div>`;
       }else{
         const faltante=Math.abs(colchonY);
-        r+=`<div style="margin-top:.4rem;padding:.25rem .4rem;background:rgba(232,107,95,.04);border:1px solid rgba(232,107,95,.1);border-radius:8px;text-align:center">`;
-        r+=`<div style="font-size:.52rem;color:var(--coral)">Faltan <strong>${fmt(faltante)}/mes</strong> para cubrir planilla. Los sueldos se ajustan al neto disponible.</div>`;
+        r+=`<div style="margin-top:.5rem;padding:.35rem .5rem;background:rgba(232,107,95,.04);border:1px solid rgba(232,107,95,.1);border-radius:10px;text-align:center">`;
+        r+=`<div style="font-size:.68rem;color:var(--coral)">Faltan <strong>${fmt(faltante)}/mes</strong> para cubrir planilla. Los sueldos se ajustan al neto disponible.</div>`;
         r+=`</div>`;
       }
 
@@ -2406,10 +2401,9 @@ function recalc(){
     }
     r+='</div>';
 
-    // Legend
-    r+='<div style="display:flex;gap:1rem;justify-content:center;margin-top:.5rem;flex-wrap:wrap">';
+    r+='<div style="display:flex;gap:1.2rem;justify-content:center;margin-top:.6rem;flex-wrap:wrap">';
     [{c:'var(--coral)',t:'En rojo — planilla > neto'},{c:'var(--green)',t:'Break-even — colchón ≥ 0'},{c:'var(--gold)',t:'Hay distribuible — sobra para equity'}].forEach(function(l){
-      r+='<div style="display:flex;align-items:center;gap:.3rem;font-size:.58rem;color:var(--muted)"><div style="width:10px;height:3px;background:'+l.c+';border-radius:2px"></div>'+l.t+'</div>';
+      r+='<div style="display:flex;align-items:center;gap:.35rem;font-size:.72rem;color:var(--muted)"><div style="width:12px;height:3px;background:'+l.c+';border-radius:2px"></div>'+l.t+'</div>';
     });
     r+='</div>';
 
