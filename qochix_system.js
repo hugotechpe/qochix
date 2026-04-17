@@ -1,8 +1,8 @@
 (() => {
   const STORAGE_KEY = 'qochix_system_state_v1';
   const CHANNEL_NAME = 'qochix_system_channel_v1';
-  const AÑOS = [2026, 2027, 2028, 2029, 2030, 2031, 2032];
-  const MESES_POR_AÑO = [9, 12, 12, 12, 12, 12, 12];
+  const AÑOS = [2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033];
+  const MESES_POR_AÑO = [9, 12, 12, 12, 12, 12, 12, 12];
   const SC = { p: 0.7, n: 1.0, o: 1.4 };
   const SC_LABELS = {
     p: 'Pesimista ×0.7',
@@ -10,27 +10,27 @@
     o: 'Optimista ×1.4',
   };
   const FACT0 = {
-    almaria: [1200, 8500, 22000, 40000, 98100, 141900, 183400],
-    ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133],
+    almaria: [1200, 8500, 22000, 40000, 98100, 141900, 183400, 228000],
+    ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133, 108000],
   };
   const SUED_F_BASE = {
-    //         2026  2027   2028   2029   2030   2031   2032
-    hugo:   [    0,    0,  4000, 10000, 20000, 27500, 35000],
-    rossy:  [    0, 1000,  2500,  7500,  9000, 11500, 14000],
-    vera:   [    0,    0,  2000,  7500,  8500, 10500, 12500],
-    mechita:[    0,    0,  7000, 10000, 15000, 19500, 24000],
+    //         2026  2027   2028   2029   2030   2031   2032   2033
+    hugo:   [    0,    0,  4000, 10000, 20000, 27500, 35000, 42000],
+    rossy:  [    0, 1000,  2500,  7500,  9000, 11500, 14000, 17000],
+    vera:   [    0,    0,  2000,  7500,  8500, 10500, 12500, 15000],
+    mechita:[    0,    0,  7000, 10000, 15000, 19500, 24000, 29000],
   };
   const SERVICE_LINES = [
     // ── Almaria (3) — todos los precios suben 2028 ──
-    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,35,35,35,35,35],vols:[16,80,160,280,500,700,900]},
-    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,75,75,75,75,75],vols:[8,60,160,250,700,1000,1200]},
-    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,75,75,75,75,75],vols:[5,60,150,180,450,680,950]},
+    {id:'al_kits',brand:'almaria',name:'B2C — Kits de plantas',unit:'kit/mes',prices:[25,25,35,35,35,35,35,35],vols:[16,80,160,280,500,700,900,1100]},
+    {id:'al_corp',brand:'almaria',name:'B2B — Ceremonias corporativas',unit:'persona/mes',prices:[55,55,75,75,75,75,75,75],vols:[8,60,160,250,700,1000,1200,1400]},
+    {id:'al_rituales',brand:'almaria',name:'Rituales (bodas, bautizos…)',unit:'persona/mes',prices:[55,55,75,75,75,75,75,75],vols:[5,60,150,180,450,680,950,1150]},
     // ── HugoTech (5) — precios suben 2028 ──
-    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,200,200,200,200,200],vols:[15,20,28,35,48,55,65]},
-    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,2000,2000,2000,2000,2000],vols:[1,3,3,4,7,8,10]},
-    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona/mes',prices:[100,100,400,400,400,400,400],vols:[8,24,14,18,24,32,40]},
-    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[0,400,1500,1500,1500,1500,1500],vols:[0,5,3,5,7,10,12]},
-    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6]},
+    {id:'ht_1a1',brand:'ht',name:'Sesiones 1:1 coaching',unit:'hr/mes',prices:[150,150,200,200,200,200,200,200],vols:[15,20,28,35,48,55,65,75]},
+    {id:'ht_talleres',brand:'ht',name:'Talleres B2B equipos',unit:'taller/mes',prices:[1250,1250,2000,2000,2000,2000,2000,2000],vols:[1,3,3,4,7,8,10,12]},
+    {id:'ht_fullday',brand:'ht',name:'Full Day RECOprogramando',unit:'persona/mes',prices:[100,100,400,400,400,400,400,400],vols:[8,24,14,18,24,32,40,48]},
+    {id:'ht_campamento',brand:'ht',name:'Campamento inmersivo',unit:'persona/mes',prices:[0,400,1500,1500,1500,1500,1500,1500],vols:[0,5,3,5,7,10,12,15]},
+    {id:'ht_programa',brand:'ht',name:'Programa transformación 3m',unit:'persona/mes',prices:[0,1000,1000,3500,3500,3500,3500,3500],vols:[0,0,2,2,3,4,6,8]},
   ];
   const BRAND_IDS = ['almaria', 'ht'];
   const BRAND_LABELS = { almaria: 'Almaria', ht: 'HugoTech', ambas: 'Ambas' };
@@ -93,6 +93,7 @@
       sue29: { hugo: 10000, rossy: 7500, vera: 7500, mechita: 10000 },
       sue30: { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 },
       sue32: { hugo: 35000, rossy: 14000, vera: 12500, mechita: 24000 },
+      sue33: { hugo: 42000, rossy: 17000, vera: 15000, mechita: 29000 },
       lineOverrides: {},
       brandOps: {},
       founderBrand: {
@@ -105,7 +106,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 18,
+      schemaVersion: 19,
     },
   };
 
@@ -306,6 +307,10 @@
         });
       }
     }},
+    { from: 18, to: 19, run(s) {
+      if (!s.P) s.P = {};
+      if (!s.P.sue33) s.P.sue33 = { hugo: 42000, rossy: 17000, vera: 15000, mechita: 29000 };
+    }},
   ];
 
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -346,6 +351,7 @@
         sue29: { ...next.P.sue29, ...(raw.P.sue29 || {}) },
         sue30: { ...next.P.sue30, ...(raw.P.sue30 || {}) },
         sue32: { ...next.P.sue32, ...(raw.P.sue32 || {}) },
+        sue33: { ...next.P.sue33, ...(raw.P.sue33 || {}) },
         lineOverrides: raw.P.lineOverrides || next.P.lineOverrides || {},
         brandOps: { ...next.P.brandOps, ...(raw.P.brandOps || {}) },
         founderBrand: { ...next.P.founderBrand, ...(raw.P.founderBrand || {}) },
@@ -499,13 +505,14 @@
     return out;
   }
 
-  function buildSuedCurve(id, target28, target29, target30, target32) {
+  function buildSuedCurve(id, target28, target29, target30, target32, target33) {
     const base = SUED_F_BASE[id];
     const parse = (v, fallback) => v != null && !Number.isNaN(+v) ? Math.max(0, Math.round(+v)) : (fallback || 0);
     const t28 = parse(target28, base[2]);
     const t29 = parse(target29, base[3]);
     const t30 = parse(target30, base[4]);
     const t32 = parse(target32, base[6]);
+    const t33 = parse(target33, base[7]);
     const b0 = base[0] || 0;
     const arr = [];
     arr[0] = b0;
@@ -515,6 +522,7 @@
     arr[4] = t30;
     arr[5] = Math.round(t30 + (t32 - t30) * 0.5);
     arr[6] = t32;
+    arr[7] = t33;
     return arr;
   }
 
@@ -523,7 +531,8 @@
       Number((state.P.sue28 || {})[person.id]) === SUED_F_BASE[person.id][2] &&
       Number((state.P.sue29 || {})[person.id]) === SUED_F_BASE[person.id][3] &&
       Number(state.P.sue30[person.id]) === SUED_F_BASE[person.id][4] &&
-      Number(state.P.sue32[person.id]) === SUED_F_BASE[person.id][6]
+      Number(state.P.sue32[person.id]) === SUED_F_BASE[person.id][6] &&
+      Number((state.P.sue33 || {})[person.id]) === SUED_F_BASE[person.id][7]
     ));
   }
 
@@ -531,7 +540,7 @@
     if (metasMatchPactAnchors(state)) return founderCurvesPact();
     const out = {};
     state.persons.forEach((person) => {
-      out[person.id] = buildSuedCurve(person.id, (state.P.sue28 || {})[person.id], (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id]);
+      out[person.id] = buildSuedCurve(person.id, (state.P.sue28 || {})[person.id], (state.P.sue29 || {})[person.id], state.P.sue30[person.id], state.P.sue32[person.id], (state.P.sue33 || {})[person.id]);
     });
     return out;
   }
@@ -780,7 +789,9 @@
     const brandFin = calcBrandFinancials(state, lr, realCurves);
     const runway = calcRunway(state, realCurves, lr);
     const breakEven = calcBreakEven(fact);
-    const firstDistYear = AÑOS.find((year, index) => fact.dist[index] > 0) || '2033+';
+    const lastYi = AÑOS.length - 1;
+    const beyondLabel = (AÑOS[lastYi] + 1) + '+';
+    const firstDistYear = AÑOS.find((year, index) => fact.dist[index] > 0) || beyondLabel;
     const effectiveEquity = calcEffectiveEquity(state, realCurves);
     const personCards = state.persons.map((person) => {
       const pCurve = realCurves[person.id] || [];
@@ -791,9 +802,9 @@
         return sue + eq;
       });
       const crossIndex = yearlyTotals.findIndex((value) => value >= Number(person.sueldo || 0));
-      const eq2032 = Math.round(fact.dist[6] * Number(effectiveEquity[person.id] || 0) / 100);
-      const sue2032 = Number(state.P.sue32[person.id] || 0);
-      const total2032 = sue2032 + eq2032;
+      const eqLast = Math.round(fact.dist[lastYi] * Number(effectiveEquity[person.id] || 0) / 100);
+      const sueLast = Number(pCurve[lastYi] || 0);
+      const totalLast = sueLast + eqLast;
       const brandCap = totalBrandCapital(person);
       const brandCash = totalBrandCash(person);
       const investment = getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash + swData.sw;
@@ -809,24 +820,24 @@
         brandCapitalTotal: brandCap,
         cashContribution: getTkt(state, person.id) + Number(person.capital || 0) + brandCap + brandCash,
         sue2030: Number(state.P.sue30[person.id] || 0),
-        sue2032,
-        eq2032,
-        total2032,
+        sueLast,
+        eqLast,
+        totalLast,
         investment,
         yearlyTotals,
-        liberationYear: crossIndex >= 0 ? AÑOS[crossIndex] : '2033+',
+        liberationYear: crossIndex >= 0 ? AÑOS[crossIndex] : beyondLabel,
       };
     });
     const eqSum = personCards.reduce((sum, person) => sum + Number(person.equity || 0), 0);
     const baseEqSum = state.persons.reduce((sum, person) => sum + Number(person.equity || 0), 0);
-    const total2032 = personCards.reduce((sum, person) => sum + person.total2032, 0);
-    const liberatedBy2030 = personCards.filter((person) => person.liberationYear !== '2033+' && person.liberationYear <= 2030).length;
-    const liberatedBy2032 = personCards.filter((person) => person.liberationYear !== '2033+' && person.liberationYear <= 2032).length;
+    const totalLast = personCards.reduce((sum, person) => sum + person.totalLast, 0);
+    const liberatedBy2030 = personCards.filter((person) => person.liberationYear !== beyondLabel && person.liberationYear <= 2030).length;
+    const liberatedBy2032 = personCards.filter((person) => person.liberationYear !== beyondLabel && person.liberationYear <= 2032).length;
     const initiallyUnderPaid = personCards.filter((p) => p.yearlyTotals[0] < Number(state.persons.find(x => x.id === p.id).sueldo || 0));
     const firstLiberationYear = (initiallyUnderPaid.length > 0
-      ? initiallyUnderPaid.filter((p) => p.liberationYear !== '2033+').map((p) => p.liberationYear).sort((a, b) => a - b)[0]
-      : personCards.filter((p) => p.liberationYear !== '2033+').map((p) => p.liberationYear).sort((a, b) => a - b)[0]
-    ) || '2033+';
+      ? initiallyUnderPaid.filter((p) => p.liberationYear !== beyondLabel).map((p) => p.liberationYear).sort((a, b) => a - b)[0]
+      : personCards.filter((p) => p.liberationYear !== beyondLabel).map((p) => p.liberationYear).sort((a, b) => a - b)[0]
+    ) || beyondLabel;
     const rossyCard = personCards.find((person) => person.id === 'rossy');
     return {
       state,
@@ -841,18 +852,20 @@
       runway,
       breakEven,
       firstDistYear,
-      rossyCrossYear: rossyCard ? rossyCard.liberationYear : '2033+',
+      rossyCrossYear: rossyCard ? rossyCard.liberationYear : beyondLabel,
       firstLiberationYear,
       liberatedBy2030,
       liberatedBy2032,
       dist2030: fact.dist[4],
       dist2032: fact.dist[6],
+      distLast: fact.dist[lastYi],
       totalFact2032: fact.total[6],
+      totalFactLast: fact.total[lastYi],
       personCards,
       effectiveEquity,
       eqSum,
       baseEqSum,
-      total2032,
+      totalLast,
       updatedAtLabel: fmtDateTime(state.meta.updatedAt),
       scenarioLabel: SC_LABELS[state.P.sc] || SC_LABELS.p,
       fmtCurrency,
@@ -910,11 +923,12 @@
       scenario: d.scenarioLabel,
       pool: d.pool,
       dist2032: d.dist2032,
+      distLast: d.distLast,
       breakEven: d.breakEven,
       runwayMonths: d.runway.months,
       liberatedBy2032: d.liberatedBy2032,
       persons: d.personCards.map((p) => ({
-        name: p.name, equity: +p.equity.toFixed(2), total2032: p.total2032,
+        name: p.name, equity: +p.equity.toFixed(2), totalLast: p.totalLast, total2032: p.totalLast,
         liberationYear: p.liberationYear, investment: p.investment,
       })),
       raw: state,

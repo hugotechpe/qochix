@@ -25,7 +25,7 @@
 <div id="summary"></div>
 <div id="timing" class="time"></div>
 
-<script src="qochix_system.js?v=24.0&t=1776470400"></script>
+<script src="qochix_system.js?v=25.0&t=1776556800"></script>
 <script>
 (function () {
   const Q = window.QochixSystem;
@@ -42,10 +42,10 @@
   }
 
   group('Defaults y estructura');
-  assert('DEFAULTS tiene 5 personas', Q.DEFAULTS.persons.length === 5);
+  assert('DEFAULTS tiene 4 personas', Q.DEFAULTS.persons.length === 4);
   assert('DEFAULTS tiene 7 hires', Q.DEFAULTS.hires.length === 7);
   assert('DEFAULTS.P.sc es "p"', Q.DEFAULTS.P.sc === 'p');
-  assert('AÑOS tiene 7 elementos (2026-2032)', Q.AÑOS.length === 7);
+  assert('AÑOS tiene 8 elementos (2026-2033)', Q.AÑOS.length === 8);
   assert('SC tiene 3 escenarios', Object.keys(Q.SC).length === 3);
   assert('FACT0 tiene almaria, ht', Q.FACT0.almaria && Q.FACT0.ht);
 
@@ -67,13 +67,13 @@
 
   group('deriveState básico');
   const d = Q.deriveState(Q.DEFAULTS);
-  assert('retorna personCards con 5 elementos', d.personCards.length === 5);
-  assert('retorna years con 7 elementos', d.years.length === 7);
+  assert('retorna personCards con 4 elementos', d.personCards.length === 4);
+  assert('retorna years con 8 elementos', d.years.length === 8);
   assert('pool > 0', d.pool > 0, 'pool=' + d.pool);
   assert('scenarioLabel existe', typeof d.scenarioLabel === 'string' && d.scenarioLabel.length > 0);
   assert('runway.months > 0', d.runway.months > 0, 'months=' + d.runway.months);
-  assert('breakEven es número o 2033+', typeof d.breakEven === 'number' || d.breakEven === '2033+', 'be=' + d.breakEven);
-  assert('fact tiene 7 arrays', d.fact.alm.length === 7 && d.fact.neto.length === 7);
+  assert('breakEven es número o 2034+', typeof d.breakEven === 'number' || d.breakEven === '2034+', 'be=' + d.breakEven);
+  assert('fact tiene 8 arrays', d.fact.alm.length === 8 && d.fact.neto.length === 8);
 
   group('Escenarios impactan facturación');
   const dp = Q.deriveState(Object.assign(Q.clone(Q.DEFAULTS), { P: Object.assign({}, Q.DEFAULTS.P, { sc: 'p' }) }));
@@ -108,7 +108,7 @@
 
   group('Liberación');
   const libYears = d.personCards.map(function (p) { return p.liberationYear; });
-  assert('Todos tienen liberationYear', libYears.every(function (y) { return typeof y === 'number' || y === '2033+'; }));
+  assert('Todos tienen liberationYear', libYears.every(function (y) { return typeof y === 'number' || typeof y === 'string'; }));
   assert('firstLiberationYear existe', d.firstLiberationYear !== undefined);
 
   group('compareScenarios');

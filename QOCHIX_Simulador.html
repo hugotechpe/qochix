@@ -528,7 +528,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div class="hero-logo">QOCHIX</div>
   <div class="hero-sub">Ecosistema de marcas · Simulador financiero v3.1</div>
   <div class="hero-line"></div>
-  <div class="hero-tagline">Un modelo donde <em>todos ganan</em>.<br>Equipo socio + 3 marcas + 7 años de proyección.</div>
+  <div class="hero-tagline">Un modelo donde <em>todos ganan</em>.<br>Equipo socio + 2 marcas + 8 años de proyección.</div>
   <p class="hero-why">
     ¿Por qué sumarte como socio? Porque aquí no estás vendiendo horas para el sueño de otro: estás <strong>construyendo un activo compartido</strong> —tres marcas, un solo ecosistema— con upside que un empleo corporativo no te va a dar.
     Eso exige <strong>tiempo</strong> (constancia en años), <strong>esfuerzo</strong> (lo que no le das a otra cosa), <strong>dinero</strong> (ticket, capital, dejar de facturar en paralelo) y <strong>pasión</strong> para aguantar los meses feos.
@@ -756,7 +756,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <!-- Partner overview cards -->
   <div class="panel open" style="margin-top:1rem">
     <div class="phdr" onclick="toggleP(this)">
-      <span class="ptitle">👤 Socios — Equity, sueldo y proyección 2027–2032</span>
+      <span class="ptitle">👤 Socios — Equity, sueldo y proyección 2027–2033</span>
       <span class="ptgl">▼</span>
     </div>
     <div class="pbody">
@@ -780,7 +780,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
         Para pagar todos los sueldos y generar distribuible, el ecosistema necesita esta facturación <strong>por marca y por año</strong>. Los números cambian con el escenario activo. La columna "Por día" indica cuánto debería facturar cada marca en promedio por día laboral (22 días/mes).
       </p>
       <div class="tw" style="margin-bottom:.85rem"><table><thead><tr>
-        <th style="text-align:left">Marca / Línea</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th style="font-size:.65rem">/ día 2032</th>
+        <th style="text-align:left">Marca / Línea</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th style="font-size:.65rem">/ día 2033</th>
       </tr></thead><tbody id="tb-effort"></tbody></table></div>
       <div id="effort-breakdown"></div>
       <div class="nota" id="nota-effort" style="margin-top:.65rem"></div>
@@ -795,8 +795,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.75rem">
-        En el sidebar definís <strong>meta 2030</strong> y <strong>meta 2032</strong> por socio. Si coinciden con la <strong>tabla del pacto</strong>, el modelo usa la <strong>curva literal</strong> (mismos números año a año que el HTML).
-        Si cambias una meta, la curva activa pasa a ser <strong>lineal 2026→2030</strong> y <strong>2030→2032</strong> (2031 = punto medio). Más planilla fundadores reduce el <strong>distribuible</strong> y el equity en soles de todos.
+        En el sidebar definís <strong>meta 2030</strong>, <strong>meta 2032</strong> y <strong>meta 2033</strong> por socio. Si coinciden con la <strong>tabla del pacto</strong>, el modelo usa la <strong>curva literal</strong> (mismos números año a año que el HTML).
+        Si cambias una meta, la curva activa pasa a ser <strong>lineal 2026→2030</strong> y <strong>2030→2033</strong>. Más planilla fundadores reduce el <strong>distribuible</strong> y el equity en soles de todos.
       </p>
       <p style="font-size:.72rem;color:var(--muted);margin:-.4rem 0 .75rem;font-family:var(--mono);opacity:.9">
         Fórmula (misma facturación y neto %): <strong>Δ distribuible ≈ −Δ planilla fundadores</strong>. Para recuperar el distribuible del pacto en un año: <strong>Δ facturación bruta ≈ Δ planilla ÷ neto%</strong> (aprox., ignora efectos de reserva S/3k si el colchón roza el piso).
@@ -816,7 +816,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <th>Eq 2030 (p→m)</th><th>Eq 2032 (p→m)</th><th>Total 2032</th>
       </tr></thead><tbody id="tb-salary-impact"></tbody></table></div>
       <div class="nota" id="si-nota"></div>
-      <button type="button" class="add-hire-btn" style="margin-top:.6rem;border-style:solid;border-color:var(--faint)" onclick="resetSueMetasToPact()">↺ Restaurar metas 2030 y 2032 al pacto base</button>
+      <button type="button" class="add-hire-btn" style="margin-top:.6rem;border-style:solid;border-color:var(--faint)" onclick="resetSueMetasToPact()">↺ Restaurar metas al pacto base</button>
     </div>
   </div>
 
@@ -857,7 +857,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="pbody">
       <div class="nota" id="nota-fact" style="margin-bottom:.75rem"></div>
       <div class="tw"><table><thead><tr>
-        <th>Línea</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th>
+        <th>Línea</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th>
       </tr></thead><tbody id="tb-fact"></tbody></table></div>
       <div id="explain-fact" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
@@ -871,7 +871,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>Acum. 7a</th>
+        <th>Socio</th><th>%</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>Acum. 8a</th>
       </tr></thead><tbody id="tb-ea"></tbody></table></div>
       <div id="explain-ea" style="margin-top:.85rem;font-size:.74rem;color:var(--muted);line-height:1.65"></div>
     </div>
@@ -958,7 +958,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <ul style="font-size:.78rem;color:var(--muted);line-height:1.65;margin:0;padding-left:1.1rem">
         <li><strong style="color:var(--text)">Excel</strong> — supuestos editables y fórmulas.</li>
         <li><strong style="color:var(--text)">Pacto HTML</strong> — narrativa, reglas, escenario ×0,7 y sección <em>Gobierno</em>.</li>
-        <li><strong style="color:var(--text)">Este simulador</strong> — escenarios, equity, metas 2030/2032, runway.</li>
+        <li><strong style="color:var(--text)">Este simulador</strong> — escenarios, equity, metas 2030/2032/2033, runway.</li>
         <li><strong style="color:var(--text)">Deck base</strong> — alineación visual en reuniones.</li>
         <li>Cada <strong style="color:var(--text)">90 días</strong>: caja real vs modelo, facturación por marca, lista de decisiones con dueño.</li>
       </ul>
@@ -973,7 +973,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <ul style="font-size:.74rem;color:var(--muted);line-height:1.6;margin:0;padding-left:1.05rem">
         <li>Pestaña <strong>Vista CEO</strong> y KPI duplicados para reuniones rápidas.</li>
         <li><strong>Notas de sesión</strong> en sidebar (localStorage).</li>
-        <li>Alineado con pacto: escenario pesimista ×0,7, metas 2030/2032, panel impacto vs curva pacto.</li>
+        <li>Alineado con pacto: escenario pesimista ×0,7, metas 2030/2032/2033, panel impacto vs curva pacto.</li>
       </ul>
     </div>
   </div>
@@ -1025,7 +1025,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="pbody"><div class="chart-wrap" style="height:220px"><canvas id="ch-planilla"></canvas></div></div>
     </div>
     <div class="panel open" style="margin-bottom:0">
-      <div class="phdr"><span class="ptitle">📊 ROI por socio (7 años)</span></div>
+      <div class="phdr"><span class="ptitle">📊 ROI por socio (8 años)</span></div>
       <div class="pbody"><div class="chart-wrap" style="height:220px"><canvas id="ch-roi"></canvas></div></div>
     </div>
   </div>
@@ -1076,7 +1076,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="dash-sub">presión del equipo no fundador en madurez</div>
     </div>
     <div class="dash-card">
-      <div class="dash-lbl">Costo acumulado 7 años</div>
+      <div class="dash-lbl">Costo acumulado 8 años</div>
       <div class="dash-val" id="team-accum">—</div>
       <div class="dash-sub">suma anualizada 2026–2032 del equipo operativo</div>
     </div>
@@ -1144,7 +1144,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Categoría</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th>
+        <th>Categoría</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th>
       </tr></thead><tbody id="tb-planilla"></tbody></table></div>
     </div>
   </div>
@@ -1241,7 +1241,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="ksub" id="ap-best-who"></div>
     </div>
     <div class="kcard k-green">
-      <div class="klbl">Menor ROI 7a</div>
+      <div class="klbl">Menor ROI 8a</div>
       <div class="kval" id="ap-min-roi">—</div>
       <div class="ksub" id="ap-min-who"></div>
     </div>
@@ -1251,7 +1251,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="ksub">si Qochix vale S/5M</div>
     </div>
     <div class="kcard k-coral">
-      <div class="klbl">ROI Hugo 7a</div>
+      <div class="klbl">ROI Hugo 8a</div>
       <div class="kval" id="ap-roi-hugo">—</div>
       <div class="ksub">retorno acumulado ÷ inversión</div>
     </div>
@@ -1259,7 +1259,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
   <div class="dash-note" id="ap-note">La pestaña Apuesta traduce el modelo a retorno personal: cuánto se pone, cuánto puede volver y en qué momento se vuelve creíble.</div>
   <div class="dash-grid" style="margin-bottom:1.2rem">
     <div class="dash-card">
-      <div class="dash-lbl">Retorno equipo 7 años</div>
+      <div class="dash-lbl">Retorno equipo 8 años</div>
       <div class="dash-val" id="ap-team-ret">—</div>
       <div class="dash-sub">suma de sueldo + equity del equipo completo</div>
     </div>
@@ -1291,12 +1291,12 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
   <div class="panel open">
     <div class="phdr" onclick="toggleP(this)">
-      <span class="ptitle">📊 ROI completo — inversión vs retorno 7 años</span>
+      <span class="ptitle">📊 ROI completo — inversión vs retorno 8 años</span>
       <span class="ptgl">▼</span>
     </div>
     <div class="pbody">
       <div class="tw"><table><thead><tr>
-        <th>Socio</th><th>% equity</th><th>Total invertido</th><th>Retorno 7a</th><th>ROI</th><th>×total 2032</th><th>Punto eq.</th>
+        <th>Socio</th><th>% equity</th><th>Total invertido</th><th>Retorno 8a</th><th>ROI</th><th>×total último año</th><th>Punto eq.</th>
       </tr></thead><tbody id="tb-roi"></tbody></table></div>
     </div>
   </div>
@@ -1422,7 +1422,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=24.0&t=1776470400"></script>
+<script src="qochix_system.js?v=25.0&t=1776556800"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1431,7 +1431,6 @@ const QSYS = window.QochixSystem;
 const BOOT = QSYS.getState();
 const PERSONS = BOOT.persons;
 
-// Curva base pacto por año (fundadores, índice 0=2026..6=2032). La meta 2032 en UI escala toda la curva.
 const SUED_F_BASE = QSYS.clone(QSYS.SUED_F_BASE);
 
 /** Curvas del pacto (tabla HTML / Excel) — referencia fija para comparar metas. */
@@ -1441,17 +1440,14 @@ function founderCurvesPact(){
   return o;
 }
 
-/**
- * Curva activa: 4 anclas editables (2028, 2029, 2030, 2032).
- * 2026→2028: lineal (2 pasos). 2028→2029: directo. 2031: midpoint 2030–2032.
- */
-function buildSuedCurve(id, target28, target29, target30, target32){
+function buildSuedCurve(id, target28, target29, target30, target32, target33){
   const b=SUED_F_BASE[id];
   const p_=function(v,fb){return v!=null&&!isNaN(+v)?Math.max(0,Math.round(+v)):(fb||0);};
   const t28=p_(target28,b[2]);
   const t29=p_(target29,b[3]);
   const t30=p_(target30,b[4]);
   const t32=p_(target32,b[6]);
+  const t33=p_(target33,b[7]);
   const b0=b[0]||0;
   const arr=[];
   arr[0]=b0;
@@ -1461,34 +1457,36 @@ function buildSuedCurve(id, target28, target29, target30, target32){
   arr[4]=t30;
   arr[5]=Math.round(t30+(t32-t30)*0.5);
   arr[6]=t32;
+  arr[7]=t33;
   return arr;
 }
 
-function buildCurvesFromMetas(s28map,s29map,s30map,s32map){
+function buildCurvesFromMetas(s28map,s29map,s30map,s32map,s33map){
   const s28=s28map||P.sue28;
   const s29=s29map||P.sue29;
   const s30=s30map||P.sue30;
   const s32=s32map||P.sue32;
+  const s33=s33map||P.sue33;
   const out={};
   PERSONS.forEach(p=>{
-    out[p.id]=buildSuedCurve(p.id,s28[p.id],s29[p.id],s30[p.id],s32[p.id]);
+    out[p.id]=buildSuedCurve(p.id,s28[p.id],s29[p.id],s30[p.id],s32[p.id],s33[p.id]);
   });
   return out;
 }
 
-/** Si las metas 2030/2032 = tabla pacto para todos, usamos la curva literal (años intermedios idénticos al HTML). */
 function metasMatchPactAnchors(){
   return PERSONS.every(p=>
     (+P.sue28[p.id]===SUED_F_BASE[p.id][2]) &&
     (+P.sue29[p.id]===SUED_F_BASE[p.id][3]) &&
     (+P.sue30[p.id]===SUED_F_BASE[p.id][4]) &&
-    (+P.sue32[p.id]===SUED_F_BASE[p.id][6])
+    (+P.sue32[p.id]===SUED_F_BASE[p.id][6]) &&
+    (+(P.sue33||{})[p.id]===SUED_F_BASE[p.id][7])
   );
 }
 
 function activeFounderCurves(){
   if(metasMatchPactAnchors()) return founderCurvesPact();
-  return buildCurvesFromMetas(P.sue28,P.sue29,P.sue30,P.sue32);
+  return buildCurvesFromMetas(P.sue28,P.sue29,P.sue30,P.sue32,P.sue33);
 }
 
 function suedTotalsFromCurves(curves){
@@ -1650,19 +1648,22 @@ function initSidebar() {
       <div class="slw"><label>Factor ajuste <span id="lla-${p.id}">${p.adj}</span></label>
         <input type="range" min="0.3" max="1.0" step="0.05" value="${p.adj}" oninput="onA('${p.id}',this.value)"></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.4rem;margin-top:.45rem">
-      <div class="fld"><label>Meta 2028 <span class="q" title="Ancla 2028: interpola 2026→2028 lineal">?</span></label>
-        <input type="number" id="inp-s28-${p.id}" value="${P.sue28[p.id]}" step="500" min="0" max="100000"
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:.4rem;margin-top:.45rem">
+      <div class="fld"><label>Meta 2028</label>
+        <input type="number" id="inp-s28-${p.id}" value="${P.sue28[p.id]}" step="500" min="0" max="200000"
           oninput="onS28('${p.id}',this.value)"></div>
-      <div class="fld"><label>Meta 2029 <span class="q" title="Ancla 2029: directo desde 2028">?</span></label>
-        <input type="number" id="inp-s29-${p.id}" value="${P.sue29[p.id]}" step="500" min="0" max="100000"
+      <div class="fld"><label>Meta 2029</label>
+        <input type="number" id="inp-s29-${p.id}" value="${P.sue29[p.id]}" step="500" min="0" max="200000"
           oninput="onS29('${p.id}',this.value)"></div>
-      <div class="fld"><label>Meta 2030 <span class="q" title="Ancla 2030: define el salto 2029→2030">?</span></label>
-        <input type="number" id="inp-s30-${p.id}" value="${P.sue30[p.id]}" step="500" min="0" max="100000"
+      <div class="fld"><label>Meta 2030</label>
+        <input type="number" id="inp-s30-${p.id}" value="${P.sue30[p.id]}" step="500" min="0" max="200000"
           oninput="onS30('${p.id}',this.value)"></div>
-      <div class="fld"><label>Meta 2032 <span class="q" title="Ancla 2032: tope final. 2031=punto medio">?</span></label>
-        <input type="number" id="inp-s32-${p.id}" value="${P.sue32[p.id]}" step="500" min="0" max="100000"
+      <div class="fld"><label>Meta 2032</label>
+        <input type="number" id="inp-s32-${p.id}" value="${P.sue32[p.id]}" step="500" min="0" max="200000"
           oninput="onS32('${p.id}',this.value)"></div>
+      <div class="fld"><label>Meta 2033</label>
+        <input type="number" id="inp-s33-${p.id}" value="${(P.sue33||{})[p.id]||0}" step="500" min="0" max="200000"
+          oninput="onS33('${p.id}',this.value)"></div>
     </div>
     <div class="pcard-footer">
       <span>Aporte total (incl. caja hoy):</span>
@@ -1864,17 +1865,25 @@ function onS32(id,v){
   const n=toNumLoose(v); if(n===null) return;
   P.sue32[id]=n;recalc();
 }
+function onS33(id,v){
+  const n=toNumLoose(v); if(n===null) return;
+  if(!P.sue33) P.sue33={};
+  P.sue33[id]=n;recalc();
+}
 function resetSueMetasToPact(){
   PERSONS.forEach(p=>{
     P.sue28[p.id]=SUED_F_BASE[p.id][2];
     P.sue29[p.id]=SUED_F_BASE[p.id][3];
     P.sue30[p.id]=SUED_F_BASE[p.id][4];
     P.sue32[p.id]=SUED_F_BASE[p.id][6];
-    const e28=sel('inp-s28-'+p.id), e29=sel('inp-s29-'+p.id), e30=sel('inp-s30-'+p.id), e32=sel('inp-s32-'+p.id);
+    if(!P.sue33) P.sue33={};
+    P.sue33[p.id]=SUED_F_BASE[p.id][7];
+    const e28=sel('inp-s28-'+p.id), e29=sel('inp-s29-'+p.id), e30=sel('inp-s30-'+p.id), e32=sel('inp-s32-'+p.id), e33=sel('inp-s33-'+p.id);
     if(e28) e28.value=P.sue28[p.id];
     if(e29) e29.value=P.sue29[p.id];
     if(e30) e30.value=P.sue30[p.id];
     if(e32) e32.value=P.sue32[p.id];
+    if(e33) e33.value=P.sue33[p.id];
   });
   recalc();
 }
@@ -1984,7 +1993,7 @@ function sw(p,curve){
   const baseMarca=Number(p.sueldoMarca||0);
   if(curve&&curve.length>0){
     let total=0;
-    for(let i=0;i<7;i++){
+    for(let i=0;i<AÑOS.length;i++){
       const extraQ=Math.max(0,Number(curve[i]||0)-baseMarca);
       total+=Math.max(0,vm-extraQ)*MESES_AÑO[i];
     }
@@ -2110,7 +2119,7 @@ function recalc(){
     const ret=AÑOS.reduce((acc,_,i)=>acc+((sc[person.id][i]||0)+Math.round(dist[i]*(eqById[person.id]||0)/100))*12,0);
     return sum+(ret/Math.max(1,Number(person.investment||1)));
   },0)/Math.max(1,derived.personCards.length);
-  const team2032=derived.personCards.reduce((sum,person)=>sum+Number(person.total2032||0),0);
+  const team2032=derived.personCards.reduce((sum,person)=>sum+Number(person.totalLast||person.total2032||0),0);
   const teamGap10=Math.max(0,(10000*PERSONS.length)-team2032);
 
   // ── KPIs dashboard ──
@@ -2356,11 +2365,11 @@ function recalc(){
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">Sue. marca:</strong> lo que ya cobra de su marca actual. Se resta de la compensación Qochix para no contar doble.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Valor/mes:</strong> = (S/hora) × (hrs/mes). Cuánto vale su dedicación mensual a precio de mercado.</div>';
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">× Factor:</strong> multiplicador de ajuste (0.1–1.0). Refleja el nivel de riesgo, compromiso y etapa de cada socio. Factor 1.0 = 100% del sweat contabilizado.</div>';
-    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Sweat neto:</strong> acumulado de todo el trabajo no-pagado en 7 años × factor. A mayor sweat, mayor peso en el equity.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--green)">Sweat neto:</strong> acumulado de todo el trabajo no-pagado en '+AÑOS.length+' años × factor. A mayor sweat, mayor peso en el equity.</div>';
     h+='<div style="margin-bottom:.5rem"><strong>% del pool:</strong> qué porción del sweat total representa cada socio.</div>';
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
     h+=`<strong style="color:${topSw.c}">${topSw.name}</strong> tiene el mayor sweat (<strong>${fmt(topSwD.sw)}</strong>) porque su valor de mercado es <strong>${fmt(topSwD.vm)}/mes</strong> y dedica <strong>${topSw.hrs}h/día</strong>. `;
-    h+=`El equipo acumula <strong>${fmt(tswAll)}</strong> de sweat total en 7 años — esta es la mayor parte del pool de inversión.`;
+    h+=`El equipo acumula <strong>${fmt(tswAll)}</strong> de sweat total en ${AÑOS.length} años — esta es la mayor parte del pool de inversión.`;
     h+='</div></div>';
     exSweat.innerHTML=h;
   }
@@ -2394,7 +2403,7 @@ function recalc(){
     let h='';
     h+='<div style="background:var(--bg2);border:1px solid var(--brd);border-radius:var(--radius);padding:.8rem 1rem">';
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo se calcula el % de equity?</div>';
-    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco) + <strong style="color:var(--coral)">Cap. marcas</strong> (inversión histórica) + <strong style="color:var(--teal)">Caja marcas</strong> (dinero real disponible) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en 7 años).</div>';
+    h+='<div style="margin-bottom:.35rem">El equity de cada socio se basa en su <strong>aporte total al pool</strong>: <strong style="color:var(--gold)">Ticket</strong> (capital fresco) + <strong style="color:var(--coral)">Cap. marcas</strong> (inversión histórica) + <strong style="color:var(--teal)">Caja marcas</strong> (dinero real disponible) + <strong style="color:var(--green)">Sweat</strong> (valor del trabajo no pagado en '+AÑOS.length+' años).</div>';
     h+='<div style="margin-bottom:.35rem"><strong>% Mat.</strong> = aporte de esa persona ÷ pool total. <strong>Dif.</strong> = diferencia entre el % equity efectivo y el % material (si hay ajuste base pre-definido).</div>';
     h+=`<div style="margin-bottom:.35rem">El pool total es <strong style="color:var(--gold)">${fmt(pool)}</strong>. De ese monto, <strong>${fmt(tktTot)}</strong> son tickets, <strong>${fmt(bcAll)}</strong> cap. marcas, <strong>${fmt(cashAll)}</strong> caja marcas, y <strong>${fmt(tswAll)}</strong> sweat equity.</div>`;
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
@@ -2511,11 +2520,11 @@ function recalc(){
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Qué es el retorno por equity?</div>';
     h+='<div style="margin-bottom:.35rem">Cada mes que hay <strong>distribuible > 0</strong>, se reparte entre los socios según su % de equity. Este ingreso es <strong>adicional al sueldo</strong> — es el retorno de tu inversión (ticket + capital + sweat).</div>';
     h+='<div style="margin-bottom:.35rem">Los guiones "—" significan que en ese año <strong>no hay distribuible</strong> (el colchón aún no cubre la reserva). El dinero empieza a fluir cuando el ecosistema genera más de lo que gasta.</div>';
-    h+=`<div style="margin-bottom:.35rem"><strong>Acum. 7a:</strong> suma total de retorno por equity en los 7 años del modelo (mensual × 12 meses × años con distribuible).</div>`;
+    h+=`<div style="margin-bottom:.35rem"><strong>Acum. ${AÑOS.length}a:</strong> suma total de retorno por equity en los ${AÑOS.length} años del modelo (mensual × 12 meses × años con distribuible).</div>`;
     if(firstDistIdx>0){
       h+=`<div style="border-top:1px solid var(--brd);padding-top:.5rem">`;
       h+=`El distribuible aparece por primera vez en <strong>${AÑOS[firstDistIdx]}</strong>. `;
-      h+=`<strong style="color:${topRet.c}">${topRet.name}</strong> acumula <strong>${fmt(topRetAcum)}</strong> en 7 años porque tiene el mayor % de equity. `;
+      h+=`<strong style="color:${topRet.c}">${topRet.name}</strong> acumula <strong>${fmt(topRetAcum)}</strong> en ${AÑOS.length} años porque tiene el mayor % de equity. `;
       h+=`En <strong>2032</strong> cada socio recibe mensualmente: su sueldo + su % del distribuible (<strong>${fmt(dist[6])}/mes</strong> total).`;
       h+='</div>';
     }
@@ -2680,22 +2689,24 @@ function recalc(){
   sel('tb-runway').innerHTML=html;
 
   // ── APUESTA tab ──
-  const hugoEq32=Math.round(dist[6]*(eqById[PERSONS[0].id]||0)/100);
-  const hugoTot32=P.sue32.hugo+hugoEq32;
+  const _li=AÑOS.length-1;
+  const _lastYear=AÑOS[_li];
+  const hugoEqL=Math.round(dist[_li]*(eqById[PERSONS[0].id]||0)/100);
+  const hugoTotL=(sc.hugo[_li]||0)+hugoEqL;
   const hugoInv=getTkt('hugo')+PERSONS[0].capital+sw(PERSONS[0]).sw;
-  const hugoRet7=AÑOS.reduce((s,_,i)=>{
+  const hugoRetN=AÑOS.reduce((s,_,i)=>{
     return s+((sc.hugo[i]||0)+Math.round(dist[i]*(eqById[PERSONS[0].id]||0)/100))*12;
   },0);
-  sv('ap-hugo',fmt(hugoTot32));
-  sv('ap-roi-hugo',fmtX(hugoRet7/hugoInv));
+  sv('ap-hugo',fmt(hugoTotL));
+  sv('ap-roi-hugo',fmtX(hugoRetN/hugoInv));
   sv('ap-pat',fmt(5000000*(eqById[PERSONS[0].id]||0)/100));
   sv('pat-c',fmt(3000000*(eqById[PERSONS[0].id]||0)/100));
   sv('pat-b',fmt(5000000*(eqById[PERSONS[0].id]||0)/100));
   sv('pat-o',fmt(7000000*(eqById[PERSONS[0].id]||0)/100));
 
   const mults=PERSONS.map(p=>{
-    const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
-    return (P.sue32[p.id]+eq32)/p.sueldo;
+    const eqL=Math.round(dist[_li]*(eqById[p.id]||0)/100);
+    return ((sc[p.id][_li]||0)+eqL)/p.sueldo;
   });
   const bestIdx=mults.indexOf(Math.max(...mults));
   const minRois=PERSONS.map(p=>{
@@ -2705,7 +2716,7 @@ function recalc(){
   });
   const minRoiIdx=minRois.indexOf(Math.min(...minRois));
   sv('ap-best-x',fmtX(mults[bestIdx]));
-  sv('ap-best-who',PERSONS[bestIdx].name+' gana más en 2032');
+  sv('ap-best-who',PERSONS[bestIdx].name+' gana más en '+_lastYear);
   sv('ap-min-roi',fmtX(minRois[minRoiIdx]));
   sv('ap-min-who',PERSONS[minRoiIdx].name+' — sigue siendo positivo');
   sv('ap-team-ret',fmt(teamRet7));
@@ -2714,19 +2725,19 @@ function recalc(){
   sv('ap-team-gap10',fmt(teamGap10));
   const apNote=sel('ap-note');
   if(apNote){
-    apNote.innerHTML=`La apuesta agregada del equipo suma <strong>${fmt(teamInv)}</strong> de inversión modelada y puede devolver <strong>${fmt(teamRet7)}</strong> en 7 años si el escenario activo se sostiene. La brecha para que las ${PERSONS.length} personas estén cerca de S/10k/mes al 2032 es <strong>${fmt(teamGap10)}</strong> mensuales.`;
+    apNote.innerHTML=`La apuesta agregada del equipo suma <strong>${fmt(teamInv)}</strong> de inversión modelada y puede devolver <strong>${fmt(teamRet7)}</strong> en ${AÑOS.length} años si el escenario activo se sostiene. La brecha para que las ${PERSONS.length} personas estén cerca de S/10k/mes al ${AÑOS[AÑOS.length-1]} es <strong>${fmt(teamGap10)}</strong> mensuales.`;
   }
   const apAlert=sel('ap-alert');
   if(apAlert){
     if(teamGap10>15000){
       apAlert.className='nota warn';
-      apAlert.innerHTML=`⚠️ <strong>La apuesta todavía no compra tranquilidad total:</strong> aun al 2032 falta una brecha agregada de ${fmt(teamGap10)}/mes para llevar a las ${PERSONS.length} personas a una referencia de S/10k/mes.`;
+      apAlert.innerHTML=`⚠️ <strong>La apuesta todavía no compra tranquilidad total:</strong> aun al ${AÑOS[AÑOS.length-1]} falta una brecha agregada de ${fmt(teamGap10)}/mes para llevar a las ${PERSONS.length} personas a una referencia de S/10k/mes.`;
     }else if(teamRoiAvg<1.5){
       apAlert.className='nota';
       apAlert.innerHTML=`ℹ️ <strong>Retorno positivo pero contenido:</strong> el ROI medio del equipo ronda ${fmtX(teamRoiAvg)}. La historia funciona, pero todavía depende de sostener disciplina comercial y margen.`;
     }else{
       apAlert.className='nota ok';
-      apAlert.innerHTML=`✅ <strong>Apuesta con upside claro:</strong> el equipo proyecta ${fmt(team2032)}/mes combinado al 2032, con un ROI medio de ${fmtX(teamRoiAvg)}.`;
+      apAlert.innerHTML=`✅ <strong>Apuesta con upside claro:</strong> el equipo proyecta ${fmt(team2032)}/mes combinado al ${AÑOS[AÑOS.length-1]}, con un ROI medio de ${fmtX(teamRoiAvg)}.`;
     }
   }
 
@@ -2737,22 +2748,22 @@ function recalc(){
 
   html='';
   PERSONS.forEach(p=>{
-    const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
-    const sue32=P.sue32[p.id];
-    const tot32=sue32+eq32;
-    const xTot=tot32/p.sueldo;
+    const eqL=Math.round(dist[_li]*(eqById[p.id]||0)/100);
+    const sueL=sc[p.id][_li]||0;
+    const totL=sueL+eqL;
+    const xTot=totL/p.sueldo;
     const tot29=(sc[p.id][3]||0)+Math.round(dist[3]*(eqById[p.id]||0)/100);
     const inv=getTkt(p.id)+p.capital+sw(p,sc[p.id]).sw;
-    const ret7=AÑOS.reduce((s,_,i)=>s+((sc[p.id][i]||0)+Math.round(dist[i]*(eqById[p.id]||0)/100))*12,0);
+    const retN=AÑOS.reduce((s,_,i)=>s+((sc[p.id][i]||0)+Math.round(dist[i]*(eqById[p.id]||0)/100))*12,0);
     html+=`<div class="ap-card">
       <div><div class="ap-nm" style="color:${p.c}">${p.name}</div>
         <div class="ap-pct">${(eqById[p.id]||0).toFixed(1)}% Qochix</div>
         <div class="ap-hoy">Val. mercado: ${fmt(p.sueldo)}/m</div></div>
       <div class="brs">
-        <div class="br"><span class="bl">MERCADO</span><div class="bt"><div class="bf" style="width:${(p.sueldo/tot32*100).toFixed(0)}%;background:var(--faint)"></div></div><span class="bv" style="color:var(--muted)">${fmt(p.sueldo)}</span></div>
-        <div class="br"><span class="bl">2029</span><div class="bt"><div class="bf" style="width:${(tot29/tot32*100).toFixed(0)}%;background:var(--teal)"></div></div><span class="bv">${fmt(tot29)}</span></div>
-        <div class="br"><span class="bl">2032</span><div class="bt"><div class="bf" style="width:100%;background:linear-gradient(90deg,${p.c},${p.c}cc)"></div></div><span class="bv" style="color:${p.c};font-weight:600">${fmt(tot32)}</span></div>
-        <div style="font-size:.65rem;color:var(--muted);margin-top:.15rem">Sueldo <strong style="color:var(--text)">${fmt(sue32)}</strong> + Equity <strong style="color:var(--gold)">${fmt(eq32)}</strong>${inv>0?' · ROI '+fmtX(ret7/inv):''}</div>
+        <div class="br"><span class="bl">MERCADO</span><div class="bt"><div class="bf" style="width:${(p.sueldo/totL*100).toFixed(0)}%;background:var(--faint)"></div></div><span class="bv" style="color:var(--muted)">${fmt(p.sueldo)}</span></div>
+        <div class="br"><span class="bl">2029</span><div class="bt"><div class="bf" style="width:${(tot29/totL*100).toFixed(0)}%;background:var(--teal)"></div></div><span class="bv">${fmt(tot29)}</span></div>
+        <div class="br"><span class="bl">${_lastYear}</span><div class="bt"><div class="bf" style="width:100%;background:linear-gradient(90deg,${p.c},${p.c}cc)"></div></div><span class="bv" style="color:${p.c};font-weight:600">${fmt(totL)}</span></div>
+        <div style="font-size:.65rem;color:var(--muted);margin-top:.15rem">Sueldo <strong style="color:var(--text)">${fmt(sueL)}</strong> + Equity <strong style="color:var(--gold)">${fmt(eqL)}</strong>${inv>0?' · ROI '+fmtX(retN/inv):''}</div>
       </div>
       <div style="text-align:center"><div class="ap-x" style="color:${p.c}">×${xTot.toFixed(1)}</div><div class="ap-xl">vs hoy</div></div>
     </div>`;
@@ -2764,14 +2775,14 @@ function recalc(){
     const inv=getTkt(p.id)+p.capital+sw(p,sc[p.id]).sw;
     const ret7=AÑOS.reduce((s,_,j)=>s+((sc[p.id][j]||0)+Math.round(dist[j]*(eqById[p.id]||0)/100))*12,0);
     const roi=inv>0?ret7/inv:0;
-    const eq32=Math.round(dist[6]*(eqById[p.id]||0)/100);
-    const xTot=(P.sue32[p.id]+eq32)/p.sueldo;
+    const eqL2=Math.round(dist[_li]*(eqById[p.id]||0)/100);
+    const xTot=((sc[p.id][_li]||0)+eqL2)/p.sueldo;
     const be_p=AÑOS.find((_,j)=>{
       let acum=0;
       for(let k=0;k<=j;k++) acum+=((sc[p.id][k]||0)+Math.round(dist[k]*(eqById[p.id]||0)/100))*12;
       return acum>=inv;
     });
-    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${(eqById[p.id]||0).toFixed(1)}%</td><td>${fmt(inv)}</td><td class="cg">${fmt(ret7)}</td><td class="cb">${fmtX(roi)}</td><td class="cv">${fmtX(xTot)}</td><td class="cv">${be_p||'2033+'}</td></tr>`;
+    html+=`<tr${i===0?' class="trh"':''}><td style="color:${p.c}">${p.name}</td><td class="cg">${(eqById[p.id]||0).toFixed(1)}%</td><td>${fmt(inv)}</td><td class="cg">${fmt(ret7)}</td><td class="cb">${fmtX(roi)}</td><td class="cv">${fmtX(xTot)}</td><td class="cv">${be_p||(_lastYear+1)+'+'}</td></tr>`;
   });
   sel('tb-roi').innerHTML=html;
 
@@ -2856,7 +2867,7 @@ function renderCharts(fact,dist,rw,monthly){
     });
     charts.roi=new Chart(croi,{type:'bar',data:{
       labels:PERSONS.map(p=>p.name),
-      datasets:[{label:'ROI 7 años',data:rois,backgroundColor:PERSONS.map(p=>p.c+'99'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:6}]
+      datasets:[{label:'ROI '+AÑOS.length+' años',data:rois,backgroundColor:PERSONS.map(p=>p.c+'99'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:6}]
     },options:{...CH_DEFAULTS,scales:{...CH_DEFAULTS.scales,y:{...CH_DEFAULTS.scales.y,ticks:{...CH_DEFAULTS.scales.y.ticks,callback:v=>v+'x'}}}}});
   }
 
@@ -2869,8 +2880,8 @@ function renderCharts(fact,dist,rw,monthly){
       datasets:[
         {label:'Valor mercado',data:PERSONS.map(p=>p.sueldo),backgroundColor:'rgba(42,51,80,.8)',borderColor:'#3A4257',borderWidth:1,borderRadius:4},
         {label:'Meta sueldo 2030',data:PERSONS.map(p=>P.sue30[p.id]),backgroundColor:'rgba(155,127,232,.35)',borderColor:'#9B7FE8',borderWidth:1,borderRadius:4},
-        {label:'Meta sueldo 2032',data:PERSONS.map(p=>P.sue32[p.id]),backgroundColor:PERSONS.map(p=>p.c+'66'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:4},
-        {label:'Equity 2032',data:PERSONS.map(p=>Math.round(fact.dist[6]*(eqById[p.id]||0)/100)),backgroundColor:PERSONS.map(p=>p.c+'33'),borderColor:PERSONS.map(p=>p.c+'99'),borderWidth:1,borderRadius:4,borderDash:[4,4]},
+        {label:'Meta sueldo '+_lastYear,data:PERSONS.map(p=>(sc[p.id]||[])[_li]||0),backgroundColor:PERSONS.map(p=>p.c+'66'),borderColor:PERSONS.map(p=>p.c),borderWidth:1,borderRadius:4},
+        {label:'Equity '+_lastYear,data:PERSONS.map(p=>Math.round(dist[_li]*(eqById[p.id]||0)/100)),backgroundColor:PERSONS.map(p=>p.c+'33'),borderColor:PERSONS.map(p=>p.c+'99'),borderWidth:1,borderRadius:4,borderDash:[4,4]},
       ]
     },options:{...CH_DEFAULTS,scales:{...CH_DEFAULTS.scales,x:{...CH_DEFAULTS.scales.x,stacked:false},y:{...CH_DEFAULTS.scales.y,stacked:false}}}});
   }
@@ -2926,8 +2937,8 @@ function decorateHelp(){
       'facturacion / mes 2032':'Ingreso mensual proyectado para 2032 en el escenario activo.',
       'distribuible socios / mes 2032':'Monto mensual repartible a socios en 2032 después de operación y reserva.',
       'ingreso total vs hoy 2032':'Comparación entre ingreso actual y el total proyectado (sueldo + equity) en 2032.',
-      'liberación equipo':'Primer año donde al menos una persona cruza su sueldo actual y conteo total de liberación al 2032.',
-      'meta humana — liberación financiera del equipo':'Semáforo de cuántos socios logran cruce de sueldo actual dentro del horizonte 2026-2032.',
+      'liberación equipo':'Primer año donde al menos una persona cruza su sueldo actual y conteo total de liberación al 2033.',
+      'meta humana — liberación financiera del equipo':'Semáforo de cuántos socios logran cruce de sueldo actual dentro del horizonte 2026-2033.',
       'valor mercado':'Lo que vale el trabajo de este socio en el mercado (no necesariamente lo que cobra hoy). Se usa para calcular su precio/hora y sweat equity.',
       's/hora':'Tarifa equivalente por hora según sueldo y dedicación.',
       'hrs/día':'Horas diarias dedicadas al ecosistema.',
@@ -2939,7 +2950,7 @@ function decorateHelp(){
       'apuesta':'Riesgo-retorno y narrativa de inversión del equipo.',
       'vista ceo':'Resumen de mesa para decidir rápido sin abrir todas las pestañas.',
       'flujo $':'Estructura de ingresos: cómo fluye el dinero desde cada marca hasta el bolsillo de cada socio.',
-      'socios — equity, sueldo y proyección 2027–2032':'Card por persona con equity, sueldo año a año, ingreso por equity, total mensual, capital y año de liberación.',
+      'socios — equity, sueldo y proyección 2027–2033':'Card por persona con equity, sueldo año a año, ingreso por equity, total mensual, capital y año de liberación.',
       'esfuerzo comercial':'Tabla editable con las líneas de ingreso reales de cada marca. Edita precio y volumen por año para simular escenarios de facturación bottom-up.',
       'auto por pool':'El equity se recalcula automáticamente proporcionalmente al pool de cada socio (ticket + capital + sweat equity). Cambia capital u horas y el % se ajusta.',
       'manual':'Tú defines manualmente el % de equity de cada socio. No cambia al modificar capital u horas.',
@@ -2994,14 +3005,14 @@ function paintEffortTable(fact){
   ];
   brandMeta.forEach(function(b){
     html+='<tr><td style="color:'+b.color+';font-weight:600">'+b.name+'</td>';
-    for(var i=1;i<=6;i++) html+='<td class="cm">'+fmt(b.arr[i])+'</td>';
-    html+='<td class="cm" style="font-size:.68rem;color:var(--muted)">'+fmt(Math.round(b.arr[6]/22))+'/d</td></tr>';
+    for(var i=1;i<AÑOS.length;i++) html+='<td class="cm">'+fmt(b.arr[i])+'</td>';
+    html+='<td class="cm" style="font-size:.68rem;color:var(--muted)">'+fmt(Math.round(b.arr[AÑOS.length-1]/22))+'/d</td></tr>';
   });
   html+='<tr class="trs"><td><strong>TOTAL ECOSISTEMA</strong></td>';
-  for(var j=1;j<=6;j++) html+='<td class="cg cb">'+fmt(fact.total[j])+'</td>';
-  html+='<td class="cg" style="font-size:.68rem">'+fmt(Math.round(fact.total[6]/22))+'/d</td></tr>';
+  for(var j=1;j<AÑOS.length;j++) html+='<td class="cg cb">'+fmt(fact.total[j])+'</td>';
+  html+='<td class="cg" style="font-size:.68rem">'+fmt(Math.round(fact.total[AÑOS.length-1]/22))+'/d</td></tr>';
   html+='<tr><td style="color:var(--teal)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
-  for(var k=1;k<=6;k++) html+='<td class="ct">'+fmt(fact.neto[k])+'</td>';
+  for(var k=1;k<AÑOS.length;k++) html+='<td class="ct">'+fmt(fact.neto[k])+'</td>';
   html+='<td></td></tr>';
   html+='<tr><td style="color:var(--coral);padding-left:1.2rem">(-) Planilla socios</td>';
   for(var l1=1;l1<=6;l1++) html+='<td class="cc">'+fmt(fact.sued_f[l1])+'</td>';
@@ -3029,11 +3040,11 @@ function paintEffortTable(fact){
       bhtml+='<div class="line-brand-section" style="border-top:3px solid '+bk.color+';margin-top:1rem;padding-top:.75rem">';
       bhtml+='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem"><span style="font-size:.85rem;font-weight:700;color:'+bk.color+'">'+bk.label+' — líneas de ingreso</span><span style="font-size:.65rem;color:var(--muted)">Edita precio y volumen por año</span></div>';
       bhtml+='<div class="tw"><table class="line-tbl"><thead><tr><th style="text-align:left;min-width:130px">Línea</th><th>$/u</th>';
-      for(var y=0;y<7;y++) bhtml+='<th>'+(2026+y)+'</th>';
-      bhtml+='<th style="font-size:.62rem">Rev 2032</th></tr></thead><tbody>';
+      for(var y=0;y<AÑOS.length;y++) bhtml+='<th>'+AÑOS[y]+'</th>';
+      bhtml+='<th style="font-size:.62rem">Rev '+AÑOS[AÑOS.length-1]+'</th></tr></thead><tbody>';
       blines.forEach(function(line){
-        var basePrice=0;for(var bp=0;bp<7;bp++){if(line.prices[bp]>0){basePrice=line.prices[bp];break;}}
-        var isTiered=false;for(var tp=0;tp<7;tp++){if(line.prices[tp]!==line.prices[0]){isTiered=true;break;}}
+        var basePrice=0;for(var bp=0;bp<AÑOS.length;bp++){if(line.prices[bp]>0){basePrice=line.prices[bp];break;}}
+        var isTiered=false;for(var tp=0;tp<AÑOS.length;tp++){if(line.prices[tp]!==line.prices[0]){isTiered=true;break;}}
         bhtml+='<tr><td style="font-size:.72rem;color:var(--text2);white-space:nowrap" title="'+line.unit+'">'+line.name+'<br><span style="font-size:.58rem;color:var(--muted)">'+line.unit+'</span></td>';
         if(isTiered){
           var priceLabel=line.prices.filter(function(p){return p>0}).filter(function(v,i,a){return a.indexOf(v)===i}).map(function(p){return 'S/'+p}).join('→');
@@ -3041,14 +3052,14 @@ function paintEffortTable(fact){
         }else{
           bhtml+='<td><input type="number" class="line-input" value="'+basePrice+'" data-line="'+line.id+'" data-field="price" min="0"></td>';
         }
-        for(var yi=0;yi<7;yi++){
+        for(var yi=0;yi<AÑOS.length;yi++){
           bhtml+='<td><input type="number" class="line-input line-vol" value="'+line.vols[yi]+'" data-line="'+line.id+'" data-field="vol" data-yi="'+yi+'" min="0"'+(line.vols[yi]===0?' style="opacity:.4"':'')+'></td>';
         }
         bhtml+='<td style="font-size:.72rem;font-weight:600;color:'+bk.color+';text-align:right;white-space:nowrap">'+fmt(line.rev[6])+'</td></tr>';
       });
       var brandTotal=blines.reduce(function(s,l){return s+l.rev[6]},0);
       bhtml+='<tr style="border-top:2px solid var(--brd)"><td style="font-weight:700;font-size:.78rem">Total/mes</td><td></td>';
-      for(var yt=0;yt<7;yt++){
+      for(var yt=0;yt<AÑOS.length;yt++){
         var yrTotal=blines.reduce(function(s,l){return s+l.rev[yt]},0);
         bhtml+='<td style="font-size:.68rem;font-weight:600;text-align:center;color:'+bk.color+'">'+fmt(yrTotal)+'</td>';
       }
@@ -3070,7 +3081,7 @@ function paintEffortTable(fact){
     for(var y=1;y<=6;y++){if(fact.dist[y]>0){firstDistYr=2026+y;break;}}
     var umbralEquity=fmt(Math.round(fact.sued_tot[6]/P.netoPct));
     var nt='Escenario <strong>'+scn[P.sc]+'</strong>. ';
-    nt+=(firstDistYr?'El primer año con distribuible es <strong style="color:var(--gold)">'+firstDistYr+'</strong>. ':'<span style="color:var(--coral)">No hay distribuible en el horizonte (2027–2032).</span> ');
+    nt+=(firstDistYr?'El primer año con distribuible es <strong style="color:var(--gold)">'+firstDistYr+'</strong>. ':'<span style="color:var(--coral)">No hay distribuible en el horizonte (2027–2033).</span> ');
     nt+='Para que el equipo reciba equity, la facturación bruta total debe superar <strong style="color:var(--teal)">'+umbralEquity+'</strong>/mes (planilla ÷ neto%).';
 
     nt+='<div style="margin-top:.7rem;padding:.7rem .9rem;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;font-size:.72rem;line-height:1.65">';
@@ -3080,8 +3091,8 @@ function paintEffortTable(fact){
       var pc=derived.personCards.find(function(c){return c.id===p.id;});
       if(!pc) return;
       var target=p.sueldo;
-      var crossYear='más allá de 2032';
-      for(var yi=0;yi<=6;yi++){
+      var crossYear='más allá de '+AÑOS[AÑOS.length-1];
+      for(var yi=0;yi<AÑOS.length;yi++){
         var sue=fact.suedCurves[p.id]?fact.suedCurves[p.id][yi]:0;
         var eq=Math.round(fact.dist[yi]*(eqById[p.id]||0)/100);
         if(sue+eq>=target){crossYear=''+(2026+yi);break;}
@@ -3126,12 +3137,12 @@ function onLineEdit(inp){
   var lo=ov[lineId];
   if(field==='price'){
     if(!lo.prices) lo.prices=def.prices.slice();
-    var origBase=0;for(var i=0;i<7;i++){if(def.prices[i]>0){origBase=def.prices[i];break;}}
+    var origBase=0;for(var i=0;i<AÑOS.length;i++){if(def.prices[i]>0){origBase=def.prices[i];break;}}
     if(origBase>0){
       var scale=val/origBase;
       lo.prices=def.prices.map(function(p){return p>0?Math.round(p*scale):0;});
     }else{
-      for(var j=0;j<7;j++) lo.prices[j]=val;
+      for(var j=0;j<AÑOS.length;j++) lo.prices[j]=val;
     }
   }else{
     if(!lo.vols) lo.vols=def.vols.slice();
@@ -3167,8 +3178,8 @@ function paintPartnerCards(derived, fact, eqById){
     // --- Sueldo Qochix (mensual) ---
     h+='<div class="ptnr-section-lbl"><span>Sueldo Qochix <span style="color:var(--teal)">/mes</span></span></div>';
     h+='<table class="ptnr-tbl">';
-    for(var i=1;i<=6;i++){
-      var yr=2026+i;
+    for(var i=1;i<AÑOS.length;i++){
+      var yr=AÑOS[i];
       var real=realCurves[p.id]?realCurves[p.id][i]:0;
       var meta=targetCurves[p.id]?targetCurves[p.id][i]:0;
       var capped=real<meta;
@@ -3189,8 +3200,9 @@ function paintPartnerCards(derived, fact, eqById){
     h+='<table class="ptnr-tbl">';
     h+='<tr class="ptnr-tbl-head"><td></td><td>sueldo</td><td>equity</td><td>total</td></tr>';
     var sumSueAn=0, sumEqAn=0, sumTotAn=0;
-    for(var j=1;j<=6;j++){
-      var yr2=2026+j;
+    var nYrs=AÑOS.length-1;
+    for(var j=1;j<AÑOS.length;j++){
+      var yr2=AÑOS[j];
       var sue2=realCurves[p.id]?realCurves[p.id][j]:0;
       var eqAmt=Math.round(fact.dist[j]*(pc.equity/100));
       var total=sue2+eqAmt;
@@ -3200,18 +3212,18 @@ function paintPartnerCards(derived, fact, eqById){
       h+='<td style="color:var(--gold)">'+fmt(eqAmt)+'</td>';
       h+='<td>'+fmt(total)+'</td></tr>';
     }
-    h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Σ 6 años</td>';
+    h+='<tr class="ptnr-sum"><td style="font-size:.52rem">Σ '+nYrs+' años</td>';
     h+='<td style="color:var(--teal)">'+fmt(sumSueAn)+'</td>';
     h+='<td style="color:var(--gold)">'+fmt(sumEqAn)+'</td>';
     h+='<td style="color:var(--green)">'+fmt(sumTotAn)+'</td></tr>';
     h+='</table>';
-    h+='<div style="font-size:.5rem;color:var(--muted);opacity:.55;margin-top:.2rem;text-align:right">Σ = sumatoria mensual × 12 meses × 6 años</div>';
+    h+='<div style="font-size:.5rem;color:var(--muted);opacity:.55;margin-top:.2rem;text-align:right">Σ = sumatoria mensual × 12 meses × '+nYrs+' años</div>';
 
     // --- Footer con métricas clave ---
     h+='<div class="ptnr-foot">';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Valor mercado/mes</span><span class="ptnr-foot-val" style="color:var(--muted)">'+fmt(p.sueldo)+'</span></div>';
-    var mult=pc.total2032/Math.max(1,p.sueldo);
-    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador 2032</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
+    var mult=(pc.totalLast||pc.total2032||0)/Math.max(1,p.sueldo);
+    h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Multiplicador '+AÑOS[AÑOS.length-1]+'</span><span class="ptnr-foot-val" style="color:'+(mult>=1?'var(--green)':'var(--coral)')+'">×'+mult.toFixed(1)+'</span></div>';
     h+='<div class="ptnr-foot-item"><span class="ptnr-foot-lbl">Capital invertido</span><span class="ptnr-foot-val" style="color:var(--teal)">'+fmt(pc.cashContribution||0)+'</span></div>';
     var libYr=pc.liberationYear;
     var libOk=libYr<=2031;
@@ -3230,7 +3242,7 @@ function paintEquityExplainer(derived, fact){
   if(!box) return;
   var fmt=QSYS.fmtCurrency;
   var realCurves=fact.suedCurves;
-  var AÑOS=[2026,2027,2028,2029,2030,2031,2032];
+  var AÑOS=[2026,2027,2028,2029,2030,2031,2032,2033];
 
   var h='';
   h+='<div style="font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.06em">📐 ¿Cómo se calcula el % de equity de cada socio?</div>';
@@ -3284,7 +3296,7 @@ function paintEquityExplainer(derived, fact){
     var bm=Number(p.sueldoMarca||0);
     var curve=realCurves[p.id]||[];
     var swTotal=0;
-    for(var i=0;i<7;i++){
+    for(var i=0;i<AÑOS.length;i++){
       var extra=Math.max(0,Number(curve[i]||0)-bm);
       swTotal+=Math.max(0,vm-extra)*MESES_AÑO[i];
     }
@@ -3344,7 +3356,7 @@ function paintEquityExplainer(derived, fact){
       } else {
         h+='<strong>No cobra sueldo de ninguna marca actualmente</strong>, así que todo su tiempo es donado hasta que Qochix le pague. ';
       }
-      h+='Con factor de ajuste ×'+r.p.adj+', su sweat total en 7 años = <strong>'+fmt(Math.round(r.sw))+'</strong>.</div>';
+      h+='Con factor de ajuste ×'+r.p.adj+', su sweat total en '+AÑOS.length+' años = <strong>'+fmt(Math.round(r.sw))+'</strong>.</div>';
     } else {
       h+='<div>💼 Sin sweat equity (su sueldo Qochix ya cubre su valor de mercado desde el inicio).</div>';
     }

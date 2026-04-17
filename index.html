@@ -177,13 +177,13 @@
           <div class="l">Si solo lees una cosa</div>
           <div class="exec">
             <div class="exec-item"><div class="exec-lbl">Pool equipo</div><div class="exec-val" id="exec-pool">—</div></div>
-            <div class="exec-item"><div class="exec-lbl">Dist. 2032</div><div class="exec-val" id="exec-dist">—</div></div>
+            <div class="exec-item"><div class="exec-lbl">Dist. último año</div><div class="exec-val" id="exec-dist">—</div></div>
             <div class="exec-item"><div class="exec-lbl">1er cruce</div><div class="exec-val" id="exec-cross">—</div></div>
           </div>
           <div class="exec-range" id="exec-range">Rango pesimista → optimista: cargando…</div>
         </div>
         <div class="k"><div class="l">Escenario</div><div class="v" id="k-scn">—</div></div>
-        <div class="k"><div class="l">Distribuible 2032</div><div class="v" id="k-dist">—</div></div>
+        <div class="k"><div class="l">Distribuible último año</div><div class="v" id="k-dist">—</div></div>
         <div class="k"><div class="l">Pool</div><div class="v" id="k-pool">—</div></div>
         <div class="k"><div class="l">Liberación equipo</div><div class="v" id="k-lib">—</div><div class="s" id="k-lib-detail">—</div></div>
         <div class="k"><div class="l">Runway por marca</div><div id="k-brand-fin" style="display:grid;gap:6px;margin-top:6px"></div></div>
@@ -298,7 +298,7 @@
   })();
   </script>
   <script src="qochix_help.js?v=10"></script>
-  <script src="qochix_system.js?v=24.0&t=1776470400"></script>
+  <script src="qochix_system.js?v=25.0&t=1776556800"></script>
   <script>
     const tabs = document.querySelectorAll('#tabs .btn');
     const frame = document.getElementById('frame');
@@ -361,7 +361,7 @@
       showHubError('QochixSystem no cargó. Intentando recuperación automática…');
       try{
         const recovery = document.createElement('script');
-        recovery.src = 'qochix_system.js?v=24.0&t=1776470400&r=' + Date.now();
+        recovery.src = 'qochix_system.js?v=25.0&t=1776556800&r=' + Date.now();
         recovery.onload = function(){ location.reload(); };
         recovery.onerror = function(){ showHubError('No se pudo recuperar QochixSystem. Usa "Reset todo y recargar".'); };
         document.head.appendChild(recovery);
@@ -570,7 +570,7 @@
         showRecalcBar();
         const d = Q.deriveState(Q.getState());
         animVal(byId('k-scn'), d.scenarioLabel);
-        animVal(byId('k-dist'), d.fmtCurrency(d.dist2032));
+        animVal(byId('k-dist'), d.fmtCurrency(d.distLast||d.dist2032));
         animVal(byId('k-pool'), d.fmtCurrency(d.pool));
         byId('k-lib').textContent = d.liberatedBy2032+'/'+d.personCards.length;
         byId('k-lib-detail').textContent = 'Primer cruce: '+d.firstLiberationYear;
@@ -626,15 +626,15 @@
         const d=cmp[sc];
         return '<div class="cmp-col" style="border-top:3px solid '+colors[sc]+'">'+
           '<div class="cmp-title" style="color:'+colors[sc]+'">'+labels[sc]+'</div>'+
-          '<div class="cmp-row"><span class="cmp-label">Fact. 2032</span><span class="cmp-value">'+d.fmtCurrency(d.totalFact2032)+'</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Distribuible 2032</span><span class="cmp-value">'+d.fmtCurrency(d.dist2032)+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Fact. '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(d.totalFactLast||d.totalFact2032)+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Distribuible '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(d.distLast||d.dist2032)+'</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">Break-even</span><span class="cmp-value">'+d.breakEven+'</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">Runway</span><span class="cmp-value">'+(d.runway.months>=99?'∞':d.runway.months)+' meses</span></div>'+
-          '<div class="cmp-row"><span class="cmp-label">Liberados 2032</span><span class="cmp-value">'+d.liberatedBy2032+'/'+d.personCards.length+'</span></div>'+
+          '<div class="cmp-row"><span class="cmp-label">Liberados '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.liberatedBy2032+'/'+d.personCards.length+'</span></div>'+
           '<div class="cmp-row"><span class="cmp-label">1er cruce</span><span class="cmp-value">'+d.firstLiberationYear+'</span></div>'+
           d.personCards.map(function(p){
             return '<div class="cmp-person"><div class="cmp-pname" style="color:'+p.color+'">'+p.name+'</div>'+
-              '<div class="cmp-row"><span class="cmp-label">Sueldo+Equity 2032</span><span class="cmp-value">'+d.fmtCurrency(p.total2032)+'</span></div>'+
+              '<div class="cmp-row"><span class="cmp-label">Sueldo+Equity '+d.years[d.years.length-1]+'</span><span class="cmp-value">'+d.fmtCurrency(p.totalLast||p.total2032)+'</span></div>'+
               '<div class="cmp-row"><span class="cmp-label">Cruce</span><span class="cmp-value">'+p.liberationYear+'</span></div>'+
             '</div>';
           }).join('')+
@@ -705,9 +705,9 @@
         const cmp=Q.compareScenarios();
         const dp=cmp.p, dn=cmp.n, doOpt=cmp.o;
         byId('exec-pool').textContent=dp.fmtCurrency(dp.pool);
-        byId('exec-dist').textContent=dn.fmtCurrency(dn.dist2032);
+        byId('exec-dist').textContent=dn.fmtCurrency(dn.distLast||dn.dist2032);
         byId('exec-cross').textContent=dp.firstLiberationYear+(dp.firstLiberationYear!==doOpt.firstLiberationYear?'–'+doOpt.firstLiberationYear:'');
-        byId('exec-range').textContent='Pesimista: '+dp.fmtCurrency(dp.dist2032)+' · Neutro: '+dn.fmtCurrency(dn.dist2032)+' · Optimista: '+doOpt.fmtCurrency(doOpt.dist2032);
+        byId('exec-range').textContent='Pesimista: '+dp.fmtCurrency(dp.distLast||dp.dist2032)+' · Neutro: '+dn.fmtCurrency(dn.distLast||dn.dist2032)+' · Optimista: '+doOpt.fmtCurrency(doOpt.distLast||doOpt.dist2032);
       }catch(e){}
     }
 
@@ -730,9 +730,9 @@
           'ticket base':'Aporte inicial por socio. Desde el hub se aplica en modo igual para todo el equipo.',
           'tratamiento de aportes':'Define si el aporte es préstamo o compra de acciones. Si eliges compra de acciones, completa la valorización pre-money.',
           'restaurar base':'Vuelve al baseline del modelo: pesimista ×0.7, neto 65%, reserva S/3,000 y ticket base S/5,000.',
-          'si solo lees una cosa':'Resumen ejecutivo: pool del equipo, distribuible 2032 y primer año de cruce en rango pesimista–optimista.',
+          'si solo lees una cosa':'Resumen ejecutivo: pool del equipo, distribuible último año y primer año de cruce en rango pesimista–optimista.',
           'pool equipo':'Valor total invertido por el equipo (ticket + capital + sweat). No varía con el escenario.',
-          'distrib 2032':'Rango mensual del distribuible 2032 desde pesimista hasta optimista.',
+          'distrib último año':'Rango mensual del distribuible del último año desde pesimista hasta optimista.',
           '1er cruce':'Primer año en que algún socio iguala su sueldo actual con ingresos Qochix.',
           'preguntas frecuentes':'Respuestas rápidas a las dudas más comunes sobre el modelo económico.'
         }
