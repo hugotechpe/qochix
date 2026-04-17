@@ -693,6 +693,20 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ══ TAB: DASHBOARD ══ -->
 <div id="tab-dashboard" class="tab-content active">
 
+  <div class="panel open" style="margin-bottom:1.2rem">
+    <div class="phdr" onclick="toggleP(this)">
+      <span class="ptitle">👤 Socios — Equity, sueldo y proyección 2027–2033</span>
+      <span class="ptgl">▼</span>
+    </div>
+    <div class="pbody">
+      <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
+        Cada card muestra el <strong>% de equity efectivo</strong> y la <strong>compensación mensual proyectada</strong> por socio. <span style="color:var(--teal)">Sueldo</span> es lo que Qochix le pagaría cada mes según el revenue real disponible. <span style="color:var(--gold)">Equity</span> es la distribución mensual de utilidades. <strong>Total</strong> = sueldo + equity por mes. <span style="color:var(--coral)">Montos en rojo</span> indican que el revenue no alcanza la meta — el socio cobra menos de su valor de mercado.
+      </p>
+      <div class="partner-grid" id="partner-grid"></div>
+      <div id="equity-explainer" style="margin-top:1.5rem;background:var(--bg1);border:1px solid var(--brd);border-radius:var(--radius);padding:1.2rem 1.4rem"></div>
+    </div>
+  </div>
+
   <div id="kpi-wrapper">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
       <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold)">📊 KPIs principales</div>
@@ -777,21 +791,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 
   <!-- Partner overview cards -->
-  <div class="panel open" style="margin-top:1rem">
-    <div class="phdr" onclick="toggleP(this)">
-      <span class="ptitle">👤 Socios — Equity, sueldo y proyección 2027–2033</span>
-      <span class="ptgl">▼</span>
-    </div>
-    <div class="pbody">
-      <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.85rem">
-        Cada card muestra el <strong>% de equity efectivo</strong> y la <strong>compensación mensual proyectada</strong> por socio. <span style="color:var(--teal)">Sueldo</span> es lo que Qochix le pagaría cada mes según el revenue real disponible. <span style="color:var(--gold)">Equity</span> es la distribución mensual de utilidades. <strong>Total</strong> = sueldo + equity por mes. <span style="color:var(--coral)">Montos en rojo</span> indican que el revenue no alcanza la meta — el socio cobra menos de su valor de mercado.
-      </p>
-      <div class="partner-grid" id="partner-grid"></div>
-
-      <div id="equity-explainer" style="margin-top:1.5rem;background:var(--bg1);border:1px solid var(--brd);border-radius:var(--radius);padding:1.2rem 1.4rem"></div>
-    </div>
-  </div>
-
   <!-- Esfuerzo comercial por marca -->
   <div class="panel open" style="margin-top:1rem">
     <div class="phdr" onclick="toggleP(this)">
