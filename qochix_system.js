@@ -450,7 +450,7 @@
   }
 
   function fmtCurrency(n) {
-    if (n === undefined || n === null || Number.isNaN(Number(n))) return '—';
+    if (n === undefined || n === null || !isFinite(Number(n))) return '—';
     return 'S/' + Math.round(Number(n)).toLocaleString('es-PE');
   }
 
@@ -471,8 +471,10 @@
   }
 
   function sw(person, curve) {
-    const hr = Number(person.sueldo || 0) / (22 * 8);
-    const hm = Number(person.hrs || 0) * 6 * 4.3;
+    const rawSueldo = Number(person.sueldo || 0);
+    const sueldo = isFinite(rawSueldo) ? Math.max(0, rawSueldo) : 0;
+    const hr = sueldo / (22 * 8);
+    const hm = Math.max(0, Number(person.hrs || 0)) * 6 * 4.3;
     const vm = hr * hm;
     const adj = Number(person.adj || 0);
     const baseMarca = Number(person.sueldoMarca || 0);
