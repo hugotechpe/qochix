@@ -78,8 +78,8 @@
     ],
     P: {
       ticket: 5000,
-      tktMode: 'equal',
-      tickets: { hugo: 5000, rossy: 5000, vera: 5000, mechita: 5000 },
+      tktMode: 'individual',
+      tickets: { hugo: 5000, rossy: 5000, vera: 5000, mechita: 15000 },
       netoPct: 0.65,
       reserva: 3000,
       sc: 'p',
@@ -267,6 +267,8 @@
         });
       }
       if (s.P) {
+        s.P.tktMode = 'individual';
+        s.P.tickets = { hugo: 5000, rossy: 5000, vera: 5000, mechita: 15000 };
         s.P.sue28 = { hugo: 4000, rossy: 2500, vera: 2000, mechita: 7000 };
         s.P.sue29 = { hugo: 10000, rossy: 7500, vera: 7500, mechita: 10000 };
         s.P.sue30 = { hugo: 20000, rossy: 9000, vera: 8500, mechita: 15000 };
