@@ -1518,7 +1518,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=35.0&t=1776989200"></script>
+<script src="qochix_system.js?v=36.0&t=1776989300"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -3545,26 +3545,23 @@ function paintFlujoReal(yr){
   });
 
   const rsvMonth=Number(P.reserva||0);
-  const cajaResMes=(fact.cajaMinMes&&fact.cajaMinMes[yi])||0;
-  const totalEgM=totalFounderM+totalHiresM+rsvMonth+cajaResMes;
+  const cajaResMes=Math.round((fact.cajaReserva[yi]||0)/(mesesAnio||12));
+  const totalPlanM=totalFounderM+totalHiresM;
+  const totalEgM=totalPlanM+rsvMonth+cajaResMes;
+  const colchonMes=netoM.map(v=>v-totalPlanM);
   const utilM=netoM.map(v=>v-totalEgM);
   const utilSum=utilM.reduce((a,b)=>a+b,0);
   const brutSum=brutM.reduce((a,b)=>a+b,0);
   const netoSum=netoM.reduce((a,b)=>a+b,0);
   const egSum=totalEgM*mesesAnio;
 
-  // Caja acumulada
+  // Caja acumulada — usa cajaNeta del sistema (consistente con dist)
   let cajaStart=0;
   if(_frYear===2026) cajaStart=derived.runway?derived.runway.capital||0:0;
   else {
     cajaStart=derived.runway?derived.runway.capital||0:0;
     for(let y=0;y<yi;y++){
-      const nA=fact.total[y]*netPct;
-      const sfA=fact.sued_f[y]||0;
-      const hcA=fact.hcost[y]||0;
-      const rA=rsvMonth;
-      const crA=(fact.cajaMinMes&&fact.cajaMinMes[y])||0;
-      cajaStart+=Math.round((nA-sfA-hcA-rA-crA)*QSYS.MESES_POR_AÑO[y]);
+      cajaStart+=Math.round((fact.cajaNeta[y]||0)*QSYS.MESES_POR_AÑO[y]);
     }
   }
   let runCaja=cajaStart;
@@ -3582,10 +3579,10 @@ function paintFlujoReal(yr){
     const kpis=[
       {label:'Facturación bruta',val:fmt(brutSum),sub:mesesAnio+' meses',cls:'kpi-gold'},
       {label:'Ingreso neto',val:fmt(netoSum),sub:Math.round(netPct*100)+'% del bruto',cls:'kpi-teal'},
-      {label:'Egresos totales',val:fmt(egSum),sub:fmt(totalEgM)+'/mes',cls:'kpi-coral'},
-      {label:'Utilidad acum.',val:fmt(utilSum),sub:'Margen op. '+margenOp+'%',cls:utilSum>=0?'kpi-green':'kpi-coral'},
-      {label:'Caja final',val:fmt(cajaEnd),sub:'Mín: '+fmt(cajaMin),cls:cajaEnd>=0?'kpi-green':'kpi-coral'},
-      {label:'Punto de equilibrio',val:fmt(totalEgM)+'/mes',sub:margenNeto>=0?'Neto cubre egresos':'Falta '+fmt(totalEgM-netoM[netoM.length-1])+'/mes',cls:margenNeto>=0?'kpi-purple':'kpi-coral'},
+      {label:'Egresos totales',val:fmt(egSum),sub:'Planilla '+fmt(totalPlanM)+' + Rsv '+fmt(rsvMonth+cajaResMes)+'/mes',cls:'kpi-coral'},
+      {label:'Utilidad neta',val:fmt(utilSum),sub:'Margen '+margenOp+'%'+(utilSum<0?' · Déficit':''),cls:utilSum>=0?'kpi-green':'kpi-coral'},
+      {label:'Caja final '+_frYear,val:fmt(cajaEnd),sub:'Mín: '+fmt(cajaMin)+(cajaMin<0?' ⚠️':''),cls:cajaEnd>=0?'kpi-green':'kpi-coral'},
+      {label:'Break-even neto',val:fmt(Math.round(totalEgM/netPct)),sub:'Facturar '+fmt(Math.round(totalEgM/netPct))+' bruto/mes para cubrir',cls:netoM[netoM.length-1]>=totalEgM?'kpi-purple':'kpi-coral'},
     ];
     kpiEl.innerHTML=kpis.map(k=>'<div class="fr-kpi '+k.cls+'"><div class="fr-kpi-label">'+k.label+'</div><div class="fr-kpi-val">'+k.val+'</div><div class="fr-kpi-sub">'+k.sub+'</div></div>').join('');
   }
@@ -3606,10 +3603,11 @@ function paintFlujoReal(yr){
     const dHc=SHOW_YEARS.map(y=>getYr(fact.hcost,y));
     const dPlan=SHOW_YEARS.map((_,i)=>dSuedF[i]+dHc[i]);
     const dRsv=SHOW_YEARS.map(()=>rsvMonth);
-    const dCaja=SHOW_YEARS.map(y=>(fact.cajaMinMes&&fact.cajaMinMes[AÑOS.indexOf(y)])||0);
+    const dCaja=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);const mp=QSYS.MESES_POR_AÑO[i]||12;return i>=0?Math.round((fact.cajaReserva[i]||0)/mp):0;});
     const dTotEg=SHOW_YEARS.map((_,i)=>dPlan[i]+dRsv[i]+dCaja[i]);
-    const dUtil=SHOW_YEARS.map((_,i)=>dNeto[i]-dTotEg[i]);
+    const dUtil=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?(fact.cajaNeta[i]||0):0;});
     const dDist=SHOW_YEARS.map(y=>getYr(fact.dist,y));
+    const dColchon=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?(fact.colchon[i]||0):0;});
     const dMarg=dTot.map((v,i)=>v>0?Math.round(dUtil[i]/v*100):0);
 
     function pctChg(arr){const last=arr[arr.length-1];return arr[0]>0?Math.round((last-arr[0])/arr[0]*100)+'%':(last>0?'∞':'—');}
@@ -3627,15 +3625,17 @@ function paintFlujoReal(yr){
     r.push(annR('(–) Costo de venta ('+Math.round(costPct*100)+'%)',dCosto,'fr-negative',false));
     r.push(annR('<strong>INGRESO NETO</strong>',dNeto,'fr-total-green'));
     r.push('<tr class="fr-margin"><td>Margen bruto</td>'+dTot.map((v,i)=>v>0?'<td>'+Math.round(dNeto[i]/v*100)+'%</td>':'<td>—</td>').join('')+'<td></td></tr>');
-    r.push(annR('Planilla fundadores',dSuedF));
-    r.push(annR('Equipo operativo',dHc));
-    r.push(annR('Reserva operativa',dRsv,'',false));
-    r.push(annR('Caja marca',dCaja,'',false));
-    r.push(annR('<strong>TOTAL EGRESOS</strong>',dTotEg,'fr-subtotal'));
+    r.push(annR('(–) Planilla fundadores',dSuedF,'fr-negative',false));
+    r.push(annR('(–) Equipo operativo',dHc,'fr-negative',false));
+    const colchonCls=dColchon[dColchon.length-1]>=0?'fr-total-green':'fr-total-red';
+    r.push(annR('<strong>= MARGEN OPERATIVO BRUTO</strong>',dColchon,colchonCls));
+    r.push('<tr class="fr-margin"><td>% sobre facturación</td>'+dTot.map((v,i)=>v>0?'<td style="color:'+(dColchon[i]>=0?'var(--green)':'var(--coral)')+'">'+Math.round(dColchon[i]/v*100)+'%</td>':'<td>—</td>').join('')+'<td></td></tr>');
+    r.push(annR('(–) Reserva operativa',dRsv,'',false));
+    r.push(annR('(–) Caja marca',dCaja,'',false));
     const utilCls=dUtil[dUtil.length-1]>=0?'fr-total-green':'fr-total-red';
-    r.push(annR('<strong>UTILIDAD OPERATIVA</strong>',dUtil,utilCls));
-    r.push('<tr class="fr-margin"><td>Margen operativo</td>'+dMarg.map(v=>'<td style="color:'+(v>=0?'var(--green)':'var(--coral)')+'">'+v+'%</td>').join('')+'<td></td></tr>');
-    r.push(annR('<strong>Distribuible (equity)</strong>',dDist,'fr-total'));
+    r.push(annR('<strong>= UTILIDAD NETA</strong>',dUtil,utilCls));
+    r.push('<tr class="fr-margin"><td>Margen neto</td>'+dMarg.map(v=>'<td style="color:'+(v>=0?'var(--green)':'var(--coral)')+'">'+v+'%</td>').join('')+'<td></td></tr>');
+    r.push(annR('<strong>DISTRIBUIBLE (equity)</strong>',dDist,'fr-total'));
     annBody.innerHTML=r.join('');
   }
 
@@ -3717,18 +3717,24 @@ function paintFlujoReal(yr){
     plHead.innerHTML='<tr><th>RESULTADO</th>'+months.map(m=>'<th>'+m.short+'</th>').join('')+'<th>TOTAL</th></tr>';
     const pr=[];
 
+    const colchonM=netoM.map(v=>v-totalFounderM-totalHiresM);
+    const cajaNetaM=colchonM.map(v=>v-rsvMonth-cajaResMes);
+    const distMes=cajaNetaM.map(v=>Math.max(0,v));
+    const cajaNetaSum=cajaNetaM.reduce((a,b)=>a+b,0);
+
     pr.push('<tr><td>Facturación bruta</td>'+brutM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(brutSum)+'</strong></td></tr>');
-    pr.push('<tr class="fr-negative"><td>(–) Costo de venta</td>'+costoVtaM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(costoVtaM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) Costo de venta ('+Math.round(costPct*100)+'%)</td>'+costoVtaM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(costoVtaM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
     pr.push('<tr class="fr-total-green"><td><strong>= INGRESO NETO</strong></td>'+netoM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(netoSum)+'</strong></td></tr>');
     pr.push('<tr class="fr-negative"><td>(–) Planilla fundadores</td>'+months.map(()=>'<td>-'+fmt(totalFounderM)+'</td>').join('')+'<td><strong>-'+fmt(totalFounderM*mesesAnio)+'</strong></td></tr>');
     pr.push('<tr class="fr-negative"><td>(–) Equipo operativo</td>'+months.map(()=>'<td>-'+fmt(totalHiresM)+'</td>').join('')+'<td><strong>-'+fmt(totalHiresM*mesesAnio)+'</strong></td></tr>');
-    pr.push('<tr class="fr-negative"><td>(–) Reservas</td>'+months.map(()=>'<td>-'+fmt(rsvMonth+cajaResMes)+'</td>').join('')+'<td><strong>-'+fmt((rsvMonth+cajaResMes)*mesesAnio)+'</strong></td></tr>');
-    const cls=utilSum>=0?'fr-total-green':'fr-total-red';
-    pr.push('<tr class="'+cls+'"><td><strong>= UTILIDAD OPERATIVA</strong></td>'+utilM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(utilSum)+'</strong></td></tr>');
-    pr.push('<tr class="fr-margin"><td>Margen operativo</td>'+brutM.map((v,i)=>'<td>'+(v>0?Math.round(utilM[i]/v*100)+'%':'—')+'</td>').join('')+'<td>'+margenOp+'%</td></tr>');
-
-    const distM=utilM.map(v=>Math.max(0,v));
-    pr.push('<tr class="fr-total"><td><strong>= DISTRIBUIBLE (equity)</strong></td>'+distM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(distM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    const colchonClsM=colchonM[colchonM.length-1]>=0?'fr-total-green':'fr-total-red';
+    pr.push('<tr class="'+colchonClsM+'"><td><strong>= MARGEN OP. BRUTO</strong></td>'+colchonM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(colchonM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) Reserva operativa</td>'+months.map(()=>'<td>-'+fmt(rsvMonth)+'</td>').join('')+'<td><strong>-'+fmt(rsvMonth*mesesAnio)+'</strong></td></tr>');
+    if(cajaResMes>0) pr.push('<tr class="fr-negative"><td>(–) Caja marca</td>'+months.map(()=>'<td>-'+fmt(cajaResMes)+'</td>').join('')+'<td><strong>-'+fmt(cajaResMes*mesesAnio)+'</strong></td></tr>');
+    const cls=cajaNetaSum>=0?'fr-total-green':'fr-total-red';
+    pr.push('<tr class="'+cls+'"><td><strong>= UTILIDAD NETA</strong></td>'+cajaNetaM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(cajaNetaSum)+'</strong></td></tr>');
+    pr.push('<tr class="fr-margin"><td>Margen neto</td>'+brutM.map((v,i)=>'<td>'+(v>0?Math.round(cajaNetaM[i]/v*100)+'%':'—')+'</td>').join('')+'<td>'+(brutSum>0?Math.round(cajaNetaSum/brutSum*100):'0')+'%</td></tr>');
+    pr.push('<tr class="fr-total"><td><strong>= DISTRIBUIBLE (equity)</strong></td>'+distMes.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(distMes.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
     plBody.innerHTML=pr.join('');
   }
 
