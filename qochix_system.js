@@ -9,9 +9,63 @@
     n: 'Neutro ×1.0',
     o: 'Optimista ×1.4',
   };
-  const FACT0 = {
-    almaria: [1200, 8500, 22000, 40000, 98100, 141900, 183400, 228000],
-    ht: [4282, 11483, 22800, 39600, 55483, 70100, 88133, 108000],
+  // ── #10: FACT0 sincronizado con horizonte 10 años (legacy, no usado internamente) ──
+  const FACT0 = null;
+
+  // ── #1: Estructura real de costos (reemplaza netoPct catch-all) ──
+  // IGV en Perú: 18% sobre venta. Se retiene en factura, no es ingreso real.
+  // COGS: costo variable por línea (materia prima, venue, logística).
+  // Costos fijos op: alquiler, herramientas, seguros, pauta base — independientes del revenue.
+  const COST_STRUCTURE = {
+    igvPct: 0.18,
+    cogsByLine: {
+      al_kits:       0.35, // materia prima + empaque + envío
+      al_corp:       0.20, // decoración + materiales ceremonia
+      al_rituales:   0.20,
+      ht_1a1:        0.05, // casi puro servicio
+      ht_talleres:   0.15, // materiales + venue
+      ht_fullday:    0.25, // venue + alimentación + materiales
+      ht_campamento: 0.30, // venue + alimentación + logística
+      ht_programa:   0.15, // materiales + plataforma
+    },
+    fixedOps: [
+      // #8: costos fijos operativos REALES conectados al motor
+      { name: 'Oficina / coworking', amount: 800, growth: 1.05 },
+      { name: 'Herramientas digitales', amount: 600, growth: 1.08 },
+      { name: 'Pauta publicitaria base', amount: 900, growth: 1.15 },
+      { name: 'Seguros y legal', amount: 300, growth: 1.05 },
+      { name: 'Transporte y logística', amount: 400, growth: 1.10 },
+      { name: 'Varios / imprevistos', amount: 500, growth: 1.05 },
+    ],
+  };
+
+  // ── #2: Cargas sociales Perú (sobre planilla formal) ──
+  // CTS ~8.33%, gratif ~16.67%, EsSalud 9%, vacaciones 8.33%, SCTR ~1.5%
+  const CARGAS_SOCIALES_PCT = 0.45;
+
+  // ── #3: Impuesto a la renta Perú (régimen MYPE tributario) ──
+  // Hasta 15 UIT: 10%, exceso: 29.5%. Simplificado como escala.
+  const IR_BRACKETS = [
+    { limit: 72750, rate: 0.10 },  // ~15 UIT 2026
+    { limit: Infinity, rate: 0.295 },
+  ];
+
+  // ── #9: Desfase de cobranza por tipo de cliente ──
+  const COLLECTION_DELAY_DAYS = {
+    B2C: 0,   // cobro inmediato (kits, rituales)
+    B2B: 45,  // corporativo: 30-60 días promedio
+  };
+
+  // ── #4: Techo de saturación por línea (curva S) ──
+  const VOLUME_CAPS = {
+    al_kits:       600,  // mercado lima kits/mes realista
+    al_corp:        25,  // máx activaciones corp/mes
+    al_rituales:    12,  // máx rituales/mes (capacidad)
+    ht_1a1:         35,  // hrs coaching/mes (1 persona)
+    ht_talleres:    18,  // talleres/mes (capacidad equipo)
+    ht_fullday:     50,  // personas/evento × freq
+    ht_campamento:  48,  // personas/evento × freq
+    ht_programa:    20,  // personas/trimestre
   };
   const SUED_F_BASE = {
     //         2026  2027   2028   2029   2030   2031   2032   2033   2034   2035
@@ -129,7 +183,7 @@
     meta: {
       updatedAt: null,
       source: 'defaults',
-      schemaVersion: 22,
+      schemaVersion: 23,
     },
   };
 
@@ -363,6 +417,12 @@
         s.P.sue35 = { hugo: 33000, rossy: 14000, vera: 12500, mechita: 24000 };
       }
     }},
+    { from: 22, to: 23, run(s) {
+      if (!s.P) s.P = {};
+      // #6: inicializar escenario por marca (hereda del global)
+      if (!s.P.scByBrand) s.P.scByBrand = {};
+      // #10: netoPct ya no se usa — se mantiene para backward compat pero se ignora
+    }},
   ];
 
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -409,6 +469,7 @@
         lineOverrides: raw.P.lineOverrides || next.P.lineOverrides || {},
         brandOps: { ...next.P.brandOps, ...(raw.P.brandOps || {}) },
         founderBrand: { ...next.P.founderBrand, ...(raw.P.founderBrand || {}) },
+        scByBrand: { ...(raw.P.scByBrand || {}) },
       };
       if (!next.P.equityMode) next.P.equityMode = DEFAULTS.P.equityMode;
     }
@@ -530,25 +591,32 @@
     return state.P.tktMode === 'equal' ? state.P.ticket : Number(state.P.tickets[id] || 0);
   }
 
+  // #7: Sweat equity — solo retrospectivo + vesting (no proyecta 10 años futuro)
+  // Cliff: 12 meses. Vesting lineal sobre 4 años (48 meses).
+  // Solo acumula sweat de los primeros 4 años (período de vesting).
   function sw(person, curve) {
     const rawSueldo = Number(person.sueldo || 0);
     const sueldo = isFinite(rawSueldo) ? Math.max(0, rawSueldo) : 0;
     const hr = sueldo / (22 * 8);
-    const hm = Math.max(0, Number(person.hrs || 0)) * 6 * 4.3;
+    const hm = Math.max(0, Number(person.hrs || 0)) * 5 * 4.3; // #7: 5 días/semana realista
     const vm = hr * hm;
     const adj = Number(person.adj || 0);
     const baseMarca = Number(person.sueldoMarca || 0);
+
+    const VESTING_YEARS = 4; // solo los primeros 4 años acumulan sweat
+    const yearsToCount = Math.min(AÑOS.length, VESTING_YEARS);
+
     if (curve && curve.length > 0) {
       let total = 0;
-      for (let i = 0; i < AÑOS.length; i++) {
+      for (let i = 0; i < yearsToCount; i++) {
         const extraQochix = Math.max(0, Number(curve[i] || 0) - baseMarca);
         const gap = Math.max(0, vm - extraQochix);
         total += gap * MESES_POR_AÑO[i];
       }
-      return { hr, hm, vm, sw: total * adj };
+      return { hr, hm, vm, sw: total * adj, vestingYears: VESTING_YEARS };
     }
-    const totalMeses = MESES_POR_AÑO.reduce((s, v) => s + v, 0);
-    return { hr, hm, vm, sw: vm * totalMeses * adj };
+    const totalMeses = MESES_POR_AÑO.slice(0, yearsToCount).reduce((s, v) => s + v, 0);
+    return { hr, hm, vm, sw: vm * totalMeses * adj, vestingYears: VESTING_YEARS };
   }
 
   function founderCurvesPact() {
@@ -620,8 +688,15 @@
   }
 
   function computeLineRevenue(state) {
-    const m = SC[state.P.sc] || 1;
+    // #6: escenario por marca — usa scByBrand si existe, sino global
+    const globalSc = SC[state.P.sc] || 1;
+    const scBrand = state.P.scByBrand || {};
+    const scAlm = SC[scBrand.almaria] || globalSc;
+    const scHt = SC[scBrand.ht] || globalSc;
+
     const ov = (state.P && state.P.lineOverrides) || {};
+    const igvPct = COST_STRUCTURE.igvPct;
+
     const lines = SERVICE_LINES.map((def) => {
       const lo = ov[def.id] || {};
       const p = lo.prices || def.prices;
@@ -629,11 +704,38 @@
       const f = lo.freq != null ? lo.freq : (def.freq || 1);
       const g = lo.ppA != null ? lo.ppA : (def.ppA || 0);
       const mult = g > 0 ? g : 1;
-      const rev = AÑOS.map((_, i) => Math.round((p[i] || 0) * (v[i] || 0) * mult / f * m));
-      return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, freq: f, ppA: g, prices: p.slice(), vols: v.slice(), rev };
+      const m = def.brand === 'almaria' ? scAlm : scHt;
+
+      // #4: aplicar techo de saturación
+      const cap = VOLUME_CAPS[def.id] || Infinity;
+
+      const rev = AÑOS.map((_, i) => {
+        const rawVol = Math.min(v[i] || 0, cap);
+        return Math.round((p[i] || 0) * rawVol * mult / f * m);
+      });
+
+      // #1: COGS por línea
+      const cogsPct = COST_STRUCTURE.cogsByLine[def.id] || 0;
+      const cogs = rev.map(r => Math.round(r * cogsPct));
+      // IGV se calcula sobre el bruto (es lo que se entrega a SUNAT)
+      const igv = rev.map(r => Math.round(r * igvPct));
+      const netoLine = rev.map((r, i) => r - igv[i] - cogs[i]);
+
+      // #9: tipo de cliente para desfase de cobranza
+      const clientType = def.name.includes('B2B') || def.name.includes('Talleres') || def.name.includes('Programa') ? 'B2B' : 'B2C';
+      const delayDays = COLLECTION_DELAY_DAYS[clientType] || 0;
+
+      return { id: def.id, brand: def.brand, name: def.name, unit: def.unit, freq: f, ppA: g,
+        prices: p.slice(), vols: v.slice(), rev, cogs, igv, netoLine, cogsPct, clientType, delayDays };
     });
+
     const bt = (b) => AÑOS.map((_, i) => lines.filter((l) => l.brand === b).reduce((s, l) => s + l.rev[i], 0));
-    return { lines, almaria: bt('almaria'), ht: bt('ht') };
+    const btNeto = (b) => AÑOS.map((_, i) => lines.filter((l) => l.brand === b).reduce((s, l) => s + l.netoLine[i], 0));
+    const totalCogs = AÑOS.map((_, i) => lines.reduce((s, l) => s + l.cogs[i], 0));
+    const totalIgv = AÑOS.map((_, i) => lines.reduce((s, l) => s + l.igv[i], 0));
+
+    return { lines, almaria: bt('almaria'), ht: bt('ht'), totalCogs, totalIgv,
+      netoAlmaria: btNeto('almaria'), netoHt: btNeto('ht') };
   }
 
   function capSalariesToRevenue(state, targetCurves, neto, hcost) {
@@ -666,53 +768,136 @@
     return capped;
   }
 
+  // #8: Costos fijos operativos reales por año
+  function fixedOpsByYear() {
+    return AÑOS.map((_, yi) => {
+      return Math.round(COST_STRUCTURE.fixedOps.reduce((s, op) => {
+        return s + op.amount * Math.pow(op.growth || 1, yi);
+      }, 0));
+    });
+  }
+
+  // #3: Impuesto a la renta sobre utilidad anual
+  function calcImpuestoRenta(utilidadAnual) {
+    if (utilidadAnual <= 0) return 0;
+    let tax = 0, remaining = utilidadAnual;
+    for (let b = 0; b < IR_BRACKETS.length; b++) {
+      const bracket = IR_BRACKETS[b];
+      const taxable = Math.min(remaining, bracket.limit - (b > 0 ? IR_BRACKETS[b-1].limit : 0));
+      if (taxable <= 0) break;
+      tax += taxable * bracket.rate;
+      remaining -= taxable;
+    }
+    return Math.round(tax / 12); // mensualizado
+  }
+
   function calcFactFromCurves(state, curves, opts) {
     var skipCap = opts && opts.skipCap;
     const lr = computeLineRevenue(state);
     const alm = lr.almaria;
     const ht = lr.ht;
     const total = AÑOS.map((_, i) => alm[i] + ht[i]);
-    const neto = total.map((value) => Math.round(value * Number(state.P.netoPct || 0)));
-    const hcost = hiresCostByYear(state);
-    const realCurves = skipCap ? curves : capSalariesToRevenue(state, curves, neto, hcost);
+
+    // #1: IGV y COGS ya calculados en computeLineRevenue
+    const totalIgv = lr.totalIgv;
+    const totalCogs = lr.totalCogs;
+    // Neto real = bruto - IGV - COGS
+    const neto = AÑOS.map((_, i) => total[i] - totalIgv[i] - totalCogs[i]);
+
+    // #8: Costos fijos operativos reales
+    const fixedOps = fixedOpsByYear();
+
+    // #2: Cargas sociales sobre equipo operativo (hires)
+    const hcostBase = hiresCostByYear(state);
+    const hcostCargas = hcostBase.map(v => Math.round(v * CARGAS_SOCIALES_PCT));
+    const hcost = hcostBase.map((v, i) => v + hcostCargas[i]);
+
+    // Disponible para fundadores = (neto - hcost - fixedOps) / 1.10 (incluye cargas 10%)
+    const FOUNDER_CARGAS_MULT = 1.10;
+    const availableForFoundersCap = neto.map((v, i) => Math.round((v - hcost[i] - fixedOps[i]) / FOUNDER_CARGAS_MULT));
+    const capNeto = availableForFoundersCap.map((v,i) => v + hcost[i] + fixedOps[i]);
+    const capHcost = hcost.map((v,i) => v + fixedOps[i]);
+    const realCurves = skipCap ? curves : capSalariesToRevenue(state, curves, capNeto, capHcost);
     const sued_f = suedTotalsFromCurves(state, realCurves);
-    const sued_tot = sued_f.map((value, i) => value + hcost[i]);
-    const colchon = neto.map((value, i) => value - sued_tot[i]);
+    const founderCargas = sued_f.map(v => Math.round(v * 0.10));
+    const sued_tot = sued_f.map((v, i) => v + founderCargas[i] + hcost[i] + fixedOps[i]);
+    const colchon = neto.map((v, i) => v - sued_tot[i]);
+
     const cajaMin = Number(state.P.cajaMinMarca || 0);
     const cajaGQ = Number(state.P.cajaMinGrowthQ || 1);
     const mesesAnio = MESES_POR_AÑO;
     const cajaReserva = AÑOS.map(function(_,yi){
       if(yi===0 || cajaMin<=0) return 0;
       var monthsSoFar=mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0);
-      var total=0;
+      var t=0;
       for(var m=0;m<mesesAnio[yi];m++){
         var qElapsed=Math.floor((monthsSoFar - mesesAnio[yi] + m)/3);
         var rate=cajaMin*Math.pow(cajaGQ, Math.max(0,qElapsed));
-        total+=Math.round(rate)*2;
+        t+=Math.round(rate)*2;
       }
-      return Math.round(total);
+      return Math.round(t);
     });
     const cajaAcum = AÑOS.map(function(_,yi){
       var sum=0; for(var j=0;j<=yi;j++) sum+=cajaReserva[j]; return sum;
     });
     const cajaMinMes = AÑOS.map(function(_,yi){ if(yi===0) return 0; var qE=Math.floor((mesesAnio.slice(1,yi+1).reduce(function(a,b){return a+b;},0)-1)/3); return Math.round(cajaMin*Math.pow(cajaGQ,Math.max(0,qE)))*2; });
     const rsvMes = Number(state.P.reserva || 0);
-    const dist = colchon.map(function(value,i){ return Math.max(0, value - rsvMes - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
-    const dist_no_op = neto.map(function(value, i){ return Math.max(0, value - sued_f[i] - rsvMes - Math.round(cajaReserva[i]/(mesesAnio[i]||12))); });
-    const cajaNeta = AÑOS.map(function(_,i){ return colchon[i] - rsvMes - Math.round(cajaReserva[i]/(mesesAnio[i]||12)); });
+    const cajaMes = AÑOS.map((_,i) => Math.round((cajaReserva[i]||0)/(mesesAnio[i]||12)));
+
+    // Utilidad antes de impuestos
+    const uai = colchon.map((v,i) => v - rsvMes - cajaMes[i]);
+
+    // #3: Impuesto a la renta (solo si hay utilidad positiva)
+    const irMes = uai.map((v,i) => {
+      const anual = v * mesesAnio[i];
+      return calcImpuestoRenta(anual);
+    });
+
+    const cajaNeta = uai.map((v,i) => v - irMes[i]);
+    const dist = cajaNeta.map(v => Math.max(0, v));
+    const dist_no_op = neto.map((v, i) => Math.max(0, v - sued_f[i] - founderCargas[i] - rsvMes - cajaMes[i] - irMes[i]));
     const cajaNetaAcum = AÑOS.map(function(_,i){ var s=0; for(var j=0;j<=i;j++) s += cajaNeta[j] * mesesAnio[j]; return s; });
-    return { alm, ht, total, neto, sued_f, hcost, sued_tot, colchon, dist, dist_no_op, cajaNeta, cajaNetaAcum, cajaReserva, cajaAcum, cajaMinMes, suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
+
+    // #9: Cuentas por cobrar (revenue pendiente de cobro)
+    const cxc = AÑOS.map((_, i) => {
+      const b2bRev = lr.lines.filter(l => l.clientType === 'B2B').reduce((s, l) => s + l.rev[i], 0);
+      return Math.round(b2bRev * 45 / 30); // ~1.5 meses de revenue B2B en CxC
+    });
+
+    return { alm, ht, total, totalIgv, totalCogs, neto, fixedOps,
+      hcostBase, hcostCargas, hcost, sued_f, founderCargas, sued_tot, colchon,
+      dist, dist_no_op, cajaNeta, cajaNetaAcum, cajaReserva, cajaAcum, cajaMinMes,
+      uai, irMes, cxc, cajaMes, rsvMes: AÑOS.map(()=>rsvMes),
+      suedCurves: realCurves, targetCurves: curves, lineRevenue: lr };
   }
 
+  // #5: calcMonthly ahora usa SERVICE_LINES reales con rampa mensual
   function calcMonthly(state, curves) {
-    const m = SC[state.P.sc] || 1;
-    const monthlyFact = [
-      [2200, 1000, 450], [2800, 1200, 500], [4200, 2000, 600], [5000, 2500, 700],
-      [6000, 3000, 800], [7000, 4000, 900], [8000, 5000, 1000], [9500, 6000, 1100],
-      [10500, 7000, 1200], [12000, 8000, 1300], [13000, 9000, 1400], [14000, 10000, 1500],
-    ].map(([t, a, h]) => Math.round((t + a + h) * m));
-    const burnFijo = state.persons.reduce((sum, person) => sum + Number((curves[person.id] || [])[0] || 0), 0) + hiresCostByYear(state)[0];
-    return monthlyFact.map((ingresos) => ({ ingresos, burn: burnFijo }));
+    const lr = computeLineRevenue(state);
+    const annualRev = (lr.almaria[0] || 0) + (lr.ht[0] || 0);
+    const prevRev = 0; // antes de 2026 no hay revenue
+    const nm = MESES_POR_AÑO[0] || 9;
+    const monthlyFact = [];
+    for (var m = 0; m < nm; m++) {
+      var t = (m + 0.5) / nm;
+      monthlyFact.push(Math.max(0, Math.round(prevRev + (annualRev - prevRev) * t)));
+    }
+    // Normalizar para que el promedio sea el annual
+    var sum = monthlyFact.reduce(function(a,b){return a+b;}, 0);
+    if (sum > 0) {
+      var ratio = (annualRev * nm / 12) / sum;
+      for (var i = 0; i < nm; i++) monthlyFact[i] = Math.round(monthlyFact[i] * ratio);
+    }
+
+    const founderBurn0 = state.persons.reduce(function(s, p) { return s + Number((curves[p.id] || [])[0] || 0); }, 0);
+    const hireBurn0 = hiresCostByYear(state)[0];
+    const fixedOp0 = fixedOpsByYear()[0];
+    const founderCarg0 = Math.round(founderBurn0 * 0.10);
+    const totalBurn = founderBurn0 + founderCarg0 + hireBurn0 + fixedOp0;
+    return monthlyFact.map(function(ingresos) {
+      var netoM = Math.round(ingresos * (1 - COST_STRUCTURE.igvPct) * 0.80); // approx after igv+cogs avg
+      return { ingresos: ingresos, netoReal: netoM, burn: totalBurn };
+    });
   }
 
   function calcPool(state, curves) {
@@ -1077,7 +1262,7 @@
     STORAGE_KEY,
     DEFAULTS: clone(DEFAULTS),
     AÑOS: AÑOS.slice(),
-    FACT0: clone(FACT0),
+    FACT0, // #10: ahora null — legacy eliminado
     SC: { ...SC },
     SC_LABELS: { ...SC_LABELS },
     SUED_F_BASE: clone(SUED_F_BASE),
@@ -1085,6 +1270,11 @@
     SERVICE_LINES: clone(SERVICE_LINES),
     BRAND_IDS: BRAND_IDS.slice(),
     BRAND_LABELS: { ...BRAND_LABELS },
+    COST_STRUCTURE: clone(COST_STRUCTURE),
+    CARGAS_SOCIALES_PCT,
+    IR_BRACKETS: IR_BRACKETS.slice(),
+    COLLECTION_DELAY_DAYS: { ...COLLECTION_DELAY_DAYS },
+    VOLUME_CAPS: { ...VOLUME_CAPS },
     clone,
     normalizeBrandId,
     totalBrandCapital,
@@ -1104,5 +1294,7 @@
     exportSnapshot,
     dumpCurrentLines,
     bakeDefaults,
+    fixedOpsByYear,
+    calcImpuestoRenta,
   };
 })();

@@ -25,7 +25,7 @@
 <div id="summary"></div>
 <div id="timing" class="time"></div>
 
-<script src="qochix_system.js?v=25.0&t=1776556800"></script>
+<script src="qochix_system.js?v=40.0&t=1776990000"></script>
 <script>
 (function () {
   const Q = window.QochixSystem;
@@ -45,9 +45,11 @@
   assert('DEFAULTS tiene 4 personas', Q.DEFAULTS.persons.length === 4);
   assert('DEFAULTS tiene 7 hires', Q.DEFAULTS.hires.length === 7);
   assert('DEFAULTS.P.sc es "p"', Q.DEFAULTS.P.sc === 'p');
-  assert('AÑOS tiene 8 elementos (2026-2033)', Q.AÑOS.length === 8);
+  assert('AÑOS tiene 10 elementos (2026-2035)', Q.AÑOS.length === 10);
   assert('SC tiene 3 escenarios', Object.keys(Q.SC).length === 3);
-  assert('FACT0 tiene almaria, ht', Q.FACT0.almaria && Q.FACT0.ht);
+  assert('FACT0 es null (legacy eliminado)', Q.FACT0 === null);
+  assert('COST_STRUCTURE existe', Q.COST_STRUCTURE && Q.COST_STRUCTURE.igvPct > 0);
+  assert('VOLUME_CAPS existe', Q.VOLUME_CAPS && Object.keys(Q.VOLUME_CAPS).length > 0);
 
   group('normalizeState');
   const s1 = Q.normalizeState(null);

@@ -2839,7 +2839,7 @@ footer {
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=31.0&t=1776556900"></script>
+<script src="qochix_system.js?v=40.0&t=1776990000"></script>
 <script>
 // ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
@@ -3093,7 +3093,7 @@ function showTermTab(panelId, btn) {
         math.innerHTML =
           '<div class="live-pan-card"><div class="lbl">Caja real inicial</div><div class="val">' + derived.fmtCurrency(cashTotal) + '</div><div class="sub">ticket + capital que sí entra como caja inmediata.</div></div>' +
           '<div class="live-pan-card"><div class="lbl">Esfuerzo valorizado</div><div class="val">' + derived.fmtCurrency(sweatTotal) + '</div><div class="sub">tiempo convertido a valor económico (horizonte completo).</div></div>' +
-          '<div class="live-pan-card"><div class="lbl">Neto 2030</div><div class="val">' + derived.fmtCurrency(neto2030) + '/mes</div><div class="sub">con neto operativo ' + pct((p.netoPct || 0) * 100).replace('.0','') + ' del escenario activo.</div></div>' +
+          '<div class="live-pan-card"><div class="lbl">Neto 2030</div><div class="val">' + derived.fmtCurrency(neto2030) + '/mes</div><div class="sub">neto real (–IGV –COGS) del escenario activo.</div></div>' +
           '<div class="live-pan-card"><div class="lbl">Planilla 2030</div><div class="val">' + derived.fmtCurrency(pay2030) + '/mes</div><div class="sub">fundadores + equipo operativo; colchón previo: ' + derived.fmtCurrency(col2030) + '/mes.</div></div>';
       }
       if (steps) {
@@ -3192,17 +3192,18 @@ function showTermTab(panelId, btn) {
       var h='';
       brands.forEach(function(b){h+='<tr><td>'+b.n+'</td>';for(var i=0;i<_ny;i++){var cls=i===0?'td-muted':(i===_ny-1?'td-'+b.c:'');h+='<td class="'+cls+'">'+fmt(b.a[i])+'</td>';}h+='</tr>';});
       h+='<tr class="tr-total"><td>TOTAL QOCHIX</td>';for(var j=0;j<_ny;j++){h+='<td>'+fmt(f.total[j])+'</td>';}h+='</tr>';
-      h+='<tr class="tr-highlight"><td>Neto '+Math.round((d.state.P.netoPct||0.65)*100)+'%</td>';for(var k=0;k<_ny;k++){var cls2=k===0?'td-muted':(k===_ny-1?'td-green':'');h+='<td class="'+cls2+'">'+fmt(f.neto[k])+'</td>';}h+='</tr>';
+      h+='<tr class="tr-highlight"><td>Neto (–IGV–COGS)</td>';for(var k=0;k<_ny;k++){var cls2=k===0?'td-muted':(k===_ny-1?'td-green':'');h+='<td class="'+cls2+'">'+fmt(f.neto[k])+'</td>';}h+='</tr>';
       h+='<tr><td>(-) Sueldos fundadores</td>';for(var m=0;m<_ny;m++){h+='<td class="td-muted">'+fmt(f.sued_f[m])+'</td>';}h+='</tr>';
-      h+='<tr><td>(-) Equipo operativo</td>';for(var n=0;n<_ny;n++){h+='<td class="td-muted">'+fmt(f.hcost[n])+'</td>';}h+='</tr>';
-      h+='<tr><td>(-) Total planilla</td>';for(var o=0;o<_ny;o++){h+='<td class="td-muted">'+fmt(f.sued_tot[o])+'</td>';}h+='</tr>';
+      h+='<tr><td>(-) Equipo op. + cargas 45%</td>';for(var n=0;n<_ny;n++){h+='<td class="td-muted">'+fmt(f.hcost[n])+'</td>';}h+='</tr>';
+      h+='<tr><td>(-) Costos fijos op.</td>';for(var o2=0;o2<_ny;o2++){h+='<td class="td-muted">'+fmt((f.fixedOps||[])[o2]||0)+'</td>';}h+='</tr>';
+      h+='<tr><td>(-) Total egresos op.</td>';for(var o=0;o<_ny;o++){h+='<td class="td-muted">'+fmt(f.sued_tot[o])+'</td>';}h+='</tr>';
       h+='<tr class="tr-highlight"><td style="color:var(--gold)">💰 Distribuible socios</td>';for(var p=0;p<_ny;p++){var dc=f.dist[p]>0?'td-gold':'td-muted';h+='<td class="'+dc+'">'+fmt(f.dist[p])+'</td>';}h+='</tr>';
       ftb.innerHTML=h;
     }
     // Fact note
     var fnote=document.getElementById('pact-fact-note');
     if(fnote){
-      var netPct=Math.round((d.state.P.netoPct||0.65)*100);
+      var netPct=f.total[_ny-1]>0?Math.round(f.neto[_ny-1]/f.total[_ny-1]*100):50;
       var resPct=fmt(Number(d.state.P.reserva||3000));
       var firstDist=null;for(var fd=0;fd<_ny;fd++){if(f.dist[fd]>0){firstDist=_yrs[fd];break;}}
       fnote.innerHTML='<strong>'+scL+' — mismas fórmulas que el simulador.</strong> Facturación total × '+netPct+'% (neto operativo) − planilla total (fundadores + equipo operativo) − reserva mínima '+resPct+'. '+(firstDist?'El primer distribuible positivo aparece en <strong>'+firstDist+'</strong>; en neutro u optimista ese momento se adelanta.':'No hay distribuible en el horizonte — ajusta escenario.')+' Lo repartible se aplica según tu % de equity.';

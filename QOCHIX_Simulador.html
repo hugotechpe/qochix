@@ -1518,7 +1518,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(sw){sw.unregister()})});caches.keys().then(function(k){k.forEach(function(c){caches.delete(c)})})}
 </script>
 <script src="qochix_help.js?v=10"></script>
-<script src="qochix_system.js?v=36.0&t=1776989300"></script>
+<script src="qochix_system.js?v=40.0&t=1776990000"></script>
 <script>
 // ════════════════════════════════════════
 // ESTADO
@@ -1600,7 +1600,7 @@ const AÑOS = QSYS.AÑOS.slice();
 const _BEYOND = (AÑOS[AÑOS.length-1]+1)+'+';
 
 // Facturación base neutro
-const FACT0 = QSYS.clone(QSYS.FACT0);
+const FACT0 = QSYS.FACT0 ? QSYS.clone(QSYS.FACT0) : null;
 const SC = {...QSYS.SC};
 const _LI = AÑOS.length - 1;
 const _LAST_YEAR = AÑOS[_LI];
@@ -1675,7 +1675,7 @@ function syncControlsFromState(){
   sel('tkt-ind').classList.toggle('active',P.tktMode==='individual');
   sel('tkt-equal-box').style.display=P.tktMode==='equal'?'block':'none';
   sel('tkt-indiv-box').style.display=P.tktMode==='individual'?'flex':'none';
-  sv('lbl-neto',Math.round(P.netoPct*100)+'%');
+  sv('lbl-neto','~auto (IGV+COGS)');
   sv('lbl-rsv',fmt(P.reserva));
   const cmr=sel('caja-min-range'); if(cmr) cmr.value=P.cajaMinMarca||1000;
   const cgr=sel('caja-gq-range'); if(cgr) cgr.value=Math.round((P.cajaMinGrowthQ||1.1)*100);
@@ -1899,9 +1899,7 @@ function onHr(id,v){
   recalc();
 }
 function onNeto(v){
-  const n=toNumLoose(v); if(n===null) return;
-  P.netoPct=n/100;
-  document.getElementById('lbl-neto').textContent=n+'%';
+  // netoPct ya no se usa en el motor (ahora calcula IGV + COGS real)
   recalc();
 }
 function onRsv(v){
@@ -2234,6 +2232,8 @@ function recalc(){
   const monthly=rw.monthly;
   const eqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.equity||0)]));
   const baseEqById=Object.fromEntries(derived.personCards.map((person)=>[person.id,Number(person.baseEquity||0)]));
+  // Neto efectivo (calculado por el motor: bruto - IGV - COGS)
+  const _effNetoPct=fact.total[_li]>0?(fact.neto[_li]/fact.total[_li]):0.50;
   const idx30=AÑOS.indexOf(2030);
   const idx32=AÑOS.indexOf(2032);
   const teamGap2030=derived.personCards.reduce((sum,person)=>{
@@ -2245,7 +2245,7 @@ function recalc(){
   const breakYearNum=typeof be==='number'?be:AÑOS[AÑOS.length-1];
   const targetBreakYear=Math.max(AÑOS[0], breakYearNum-1);
   const targetBreakIdx=AÑOS.indexOf(targetBreakYear);
-  const gapBreakGross=targetBreakIdx>=0?Math.max(0,Math.round((Math.max(0,fact.sued_tot[targetBreakIdx]+P.reserva-fact.neto[targetBreakIdx]))/Math.max(0.01,P.netoPct))):0;
+  const gapBreakGross=targetBreakIdx>=0?Math.max(0,Math.round((Math.max(0,fact.sued_tot[targetBreakIdx]+(P.reserva||0)-fact.neto[targetBreakIdx]))/Math.max(0.01,_effNetoPct))):0;
   const growth30=fact.total[0]>0?(((fact.total[idx30]/fact.total[0])-1)*100):0;
   const growth32=fact.total[idx30]>0?(((fact.total[idx32]/fact.total[idx30])-1)*100):0;
   const brands32=(QSYS.BRAND_IDS||['almaria','ht']).map((b)=>({
@@ -2261,7 +2261,7 @@ function recalc(){
   let minCashMonth='Inicio';
   const meses=['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'];
   monthly.forEach((m,i)=>{
-    const neto_m=Math.round(m.ingresos*P.netoPct);
+    const neto_m=m.netoReal||Math.round(m.ingresos*_effNetoPct);
     const flujo=neto_m-m.burn;
     cashWalk+=flujo;
     if(cashWalk<minCash){
@@ -2282,8 +2282,8 @@ function recalc(){
   const teamGap10=Math.max(0,(10000*PERSONS.length)-team2032);
 
   // ── KPIs dashboard ──
-  const factMinBE=Math.round(fact.sued_tot[_li]/Math.max(0.01,P.netoPct));
-  const netoPctInt=Math.round(P.netoPct*100);
+  const factMinBE=Math.round(fact.sued_tot[_li]/Math.max(0.01,_effNetoPct));
+  const netoPctInt=Math.round(_effNetoPct*100);
   animateValue(sel('kpi-fact-need'),fmt(factMinBE)+'/mes');
   const kpiFactSub=sel('kpi-fact-need-sub');
   if(kpiFactSub) kpiFactSub.textContent='factura bruta mínima '+_lastYear;
@@ -2348,7 +2348,7 @@ function recalc(){
       const isBEyr=yr===be;
       d+='<div class="kd-row" style="'+(isBEyr?'background:rgba(82,201,122,.08);border-radius:4px;padding:.15rem .25rem;margin:0 -.25rem':'')+'"><span class="kd-lbl">'+(isBEyr?'→ ':'')+yr+'</span><span class="kd-val" style="color:'+(isOk?'var(--green)':'var(--coral)')+'">'+fmt(gapY)+'</span></div>';
     }
-    d+='<div class="kd-eq">Cada año: neto (factura×'+netoPctInt+'%) − planilla = gap.<br>Cuando gap ≥ 0 → <strong>break-even</strong>. '+(typeof be==='number'?'En <strong>'+be+'</strong> el neto '+fmt(fact.neto[beIdx])+' supera la planilla '+fmt(fact.sued_tot[beIdx])+'.':'Aún no se alcanza.')+'</div>';
+    d+='<div class="kd-eq">Cada año: neto (bruto − IGV − COGS) − planilla − costos fijos = gap.<br>Cuando gap ≥ 0 → <strong>break-even</strong>. '+(typeof be==='number'?'En <strong>'+be+'</strong> el neto '+fmt(fact.neto[beIdx])+' supera los egresos '+fmt(fact.sued_tot[beIdx])+'.':'Aún no se alcanza.')+'</div>';
     kdBE.innerHTML=d;
   }
 
@@ -2422,10 +2422,10 @@ function recalc(){
 
   // ── Dashboard narrativo ──
   const idx27=AÑOS.indexOf(2027);
-  const factMinBE27=Math.round(fact.sued_tot[idx27]/Math.max(0.01,P.netoPct));
+  const factMinBE27=Math.round(fact.sued_tot[idx27]/Math.max(0.01,_effNetoPct));
   const gap27=Math.max(0,factMinBE27-fact.total[idx27]);
-  const factMinBELast=Math.round(fact.sued_tot[_li]/Math.max(0.01,P.netoPct));
-  const factMinDistLast=Math.round((fact.sued_tot[_li]+Number(P.reserva||0))/Math.max(0.01,P.netoPct));
+  const factMinBELast=Math.round(fact.sued_tot[_li]/Math.max(0.01,_effNetoPct));
+  const factMinDistLast=Math.round((fact.sued_tot[_li]+Number(P.reserva||0))/Math.max(0.01,_effNetoPct));
   const _tktTot=PERSONS.reduce((s,p)=>s+getTkt(p.id),0);
   const _bcAll=PERSONS.reduce((s,p)=>s+Object.values(p.brandCapital||{}).reduce((a,v)=>a+Number(v||0),0),0);
   const _tswAll=PERSONS.reduce((s,p)=>s+sw(p,sc[p.id]).sw,0);
@@ -2454,7 +2454,7 @@ function recalc(){
   const roadmapEl=sel('dash-roadmap');
   if(roadmapEl){
     let r='';
-    const netPct=Math.round(P.netoPct*100);
+    const netPct=netoPctInt;
     const reservaNum=Number(P.reserva||0);
 
     r+='<div style="display:flex;overflow-x:auto;gap:.85rem;padding:.35rem 0">';
@@ -2580,7 +2580,7 @@ function recalc(){
     const teamTotalsByYear=AÑOS.map((_,i)=>derived.personCards.reduce((s,p)=>s+Number(p.yearlyTotals[i]||0),0));
     const teamSueByYear=AÑOS.map((_,i)=>fact.sued_f[i]);
     const teamEqByYear=AÑOS.map((_,i)=>derived.personCards.reduce((s,p)=>s+Math.round(dist[i]*(eqById[p.id]||0)/100),0));
-    const factMinByYear=AÑOS.map((_,i)=>Math.round(fact.sued_tot[i]/Math.max(0.01,P.netoPct)));
+    const factMinByYear=AÑOS.map((_,i)=>Math.round(fact.sued_tot[i]/Math.max(0.01,fact.total[i]>0?fact.neto[i]/fact.total[i]:_effNetoPct)));
     const accumByYear=[];let accum=0;
     AÑOS.forEach((_,i)=>{accum+=teamTotalsByYear[i]*12;accumByYear.push(accum);});
     const roiByYear=accumByYear.map(v=>pool>0?v/pool:0);
@@ -2652,7 +2652,7 @@ function recalc(){
     const colchon30=fact.colchon[idx30];
     const firstPosCol=fact.colchon.findIndex((v,i)=>i>0&&v>=0);
     const lastNegCol=fact.colchon.reduce((last,v,i)=>v<0?i:last,-1);
-    const netoPctLabel=Math.round(P.netoPct*100);
+    const netoPctLabel=netoPctInt;
     const reservaLabel=fmt(P.reserva);
     b+=`<div style="${panelS}">
       <div style="${titleS}color:var(--mint)">💵 Flujo del dinero año a año</div>
@@ -2960,10 +2960,11 @@ function recalc(){
   const rows=[
     ['🌿 Almaria',fact.alm,'cv',false],['💻 HugoTech',fact.ht,'ct',false],
     ['TOTAL QOCHIX',fact.total,'cg',false],
-    [`NETO ${(P.netoPct*100).toFixed(0)}%`,fact.neto,'ct',false],
+    [`NETO (–IGV–COGS) ~${netoPctInt}%`,fact.neto,'ct',false],
     ['(-) Sueldos fundadores',fact.sued_f,'cc',false],
-    ['(-) Equipo operativo',fact.hcost,'cc',false],
-    ['(-) Total planilla',fact.sued_tot,'cc',false],
+    ['(-) Equipo op. + cargas 45%',fact.hcost,'cc',false],
+    ['(-) Costos fijos op.',fact.fixedOps||[],'cc',false],
+    ['(-) Total egresos op.',fact.sued_tot,'cc',false],
     ['COLCHÓN',fact.colchon,'cg',false],
     ['💰 DISTRIBUIBLE',fact.dist,'cg',false],
     ['FLUJO CAJA /mes',fact.cajaNeta||AÑOS.map(()=>0),'',true],
@@ -2995,9 +2996,10 @@ function recalc(){
     h+='<div style="font-weight:700;color:var(--text);margin-bottom:.5rem">¿Cómo leer esta tabla?</div>';
     h+='<div style="margin-bottom:.35rem"><strong>Almaria y HugoTech:</strong> facturación mensual proyectada de cada marca. Basada en las líneas de servicio (precios × volúmenes) del escenario activo.</div>';
     h+='<div style="margin-bottom:.35rem"><strong>TOTAL QOCHIX:</strong> suma de ambas marcas. Es el ingreso bruto mensual del ecosistema.</div>';
-    h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">NETO ${Math.round(P.netoPct*100)}%:</strong> lo que queda después de costos operativos (impuestos, herramientas, etc.). Solo este monto está disponible para sueldos.</div>`;
+    h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--teal)">NETO (~${netoPctInt}%):</strong> lo que queda después de IGV (18%), COGS por línea, y costos fijos. Solo este monto está disponible para sueldos.</div>`;
     h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Sueldos fundadores:</strong> lo que se paga a los '+PERSONS.length+' socios. Está <em>capeado por el revenue</em>: si no hay suficiente neto, los sueldos bajan automáticamente.</div>';
-    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Equipo operativo:</strong> content creators, comerciales, facilitadora. Se pagan antes que los sueldos fundadores.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Equipo op. + cargas 45%:</strong> content creators, comerciales, facilitadora + EsSalud, CTS, gratificaciones, SCTR. Se pagan antes que los sueldos fundadores.</div>';
+    h+='<div style="margin-bottom:.35rem"><strong style="color:var(--coral)">(-) Costos fijos op.:</strong> oficina/coworking, herramientas digitales, pauta publicitaria, seguros, logística, imprevistos.</div>';
     h+=`<div style="margin-bottom:.35rem"><strong>COLCHÓN:</strong> neto − planilla total. Si es <span style="color:var(--coral)">negativo</span> (entre paréntesis), el ecosistema no genera suficiente para pagar a todos. ${firstPos>0?'El colchón se vuelve positivo en <strong>'+AÑOS[firstPos]+'</strong>.':'El colchón nunca se vuelve positivo en este escenario.'}</div>`;
     h+=`<div style="margin-bottom:.35rem"><strong style="color:var(--gold)">💰 DISTRIBUIBLE:</strong> max(0, colchón − reserva S/${fmt(P.reserva||0)}). Es lo que se reparte entre socios según su % de equity, <em>aparte</em> de su sueldo.</div>`;
     h+='<div style="border-top:1px solid var(--brd);padding-top:.5rem">';
@@ -3082,8 +3084,8 @@ function recalc(){
   // ── Metas sueldo vs impacto (referencia = curva literal pacto) ──
   const dPay30=fact.sued_f[idx30]-factPact.sued_f[idx30];
   const dPay32=fact.sued_f[idx32]-factPact.sued_f[idx32];
-  const factExtra30=dPay30>0?Math.round(dPay30/P.netoPct):0;
-  const factExtra32=dPay32>0?Math.round(dPay32/P.netoPct):0;
+  const factExtra30=dPay30>0?Math.round(dPay30/_effNetoPct):0;
+  const factExtra32=dPay32>0?Math.round(dPay32/_effNetoPct):0;
   const siD30=sel('si-delta-pay-30');
   if(siD30)siD30.textContent=(dPay30>=0?'+':'')+fmt(dPay30)+'/mes';
   const siF30=sel('si-fact-extra-30');
@@ -3126,7 +3128,7 @@ function recalc(){
     if(bothZero){
       siNota.innerHTML='<strong>Curva = pacto base</strong> (metas 2030/2032 iguales a la tabla). Δ planilla y distribuible vs referencia: <strong>cero</strong>.';
     }else if(anyUp){
-      siNota.innerHTML=`<strong>Equity según modo actual.</strong> Subiste planilla fundadores vs pacto: en 2030 Δ <strong>${fmt(dPay30)}</strong>/mes · en 2032 Δ <strong>${fmt(dPay32)}</strong>/mes. Para acercarte al distribuible del pacto en cada año (aprox.): suma ~<strong>${fmt(factExtra30)}</strong>/mes de facturación bruta en 2030 y ~<strong>${fmt(factExtra32)}</strong>/mes en 2032 (con neto ${(P.netoPct*100).toFixed(0)}%).`;
+      siNota.innerHTML=`<strong>Equity según modo actual.</strong> Subiste planilla fundadores vs pacto: en 2030 Δ <strong>${fmt(dPay30)}</strong>/mes · en 2032 Δ <strong>${fmt(dPay32)}</strong>/mes. Para acercarte al distribuible del pacto en cada año (aprox.): suma ~<strong>${fmt(factExtra30)}</strong>/mes de facturación bruta en 2030 y ~<strong>${fmt(factExtra32)}</strong>/mes en 2032 (con neto efectivo ~${netoPctInt}%).`;
     }else{
       siNota.innerHTML='<strong>En 2030 y 2032 la planilla fundadores no supera al pacto</strong> en la suma total; el distribuible en esos cruces es ≥ referencia. Si solo moviste una meta, revisa años intermedios en la tabla de facturación.';
     }
@@ -3164,8 +3166,10 @@ function recalc(){
 
   // Tabla planilla
   html=`<tr class="trh"><td>Fundadores</td>${fact.sued_f.map(v=>`<td class="cg">${fmt(v)}</td>`).join('')}</tr>`;
-  html+=`<tr><td>Equipo operativo</td>${fact.hcost.map(v=>`<td class="cc">${fmt(v)}</td>`).join('')}</tr>`;
-  html+=`<tr class="trs"><td>TOTAL PLANILLA</td>${fact.sued_tot.map(v=>`<td class="cg cb">${fmt(v)}</td>`).join('')}</tr>`;
+  html+=`<tr><td>+ Cargas fund. 10%</td>${fact.founderCargas.map(v=>`<td class="cc" style="font-size:.6rem">${fmt(v)}</td>`).join('')}</tr>`;
+  html+=`<tr><td>Equipo op. + cargas 45%</td>${fact.hcost.map(v=>`<td class="cc">${fmt(v)}</td>`).join('')}</tr>`;
+  html+=`<tr><td>Costos fijos op.</td>${fact.fixedOps.map(v=>`<td class="cc">${fmt(v)}</td>`).join('')}</tr>`;
+  html+=`<tr class="trs"><td>TOTAL EGRESOS OP.</td>${fact.sued_tot.map(v=>`<td class="cg cb">${fmt(v)}</td>`).join('')}</tr>`;
   sel('tb-planilla').innerHTML=html;
 
   // Impacto nota
@@ -3208,7 +3212,7 @@ function recalc(){
   let caja=rw.capital;
   html='';
   monthly.forEach((m,i)=>{
-    const neto_m=Math.round(m.ingresos*P.netoPct);
+    const neto_m=m.netoReal||Math.round(m.ingresos*_effNetoPct);
     const flujo=neto_m-m.burn;
     caja+=flujo;
     const estado=caja<0?'🔴 ROJO':caja<5000?'🟡 ALERTA':'🟢 OK';
@@ -3453,7 +3457,7 @@ function renderCharts(fact,dist,rw,monthly){
     let caja=rw.capital||0;
     const cajas=[caja];
     const monthly2=rw.monthly;
-    monthly2.forEach(m=>{const neto=Math.round((m.ingresos||0)*(P.netoPct||0.65));caja+=neto-(m.burn||0);cajas.push(caja);});
+    monthly2.forEach(m=>{const neto=m.netoReal||Math.round((m.ingresos||0)*0.50);caja+=neto-(m.burn||0);cajas.push(caja);});
     const meses=['Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'];
     charts.caja=new Chart(ccaja,{type:'line',data:{labels:meses,datasets:[
       {label:'Caja disponible',data:cajas,borderColor:'#3ECFCF',backgroundColor:'rgba(62,207,207,.1)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:cajas.map(v=>v<0?'#E86B5F':'#3ECFCF')},
@@ -3475,8 +3479,7 @@ function paintFlujoReal(yr){
   const fact=derived.fact;
   const lr=fact.lineRevenue;
   const fmt=QSYS.fmtCurrency;
-  const netPct=P.netoPct||0.65;
-  const costPct=1-netPct;
+  const CS=QSYS.COST_STRUCTURE;
   const MONTH_NAMES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const SHOW_YEARS=[2026,2027,2028,2029,2030,2031,2032];
   const curves=derived.curves||fact.suedCurves||{};
@@ -3484,7 +3487,6 @@ function paintFlujoReal(yr){
   const scLabels={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
   sv('fr-scenario-lbl',scLabels[P.sc]||P.sc);
 
-  // Year tabs
   const tabsEl=sel('fr-year-tabs');
   if(tabsEl) tabsEl.innerHTML=SHOW_YEARS.map(y=>'<button class="fr-year-btn'+(y===_frYear?' active':'')+'" onclick="paintFlujoReal('+y+')">'+y+'</button>').join('');
 
@@ -3498,7 +3500,6 @@ function paintFlujoReal(yr){
     months.push({idx:m,name:MONTH_NAMES[mi]+' '+_frYear,short:MONTH_NAMES[mi]});
   }
 
-  // Period label
   const pLbl=sel('fr-period-lbl');
   if(pLbl) pLbl.textContent=months[0].name+' – '+months[months.length-1].name;
 
@@ -3517,12 +3518,16 @@ function paintFlujoReal(yr){
     return raw;
   }
 
-  const lineData=lr.lines.map(l=>({id:l.id,brand:l.brand,name:l.name,monthly:monthlyRev(l)}));
+  const lineData=lr.lines.map(l=>({id:l.id,brand:l.brand,name:l.name,monthly:monthlyRev(l),cogsPct:l.cogsPct||0,clientType:l.clientType,delayDays:l.delayDays||0}));
   let almM=new Array(mesesAnio).fill(0), htM=new Array(mesesAnio).fill(0);
   lineData.forEach(l=>l.monthly.forEach((v,m)=>{if(l.brand==='almaria')almM[m]+=v;else htM[m]+=v;}));
   const brutM=months.map((_,m)=>almM[m]+htM[m]);
-  const costoVtaM=brutM.map(v=>Math.round(v*costPct));
-  const netoM=brutM.map(v=>Math.round(v*netPct));
+
+  // #1: IGV y COGS desglosados (no más "costo de venta genérico")
+  const igvM=brutM.map(v=>Math.round(v*CS.igvPct));
+  const cogsM=new Array(mesesAnio).fill(0);
+  lineData.forEach(l=>l.monthly.forEach((v,m)=>{cogsM[m]+=Math.round(v*l.cogsPct);}));
+  const netoM=brutM.map((v,m)=>v-igvM[m]-cogsM[m]);
 
   // Founder salary per person per month
   const founderSalM={};
@@ -3532,30 +3537,48 @@ function paintFlujoReal(yr){
     founderSalM[p.id]=ms;
     totalFounderM+=ms;
   });
+  // #2: Cargas sociales sobre fundadores (recibos por honorarios ~10%)
+  const founderCargasM=Math.round(totalFounderM*0.10);
 
   // Hires per person per month
   const hiresDetail=[];
-  let totalHiresM=0;
+  let totalHiresBaseM=0;
   HIRES.forEach(h=>{
     const sYi=h.startYear?Math.max(0,AÑOS.indexOf(h.startYear)):0;
     const active=yi>=sYi;
     const sue=active?Math.round(Number(h.sue||0)*Math.pow(Number(h.growth||1),yi-sYi)):0;
     hiresDetail.push({role:h.role,sue,active,startYear:h.startYear?AÑOS[sYi]:null});
-    totalHiresM+=sue;
+    totalHiresBaseM+=sue;
   });
+  // #2: Cargas sociales sobre equipo (+45%)
+  const hiresCargasM=Math.round(totalHiresBaseM*QSYS.CARGAS_SOCIALES_PCT);
+  const totalHiresM=totalHiresBaseM+hiresCargasM;
+
+  // #8: Costos fijos operativos reales
+  const fixedOpM=Math.round((fact.fixedOps[yi]||0));
 
   const rsvMonth=Number(P.reserva||0);
   const cajaResMes=Math.round((fact.cajaReserva[yi]||0)/(mesesAnio||12));
-  const totalPlanM=totalFounderM+totalHiresM;
-  const totalEgM=totalPlanM+rsvMonth+cajaResMes;
-  const colchonMes=netoM.map(v=>v-totalPlanM);
-  const utilM=netoM.map(v=>v-totalEgM);
+  const totalPlanM=totalFounderM+founderCargasM+totalHiresM;
+  const totalEgM=totalPlanM+fixedOpM+rsvMonth+cajaResMes;
+
+  // #3: Impuesto a la renta mensualizado
+  const irMes=fact.irMes[yi]||0;
+  const totalEgConIR=totalEgM+irMes;
+
+  const utilPreIR=netoM.map(v=>v-totalEgM);
+  const utilM=netoM.map(v=>v-totalEgConIR);
   const utilSum=utilM.reduce((a,b)=>a+b,0);
   const brutSum=brutM.reduce((a,b)=>a+b,0);
+  const igvSum=igvM.reduce((a,b)=>a+b,0);
+  const cogsSum=cogsM.reduce((a,b)=>a+b,0);
   const netoSum=netoM.reduce((a,b)=>a+b,0);
-  const egSum=totalEgM*mesesAnio;
+  const egSum=totalEgConIR*mesesAnio;
 
-  // Caja acumulada — usa cajaNeta del sistema (consistente con dist)
+  // #9: CxC (cuentas por cobrar)
+  const cxcAnual=fact.cxc[yi]||0;
+
+  // Caja acumulada
   let cajaStart=0;
   if(_frYear===2026) cajaStart=derived.runway?derived.runway.capital||0:0;
   else {
@@ -3569,20 +3592,18 @@ function paintFlujoReal(yr){
   const cajaMin=Math.min(cajaStart,...cajaM);
   const cajaEnd=cajaM[cajaM.length-1];
 
-  // Margen operativo
   const margenOp=brutSum>0?Math.round(utilSum/brutSum*100):0;
-  const margenNeto=netoSum>0?Math.round(utilSum/netoSum*100):0;
 
   // ─── KPI Cards ───
   const kpiEl=sel('fr-kpis');
   if(kpiEl){
     const kpis=[
       {label:'Facturación bruta',val:fmt(brutSum),sub:mesesAnio+' meses',cls:'kpi-gold'},
-      {label:'Ingreso neto',val:fmt(netoSum),sub:Math.round(netPct*100)+'% del bruto',cls:'kpi-teal'},
-      {label:'Egresos totales',val:fmt(egSum),sub:'Planilla '+fmt(totalPlanM)+' + Rsv '+fmt(rsvMonth+cajaResMes)+'/mes',cls:'kpi-coral'},
+      {label:'Neto (–IGV –COGS)',val:fmt(netoSum),sub:'IGV: '+fmt(igvSum)+' · COGS: '+fmt(cogsSum),cls:'kpi-teal'},
+      {label:'Egresos + IR',val:fmt(egSum),sub:'Plan '+fmt(totalPlanM)+' + Fijos '+fmt(fixedOpM)+' + IR '+fmt(irMes)+'/mes',cls:'kpi-coral'},
       {label:'Utilidad neta',val:fmt(utilSum),sub:'Margen '+margenOp+'%'+(utilSum<0?' · Déficit':''),cls:utilSum>=0?'kpi-green':'kpi-coral'},
-      {label:'Caja final '+_frYear,val:fmt(cajaEnd),sub:'Mín: '+fmt(cajaMin)+(cajaMin<0?' ⚠️':''),cls:cajaEnd>=0?'kpi-green':'kpi-coral'},
-      {label:'Break-even neto',val:fmt(Math.round(totalEgM/netPct)),sub:'Facturar '+fmt(Math.round(totalEgM/netPct))+' bruto/mes para cubrir',cls:netoM[netoM.length-1]>=totalEgM?'kpi-purple':'kpi-coral'},
+      {label:'Caja final '+_frYear,val:fmt(cajaEnd),sub:'Mín: '+fmt(cajaMin)+(cajaMin<0?' ⚠️':'')+' · CxC: '+fmt(cxcAnual),cls:cajaEnd>=0?'kpi-green':'kpi-coral'},
+      {label:'Break-even bruto',val:fmt(brutSum>0&&netoSum>0?Math.round(totalEgConIR/(netoSum/brutSum)):0),sub:'Facturar esto/mes p/ cubrir',cls:netoM[netoM.length-1]>=totalEgConIR?'kpi-purple':'kpi-coral'},
     ];
     kpiEl.innerHTML=kpis.map(k=>'<div class="fr-kpi '+k.cls+'"><div class="fr-kpi-label">'+k.label+'</div><div class="fr-kpi-val">'+k.val+'</div><div class="fr-kpi-sub">'+k.sub+'</div></div>').join('');
   }
@@ -3597,23 +3618,30 @@ function paintFlujoReal(yr){
     const dAlm=SHOW_YEARS.map(y=>getYr(fact.alm,y));
     const dHt=SHOW_YEARS.map(y=>getYr(fact.ht,y));
     const dTot=SHOW_YEARS.map((_,i)=>dAlm[i]+dHt[i]);
-    const dCosto=dTot.map(v=>Math.round(v*costPct));
-    const dNeto=dTot.map(v=>Math.round(v*netPct));
+    const dIgv=SHOW_YEARS.map(y=>getYr(fact.totalIgv,y));
+    const dCogs=SHOW_YEARS.map(y=>getYr(fact.totalCogs,y));
+    const dNeto=SHOW_YEARS.map(y=>getYr(fact.neto,y));
     const dSuedF=SHOW_YEARS.map(y=>getYr(fact.sued_f,y));
+    const dFCarg=SHOW_YEARS.map(y=>getYr(fact.founderCargas,y));
+    const dHcBase=SHOW_YEARS.map(y=>getYr(fact.hcostBase,y));
+    const dHcCarg=SHOW_YEARS.map(y=>getYr(fact.hcostCargas,y));
     const dHc=SHOW_YEARS.map(y=>getYr(fact.hcost,y));
-    const dPlan=SHOW_YEARS.map((_,i)=>dSuedF[i]+dHc[i]);
-    const dRsv=SHOW_YEARS.map(()=>rsvMonth);
-    const dCaja=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);const mp=QSYS.MESES_POR_AÑO[i]||12;return i>=0?Math.round((fact.cajaReserva[i]||0)/mp):0;});
-    const dTotEg=SHOW_YEARS.map((_,i)=>dPlan[i]+dRsv[i]+dCaja[i]);
-    const dUtil=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?(fact.cajaNeta[i]||0):0;});
+    const dFixedOps=SHOW_YEARS.map(y=>getYr(fact.fixedOps,y));
+    const dPlan=SHOW_YEARS.map((_,i)=>dSuedF[i]+dFCarg[i]+dHc[i]+dFixedOps[i]);
+    const dColchon=SHOW_YEARS.map(y=>getYr(fact.colchon,y));
+    const dRsv=SHOW_YEARS.map(y=>getYr(fact.rsvMes,y));
+    const dCajaMes=SHOW_YEARS.map(y=>getYr(fact.cajaMes,y));
+    const dUai=SHOW_YEARS.map(y=>getYr(fact.uai,y));
+    const dIR=SHOW_YEARS.map(y=>getYr(fact.irMes,y));
+    const dUtil=SHOW_YEARS.map(y=>getYr(fact.cajaNeta,y));
     const dDist=SHOW_YEARS.map(y=>getYr(fact.dist,y));
-    const dColchon=SHOW_YEARS.map(y=>{const i=AÑOS.indexOf(y);return i>=0?(fact.colchon[i]||0):0;});
+    const dCxC=SHOW_YEARS.map(y=>getYr(fact.cxc,y));
     const dMarg=dTot.map((v,i)=>v>0?Math.round(dUtil[i]/v*100):0);
 
     function pctChg(arr){const last=arr[arr.length-1];return arr[0]>0?Math.round((last-arr[0])/arr[0]*100)+'%':(last>0?'∞':'—');}
     function annR(lbl,arr,cls,isDelta){
       const delta=isDelta!==false?pctChg(arr):'';
-      return '<tr class="'+(cls||'')+'">'+'<td>'+lbl+'</td>'+arr.map((v,i)=>{
+      return '<tr class="'+(cls||'')+'">'+'<td>'+lbl+'</td>'+arr.map((v)=>{
         const c=cls&&cls.includes('negative')?'color:var(--coral)':cls&&cls.includes('positive')?'color:var(--green)':'';
         return '<td'+(c?' style="'+c+'"':'')+'>'+fmt(v)+'</td>';
       }).join('')+'<td style="text-align:center;font-size:.62rem;color:var(--muted)">'+delta+'</td></tr>';
@@ -3622,24 +3650,31 @@ function paintFlujoReal(yr){
     r.push(annR('<span class="fr-brand-alm">🌿</span> Almaria',dAlm));
     r.push(annR('<span class="fr-brand-ht">⚡</span> HugoTech',dHt));
     r.push(annR('<strong>FACTURACIÓN BRUTA</strong>',dTot,'fr-subtotal'));
-    r.push(annR('(–) Costo de venta ('+Math.round(costPct*100)+'%)',dCosto,'fr-negative',false));
-    r.push(annR('<strong>INGRESO NETO</strong>',dNeto,'fr-total-green'));
+    r.push(annR('(–) IGV 18%',dIgv,'fr-negative',false));
+    r.push(annR('(–) COGS por línea',dCogs,'fr-negative',false));
+    r.push(annR('<strong>= INGRESO NETO</strong>',dNeto,'fr-total-green'));
     r.push('<tr class="fr-margin"><td>Margen bruto</td>'+dTot.map((v,i)=>v>0?'<td>'+Math.round(dNeto[i]/v*100)+'%</td>':'<td>—</td>').join('')+'<td></td></tr>');
     r.push(annR('(–) Planilla fundadores',dSuedF,'fr-negative',false));
-    r.push(annR('(–) Equipo operativo',dHc,'fr-negative',false));
+    r.push(annR('(–) Cargas sociales fund. 10%',dFCarg,'fr-negative',false));
+    r.push(annR('(–) Equipo operativo base',dHcBase,'fr-negative',false));
+    r.push(annR('(–) Cargas sociales equipo 45%',dHcCarg,'fr-negative',false));
+    r.push(annR('(–) Costos fijos operativos',dFixedOps,'fr-negative',false));
     const colchonCls=dColchon[dColchon.length-1]>=0?'fr-total-green':'fr-total-red';
-    r.push(annR('<strong>= MARGEN OPERATIVO BRUTO</strong>',dColchon,colchonCls));
+    r.push(annR('<strong>= MARGEN OPERATIVO</strong>',dColchon,colchonCls));
     r.push('<tr class="fr-margin"><td>% sobre facturación</td>'+dTot.map((v,i)=>v>0?'<td style="color:'+(dColchon[i]>=0?'var(--green)':'var(--coral)')+'">'+Math.round(dColchon[i]/v*100)+'%</td>':'<td>—</td>').join('')+'<td></td></tr>');
     r.push(annR('(–) Reserva operativa',dRsv,'',false));
-    r.push(annR('(–) Caja marca',dCaja,'',false));
+    r.push(annR('(–) Caja marca',dCajaMes,'',false));
+    r.push(annR('<strong>= UTILIDAD ANTES IR</strong>',dUai,''));
+    r.push(annR('(–) Imp. renta (10-29.5%)',dIR,'fr-negative',false));
     const utilCls=dUtil[dUtil.length-1]>=0?'fr-total-green':'fr-total-red';
     r.push(annR('<strong>= UTILIDAD NETA</strong>',dUtil,utilCls));
     r.push('<tr class="fr-margin"><td>Margen neto</td>'+dMarg.map(v=>'<td style="color:'+(v>=0?'var(--green)':'var(--coral)')+'">'+v+'%</td>').join('')+'<td></td></tr>');
     r.push(annR('<strong>DISTRIBUIBLE (equity)</strong>',dDist,'fr-total'));
+    r.push(annR('<em style="font-size:.6rem">📋 CxC pendiente (B2B 45d)</em>',dCxC,'fr-margin',false));
     annBody.innerHTML=r.join('');
   }
 
-  // ─── Detalle mensual: títulos ───
+  // ─── Detalle mensual ───
   sv('fr-detail-title','📅 DETALLE MENSUAL — '+_frYear);
   sv('fr-cashflow-title','🏦 FLUJO DE CAJA ACUMULADO — '+_frYear);
   sv('fr-chart1-title','📈 P&L Mensual — '+_frYear);
@@ -3657,7 +3692,7 @@ function paintFlujoReal(yr){
     function lineRow(l){
       const s=l.monthly.reduce((a,b)=>a+b,0);
       const pct=brutSum>0?Math.round(s/brutSum*100):0;
-      return '<tr><td>'+l.name+'</td>'+l.monthly.map(v=>'<td'+(v>0?'':' style="opacity:.3"')+'>'+(v>0?fmt(v):'—')+'</td>').join('')+'<td><strong>'+fmt(s)+'</strong></td><td><span class="fr-pct">'+pct+'%</span></td></tr>';
+      return '<tr><td>'+l.name+' <span style="font-size:.5rem;color:var(--muted)">COGS '+Math.round(l.cogsPct*100)+'%'+(l.delayDays>0?' · '+l.clientType+' '+l.delayDays+'d':'')+'</span></td>'+l.monthly.map(v=>'<td'+(v>0?'':' style="opacity:.3"')+'>'+(v>0?fmt(v):'—')+'</td>').join('')+'<td><strong>'+fmt(s)+'</strong></td><td><span class="fr-pct">'+pct+'%</span></td></tr>';
     }
     almLines.forEach(l=>rows.push(lineRow(l)));
     const almS=almM.reduce((a,b)=>a+b,0);
@@ -3668,8 +3703,9 @@ function paintFlujoReal(yr){
     rows.push('<tr class="fr-subtotal-ht"><td><span class="fr-brand-ht">⚡ HUGOTECH</span></td>'+htM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(htS)+'</strong></td><td><span class="fr-pct">'+(brutSum>0?Math.round(htS/brutSum*100):0)+'%</span></td></tr>');
 
     rows.push('<tr class="fr-total"><td><strong>FACTURACIÓN BRUTA</strong></td>'+brutM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(brutSum)+'</strong></td><td></td></tr>');
-    rows.push('<tr class="fr-negative"><td>(–) Costo de venta ('+Math.round(costPct*100)+'%)</td>'+costoVtaM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(costoVtaM.reduce((a,b)=>a+b,0))+'</strong></td><td></td></tr>');
-    rows.push('<tr class="fr-total-green"><td><strong>INGRESO NETO OPERATIVO</strong></td>'+netoM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(netoSum)+'</strong></td><td></td></tr>');
+    rows.push('<tr class="fr-negative"><td>(–) IGV 18%</td>'+igvM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(igvSum)+'</strong></td><td></td></tr>');
+    rows.push('<tr class="fr-negative"><td>(–) COGS por línea</td>'+cogsM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(cogsSum)+'</strong></td><td></td></tr>');
+    rows.push('<tr class="fr-total-green"><td><strong>INGRESO NETO</strong></td>'+netoM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(netoSum)+'</strong></td><td></td></tr>');
 
     incBody.innerHTML=rows.join('');
   }
@@ -3689,7 +3725,8 @@ function paintFlujoReal(yr){
       const color=ms>0?'':'opacity:.4';
       er.push('<tr'+(color?' style="'+color+'"':'')+'><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+p.c+';margin-right:.4rem"></span>'+p.name+'</td>'+months.map(()=>'<td>'+(ms>0?fmt(ms):'—')+'</td>').join('')+'<td><strong>'+fmt(tot)+'</strong></td><td><span class="fr-pct">'+pct+'%</span></td></tr>');
     });
-    er.push('<tr class="fr-subtotal"><td>Subtotal fundadores</td>'+months.map(()=>'<td>'+fmt(totalFounderM)+'</td>').join('')+'<td><strong>'+fmt(totalFounderM*mesesAnio)+'</strong></td><td></td></tr>');
+    er.push('<tr style="color:var(--muted);font-size:.6rem"><td>    + Cargas sociales 10% (RxH)</td>'+months.map(()=>'<td>'+fmt(founderCargasM)+'</td>').join('')+'<td><strong>'+fmt(founderCargasM*mesesAnio)+'</strong></td><td></td></tr>');
+    er.push('<tr class="fr-subtotal"><td>Subtotal fundadores</td>'+months.map(()=>'<td>'+fmt(totalFounderM+founderCargasM)+'</td>').join('')+'<td><strong>'+fmt((totalFounderM+founderCargasM)*mesesAnio)+'</strong></td><td></td></tr>');
 
     er.push('<tr class="fr-sep-top"><td colspan="'+(mesesAnio+3)+'" style="font-size:.6rem;font-weight:700;color:var(--coral);padding:.55rem .55rem .2rem;text-transform:uppercase;letter-spacing:.06em">Equipo operativo</td></tr>');
     hiresDetail.forEach(h=>{
@@ -3700,13 +3737,22 @@ function paintFlujoReal(yr){
         er.push('<tr><td>'+h.role+'</td>'+months.map(()=>'<td>'+fmt(h.sue)+'</td>').join('')+'<td><strong>'+fmt(h.sue*mesesAnio)+'</strong></td><td><span class="fr-pct">'+pct+'%</span></td></tr>');
       }
     });
+    er.push('<tr style="color:var(--muted);font-size:.6rem"><td>    + Cargas sociales 45% (EsSalud+CTS+Grat)</td>'+months.map(()=>'<td>'+fmt(hiresCargasM)+'</td>').join('')+'<td><strong>'+fmt(hiresCargasM*mesesAnio)+'</strong></td><td></td></tr>');
     er.push('<tr class="fr-subtotal"><td>Subtotal equipo op.</td>'+months.map(()=>'<td>'+fmt(totalHiresM)+'</td>').join('')+'<td><strong>'+fmt(totalHiresM*mesesAnio)+'</strong></td><td></td></tr>');
 
-    er.push('<tr class="fr-sep-top"><td colspan="'+(mesesAnio+3)+'" style="font-size:.6rem;font-weight:700;color:var(--teal);padding:.55rem .55rem .2rem;text-transform:uppercase;letter-spacing:.06em">Reservas y provisiones</td></tr>');
+    er.push('<tr class="fr-sep-top"><td colspan="'+(mesesAnio+3)+'" style="font-size:.6rem;font-weight:700;color:var(--purple);padding:.55rem .55rem .2rem;text-transform:uppercase;letter-spacing:.06em">Costos fijos operativos</td></tr>');
+    CS.fixedOps.forEach(op=>{
+      const amt=Math.round(op.amount*Math.pow(op.growth||1,yi));
+      er.push('<tr><td>'+op.name+'</td>'+months.map(()=>'<td>'+fmt(amt)+'</td>').join('')+'<td><strong>'+fmt(amt*mesesAnio)+'</strong></td><td></td></tr>');
+    });
+    er.push('<tr class="fr-subtotal"><td>Subtotal costos fijos</td>'+months.map(()=>'<td>'+fmt(fixedOpM)+'</td>').join('')+'<td><strong>'+fmt(fixedOpM*mesesAnio)+'</strong></td><td></td></tr>');
+
+    er.push('<tr class="fr-sep-top"><td colspan="'+(mesesAnio+3)+'" style="font-size:.6rem;font-weight:700;color:var(--teal);padding:.55rem .55rem .2rem;text-transform:uppercase;letter-spacing:.06em">Reservas, provisiones e impuestos</td></tr>');
     er.push('<tr><td>Reserva operativa</td>'+months.map(()=>'<td>'+fmt(rsvMonth)+'</td>').join('')+'<td><strong>'+fmt(rsvMonth*mesesAnio)+'</strong></td><td></td></tr>');
     if(cajaResMes>0) er.push('<tr><td>Caja marca (ahorro)</td>'+months.map(()=>'<td>'+fmt(cajaResMes)+'</td>').join('')+'<td><strong>'+fmt(cajaResMes*mesesAnio)+'</strong></td><td></td></tr>');
+    er.push('<tr><td>Imp. renta (10-29.5%)</td>'+months.map(()=>'<td>'+fmt(irMes)+'</td>').join('')+'<td><strong>'+fmt(irMes*mesesAnio)+'</strong></td><td></td></tr>');
 
-    er.push('<tr class="fr-total-red"><td><strong>TOTAL EGRESOS</strong></td>'+months.map(()=>'<td>'+fmt(totalEgM)+'</td>').join('')+'<td><strong>'+fmt(egSum)+'</strong></td><td><span class="fr-pct">100%</span></td></tr>');
+    er.push('<tr class="fr-total-red"><td><strong>TOTAL EGRESOS</strong></td>'+months.map(()=>'<td>'+fmt(totalEgConIR)+'</td>').join('')+'<td><strong>'+fmt(egSum)+'</strong></td><td><span class="fr-pct">100%</span></td></tr>');
     expBody.innerHTML=er.join('');
   }
 
@@ -3717,23 +3763,24 @@ function paintFlujoReal(yr){
     plHead.innerHTML='<tr><th>RESULTADO</th>'+months.map(m=>'<th>'+m.short+'</th>').join('')+'<th>TOTAL</th></tr>';
     const pr=[];
 
-    const colchonM=netoM.map(v=>v-totalFounderM-totalHiresM);
-    const cajaNetaM=colchonM.map(v=>v-rsvMonth-cajaResMes);
-    const distMes=cajaNetaM.map(v=>Math.max(0,v));
-    const cajaNetaSum=cajaNetaM.reduce((a,b)=>a+b,0);
-
     pr.push('<tr><td>Facturación bruta</td>'+brutM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(brutSum)+'</strong></td></tr>');
-    pr.push('<tr class="fr-negative"><td>(–) Costo de venta ('+Math.round(costPct*100)+'%)</td>'+costoVtaM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(costoVtaM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) IGV 18%</td>'+igvM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(igvSum)+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) COGS por línea</td>'+cogsM.map(v=>'<td>-'+fmt(v)+'</td>').join('')+'<td><strong>-'+fmt(cogsSum)+'</strong></td></tr>');
     pr.push('<tr class="fr-total-green"><td><strong>= INGRESO NETO</strong></td>'+netoM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(netoSum)+'</strong></td></tr>');
-    pr.push('<tr class="fr-negative"><td>(–) Planilla fundadores</td>'+months.map(()=>'<td>-'+fmt(totalFounderM)+'</td>').join('')+'<td><strong>-'+fmt(totalFounderM*mesesAnio)+'</strong></td></tr>');
-    pr.push('<tr class="fr-negative"><td>(–) Equipo operativo</td>'+months.map(()=>'<td>-'+fmt(totalHiresM)+'</td>').join('')+'<td><strong>-'+fmt(totalHiresM*mesesAnio)+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) Planilla fund. + cargas</td>'+months.map(()=>'<td>-'+fmt(totalFounderM+founderCargasM)+'</td>').join('')+'<td><strong>-'+fmt((totalFounderM+founderCargasM)*mesesAnio)+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) Equipo op. + cargas 45%</td>'+months.map(()=>'<td>-'+fmt(totalHiresM)+'</td>').join('')+'<td><strong>-'+fmt(totalHiresM*mesesAnio)+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) Costos fijos operativos</td>'+months.map(()=>'<td>-'+fmt(fixedOpM)+'</td>').join('')+'<td><strong>-'+fmt(fixedOpM*mesesAnio)+'</strong></td></tr>');
+    const colchonM=netoM.map(v=>v-totalPlanM-fixedOpM);
     const colchonClsM=colchonM[colchonM.length-1]>=0?'fr-total-green':'fr-total-red';
-    pr.push('<tr class="'+colchonClsM+'"><td><strong>= MARGEN OP. BRUTO</strong></td>'+colchonM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(colchonM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    pr.push('<tr class="'+colchonClsM+'"><td><strong>= MARGEN OPERATIVO</strong></td>'+colchonM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(colchonM.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
     pr.push('<tr class="fr-negative"><td>(–) Reserva operativa</td>'+months.map(()=>'<td>-'+fmt(rsvMonth)+'</td>').join('')+'<td><strong>-'+fmt(rsvMonth*mesesAnio)+'</strong></td></tr>');
     if(cajaResMes>0) pr.push('<tr class="fr-negative"><td>(–) Caja marca</td>'+months.map(()=>'<td>-'+fmt(cajaResMes)+'</td>').join('')+'<td><strong>-'+fmt(cajaResMes*mesesAnio)+'</strong></td></tr>');
-    const cls=cajaNetaSum>=0?'fr-total-green':'fr-total-red';
-    pr.push('<tr class="'+cls+'"><td><strong>= UTILIDAD NETA</strong></td>'+cajaNetaM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(cajaNetaSum)+'</strong></td></tr>');
-    pr.push('<tr class="fr-margin"><td>Margen neto</td>'+brutM.map((v,i)=>'<td>'+(v>0?Math.round(cajaNetaM[i]/v*100)+'%':'—')+'</td>').join('')+'<td>'+(brutSum>0?Math.round(cajaNetaSum/brutSum*100):'0')+'%</td></tr>');
+    pr.push('<tr><td><strong>= UTILIDAD ANTES IR</strong></td>'+utilPreIR.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(utilPreIR.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
+    pr.push('<tr class="fr-negative"><td>(–) Imp. renta</td>'+months.map(()=>'<td>-'+fmt(irMes)+'</td>').join('')+'<td><strong>-'+fmt(irMes*mesesAnio)+'</strong></td></tr>');
+    const cls=utilSum>=0?'fr-total-green':'fr-total-red';
+    pr.push('<tr class="'+cls+'"><td><strong>= UTILIDAD NETA</strong></td>'+utilM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(utilSum)+'</strong></td></tr>');
+    pr.push('<tr class="fr-margin"><td>Margen neto</td>'+brutM.map((v,i)=>'<td>'+(v>0?Math.round(utilM[i]/v*100)+'%':'—')+'</td>').join('')+'<td>'+(brutSum>0?Math.round(utilSum/brutSum*100):'0')+'%</td></tr>');
+    const distMes=utilM.map(v=>Math.max(0,v));
     pr.push('<tr class="fr-total"><td><strong>= DISTRIBUIBLE (equity)</strong></td>'+distMes.map(v=>'<td>'+fmt(v)+'</td>').join('')+'<td><strong>'+fmt(distMes.reduce((a,b)=>a+b,0))+'</strong></td></tr>');
     plBody.innerHTML=pr.join('');
   }
@@ -3746,14 +3793,13 @@ function paintFlujoReal(yr){
     const cr=[];
     cr.push('<tr><td>Saldo inicial</td>'+months.map((_,i)=>{const v=i===0?cajaStart:cajaM[i-1];return '<td style="color:var(--muted)">'+fmt(v)+'</td>';}).join('')+'</tr>');
     cr.push('<tr class="fr-positive"><td>(+) Ingreso neto</td>'+netoM.map(v=>'<td>+'+fmt(v)+'</td>').join('')+'</tr>');
-    cr.push('<tr class="fr-negative"><td>(–) Egresos</td>'+months.map(()=>'<td>-'+fmt(totalEgM)+'</td>').join('')+'</tr>');
-    cr.push('<tr><td><strong>Flujo neto del mes</strong></td>'+utilM.map(v=>'<td style="color:'+(v>=0?'var(--green)':'var(--coral)')+'">'+fmt(v)+'</td>').join('')+'</tr>');
+    cr.push('<tr class="fr-negative"><td>(–) Egresos + IR</td>'+months.map(()=>'<td>-'+fmt(totalEgConIR)+'</td>').join('')+'</tr>');
+    cr.push('<tr><td><strong>Flujo neto</strong></td>'+utilM.map(v=>'<td style="color:'+(v>=0?'var(--green)':'var(--coral)')+'">'+fmt(v)+'</td>').join('')+'</tr>');
     const clsCaja=cajaEnd>=0?'fr-total-green':'fr-total-red';
     cr.push('<tr class="'+clsCaja+'"><td><strong>SALDO FINAL</strong></td>'+cajaM.map(v=>'<td>'+fmt(v)+'</td>').join('')+'</tr>');
 
-    // Semáforo
     cr.push('<tr><td>Estado</td>'+cajaM.map(v=>{
-      if(v>totalEgM*2) return '<td><span style="color:#52C97A;font-weight:700">●</span> <span style="font-size:.55rem;color:var(--muted)">Sano</span></td>';
+      if(v>totalEgConIR*2) return '<td><span style="color:#52C97A;font-weight:700">●</span> <span style="font-size:.55rem;color:var(--muted)">Sano</span></td>';
       if(v>0) return '<td><span style="color:#D4A853;font-weight:700">●</span> <span style="font-size:.55rem;color:var(--muted)">Ajustado</span></td>';
       return '<td><span style="color:#E86B5F;font-weight:700">●</span> <span style="font-size:.55rem;color:var(--muted)">Déficit</span></td>';
     }).join('')+'</tr>');
@@ -3769,8 +3815,8 @@ function paintFlujoReal(yr){
         labels:months.map(m=>m.short),
         datasets:[
           {label:'Ingreso neto',data:netoM,backgroundColor:'rgba(62,207,207,.3)',borderColor:'#3ECFCF',borderWidth:1,borderRadius:3},
-          {label:'Egresos',data:months.map(()=>totalEgM),backgroundColor:'rgba(232,107,95,.2)',borderColor:'#E86B5F',borderWidth:1,borderRadius:3},
-          {label:'Utilidad',data:utilM,type:'line',borderColor:utilSum>=0?'#52C97A':'#E86B5F',borderWidth:2,tension:.3,pointRadius:3,pointBackgroundColor:utilM.map(v=>v>=0?'#52C97A':'#E86B5F'),fill:false},
+          {label:'Egresos + IR',data:months.map(()=>totalEgConIR),backgroundColor:'rgba(232,107,95,.2)',borderColor:'#E86B5F',borderWidth:1,borderRadius:3},
+          {label:'Utilidad neta',data:utilM,type:'line',borderColor:utilSum>=0?'#52C97A':'#E86B5F',borderWidth:2,tension:.3,pointRadius:3,pointBackgroundColor:utilM.map(v=>v>=0?'#52C97A':'#E86B5F'),fill:false},
         ]
       },options:{...CH_DEFAULTS,interaction:{mode:'index',intersect:false}}});
     }
@@ -3787,7 +3833,7 @@ function paintFlujoReal(yr){
         datasets:[
           {label:'Caja acumulada',data:cajaAll,borderColor:'#3ECFCF',backgroundColor:'rgba(62,207,207,.08)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:cajaAll.map(v=>v<0?'#E86B5F':'#3ECFCF')},
           {label:'Cero',data:new Array(lbls.length).fill(0),borderColor:'rgba(232,107,95,.35)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false},
-          {label:'Piso seguro (2× egresos)',data:new Array(lbls.length).fill(totalEgM*2),borderColor:'rgba(82,201,122,.25)',borderWidth:1,borderDash:[6,3],pointRadius:0,fill:false},
+          {label:'Piso seguro (2× egresos)',data:new Array(lbls.length).fill(totalEgConIR*2),borderColor:'rgba(82,201,122,.25)',borderWidth:1,borderDash:[6,3],pointRadius:0,fill:false},
         ]
       },options:{...CH_DEFAULTS,interaction:{mode:'index',intersect:false},scales:{...CH_DEFAULTS.scales,y:{...CH_DEFAULTS.scales.y,ticks:{...CH_DEFAULTS.scales.y.ticks,callback:v=>'S/'+Math.round(v/1000)+'k'}}}}});
     }
@@ -3887,17 +3933,7 @@ function paintEffortTable(fact, derived){
   // ── P&L completo ──
   var pnlEl=sel('effort-pnl');
   if(pnlEl){
-    var OPS_COSTS=[
-      {name:'Alquiler oficina/cowork',base:800,growth:1.05},
-      {name:'Servicios (luz, agua, internet)',base:350,growth:1.04},
-      {name:'Herramientas digitales (Canva, hosting, CRM, etc.)',base:600,growth:1.10},
-      {name:'Pauta publicitaria — Almaria',base:500,growth:1.25},
-      {name:'Pauta publicitaria — HugoTech',base:400,growth:1.25},
-      {name:'Contabilidad y legal',base:500,growth:1.08},
-      {name:'Transporte y logística',base:300,growth:1.06},
-      {name:'Capacitación y eventos',base:200,growth:1.15},
-      {name:'Imprevistos (buffer 5%)',dynamic:true,pct:0.05},
-    ];
+    var OPS_COSTS=QSYS.COST_STRUCTURE.fixedOps.map(function(c){return{name:c.name,base:c.amount,growth:c.growth};});
 
     var ph='<div style="margin-bottom:1.2rem">';
     ph+='<div style="font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:.6rem">📊 Estado de Resultados Proyectado (P&L mensual)</div>';
@@ -3936,42 +3972,34 @@ function paintEffortTable(fact, derived){
     ph+='</tr>';
 
     // ═══ COSTOS DE VENTA (35%) ═══
-    var costVentaPct=1-P.netoPct;
-    ph+='<tr style="background:rgba(255,255,255,.02)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--orange);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">⚙️ Costos de venta y operación ('+Math.round(costVentaPct*100)+'% del bruto)</td></tr>';
-    ph+='<tr><td style="padding:.35rem .5rem;color:var(--orange);font-weight:600">Total costos de venta</td>';
-    for(var cvi=1;cvi<AÑOS.length;cvi++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--orange)">'+fmt(Math.round(fact.total[cvi]*costVentaPct))+'</td>';
+    ph+='<tr style="background:rgba(255,255,255,.02)"><td colspan="'+(AÑOS.length)+'" style="padding:.5rem .5rem .3rem;font-weight:700;color:var(--orange);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em">⚙️ IGV + COGS + Costos fijos (desglosado)</td></tr>';
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--orange);font-weight:600">IGV 18%</td>';
+    for(var ci=1;ci<AÑOS.length;ci++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--orange)">'+fmt(fact.totalIgv[ci])+'</td>';
+    ph+='</tr>';
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--orange)">COGS por línea</td>';
+    for(var ci2=1;ci2<AÑOS.length;ci2++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--orange)">'+fmt(fact.totalCogs[ci2])+'</td>';
+    ph+='</tr>';
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--orange)">Costos fijos op.</td>';
+    for(var ci3=1;ci3<AÑOS.length;ci3++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--orange)">'+fmt(fact.fixedOps[ci3])+'</td>';
+    ph+='</tr>';
+    ph+='<tr><td style="padding:.35rem .5rem;color:var(--orange);font-weight:600">Total deducciones</td>';
+    for(var cvi=1;cvi<AÑOS.length;cvi++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--orange)">'+fmt((fact.totalIgv[cvi]||0)+(fact.totalCogs[cvi]||0)+(fact.fixedOps[cvi]||0))+'</td>';
     ph+='</tr>';
 
-    // Desglose estimado de costos operativos (referencial)
-    var opsCostByYear=[];
-    for(var oi=1;oi<AÑOS.length;oi++){
-      var yearOps=0;
-      OPS_COSTS.forEach(function(c){
-        if(c.dynamic) yearOps+=Math.round(fact.total[oi]*c.pct);
-        else yearOps+=Math.round(c.base*Math.pow(c.growth,oi));
-      });
-      opsCostByYear.push(yearOps);
-    }
+    // Desglose de costos fijos operativos (del motor)
     OPS_COSTS.forEach(function(c){
       ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">'+c.name+'</td>';
       for(var ci=1;ci<AÑOS.length;ci++){
-        var val=c.dynamic?Math.round(fact.total[ci]*c.pct):Math.round(c.base*Math.pow(c.growth,ci));
+        var val=Math.round(c.base*Math.pow(c.growth||1,ci));
         ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--muted)">'+fmt(val)+'</td>';
       }
       ph+='</tr>';
     });
 
-    // Margen restante del 35%
-    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.3rem .5rem;font-size:.68rem;color:var(--mint)">Margen libre (impuestos, otros)</td>';
-    for(var mi=1;mi<AÑOS.length;mi++){
-      var costoVenta=Math.round(fact.total[mi]*costVentaPct);
-      var margenLibre=costoVenta-opsCostByYear[mi-1];
-      ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:'+(margenLibre>=0?'var(--mint)':'var(--coral)')+'">'+fmt(margenLibre)+'</td>';
-    }
-    ph+='</tr>';
+    // Margen separado ya no aplica — ahora los costos son reales
 
     // NETO OPERATIVO
-    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(68,217,168,.05)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--mint)">NETO OPERATIVO ('+Math.round(P.netoPct*100)+'%)</td>';
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(68,217,168,.05)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--mint)">NETO (–IGV –COGS –Fijos)</td>';
     for(var ni=1;ni<AÑOS.length;ni++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--mint)">'+fmt(fact.neto[ni])+'</td>';
     ph+='</tr>';
 
@@ -3988,7 +4016,11 @@ function paintEffortTable(fact, derived){
       ph+='</tr>';
     });
 
-    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">Equipo operativo</td>';
+    ph+='<tr><td style="padding:.3rem .5rem .3rem 1.5rem;color:var(--muted);font-size:.68rem">+ Cargas sociales fund. 10%</td>';
+    for(var fci=1;fci<AÑOS.length;fci++) ph+='<td style="text-align:right;padding:.3rem .3rem;font-size:.68rem;color:var(--muted)">'+fmt(fact.founderCargas[fci]||0)+'</td>';
+    ph+='</tr>';
+
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">Equipo op. + cargas 45%</td>';
     for(var ei=1;ei<AÑOS.length;ei++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(fact.hcost[ei])+'</td>';
     ph+='</tr>';
     HIRES.forEach(function(hire){
@@ -4001,12 +4033,16 @@ function paintEffortTable(fact, derived){
       ph+='</tr>';
     });
 
-    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--coral)">TOTAL PLANILLA</td>';
+    ph+='<tr style="border-top:1px solid var(--brd)"><td style="padding:.35rem .5rem;font-weight:600;color:var(--coral)">Costos fijos operativos</td>';
+    for(var fi2=1;fi2<AÑOS.length;fi2++) ph+='<td style="text-align:right;padding:.35rem .3rem;color:var(--coral)">'+fmt(fact.fixedOps[fi2])+'</td>';
+    ph+='</tr>';
+
+    ph+='<tr style="border-top:2px solid var(--brd);background:rgba(255,255,255,.02)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--coral)">TOTAL EGRESOS OP.</td>';
     for(var tei=1;tei<AÑOS.length;tei++) ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:var(--coral)">'+fmt(fact.sued_tot[tei])+'</td>';
     ph+='</tr>';
 
     // ═══ COLCHÓN ═══
-    ph+='<tr style="background:rgba(91,168,245,.04);border-top:2px solid var(--brd)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--text)">COLCHÓN (neto − planilla)</td>';
+    ph+='<tr style="background:rgba(91,168,245,.04);border-top:2px solid var(--brd)"><td style="padding:.4rem .5rem;font-weight:700;color:var(--text)">COLCHÓN (neto − egresos)</td>';
     for(var ci2=1;ci2<AÑOS.length;ci2++){
       var colchon=fact.colchon[ci2];
       ph+='<td style="text-align:right;padding:.4rem .3rem;font-weight:700;color:'+(colchon>=0?'var(--blue)':'var(--coral)')+'">'+(colchon<0?'('+fmt(Math.abs(colchon))+')':fmt(colchon))+'</td>';
@@ -4035,7 +4071,7 @@ function paintEffortTable(fact, derived){
     ph+='<div style="margin-top:.6rem;padding:.6rem .8rem;background:rgba(91,168,245,.04);border:1px solid rgba(91,168,245,.12);border-radius:10px;font-size:.7rem;color:var(--muted);line-height:1.65">';
     ph+='<strong style="color:var(--blue)">¿Cómo leer este P&L?</strong><br>';
     ph+='<strong>Ingresos brutos</strong> = facturación total de ambas marcas (precio × volumen × escenario).<br>';
-    ph+='<strong style="color:var(--orange)">Costos de venta ('+Math.round(costVentaPct*100)+'%)</strong> = impuestos, herramientas, pauta, servicios, logística. El desglose es referencial — estos costos ya están cubiertos dentro del '+Math.round(costVentaPct*100)+'% que se descuenta del bruto.<br>';
+    ph+='<strong style="color:var(--orange)">Costos reales</strong> = IGV 18% (SUNAT) + COGS por línea (materia prima, venues, logística) + costos fijos operativos (oficina, herramientas, pauta, seguros). Calculados individualmente, no como % flat.<br>';
     ph+='<strong style="color:var(--mint)">Neto operativo</strong> = lo que queda después de costos. <strong>De aquí se paga la planilla.</strong><br>';
     ph+='<strong style="color:var(--coral)">Planilla</strong> = sueldos de socios (capeados por revenue) + equipo operativo.<br>';
     ph+='<strong style="color:var(--gold)">Distribuible</strong> = colchón − reserva (S/'+fmt(P.reserva)+'/mes). Es el <strong>ingreso real por equity</strong> que se reparte entre socios, adicional al sueldo.';
@@ -4058,7 +4094,7 @@ function paintEffortTable(fact, derived){
   html+='<tr class="trs"><td><strong>TOTAL ECOSISTEMA</strong></td>';
   for(var j=1;j<AÑOS.length;j++) html+='<td class="cg cb">'+fmt(fact.total[j])+'</td>';
   html+='<td class="cg" style="font-size:.68rem">'+fmt(Math.round(fact.total[AÑOS.length-1]/22))+'/d</td></tr>';
-  html+='<tr><td style="color:var(--teal)">Neto operativo ('+Math.round(P.netoPct*100)+'%)</td>';
+  html+='<tr><td style="color:var(--teal)">Neto (–IGV–COGS)</td>';
   for(var k=1;k<AÑOS.length;k++) html+='<td class="ct">'+fmt(fact.neto[k])+'</td>';
   html+='<td></td></tr>';
   html+='<tr><td style="color:var(--coral);padding-left:1.2rem">(-) Planilla socios</td>';
@@ -4178,7 +4214,8 @@ function paintEffortTable(fact, derived){
     var scn={p:'Pesimista ×0.7',n:'Neutro ×1.0',o:'Optimista ×1.4'};
     var firstDistYr=null;
     for(var y=1;y<AÑOS.length;y++){if(fact.dist[y]>0){firstDistYr=AÑOS[y];break;}}
-    var umbralEquity=fmt(Math.round(fact.sued_tot[_LI]/P.netoPct));
+    var _effPct=fact.total[_LI]>0?(fact.neto[_LI]/fact.total[_LI]):0.50;
+    var umbralEquity=fmt(Math.round(fact.sued_tot[_LI]/_effPct));
     var nt='Escenario <strong>'+scn[P.sc]+'</strong>. ';
     nt+=(firstDistYr?'El primer año con distribuible es <strong style="color:var(--gold)">'+firstDistYr+'</strong>. ':'<span style="color:var(--coral)">No hay distribuible en el horizonte (2027–'+AÑOS[AÑOS.length-1]+').</span> ');
     nt+='Para que el equipo reciba equity, la facturación bruta total debe superar <strong style="color:var(--teal)">'+umbralEquity+'</strong>/mes (planilla ÷ neto%).';
@@ -4605,10 +4642,10 @@ function paintFlowTab(){
 
   const diagramEl=sel('flow-diagram');
   if(diagramEl){
-    const netoPct=Math.round((P.netoPct||0.65)*100);
+    const netoPctFlow=totalFact>0?Math.round(neto/totalFact*100):50;
     diagramEl.innerHTML=[
       {icon:'brand',emoji:'📥',title:'Facturación total ecosistema',desc:'Almaria + HugoTech ('+AÑOS[yr]+'/mes)',amount:fmt(totalFact),cls:''},
-      {icon:'calc',emoji:'📊',title:'Neto operativo ('+netoPct+'%)',desc:'Después de costos directos de producción, herramientas, comisiones',amount:fmt(neto),cls:''},
+      {icon:'calc',emoji:'📊',title:'Neto (–IGV–COGS–Fijos) ~'+netoPctFlow+'%',desc:'Después de IGV 18%, COGS por línea, costos fijos operativos',amount:fmt(neto),cls:''},
       {icon:'pay',emoji:'👥',title:'Planilla fundadores',desc:'Sueldos pactados del equipo socio (crece cada año)',amount:'−'+fmt(suedF),cls:'negative'},
       {icon:'pay',emoji:'🏢',title:'Equipo operativo',desc:'Content creators, comerciales, facilitadores',amount:'−'+fmt(hcost),cls:'negative'},
       {icon:'rsv',emoji:'🛡️',title:'Reserva mensual',desc:'Colchón mínimo antes de distribuir',amount:'−'+fmt(reserva),cls:'negative'},
@@ -4717,8 +4754,11 @@ function paintFlowCalc(){
     const r=sel('flow-calc-result'); if(r) r.innerHTML='<div style="font-size:.82rem;color:var(--muted)">Ingresa un monto mayor a 0.</div>';
     return;
   }
-  const netoPct=Number(P.netoPct||0.65);
-  const neto=Math.round(amount*netoPct);
+  const derivedCalc=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
+  const _factCalc=derivedCalc.fact;
+  const _lastIdx=AÑOS.length-1;
+  const netoPctCalc=_factCalc.total[_lastIdx]>0?(_factCalc.neto[_lastIdx]/_factCalc.total[_lastIdx]):0.50;
+  const neto=Math.round(amount*netoPctCalc);
   const costos=amount-neto;
   const derived=QSYS.deriveState({persons:PERSONS,hires:HIRES,P});
   const fmt=QSYS.fmtCurrency;
@@ -4729,7 +4769,7 @@ function paintFlowCalc(){
   html+='<div style="margin-bottom:.5rem"><strong>Si entran '+fmt(amount)+'</strong> a <strong>'+document.getElementById('flow-calc-brand').value+'</strong>:</div>';
   html+='<div style="display:grid;gap:.35rem">';
   html+='<div>📥 Facturación bruta: <strong>'+fmt(amount)+'</strong></div>';
-  html+='<div>📊 Neto operativo ('+Math.round(netoPct*100)+'%): <strong>'+fmt(neto)+'</strong> <span style="color:var(--muted);font-size:.72rem">('+fmt(costos)+' se fue en costos directos)</span></div>';
+  html+='<div>📊 Neto (–IGV–COGS–Fijos) ~'+Math.round(netoPctCalc*100)+'%: <strong>'+fmt(neto)+'</strong> <span style="color:var(--muted);font-size:.72rem">('+fmt(costos)+' se fue en IGV, COGS y costos fijos)</span></div>';
   html+='<div style="margin-top:.35rem;padding-top:.35rem;border-top:1px solid rgba(255,255,255,.08)">💰 <strong>De esos '+fmt(neto)+'</strong>, lo que no se use en planilla ni reserva es distribuible:</div>';
   html+='</div>';
   html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;margin-top:.65rem">';
